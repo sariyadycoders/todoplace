@@ -1,0 +1,40 @@
+{
+  "info": {
+    "version": "0.0.1",
+    "title": "<enter your title>"
+  },
+  "host": "localhost:4000",
+  "definitions": {
+    "ICalendarResponse": {
+      "description": "Response schema for iCalendar data",
+      "example": "  BEGIN:VCALENDAR\n  CALSCALE:GREGORIAN\n  VERSION:2.0\n  PRODID:-//Elixir ICalendar//Elixir ICalendar//EN\n  BEGIN:VEVENT\n  DESCRIPTION:Let's go see Star Wars.\n  DTEND:20151224T084500\n  DTSTART:20151224T083000\n  LOCATION:123 Fun Street\\, Toronto ON\\, Canada\n  SUMMARY:Film with Amy and Adam\n  END:VEVENT\n  BEGIN:VEVENT\n  DESCRIPTION:A big long meeting with lots of details.\n  DTEND:20240806T191722Z\n  DTSTART:20240806T161722Z\n  LOCATION:456 Boring Street\\, Toronto ON\\, Canada\n  SUMMARY:Morning meeting\n  END:VEVENT\n  END:VCALENDAR\n",
+      "title": "ICalendar Response",
+      "type": "string"
+    }
+  },
+  "swagger": "2.0",
+  "paths": {
+    "/calendar/{token}": {
+      "get": {
+        "description": "Retrieve calendar events in iCalendar format",
+        "operationId": "TodoplaceWeb.ICalendarController.index",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ICalendarResponse"
+            }
+          },
+          "404": {
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "ICalendar"
+        ]
+      }
+    }
+  }
+}
