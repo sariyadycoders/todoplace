@@ -59,19 +59,27 @@ defmodule TodoplaceWeb.LayoutView do
     <div>
       <%= for {key, icon, text_color} <- flash_styles(), message <- [live_flash(@flash, key)], message do %>
         <%= if(key in [:error, :info, :success])  do %>
-        <div phx-hook="Flash" id={"flash-#{DateTime.to_unix(DateTime.utc_now)}"} phx-click="lv:clear-flash" phx-value-key={key} title={key} class="fixed right-10-md right-0 top-1.5 z-40 max-w-lg px-1.5 px-0-md flash" role="alert">
-          <div class="flex bg-white rounded-lg shadow-lg cursor-pointer">
-            <div class={classes(["flex items-center justify-center p-3", text_color])}>
-              <.icon name={icon} class="w-6 h-6 stroke-current" />
-            </div>
-            <div class="flex items-center justify-center font-sans flex-grow px-3 py-2 mr-7">
-              <p><%= message %></p>
-            </div>
-            <div class="flex items-center justify-center mr-3">
-              <.icon name="close-x" class="w-3 h-3 stroke-current" />
+          <div
+            phx-hook="Flash"
+            id={"flash-#{DateTime.to_unix(DateTime.utc_now)}"}
+            phx-click="lv:clear-flash"
+            phx-value-key={key}
+            title={key}
+            class="fixed right-10-md right-0 top-1.5 z-40 max-w-lg px-1.5 px-0-md flash"
+            role="alert"
+          >
+            <div class="flex bg-white rounded-lg shadow-lg cursor-pointer">
+              <div class={classes(["flex items-center justify-center p-3", text_color])}>
+                <.icon name={icon} class="w-6 h-6 stroke-current" />
+              </div>
+              <div class="flex items-center justify-center font-sans flex-grow px-3 py-2 mr-7">
+                <p><%= message %></p>
+              </div>
+              <div class="flex items-center justify-center mr-3">
+                <.icon name="close-x" class="w-3 h-3 stroke-current" />
+              </div>
             </div>
           </div>
-        </div>
         <% end %>
       <% end %>
     </div>
@@ -81,7 +89,8 @@ defmodule TodoplaceWeb.LayoutView do
   def google_analytics(assigns) do
     ~H"""
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src={"https://www.googletagmanager.com/gtag/js?id=#{@gaId}"}></script>
+    <script async src={"https://www.googletagmanager.com/gtag/js?id=#{@gaId}"}>
+    </script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -95,16 +104,25 @@ defmodule TodoplaceWeb.LayoutView do
   def google_tag_manager(assigns) do
     ~H"""
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','<%= @gtmId %>');</script>
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','<%= @gtmId %>');
+    </script>
     <!-- End Google Tag Manager -->
 
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src={"https://www.googletagmanager.com/ns.html?id=#{@gtmId}"}
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript>
+      <iframe
+        src={"https://www.googletagmanager.com/ns.html?id=#{@gtmId}"}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      >
+      </iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
     """
   end
@@ -147,18 +165,29 @@ defmodule TodoplaceWeb.LayoutView do
         ~H"""
         <div class={classes(%{"hidden" => @subscription.hidden_for_days?})}>
           <.link navigate={~p"/users/setttings"} class="flex gap-2 items-center mr-4">
-
-            <h6 class="text-xs italic text-gray-250 opacity-50">Trial ending soon! <%= ngettext("1 day", "%{count} days", Map.get(@subscription, :days_left, 0)) %> left.</h6>
-            <button class="hidden sm:block text-xs rounded-lg px-4 py-1 border border-blue-planning-300 font-semibold hover:bg-blue-planning-100">Renew plan</button>
+            <h6 class="text-xs italic text-gray-250 opacity-50">
+              Trial ending soon! <%= ngettext(
+                "1 day",
+                "%{count} days",
+                Map.get(@subscription, :days_left, 0)
+              ) %> left.
+            </h6>
+            <button class="hidden sm:block text-xs rounded-lg px-4 py-1 border border-blue-planning-300 font-semibold hover:bg-blue-planning-100">
+              Renew plan
+            </button>
           </.link>
         </div>
         """
 
       "banner" ->
         ~H"""
-        <div {testid("subscription-top-banner")} class={classes(@class, %{"hidden" => @subscription.hidden?})}>
-          <.icon name="clock-filled" class="lg:w-5 lg:h-5 w-8 h-8 mr-2"/>
-          <span>You have <%= ngettext("1 day", "%{count} days", Map.get(@subscription, :days_left, 0)) %> left before your subscription ends.
+        <div
+          {testid("subscription-top-banner")}
+          class={classes(@class, %{"hidden" => @subscription.hidden?})}
+        >
+          <.icon name="clock-filled" class="lg:w-5 lg:h-5 w-8 h-8 mr-2" />
+          <span>
+            You have <%= ngettext("1 day", "%{count} days", Map.get(@subscription, :days_left, 0)) %> left before your subscription ends.
             <.link navigate={~p"/users/setttings"}>
               <span class="font-bold underline px-1 cursor-pointer">Click here</span>
             </.link>
@@ -180,10 +209,17 @@ defmodule TodoplaceWeb.LayoutView do
 
   def admin_banner(assigns) do
     ~H"""
-    <div class="hidden fixed top-4 right-4 p-2 bg-red-sales-300/25 rounded-lg text-red-sales-300 shadow-lg backdrop-blur-md z-[1000]" id="admin-banner">
+    <div
+      class="hidden fixed top-4 right-4 p-2 bg-red-sales-300/25 rounded-lg text-red-sales-300 shadow-lg backdrop-blur-md z-[1000]"
+      id="admin-banner"
+    >
       <span class="font-bold">You are logged in as a user, please log out when finished</span>
       <%!-- TODO: handle me : path not found --%>
-      <%= link("Logout", to: ~p"/users/log_out", method: :delete, class: "ml-4 btn-tertiary px-2 py-1 text-sm text-red-sales-300") %>
+      <%= link("Logout",
+        to: ~p"/users/log_out",
+        method: :delete,
+        class: "ml-4 btn-tertiary px-2 py-1 text-sm text-red-sales-300"
+      ) %>
     </div>
     """
   end
@@ -199,14 +235,31 @@ defmodule TodoplaceWeb.LayoutView do
           <div class="flex justify-between items-center gap-2">
             <details class="cursor-pointer text-base-250 group">
               <summary class="flex items-center font-bold text-black">
-                <.icon name="confetti" class="w-5 h-5 mr-2 text-blue-planning-300"/>
+                <.icon name="confetti" class="w-5 h-5 mr-2 text-blue-planning-300" />
                 Get paid within ":todoplace%"!
-                <.icon name="down" class="w-4 h-4 stroke-current stroke-2 text-blue-planning-300 ml-2 group-open:rotate-180" />
+                <.icon
+                  name="down"
+                  class="w-4 h-4 stroke-current stroke-2 text-blue-planning-300 ml-2 group-open:rotate-180"
+                />
               </summary>
-              To accept money from bookings & galleries, connect your Stripe account and add a payment method. <em>We also offer offline payments for bookings only. <a href={"#{base_url(:support)}article/32-set-up-stripe"} class="underline" target="_blank" rel="noreferrer">Learn more</a></em>
+              To accept money from bookings & galleries, connect your Stripe account and add a payment method.
+              <em>
+                We also offer offline payments for bookings only.
+                <a
+                  href={"#{base_url(:support)}article/32-set-up-stripe"}
+                  class="underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Learn more
+                </a>
+              </em>
             </details>
             <div class="flex gap-2">
-              <a href={~p"/finance"} class="flex text-xs items-center px-2 py-1 btn-tertiary bg-blue-planning-300 text-white hover:bg-blue-planning-300/75">
+              <a
+                href={~p"/finance"}
+                class="flex text-xs items-center px-2 py-1 btn-tertiary bg-blue-planning-300 text-white hover:bg-blue-planning-300/75"
+              >
                 <.icon name="settings" class="inline-block w-4 h-4 fill-current text-white mr-1" />
                 Connect Stripe
               </a>
@@ -228,31 +281,81 @@ defmodule TodoplaceWeb.LayoutView do
         <div class="flex justify-between gap-8">
           <nav class="flex flex-col sm:flex-row text-lg font-bold mt-4 w-full items-center gap-2">
             <ul class="flex">
-              <li><a href={"#{base_url(:support)}"} target="_blank" rel="noopener noreferrer">Help center</a></li>
+              <li>
+                <a href={"#{base_url(:support)}"} target="_blank" rel="noopener noreferrer">
+                  Help center
+                </a>
+              </li>
               <%= if @current_user && Application.get_env(:todoplace, :intercom_id) do %>
-              <li><a href="#help" class="ml-10 open-help">Contact us</a></li>
+                <li><a href="#help" class="ml-10 open-help">Contact us</a></li>
               <% end %>
-              <li><a class="ml-10" href={"#{base_url(:marketing)}blog"} target="_blank" rel="noopener noreferrer">Blog</a></li>
-              <li><a class="ml-10" href="/users/settings#rewardful-affiliate">Get paid to share Todoplace!</a></li>
+              <li>
+                <a
+                  class="ml-10"
+                  href={"#{base_url(:marketing)}blog"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a class="ml-10" href="/users/settings#rewardful-affiliate">
+                  Get paid to share Todoplace!
+                </a>
+              </li>
             </ul>
 
-            <.icon name="logo-shoot-higher" class="w-24 h-10 sm:h-20 sm:w-32 sm:ml-auto mt-4 md:mt-0" />
+            <%!-- <.icon name="logo-shoot-higher" class="w-24 h-10 sm:h-20 sm:w-32 sm:ml-auto mt-4 md:mt-0" /> --%>
 
-            <.subscription_ending_soon type="footer" socket={@socket} current_user={@current_user} class="flex ml-auto bg-white text-black rounded px-4 py-2 items-center text-sm"/>
+            <.subscription_ending_soon
+              type="footer"
+              socket={@socket}
+              current_user={@current_user}
+              class="flex ml-auto bg-white text-black rounded px-4 py-2 items-center text-sm"
+            />
           </nav>
         </div>
         <hr class="my-8 opacity-30" />
         <div class="flex flex-col lg:flex-row">
           <ul class="flex lg:ml-auto items-center">
-            <li class="text-base-250 text-xs"><a href={"#{base_url(:marketing)}terms-conditions"} target="_blank" rel="noopener noreferrer">Terms</a></li>
+            <li class="text-base-250 text-xs">
+              <a
+                href={"#{base_url(:marketing)}terms-conditions"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Terms
+              </a>
+            </li>
             <li class="text-base-250 mx-3.5">|</li>
-            <li class="text-base-250 text-xs"><a href={"#{base_url(:marketing)}privacy-policy"} target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+            <li class="text-base-250 text-xs">
+              <a
+                href={"#{base_url(:marketing)}privacy-policy"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Privacy Policy
+              </a>
+            </li>
             <li class="text-base-250 mx-3.5">|</li>
-            <li class="text-base-250 text-xs"><a href={"#{base_url(:marketing)}privacy-policy#ccpa"} target="_blank" rel="noopener noreferrer">California Privacy</a></li>
+            <li class="text-base-250 text-xs">
+              <a
+                href={"#{base_url(:marketing)}privacy-policy#ccpa"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                California Privacy
+              </a>
+            </li>
           </ul>
         </div>
       </div>
-      <button id="scroll-top" phx-hook="ScrollToTop" class="bg-blue-planning-300 p-2 text-white fixed bottom-5 right-24 sm:right-20 rounded-lg shadow-2xl shadow-black">
+      <button
+        id="scroll-top"
+        phx-hook="ScrollToTop"
+        class="bg-blue-planning-300 p-2 text-white fixed bottom-5 right-24 sm:right-20 rounded-lg shadow-2xl shadow-black"
+      >
         <.icon name="up" class="w-4 h-4 stroke-2 text-white" />
       </button>
     </footer>
@@ -268,21 +371,37 @@ defmodule TodoplaceWeb.LayoutView do
       <.photographer_logo organization={@organization} />
       <div class="flex gap-6 items-center ml-auto pt-3">
         <div class="flex flex-col">
-        <%= link("Logout", to: ~p"/users/log_out?#{%{client_link_hash: @gallery.client_link_hash}}", method: :delete, class: "text-sm text-base-250 inline-block") %>
+          <%= link("Logout",
+            to: ~p"/users/log_out?#{%{client_link_hash: @gallery.client_link_hash}}",
+            method: :delete,
+            class: "text-sm text-base-250 inline-block"
+          ) %>
           <div class="border-b border-base-250 -mt-1"></div>
         </div>
-        <a class="flex items-center justify-center px-2.5 py-1 text-base-300 bg-base-100 border border-base-300 hover:text-base-100 hover:bg-base-300" phx-hook="OpenCompose" id="open-compose">
-          <.icon name="envelope" class="mr-2 w-4 h-4 fill-current"/>
-          Contact
+        <a
+          class="flex items-center justify-center px-2.5 py-1 text-base-300 bg-base-100 border border-base-300 hover:text-base-100 hover:bg-base-300"
+          phx-hook="OpenCompose"
+          id="open-compose"
+        >
+          <.icon name="envelope" class="mr-2 w-4 h-4 fill-current" /> Contact
         </a>
       </div>
     </nav>
     <hr class="my-8 opacity-100 border-base-200" />
     <div class="flex text-base-250 flex-col sm:flex-row">
-      <div class="flex justify-center">©<%= DateTime.utc_now.year %> <span class="font-base-300 font-bold ml-2"><%= @organization.name %></span>. All Rights Reserved</div>
+      <div class="flex justify-center">
+        ©<%= DateTime.utc_now().year %> <span class="font-base-300 font-bold ml-2"><%= @organization.name %></span>. All Rights Reserved
+      </div>
       <div class="flex md:ml-auto justify-center">
         Powered by
-        <a href={"#{base_url(:marketing)}terms-conditions"} class="underline ml-1" target="_blank" rel="noopener noreferrer"> <b>Todoplace</b></a>
+        <a
+          href={"#{base_url(:marketing)}terms-conditions"}
+          class="underline ml-1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <b>Todoplace</b>
+        </a>
       </div>
     </div>
     """
@@ -291,7 +410,7 @@ defmodule TodoplaceWeb.LayoutView do
   defp reattach_activator(assigns) do
     ~H"""
     <script>
-    (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/<%= @intercom_id %>';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+      (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/<%= @intercom_id %>';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
     </script>
     """
   end

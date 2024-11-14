@@ -24,25 +24,33 @@ defmodule TodoplaceWeb.Live.PasswordReset.New do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-      <div class="flex flex-col items-center justify-start w-screen min-h-screen p-5 sm:justify-center bg-blue-planning-200">
-        <div class="container px-6 pt-8 pb-6 bg-white rounded-lg shadow-md max-w-screen-sm sm:p-14">
-          <.live_link to={~p"/"} >
+    <div class="flex flex-col items-center justify-start w-screen min-h-screen p-5 sm:justify-center bg-blue-planning-200">
+      <div class="container px-6 pt-8 pb-6 bg-white rounded-lg shadow-md max-w-screen-sm sm:p-14">
+        <%!-- <.live_link to={~p"/"} >
             <.icon name="logo-shoot-higher" class="w-32 h-12 sm:h-20 sm:w-48" />
-          </.live_link>
-          <h1 class="mt-10 text-4xl font-bold">Forgot your password?</h1>
+          </.live_link> --%>
+        <h1 class="mt-10 text-4xl font-bold">Forgot your password?</h1>
 
-          <.form :let={f} for={@changeset} phx-change="validate" phx-submit="submit" >
-            <%= labeled_input f, :email, type: :email_input, placeholder: "email@example.com", phx_debounce: "500", wrapper_class: "mt-4" %>
+        <.form :let={f} for={@changeset} phx-change="validate" phx-submit="submit">
+          <%= labeled_input(f, :email,
+            type: :email_input,
+            placeholder: "email@example.com",
+            phx_debounce: "500",
+            wrapper_class: "mt-4"
+          ) %>
 
-
-            <div class="flex flex-row mt-8 sm:justify-end">
-              <div class="w-full text-right sm:w-1/2 sm:pl-6">
-                <%= submit "Reset Password", class: "w-full btn-primary", disabled: !@changeset.valid?, phx_disable_with: "Resetting..." %>
-              </div>
+          <div class="flex flex-row mt-8 sm:justify-end">
+            <div class="w-full text-right sm:w-1/2 sm:pl-6">
+              <%= submit("Reset Password",
+                class: "w-full btn-primary",
+                disabled: !@changeset.valid?,
+                phx_disable_with: "Resetting..."
+              ) %>
             </div>
-          </.form>
-        </div>
+          </div>
+        </.form>
       </div>
+    </div>
     """
   end
 
@@ -60,11 +68,12 @@ defmodule TodoplaceWeb.Live.PasswordReset.New do
   def handle_event("submit", %{"user" => user_params}, socket) do
     result =
       case Accounts.get_user_by_email(user_params["email"]) do
-         user ->
+        user ->
           Accounts.deliver_user_reset_password_instructions(
             user,
             &url(~p"/users/reset_password/#{&1}")
           )
+
         _ ->
           {:ok, :user_not_found}
       end

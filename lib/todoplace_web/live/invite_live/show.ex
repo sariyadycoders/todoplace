@@ -42,8 +42,8 @@ defmodule TodoplaceWeb.InviteLive.Show do
 
   defp fetch_user_by_token(token) do
     with {:ok, invite_token} <- Todoplace.InviteToken.get_by_token(token),
-        user <- Repo.get_by(User, email: invite_token.email),
-        true <- user != nil do
+         user <- Repo.get_by(User, email: invite_token.email),
+         true <- user != nil do
       {:ok, user}
     else
       _ -> :error
@@ -60,9 +60,9 @@ defmodule TodoplaceWeb.InviteLive.Show do
       ])
     }>
       <div class="container px-6 pt-8 pb-6 bg-white rounded-lg shadow-md max-w-screen-sm sm:p-14">
-        <div class="flex items-end justify-between sm:items-center">
+        <%!-- <div class="flex items-end justify-between sm:items-center">
           <.icon name="logo-shoot-higher" class="w-32 h-12 sm:h-20 sm:w-48" />
-        </div>
+        </div> --%>
         <div>
           <div class="font-semibold p-2 text-blue-400 text-lg">
             You are invited to the following organization.

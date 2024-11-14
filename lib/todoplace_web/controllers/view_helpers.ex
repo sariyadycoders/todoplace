@@ -345,7 +345,7 @@ defmodule TodoplaceWeb.ViewHelpers do
               </li>
             </ul>
 
-            <.icon name="logo-shoot-higher" class="w-24 h-10 sm:h-20 sm:w-32 sm:ml-auto mt-4 md:mt-0" />
+            <%!-- <.icon name="logo-shoot-higher" class="w-24 h-10 sm:h-20 sm:w-32 sm:ml-auto mt-4 md:mt-0" /> --%>
 
             <.subscription_ending_soon
               type="footer"
