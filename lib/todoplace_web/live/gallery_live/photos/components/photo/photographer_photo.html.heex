@@ -1,0 +1,46 @@
+<div class="bg-white relative">
+  <div class="relative bg-base-200 cursor-pointer"
+    id={"gallery-selector-#{@id}"}
+    data-photo_id={@photo_id}
+    phx-value-photo_id={@photo_id}
+    {if @inserted_photo?, do: ["phx-hook": 'GallerySelector', "phx-click": 'toggle_selected_photos'], else: []}
+  >
+    <div id={"#{@id}-selected"} photo-id={@id} class="toggle-it"></div>
+    <div class="m-h-[100px] flex items-center justify-center drag-ghost:opacity-0 pointer-events-none relative">
+      <.preview is_purchased={@is_purchased} photo={@photo} preview_url={@photo.preview_url} id={@id} />
+    </div>
+  </div>
+  <div class="text-base-250 p-2">
+    <%= if !@client_liked_album && (@photo.watermarked_preview_url || @photo.preview_url) do %>
+      <div class="flex justify-between text-base-250">
+        <div class="flex gap-2 cursor-pointer">
+          <button type="button" phx-click={js_like_click(@photo.id, @myself)}>
+            <%= if @photo.is_photographer_liked do %>
+              <.icon name="heart-filled" class="w-5 h-5" />
+            <% else %>
+              <.icon name="heart" class="w-5 h-5" />
+            <% end %>
+          </button>
+          <button type="button" phx-click="photo_view" phx-value-photo_id={@photo.id}>
+            <.icon name="eye" class="w-5 h-5 fill-current" />
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" phx-click="delete_photo_popup" phx-value-photo_id={@photo.id} class="cursor-pointer">
+            <.icon name="trash" class="w-4 h-4 fill-current" />
+          </button>
+          <div id={"meatball-photo-#{@id}"} phx-hook="Select" class="relative cursor-pointer">
+            <button class="" type="button">
+              <.icon name="meatballs" class="w-5 h-5 open-icon" />
+              <.icon name="close-x" class="hidden w-5 h-4 stroke-current stroke-2 close-icon opacity-100"/>
+            </button>
+            <.ul {assigns} entries={meatball(@album, @show_products)} />
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="py-1 text-[11px] drag-ghost:opacity-0 truncate" phx-hook="Tooltip" id={"phx-#{@id}-filename"} data-hint={@photo.name}>
+      <%= @photo.name %>
+    </div>
+  </div>
+</div>

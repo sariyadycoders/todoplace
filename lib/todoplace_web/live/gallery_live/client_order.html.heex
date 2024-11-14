@@ -1,0 +1,83 @@
+<div class="relative mx-auto max-w-screen-xl">
+  <div class="fixed top-0 sm:px-16 w-full z-40 bg-white max-w-screen-xl">
+    <.live_component module={TodoplaceWeb.GalleryLive.ClientMenuComponent} id={@gallery.id} live_action={@live_action} cart_count={@cart_count} gallery={@gallery} album={assigns[:album]} is_proofing={@is_proofing} client_email={@client_email} credits_available={@credits_available} />
+  </div>
+
+  <.credits_available_mobile_header organization={@organization} open_profile_logout?={@open_profile_logout?} credits_available={@credits_available} client_email={@client_email} gallery={@gallery} socket={@socket} />
+
+  <hr>
+   <div class={classes("px-6 pt-5 mx-auto lg:pt-14 lg:px-14 mt-28", %{"mt-36" => @client_email})}>
+    <%= if @from_checkout do %>
+      
+      <.link class="flex items-center font-extrabold text-base-250" navigate={@checkout_routes.home_page}>
+        <.icon name="back" class="h-3 w-2 mr-2 stroke-[3px]" />
+        Back to  <%= if @is_proofing || @album && @album.is_finals, do: "album", else: "gallery" %>
+      </.link>
+
+    <.success_message {assigns} />
+    <% else %>
+      <nav class="pb-5 lg:pb-9 text-base-300">
+        <ol class="flex list-reset text-grey-dark">
+          <li {testid("My orders")}>
+            
+            <.link navigate={@checkout_routes.orders}>
+              My orders
+            </.link>
+          </li>
+
+          <li><span class="mx-2">></span></li>
+
+          <li><a>Order number <%= Orders.number(@order) %></a></li>
+        </ol>
+      </nav>
+
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg md:text-3xl">
+          Order number <%= Orders.number(@order) %>
+        </h3>
+
+        <%= if canceled?(@order) do %>
+          <div class="px-5 pt-2 pb-1 text-lg font-extrabold text-red-sales-300 bg-red-sales-100">Order Canceled</div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= if has_download?(@order) && !@is_proofing do %>
+      <%= cond do %>
+        <% check_purchase_digital?(@order.digitals) == true && is_nil(@order.bundle_price) -> %>
+        <% has_download?(@order) -> %>
+          <div class="flex flex-col items-start justify-between px-5 py-5 mt-5 border border-base-225 md:px-7 md:flex-row md:items-center md:pr-16">
+            <.download_link packable={@order} class="my-0 md:w-1/3 md:my-8">
+              Download photos
+              <.icon name="forth" class="w-2 h-3 ml-2 stroke-current stroke-3" />
+            </.download_link>
+          </div>
+        <% true -> %>
+      <% end %>
+    <% end %>
+
+    <%= unless Enum.empty?(@order.products) do %>
+      <div class="p-5 mt-5 border rounded-lg border-grey-100">
+        <h4 class="text-lg">Your order will be sent to:</h4>
+
+        <p class="pt-4 text-base"><%= @shipping_name %></p>
+        <p class="pt-4 text-base"><%= @shipping_email %></p>
+
+        <p class="text-base pt-2.5"><%= @shipping_address.addr1 %></p>
+        <%= case @shipping_address.addr2 do %>
+          <% nil -> %>
+          <% addr2 -> %> <p class="text-base pt-2.5"><%= addr2 %></p>
+        <% end %>
+
+        <p class="text-base pt-2.5"><%= "#{@shipping_address.city}, #{@shipping_address.state} #{@shipping_address.zip}" %></p>
+      </div>
+    <% end %>
+    <.order_details order={@order} gallery={@gallery} is_proofing={@is_proofing} class="px-5 pt-5 mt-5 border border-base-225" />
+      <%= unless canceled?(@order) do %>
+      <div class="py-7"><.summary order={@order} is_proofing={@is_proofing} caller={checkout_type(@is_proofing)} /></div>
+      <% end %>
+  </div>
+  <%= if @is_proofing do %>
+     <.credits_footer for={:proofing_album_order} credits={[]} is_fixed={true} />
+  <% end %>
+</div>

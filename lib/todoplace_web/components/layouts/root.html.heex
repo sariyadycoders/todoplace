@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="application-name" content="Todoplace" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content={static_path(@conn, "/mstile-144x144.png")} />
+    <meta name="msapplication-square70x70logo" content={static_path(@conn, "/mstile-70x70.png")} />
+    <meta
+      name="msapplication-square150x150logo"
+      content={static_path(@conn, "/mstile-150x150.png")}
+    />
+    <meta
+      name="msapplication-wide310x150logo"
+      content={static_path(@conn, "/mstile-310x150.png")}
+    />
+    <meta
+      name="msapplication-square310x310logo"
+      content={static_path(@conn, "/mstile-310x310.png")}
+    />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <%= for {name, content} <- meta_tags(assigns[:meta_attrs]) do %>
+      <meta name={name} content={content} />
+    <% end %>
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <%= case assigns[:page_title] do %>
+      <% nil -> %>
+        <.live_title>Todoplace</.live_title>
+      <% title -> %>
+        <.live_title suffix=" · Todoplace"><%= title %></.live_title>
+    <% end %>
+    <link phx-track-static rel="stylesheet" href={static_path(@conn, "/css/app.css")} />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href={static_path(@conn, "/favicon-196x196.png")}
+      sizes="196x196"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href={static_path(@conn, "/favicon-128.png")}
+      sizes="128x128"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href={static_path(@conn, "/favicon-96x96.png")}
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href={static_path(@conn, "/favicon-32x32.png")}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href={static_path(@conn, "/favicon-16x16.png")}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href={static_path(@conn, "/apple-touch-icon-57x57.png")}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href={static_path(@conn, "/apple-touch-icon-114x114.png")}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href={static_path(@conn, "/apple-touch-icon-72x72.png")}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href={static_path(@conn, "/apple-touch-icon-144x144.png")}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href={static_path(@conn, "/apple-touch-icon-60x60.png")}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href={static_path(@conn, "/apple-touch-icon-120x120.png")}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href={static_path(@conn, "/apple-touch-icon-76x76.png")}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href={static_path(@conn, "/apple-touch-icon-152x152.png")}
+    />
+    <link rel="manifest" href={static_path(@conn, "/manifest.json")} />
+    <script defer phx-track-static type="module" src={static_path(@conn, "/js/app.js")}>
+    </script>
+    <script type="text/javascript">
+        window.FIREBASE_CONFIG = {
+          apiKey: <%= raw(Application.get_env(:todoplace, :firebase)[:api_key]) %>,
+          authDomain: <%= raw(Application.get_env(:todoplace, :firebase)[:auth_domain]) %>,
+          projectId: <%= raw(Application.get_env(:todoplace, :firebase)[:project_id]) %>,
+          storageBucket: <%= raw(Application.get_env(:todoplace, :firebase)[:storage_bucket]) %>,
+          messagingSenderId: <%= raw(Application.get_env(:todoplace, :firebase)[:messaging_sender_id]) %>,
+          appId: <%= raw(Application.get_env(:todoplace, :firebase)[:app_id]) %>,
+          measurementId: <%= raw(Application.get_env(:todoplace, :firebase)[:measurement_id]) %>
+        };
+  </script>
+  </head>
+  <body>
+    <%= @inner_content %>
+  </body>
+</html>

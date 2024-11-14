@@ -1,0 +1,435 @@
+<section class="bg-blue-planning-300 px-6 py-10" id="intercom" phx-hook="IntercomPush">
+  <div class="center-container">
+    <div class="flex flex-wrap items-end justify-between mb-6">
+      <div class="max-w-lg sm:mb-0 mb-4">
+        <h1 class="text-xl md:text-4xl font-bold text-white">Welcome to Todoplace!</h1>
+        <%= if TodoplaceWeb.UserAuth.redirect_welcome_route?(@current_user) == "true" do %>
+          <p class="text-white">Check out these initial demo videos to take a closer look at the key features we know you are going to love and mark domplete when finished.</p>
+        <% else %>
+          <p class="text-white">You may have already completed these but sometimes a little refresher can help you open up to some more efficient ways of using the platform</p>
+        <% end %>
+      </div>
+      <div class="relative">
+        <div class="bg-white rounded-lg p-4 text-blue-planning-300 max-w-md z-10 relative mb-4">
+          <p class="font-bold">Jane, Founder & CEO</p>
+          <p>You’ve got this! We’ve created this guide to help you check out Todoplace and get set up. If you need help with migrating, get overwhelmed or want to schedule an orientation call, contact support!</p>
+        </div>
+        <img src="/images/jane-headshot.png" alt="Jane's Headshot" class="absolute w-24 h-24 -bottom-8 -left-16" />
+      </div>
+    </div>
+    <div class="relative z-10 space-y-6">
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="1"
+        heading="Explore galleries and discover the ease of seamless upselling"
+        icon="upload"
+        time="About 5 min"
+        complete_action="create-gallery"
+        complete_text="Upload a gallery" 
+        slug="explore-galleries"
+        group="welcome"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "explore-galleries")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <p>Impress your clients with gorgeous client galleries where they can download digitals (and extras so easily!) and buy professional prints, greeting cards, albums, and frames. Download and gallery view tracking included. </p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="hoP3DuNjqaI" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="2"
+        heading="Discover the simplicity of client booking"
+        icon="calendar"
+        time="About 6 min" 
+        complete_action="create-booking-event"
+        complete_text="Create a booking event" 
+        slug="explore-client-booking"
+        group="welcome"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "explore-client-booking")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <p>Your clients will follow a seamless process that lets them view available dates and times, choose their spot, sign contracts, and complete payments. Whether it is a full or a mini-session, the process remains just as intuitive.</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="j7xxBZ5EM3o" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="3"
+        heading="Explore the power of automating your client communications"
+        icon="play-icon"
+        time="About 4 min" 
+        complete_action="view-automations"
+        complete_text="Check out automations" 
+        slug="explore-automations"
+        group="welcome"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "explore-automations")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <p>Take the endless task of client communication and put it on autopilot with automated email sequences.  </p>
+          <p>Your account is pre-loaded with set-it-and-forget-it customizable emails that streamline client communications from leads, to galleries, to post-shoot follow-ups. You can customize these later by following the guide.</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="24s4nZgqgL4" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="4"
+        heading="See what your client sees from start to finish"
+        icon="client-icon"
+        time="About 10 min" 
+        slug="explore-clients"
+        group="welcome"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "explore-clients")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Now that you have seen the parts and pieces…</h3>
+          <p>…here’s an expansive end-to-end view of how your clients will interact with Todoplace with your brand at the forefront. Never miss a payment, reminder, or gallery upsell with Todoplace. </p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="AIflWbsD-_Q" />
+        </:right_panel>
+      </.live_component>
+    </div>
+  </div>
+</section>
+
+<section class="px-6 py-10 bg-white">
+  <div class="center-container">
+    <div class="max-w-lg">
+      <h2 class="text-xl md:text-2xl font-bold">Quick Start Guide</h2>
+      <%= if TodoplaceWeb.UserAuth.redirect_welcome_route?(@current_user) == "true" do %>
+        <p>We know you are chomping at the bit to start working in your Todoplace account. Review each of these and mark them complete and you'll be off to the races.</p>
+      <% else %>
+        <p class="text-white">You may have already completed these but sometimes a little refresher can help you open up to some more efficient ways of using the platform</p>
+      <% end %>
+    </div>
+    <div class="space-y-6 mt-6">
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="5"
+        heading="Upload your logo"
+        icon="brand"
+        time="About 3 min" 
+        complete_action="upload-logo"
+        complete_text="Upload logo" 
+        completed_already={!is_nil(Todoplace.Profiles.logo_url(@current_user.organization))}
+        secondary_action="view-global-gallery-settings" 
+        secondary_text="Global gallery settings"
+        slug="upload-logo"
+        group="quick-start"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "upload-logo")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Make Todoplace your own</h3>
+          <p>Upload your logo to Todoplace—we’ll apply it to your Public Profile and email signature which you can customize later in account settings. Make sure to check out Global Gallery Settings after you finish up this guide to upload your watermark.</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="ZmSRETCeV94" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="6"
+        heading="Add your first contract"
+        icon="contract"
+        time="About 5 min" 
+        complete_action="create-contract"
+        complete_text="Create first contract" 
+        secondary_action="view-contracts" 
+        secondary_text="See default"
+        slug="create-contract"
+        group="quick-start"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "create-contract")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Keeping it legal</h3>
+          <p>Now that you’ve added your logo, let’s complete some of the more boring—but important- tasks done. We have some contracts that have been vetted by our legal team, but we know you likely have your own, so you can go ahead and add them now. You can come back to this step  if you’d like to move on to the next.</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="9azhZx0V7-c" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="7"
+        heading="Add your first questionnaire"
+        icon="questionnaire"
+        time="About 6 min" 
+        complete_action="create-questionnaire"
+        complete_text="Create first questionnaire" 
+        secondary_action="view-questionnaires" 
+        secondary_text="See default"
+        slug="create-questionnaire"
+        group="quick-start"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "create-questionnaire")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Ask all the right questions</h3>
+          <p>With the contract out of the way, let’s get a questionnaire added. As with contracts, we have defaults you can use as a starting point or you can start from scratch. Either option is available so you can be sure to get the information you need to run an effective session.</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="4WeDteWAKVo" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="8"
+        heading="Customize a package"
+        icon="package"
+        time="About 6 min" 
+        complete_action="create-package"
+        complete_text="Create first package" 
+        secondary_action="view-packages" 
+        secondary_text="See default"
+        slug="create-package"
+        group="quick-start"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "create-package")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Putting it all together</h3>
+          <p>Let’s bundle up your pricing and the documents you’ve just created! Again, we’ve created default packages for you to customize, or you can start from scratch. Add marketing details, select documents, add your session & gallery pricing (which you can customize after gallery delivery), and finally let your clients know when you want to be paid! Once created, you can apply your packages to leads and show/hide them on your public profile.</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="97FzpUHgR9g" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="9"
+        heading="Connect Stripe account"
+        icon="stripe"
+        time="About 5–10 min" 
+        completed_already={if @stripe_status == :charges_enabled, do: true, else: false}
+        secondary_action="enable-offline-payments" 
+        secondary_text="Enable offline payments"
+        slug="connect-stripe"
+        group="quick-start"
+        stripe_status={@stripe_status}
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "connect-stripe")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Collect payments automatically</h3>
+          <p>We’ve partnered with Stripe as our payment processor. They have a great user experience for you and your clients. You can manage payout schedules, view transaction details, and charge incremental invoices via Stripe. To get started collecting payments, we need to connect your accounts. If you want to collect offline payments instead or in tandem, you can do that here as well.</p>
+        </:left_panel>
+        <:right_panel>
+          <img src="/images/stripe-todoplace.jpg" />
+        </:right_panel>
+      </.live_component>
+    </div>
+  </div>
+</section>
+
+<section class="px-6 bg-white">
+  <div class="center-container">
+    <div class="bg-gray-100 p-6 grid md:grid-cols-2 gap-4 rounded-lg">
+      <div>
+        <h2 class="font-bold text-2xl">Feeling stuck or overwhelmed?</h2>
+        <p>We have a robust support team ready and waiting to help you out if you get stuck or want a general overview of Todoplace.</p>
+      </div>
+      <button class="btn-tertiary text-white bg-blue-planning-300 self-center ml-auto" type="button" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/teamtodoplace/todoplace-orientation'});return false;">Schedule orientation call</button>
+    </div>
+  </div>
+</section>
+
+<section class="px-6 py-10 bg-white">
+  <div class="center-container">
+    <h2 class="text-xl md:text-2xl font-bold">Get your clients and schedule in order</h2>
+    <div class="space-y-6 mt-6">
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="10"
+        heading="Embed your lead form"
+        icon="website"
+        time="About 10 min" 
+        complete_action="view-embed"
+        complete_text="View embed code" 
+        secondary_action="contact-todoplace-embed" 
+        secondary_text="Let Todoplace embed for you!"
+        slug="view-embed"
+        group="clients-schedule"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "view-embed")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Start capturing leads from your website</h3>
+          <p>Now that you have most of Todoplace setup, let’s get some leads into your account from your website. You can copy the embed code or contact us to help! You can also directly share your Public Profile if you don’t have a site. (Check out the Public Profile settings if you’d like to do so)</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="V39Z2Dka3oE" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="11"
+        heading="Upload your contacts"
+        icon="phone"
+        time="About 10 min" 
+        complete_action="bulk-upload-contacts"
+        complete_text="Bulk upload contacts" 
+        slug="upload-contacts"
+        group="clients-schedule"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "upload-contacts")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Have clients from an email list or previous software?</h3>
+          <p>We take the burden off of you when you are uploading your contacts. Just send us a CSV through the button below (or multiple if you have them) and we’ll get those uploaded pronto!</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="LOaQpapRF8c" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="12"
+        heading="Calendar sync"
+        icon="calendar"
+        time="About 6 min"
+        completed_already={Todoplace.NylasDetails.user_has_token?(@current_user)}
+        complete_action="calendar-sync"
+        complete_text="Setup 2-way sync" 
+        slug="calendar-sync"
+        group="clients-schedule"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "calendar-sync")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Sync your external calendar with Todoplace</h3>
+          <p>We’ve created a 2-way sync from your calendar into Todoplace and we also send events to your selected calendar. Never miss a session, avoid double-booking, and stay organized and on-track at work and at home.</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="C_UmAEFqE4k" />
+        </:right_panel>
+      </.live_component>
+    </div>
+  </div>
+</section>
+
+<section class="px-6 pb-10 bg-white">
+  <div class="center-container">
+    <h2 class="text-xl md:text-2xl font-bold">Final details</h2>
+    <div class="space-y-6 mt-6">
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="13"
+        heading="Setup your finance options"
+        icon="money-bags"
+        time="About 5 min" 
+        complete_action="finance-options"
+        complete_text="View finance settings" 
+        slug="finance-options"
+        group="final-details"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "finance-options")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Buy Now Pay Later (BNPL)</h3>
+          <p>BNPL has taken the world by storm. Get paid-in-full via Todoplace but allow your clients to have more options to finance their session outside of a package payment schedule. You can set those up in finance settings!</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="g6TEA12Suvg" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="14"
+        heading="Prepare for gallery sales"
+        icon="cart"
+        time="About 5 min"
+        completed_already={Todoplace.Subscriptions.subscription_payment_method?(@current_user)}
+        complete_action="add-payment-method"
+        complete_text="Open billing portal" 
+        slug="add-payment-method"
+        group="final-details"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "add-payment-method")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Add a payment method to sell products</h3>
+          <p>If you offer large Print Credits on your gallery, and they don’t cover the entire order for the client, we’ll need to invoice you to make sure WHCC’s print costs are covered</p>
+        </:left_panel>
+        <:right_panel>
+          <img src="/images/gallery-products.jpg" />
+        </:right_panel>
+      </.live_component>
+      <.live_component 
+        module={TodoplaceWeb.Live.User.Welcome.AccordionComponent} 
+        id="15"
+        heading="Customize automated emails"
+        icon="play-icon"
+        time="About 20 min" 
+        complete_action="automation-settings"
+        complete_text="View automation settings" 
+        slug="automation-settings"
+        group="final-details"
+        tracked_state={Welcome.get_welcome_state_by_slug_in_group(@welcome_states, "automation-settings")}
+        current_user={@current_user}
+      >
+        <:left_panel>
+          <h3 class="font-bold text-lg">Put your client communications on autopilot</h3>
+          <p>We’ve left this until the end as it takes a little time, but once you customize these email automations, it will be a game-changer for your business. Review the language, and what emails you’d like turned on/off. Once you’re good to go—automations will start working behind the scenes. You can always see how it is working by going to the automations section within a lead or job.</p>
+        </:left_panel>
+        <:right_panel>
+          <.youtube_video video_id="24s4nZgqgL4" />
+        </:right_panel>
+      </.live_component>
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-100 px-6 py-10 mt-10">
+  <div class="center-container">
+    <h2 class="text-xl md:text-2xl font-bold">Explore more resources</h2>
+    <div class="mt-6 grid md:grid-cols-2 gap-4">
+      <div class="space-y-6">
+        <a href="https://support.todoplace.com" target="_blank" class="block">
+          <h3 class="flex font-bold items-center gap-2 text-blue-planning-300">
+            Help Center
+            <.icon name="up" class="w-4 h-4 rotate-90 flex-shrink-0" />
+          </h3>
+          <p>Plenty of self-service help articles for you</p>
+        </a>
+        <a href="https://www.facebook.com/groups/todoplacephotographers" target="_blank" class="block">
+          <h3 class="flex font-bold items-center gap-2 text-blue-planning-300">
+            Todoplace Facebook Group
+            <.icon name="up" class="w-4 h-4 rotate-90 flex-shrink-0" />
+          </h3>
+          <p>Ask questions of Todoplace and your peers</p>
+        </a>
+        <a href="https://www.todoplace.com/blog" target="_blank" class="block">
+          <h3 class="flex font-bold items-center gap-2 text-blue-planning-300">
+            Todoplace Blog
+            <.icon name="up" class="w-4 h-4 rotate-90 flex-shrink-0" />
+          </h3>
+          <p>Tips & Tricks to make your business even more effective</p>
+        </a>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <img src="/images/moving.png" />
+        <div>
+          <p>We know setting up new software is never “easy” and we’re here to help make it as simple as possible. You get to pick and choose the support you prefer—based on your unique learning style.</p>
+          <a href="https://www.todoplace.com/moving-to-todoplace" target="_blank" class="link">
+            Learn more
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div phx-hook="ViewProposal" id="view-proposal"></div>
+<div phx-hook="Confetti" id="confetti"></div>

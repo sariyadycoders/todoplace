@@ -1,0 +1,545 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import 'tippy.js/dist/tippy';
+@import './components/buttons.scss';
+@import 'components/gallery.scss';
+@import './components/shoppingCart.scss';
+@import './components/forms.scss';
+@import './components/typography.scss';
+@import './components/uploadPopup.scss';
+@import 'intro.js/introjs';
+@import './components/intro.scss';
+@import './components/quill.scss';
+@import './client-app';
+@import './components/welcomeComponent.scss';
+@import 'components/date-picker.scss';
+@import "live_phone/assets/live_phone";
+
+@layer utilities {
+    /* Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+}
+
+html {
+  @apply text-base-300 bg-white text-13px sm:text-16px;
+}
+
+// Google Maps autocomplete overrides
+.pac-container {
+  top: 0px !important;
+  left: 0px !important;
+}
+
+.delete_btn{
+  @apply py-3 font-sans px-6 text-base-300 bg-white border border-base-300 rounded-lg hover:border-base-250 hover:text-base-300 disabled:opacity-50 disabled:cursor-not-allowed min-w-[12rem];
+}
+
+.brand-links {
+  @apply flex items-center pr-4 pl-2 py-2 overflow-hidden text-sm transition duration-300 ease-in-out rounded text-ellipsis whitespace-nowrap;
+}
+.pac-item {
+  @apply p-2;
+}
+
+.large-margin {
+  margin-left: 20rem;
+}
+
+.large-margin-close {
+  margin-left: 16rem;
+}
+
+.small-margin {
+  margin-left: 5.5rem;
+}
+
+.small-margin-close {
+  margin-left: 18rem;
+}
+
+.raw_html {
+  * {
+    box-sizing: revert;
+  }
+  ol, ul {
+    @apply pl-4;
+    list-style: revert;
+    li {
+      @apply pb-2;
+    }
+  }
+  a {
+    @apply text-blue-planning-300;
+    text-decoration: underline;
+  }
+}
+
+.raw_html_inline {
+  p {
+    display: inline;
+  }
+  ol, ul {
+    li {
+        @apply pb-0;
+      }
+  }
+}
+
+.flip-icon {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+.center-container {
+  @apply xl:container xl:mx-auto;
+}
+
+@layer components {
+  .bare-modal {
+    @apply bg-white w-[92vw] max-h-[85vh] overflow-auto rounded-t-lg p-6 sm:p-8;
+  }
+}
+
+.modal-container {
+  @apply overflow-hidden rounded-lg sm:self-center;
+}
+
+.modal {
+  @apply max-w-screen-xl relative bare-modal;
+}
+
+.modal-small {
+  @apply max-w-screen-sm relative bare-modal;
+}
+
+.modal.no-pad {
+  @apply p-0;
+}
+
+.modal-banner {
+  @apply px-4 sm:px-8;
+}
+
+.dialog {
+  @apply max-w-md bare-modal;
+}
+
+.dialog-photographer {
+  @apply max-w-md bare-modal rounded-lg mb-6;
+}
+
+.badge {
+  @apply px-2 py-1 font-bold text-white rounded;
+  font-size: 0.5rem;
+}
+
+canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.muuri.grid {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+
+  .item.muuri-item-dragging {
+    z-index: 3;
+  }
+
+  .item.muuri-item-releasing {
+    z-index: 2;
+  }
+
+  .item.muuri-item-hidden {
+    z-index: 0;
+  }
+
+  .muuri-item > div {
+    width: 100%;
+  }
+
+  .item-content {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+
+    &.preview {
+      @apply h-full;
+    }
+  }
+
+  .item {
+    @apply flex absolute items-center m-[5px] w-[calc(100%-10px)] sm:w-[calc(33.33%-10px)] lg:w-[calc(20%-10px)] z-10;
+
+
+    .galleryItem {
+      @apply h-full;
+    }
+
+    &:hover {
+      .galleryItem {
+        &:before {
+          background: linear-gradient(
+            0deg,
+            rgba(31, 28, 30, 0.8) 0%,
+            rgba(31, 28, 30, 0) 50%
+          );
+          border-radius: 0px;
+        }
+      }
+    }
+
+    img,
+    .galleryLoaderFinished {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .galleryLoader {
+      background-color: #efefef;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      &:after {
+        content: '';
+        background-color: rgba(0,0,0,0.2);
+        backdrop-filter: blur(3px);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+
+      img.image--preview {
+        z-index: 10;
+        max-width: 45px;
+      }
+
+      img:not(.image--original),
+      img:not(.image--preview) {
+        width: unset;
+        background-color: transparent !important;
+        object-fit: unset;
+        height: unset;
+      }
+    }
+  }
+
+  /**************************************************************************************
+   *  PicSello specific
+   **/
+  .item .btn {
+    position: relative;
+    left: 85%;
+    transform: translate(-30%, -100%);
+    color: black;
+    padding: 12px 24px;
+
+    svg {
+      filter: drop-shadow(3px 5px 2px rgba(0, 0, 0, 0.4));
+    }
+  }
+}
+
+.client-app {
+  .muuri.grid {
+    .item-content {
+      @apply h-full;
+    }
+
+    .item {
+      @apply md:w-[calc(25%-10px)] w-full items-center bg-gray-100;
+    }
+
+    .galleryItem img,
+    .js-disable-right-click img,
+    .js-disable-right-click canvas {
+      @apply pointer-events-none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+  }
+
+  .js-disable-right-click img,
+  .js-disable-right-click canvas {
+    @apply pointer-events-none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+}
+
+// reset background gradient
+// for photographer editing the grid
+#gallery_product_form {
+  .muuri.grid {
+    .item {
+      &:hover {
+        .galleryItem {
+          &:before {
+            background: unset;
+          }
+        }
+      }
+    }
+  }
+}
+/**
+ * only used on photographer settings / gallery pricing
+ **/
+.grid {
+  // all the variation cells get a top boarder...
+  .contents.collapsed > * {
+    @apply border-t;
+  }
+
+  // except the first one (after the headers)
+  h3 + .contents.collapsed > * {
+    @apply border-t-0;
+  }
+
+  // or the first one after an expanded one, on mobile
+  .contents.expanded + .contents.collapsed > * {
+    @apply border-t-0 sm:border-t;
+  }
+
+  // every other attribute row is blue in desktop
+  .contents .contents:nth-child(odd) div {
+    @apply sm:bg-blue-planning-100;
+  }
+}
+
+.phx-click-loading {
+  @apply animate-pulse cursor-wait;
+}
+
+@media (min-width: 640px) {
+  .responsive-table {
+    display: inline-table !important;
+
+    thead tr:not(:first-child) {
+      display: none;
+    }
+
+    tbody tr:nth-child(even) {
+      @apply bg-gray-100;
+    }
+  }
+}
+
+*.custom-tooltip {
+  border-bottom: 1px;
+  text-decoration: none;
+}
+
+*.custom-tooltip:hover {
+  position: relative;
+}
+
+*.custom-tooltip span {
+  display: none;
+  text-align: center;
+}
+
+*.custom-tooltip:hover span {
+  padding: 5px;
+  display: block;
+  z-index: 100;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  left: 10px;
+  position: absolute;
+  top: 30px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  *.custom-tooltip:hover span {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:w-64 {
+      width: 16rem;
+  }
+  .md\:w-60 {
+    width: 15rem;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+// Calendar CSS overrides
+
+.fc-daygrid-body {
+  width: auto !important
+}
+
+.fc-scrollgrid-sync-table {
+  width: 100% !important
+}
+
+.fc-col-header {
+  width: 100% !important
+}
+
+.fc-button-group {
+  @apply gap-1 mb-1;
+}
+
+.fc-toolbar-chunk {
+  @apply flex gap-1;
+}
+
+.fc-button-primary {
+  border-radius: 0.5rem !important;
+  display: grid !important;
+  place-content: center !important;
+  padding: 0 8px 0 8px !important;
+}
+
+.text-input {
+  height: 2.75rem;
+}
+
+.fc-today-button {
+  background-color: #4daac6 !important;
+  border-color: #4daac6 !important;
+}
+
+.fc-next-button, .fc-prev-button {
+  @apply w-8 h-8;
+  padding: 0 !important;
+  background-color: #4daac6 !important;
+  border-color: #4daac6 !important;
+}
+
+.fc .fc-header-toolbar .fc-toolbar-title {
+  @apply text-2xl text-blue-planning-300 md:text-xl;
+}
+
+.fc .fc-header-toolbar .fc-toolbar-chunk:first-child {
+  @apply order-2 flex flex-row-reverse sm:order-none sm:flex-row sm:block;
+}
+
+.fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+  @apply mr-3 sm:mr-0;
+  margin-left: 0px !important;
+}
+
+.fc .fc-header-toolbar .fc-dayGridMonth-button,
+.fc .fc-header-toolbar .fc-timeGridWeek-button {
+  @apply hidden sm:block;
+}
+
+#default-sidebar {
+  summary {
+    @apply list-none;
+
+    &::-webkit-details-marker {
+      @apply hidden;
+    }
+  }
+}
+
+[data-drawer-open="true"] #default-sidebar {
+  @apply w-64;
+
+  [data-drawer-type="desktop"] svg {
+    @apply transform rotate-180;
+  }
+
+  .logo-badge {
+    @apply hidden;
+  }
+
+  .logo-full {
+    @apply block;
+  }
+}
+
+[data-drawer-open="false"] {
+  #default-sidebar {
+    @apply transform-none sm:translate-x-0 sm:w-12;
+  }
+
+  span {
+    @apply sm:opacity-0 hidden;
+  }
+
+  .logo-badge {
+    @apply block;
+  }
+
+  .logo-full,
+  .js--onboard-card {
+    @apply hidden;
+  }
+}
+
+[data-mobile-drawer-open="false"] {
+  #default-sidebar {
+    @apply -translate-x-full sm:translate-x-0;
+  }
+}
+
+[data-mobile-drawer-open="true"] {
+  @apply flex items-center justify-center w-full h-full bg-base-300/90 sm:bg-transparent z-50 fixed sm:static transition-opacity ease-in-out opacity-100 bottom-0 top-0;
+
+  > div {
+    @apply opacity-0 pointer-events-none sm:pointer-events-auto sm:opacity-100;
+  }
+
+  #default-sidebar {
+    @apply transform-none w-64;
+  }
+}
+
+/* Import GrapesJS CSS */
+@import "grapesjs/dist/css/grapes.min.css";
+
+
+// Hide the custom context menu initially
+.hidden {
+  display: none;
+}
+
+// Style the custom context menu
+.custom-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
+  }
+}

@@ -1,0 +1,224 @@
+<.settings_nav socket={@socket} live_action={@live_action} current_user={@current_user} intro_id="intro_settings_profile">
+  <div class="flex items-center justify-between">
+    <h1 class="my-7 text-2xl font-bold" {testid("settings-heading")}>Account</h1>
+
+    <.sign_out class="hidden sm:block" socket={@socket} sign_out={@sign_out} />
+  </div>
+  <hr class="mb-12" />
+
+  <%= case @current_user.subscription do %>
+    <% nil -> %>
+    <% subscription -> %>
+      <.card title="Your subscription" title_badge={subscription_badge(subscription)}>
+        <p class="text-base-250 sm:mr-32">You can update your payment method, modify your plan, or download your invoices using our Billing Portal through Stripe. If you’re currently on a monthly trial and modify your plan to yearly, you will lose the time left. Contact us if you have issues.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-1 mt-4 gap-6">
+          <div class="border flex flex-wrap rounded-lg p-4 sm:p-6 justify-between sm:items-center">
+            <div class="flex flex-col items-start">
+              <.badge color={:blue}>
+                <%= if Subscriptions.next_payment?(subscription), do: "Current Plan", else: "Subscribe now" %>
+              </.badge>
+              <p class="font-bold text-3xl"><%= subscription.price |> Money.to_string(fractional_unit: false) %>/<%= subscription.recurring_interval %></p>
+              
+              <%= if Subscriptions.next_payment?(subscription) do %>
+                <p class="text-base-250">Next payment is on <%= strftime(@current_user.time_zone, subscription.current_period_end, "%-m/%-d/%y") %></p>
+              <% end %>
+            </div>
+            <div>
+              <button class="btn-primary sm:px-8" phx-click="open-billing">Open Billing Portal</button>
+              <%= if Subscriptions.interval(subscription) do %>
+                <p phx-click="open-billing" class="underline text-sm mt-2 text-center cursor-pointer text-blue-planning-300">Update to <%= Subscriptions.interval(subscription) == "month" && "yearly" || "monthly" %></p>
+              <% end %>
+            </div>
+            <div class="w-full mt-4 border-t pt-4">
+              <%= if @promotion_code do %>
+                <p class="text-base-250">
+                  🎉 
+                  <%= cond do %>
+                    <% @promotion_code.percent_off -> %>
+                      <%= @promotion_code.percent_off %>% off each <%= Subscriptions.interval(subscription) %>
+                    <% @promotion_code.amount_off && @promotion_code.code == "THREEMONTHDEAL" -> %>
+                      <%= Money.new(@promotion_code.amount_off) %> off for 3 months
+                    <% @promotion_code.amount_off -> %>
+                      <%= Money.new(@promotion_code.amount_off) %> off each <%= Subscriptions.interval(subscription) %>
+                    <% true -> %>
+                  <% end %>
+                   with code "<span class="font-bold"><%= @promotion_code.code %></span>"</p>
+              <% end %>
+              <p class="underline w-full text-sm mt-2 cursor-pointer text-blue-planning-300" {testid("promo-code")} phx-click="open-promo-code-modal"><%= if @promotion_code, do: "Edit", else: "Add" %> promo code</p>
+            </div>
+          </div>
+        </div>
+      </.card>
+  <% end %>
+
+  <%!-- Leave for future enablement --%>
+  <%!-- <%= if FunWithFlags.enabled?(:photo_lab) do %>
+    <.card title="Beta Features" class="mt-10">
+      <p class="text-base-250 sm:mr-32">Todoplace's Beta Features gives you early access to new features before they’re available to everyone. We welcome your feedback to help us continuously improve Todoplace. Experimental features are works-in-progress, so you may find some bugs along the way.</p>
+      <hr class="my-4" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="max-w-md">
+          <div class="flex items-center gap-4">
+            <p class=" font-bold text-xl">Leads and Jobs Redesign</p>
+            <button type="button" class="cursor-pointer flex items-center gap-2" phx-click="feature-flag" phx-value-flag="leads_jobs_redesign">
+              <div class="flex">
+                <div class={classes("rounded-full w-7 p-0.5 flex border border-blue-planning-300", %{"bg-blue-planning-300 justify-end" => FunWithFlags.enabled?(:leads_jobs_redesign, for: @current_user), "bg-base-100" => !FunWithFlags.enabled?(:leads_jobs_redesign, for: @current_user)})}>
+                  <div class={classes("rounded-full h-3 w-3", %{"bg-base-100" => FunWithFlags.enabled?(:leads_jobs_redesign, for: @current_user), "bg-blue-planning-300" => !FunWithFlags.enabled?(:leads_jobs_redesign, for: @current_user)})}></div>
+                </div>
+              </div>
+              <%= if FunWithFlags.enabled?(:leads_jobs_redesign, for: @current_user) do %>
+                Disable
+              <% else %>
+                Enable
+              <% end %>
+            </button>
+          </div>
+          <p class="text-sm text-base-250">Try out an easier to use Leads and Jobs experience! Visit any Lead or Job once you turn this on. Contact support with any bugs or feedback! (You will be directed to your dashboard when toggled.)</p>
+        </div>
+      </div>
+    </.card>
+  <% end %> --%>
+
+  <div class="grid gap-10 grid-cols-1 sm:grid-cols-2 mt-10" phx-hook="BeforeUnload" id="setting-alert" data-is-save={@is_save_settings} >
+    <.card title="Get paid to share Todoplace!" class="sm:col-span-2" id="rewardful-affiliate">
+      <div class="grid gap-10 grid-cols-1 sm:grid-cols-2">
+        <div>
+          <p class="text-base-250 sm:mr-32">We are so excited to offer you the opportunity to share Todoplace to your friends to get 20% and you get paid if they sign up! <a class="underline text-blue-planning-300" href={"#{base_url(:marketing)}ambassador-program"} target="_blank">Learn more here</a></p>
+          <ul class="pl-4 list-disc text-base-250">
+            <li>Share your link with them to explore Todoplace</li>
+            <li>Tell them to enter coupon code "FRIENDSANDFAMILY" in their settings after signup</li>
+          </ul>
+        </div>
+        <div>
+          <%= if user_has_affiliate_link?(@current_user) do %>
+            <h3 class="text-xl font-bold text-blue-planning-300 mb-1">Copy link to share</h3>
+            <div class="flex gap-4">
+              <input type="text" value={"#{base_url(:marketing)}?via=#{@current_user.rewardful_affiliate.affiliate_token}"} class="w-full border rounded p-2" readonly />
+              <.button_element element="button" id="copy_affiliate_link" phx-hook="Clipboard" data-clipboard-text={"#{base_url(:marketing)}?via=#{@current_user.rewardful_affiliate.affiliate_token}"}
+              class="btn-primary flex-shrink-0">
+                <div class="hidden p-1 text-sm rounded font-sans shadow bg-white text-blue-planning-300" role="tooltip">
+                    Copied!
+                </div>
+                Copy link
+              </.button_element>
+            </div>
+            <hr class="my-6" />
+            <div class="flex md:flex-nowrap flex-wrap gap-4 items-center">
+              <div>
+                <h3 class="text-xl font-bold text-blue-planning-300 mb-1">Manage your affiliate account</h3>
+                <p class="mb-4">To setup payouts and check commissions, click the login button to visit our partner.</p>
+              </div>
+              <.button_element element="button" phx-click="login-affiliate" class="btn-tertiary flex-shrink-0" type="button">Affiliate Account Login</.button_element>
+            </div>
+          <% else %>
+            <h3 class="text-xl font-bold text-blue-planning-300 mb-1">Become an affiliate!</h3>
+            <p class="mb-4">To get started, click below</p>
+            <.button_element element="button" phx-click="create-affiliate" class="btn-primary" type="button">Become an affiliate</.button_element>
+          <% end %>
+        </div>
+      </div>
+    </.card>
+    <.card title="Edit your business name">
+      <.form :let={f} for={@organization_name_changeset} phx-change="validate" phx-submit="save" id="name_form">
+        <%= hidden_input f, :action, name: "action", value: "update_organization_name" %>
+        <%= labeled_input f, :name, label: "Business name", wrapper_class: "mt-4"  %>
+
+        <div class="mt-5 text-right">
+          <%= submit "Save", class: @card_btn_class, disabled: !@organization_name_changeset.valid?, phx_disable_with: "Editing business name...", data_testid: "save_business_name" %>
+        </div>
+      </.form>
+    </.card>
+    <.card title="Edit your name">
+      <.form :let={f} for={@name_changeset} phx-change="validate" phx-submit="save" id="time_zone_form">
+        <%= hidden_input f, :action, name: "action", value: "update_user_name" %>
+        <%= labeled_input f, :name, label: "Your name", wrapper_class: "mt-4" %>
+
+        <div class="mt-5 text-right">
+          <%= submit "Save", class: @card_btn_class, disabled: !@name_changeset.valid?, phx_disable_with: "Editing name...", data_testid: "save_name" %>
+        </div>
+      </.form>
+    </.card>
+
+    <%= if @phone_changeset do %>
+      <.card title="Edit your phone number">
+        <.form :let={f} for={@phone_changeset} phx-change="validate" phx-submit="save" id="phone_form">
+          <%= hidden_input f, :action, name: "action", value: "update_phone" %>
+          
+          <%= for o <- inputs_for(f, :onboarding) do %>
+          <div class="flex flex-col" >
+             <%= label_for o, :phone, label: "Phone number", optional: true %>
+             <.live_component module={LivePhone} id="phone" form={o} field={:phone} tabindex={0} apply_format?{true} preferred={@preferred_phone_country} />
+          </div>
+          <% end %>
+          
+          <div class="mt-5 text-right">
+            <%= submit "Save", class: @card_btn_class, disabled: !@phone_changeset.valid?, phx_disable_with: "Editing number...", data_testid: "save_phone" %>
+          </div>
+        </.form>
+      </.card>
+    <% end %>
+
+    <.card title="Edit your timezone" select={true}>
+      <.form :let={f} for={@time_zone_changeset} phx-change="validate" phx-submit="save" id="time_zone_form">
+        <%= hidden_input f, :action, name: "action", value: "update_time_zone" %>
+        <%= labeled_select f, :time_zone, time_zone_options(), label: "Timezone", wrapper_class: "mt-4" %>
+
+        <div class="mt-5 text-right">
+          <%= submit "Save", class: @card_btn_class, disabled: !@time_zone_changeset.valid?, phx_disable_with: "Editing timezone...", data_testid: "save_timezone" %>
+        </div>
+      </.form>
+    </.card>
+
+    <%= if @email_changeset do %>
+      <.card title="Edit email">
+        <.form :let={f} for={@email_changeset} phx-change="validate" phx-submit="save" id="email_form">
+        <%= hidden_input f, :action, name: "action", value: "update_email" %>
+
+        <%= labeled_input f, :email, type: :email_input, wrapper_class: "mt-4"  %>
+
+        <.live_component module={TodoplaceWeb.PasswordFieldComponent} f={f} id={:current_password} name={:current_password} label="Current password" placeholder="Enter password" />
+
+          <div class="mt-5 text-right">
+            <%= submit "Save", class: @card_btn_class, disabled: !@email_changeset.valid?, phx_disable_with: "Editing email...", data_testid: "save_email" %>
+          </div>
+        </.form>
+      </.card>
+    <% end %>
+
+    <%= if @password_changeset do %>
+      <.card title="Edit password">
+        <.form :let={f} for={@password_changeset} action={~p"/users/settings"} phx-change="validate" phx-submit="save" method="put" phx-trigger-action={@submit_changed_password}>
+          <%= hidden_input f, :action, name: "action", value: "update_password" %>
+
+          <.live_component module={TodoplaceWeb.PasswordFieldComponent} f={f} id={:change_new_password} label="New password" placeholder="Enter password" />
+
+          <.live_component module={TodoplaceWeb.PasswordFieldComponent} f={f} id={:password_to_change} name={:password_to_change} label="Current password" placeholder="Enter password" />
+
+          <div class="mt-5 text-right">
+            <%= submit "Save", class: @card_btn_class, disabled: !@password_changeset.valid?, phx_disable_with: "Editing password...", data_testid: "save_password" %>
+          </div>
+        </.form>
+      </.card>
+    <% end %>
+
+    <.card title="Edit your business address" class="sm:col-span-2">
+      <.form :let={f} for={@organization_address_changeset} phx-change="validate" phx-submit="save" class="grid gap-x-7 gap-y-3 grid-cols-1 sm:grid-cols-2">
+        <%= hidden_input f, :action, name: "action", value: "update_organization_address" %>
+        <%= inputs_for f, :address, fn a -> %>
+          <%= labeled_input a, :address_line_1, label: "Address Line 1", placeholder: "enter address line 1...", wrapper_class: "mt-4" %>
+          <%= labeled_input a, :address_line_2, label: "Address Line 2", placeholder: "enter address line 2 if applicable...", wrapper_class: "mt-4" %>
+          <%= labeled_input a, :city, label: "City", placeholder: "enter city...", wrapper_class: "mt-4" %>
+          <%= labeled_input a, :state, label: "State/Provice/Locality", placeholder: "enter state/provice/locality...", wrapper_class: "mt-4" %>
+          <%= labeled_input a, :zipcode, label: "Zipcode", placeholder: "enter zipcode if applicable...", wrapper_class: "mt-4" %>
+          <%= labeled_select a, :country_name, Todoplace.Country.all |> Enum.map(& &1.name), label: "Country", wrapper_class: "mt-4" %>
+        <% end %>
+
+        <div class="mt-5 sm:col-span-2 text-right">
+          <%= submit "Save", class: @card_btn_class, disabled: !@organization_address_changeset.valid? || @organization_address_changeset.changes == %{}, phx_disable_with: "Editing adress...", data_testid: "save_address" %>
+        </div>
+      </.form>
+    </.card>
+  </div>
+
+  <.sign_out class="block sm:hidden mt-8 w-full" socket={@socket} sign_out={@sign_out} />
+</.settings_nav>

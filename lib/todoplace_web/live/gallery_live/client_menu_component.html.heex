@@ -1,0 +1,63 @@
+<div class="items-center w-full px-2 md:px-0 py-2 grid grid-cols-3 sm:grid-cols-[1fr,min-content]">
+  <div phx-click={hamburger(:open)} class="block sm:hidden">
+   <.icon name="hamburger" class="w-6 h-4 text-base-300"/>
+ </div>
+
+ <div class="flex items-center justify-center">
+   <div class="px-6 py-2 sm:pl-0 sm:pr-4 shrink-0">
+     <.photographer_logo {assigns} show_large_logo?={true} />
+   </div>
+
+   <nav id="gallery-nav" phx-click={hamburger(:close)} class="fixed top-0 left-0 z-10 hidden w-full h-full sm:relative sm:block bg-base-300/60">
+     <div class="w-2/3 h-full p-2 sm:w-full bg-base-100">
+       <div class="block px-4 pt-8 pb-6 text-base-300 sm:hidden">
+         <.icon name="close-x" class="w-4 h-4 stroke-current stroke-2"/>
+       </div>
+
+       <ul class="flex flex-col items-center text-xl sm:text-base sm:flex-row mr-auto">
+          <%= for %{title: title, path: path} <- get_menu_items(assigns) do %>
+            <li class="p-4 tracking-widest">
+              <.nav_link title={title} to={path} socket={@socket} live_action={@live_action}
+                class="flex items-center text-sm" active_class="border-b border-black">
+                <span class="flex-shrink-0"><%= title %></span>
+              </.nav_link>
+            </li>
+          <% end %>
+          <%= if @credits_available do %>
+            <div class="hidden md:block ml-auto">
+              <div class="flex flex-wrap border border-base-200 px-1 py-1 gap-1 lg:gap-4 mr-2">
+                <div class="flex items-center gap-1">
+                  <.icon name="gallery-credit" class="w-5 h-5 fill-current hidden lg:block"/>
+                  <p class="text-base-250 text-xs md:text-sm flex-shrink-0"><%= @gallery.gallery_digital_pricing.print_credits %> print credit</p>
+                </div>
+                <div class="flex items-center gap-1">
+                  <.icon name="download-credit" class="w-5 h-5 fill-current hidden lg:block"/>
+                  <p class="text-base-250 text-xs md:text-sm flex-shrink-0"><%= @gallery.gallery_digital_pricing.download_count %> digital credits</p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="flex pl-2 justify-self-end gap-3">
+    <%= if @cart do %>
+      <div class="relative">
+        
+        <.cart_wrapper route={@checkout_routes.cart} count={@cart_count} >
+          <.icon name="shopping-cart" class="w-8 h-8 text-base-300" />
+
+          <span {testid("cart-count")} class="absolute -top-1 -left-1.5 border-base-300 border-2 bg-base-100 text-base-300 rounded-full flex items-center justify-center w-5 h-5 pt-0.5 text-[12px]">
+            <%= @cart_count %>
+          </span>
+        </.cart_wrapper>
+      </div>
+    <% end %>
+    <%= if @client_email do %>
+      <div phx-click="profile_logout" class="block sm:hidden">
+        <.icon name="client-icon" class="w-7 h-7 text-base-300"/>
+      </div>
+    <% end %>
+  </div>
+</div>

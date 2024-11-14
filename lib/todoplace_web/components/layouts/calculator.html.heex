@@ -1,0 +1,7 @@
+<%= live_render @socket, TodoplaceWeb.LiveModal, id: "live_modal" %>
+<main role="main" phx-hook="showAdminBanner" id="show-admin-banner">
+  <%= TodoplaceWeb.LayoutView.flash(@flash) %>
+  <%= @inner_content %>
+  <.sticky_upload current_user={@current_user} />
+  <.admin_banner socket={@socket} />
+</main>

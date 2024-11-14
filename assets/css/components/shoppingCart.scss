@@ -1,0 +1,63 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.cartImg {
+    max-width: 250px;
+    @apply w-full
+    max-h-full
+    overflow-hidden
+}
+
+.cartImg img {
+    height: 193px;
+    @apply w-auto
+}
+
+.cartImg__small {
+    width: 160px;
+    @apply max-h-full
+    overflow-hidden
+}
+
+.cartImg__small img {
+    height: 130px;
+    @apply w-auto
+    max-w-full
+}
+
+.shippingOptions__select {
+    @apply py-1
+}
+
+@media screen and (max-width: 768px) {
+    .cart {
+        @apply relative
+    }
+
+    .cartImg {
+        max-width: 165px;
+        @apply pb-16
+    }
+
+    .cartImg img {
+        height: 132px;
+    }
+
+    .cartPanel {
+       @apply absolute
+        bottom-0
+        left-0
+        right-0
+        w-full
+    }
+
+    .cartImg__small {
+        @apply mb-16
+    }
+
+    .shippingOptions__infoBlock  .shippingOptions__select {
+        @apply w-full
+        py-2
+    }
+}

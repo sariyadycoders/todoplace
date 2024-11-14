@@ -1,0 +1,61 @@
+<.live_component module={TodoplaceWeb.JobLive.Shared.JobLeadHeaderComponent} id="hero" {assigns} />
+
+<%= if show_intro?(@current_user, "intro_automations") === "true" do %>
+  <div class="p-6 center-container">
+    <.empty_state_base wrapper_class="border rounded-lg p-4 mb-8" tour_embed="https://demo.arcade.software/tVoaPOy6CR6R9ed0LOt2?embed" headline="Meet Automations" eyebrow_text="" body="Here are the controls to communications that will make managing your clients and running your business - pre and post shoot so much easier! Adjust timing, start, stop, edit and version emails for the photography types you offer. That is right - email automation sequences can be customized for your specific business workflow and client needs!" third_party_padding="calc(67.79661016949152% + 41px)" close_event="intro-close-automations">
+    </.empty_state_base>
+  </div>
+<% end %>
+
+<%= if Enum.empty?(@email_schedules) do %>
+<div class="px-6 pt-6 center-container">
+  <div class="bg-white p-6 rounded-lg border">
+    <div class="grid grid-cols-1 lg:grid-cols-2 md:gap-20 gap-8 items-center md:pb-0 pb-8 relative">
+      <div>
+        <.icon name="play-icon" class="w-12 h-12 text-blue-planning-300" />
+        <h1 class="text-2xl md:text-5xl font-bold mb-4">Looks like there aren't any automations here!</h1>
+        <p class="text-base-250 text-xl">This typically happens when:</p>
+        <ul class="list-inside list-disc text-base-250">
+          <li>All of your automations are disabled. You can review your content and fix that <.live_link class="link" to={~p"/email-automations"}>here</.live_link></li>
+          <li>The system hasn't hit a step in which we need to load with enabled automations. For example: you've added a gallery to a job</li>
+          <li>If you are stuck or feel you should be seeing something here, reach out to support!</li>
+        </ul>
+        <.live_link class="btn-primary mt-4 inline-block" to={~p"/email-automations"}>View global automation settings</.live_link>
+      </div>
+      <img src="https://assets-global.website-files.com/61147776bffed57ff3e884ef/653ac2d6ad0b812ee34c7f40_Automations-featured-img.jpg" alt="" class="rounded-lg" />
+    </div>
+  </div>
+</div>
+<% end %>
+
+<%= Enum.map(@email_schedules, fn email_schedule -> %>
+  <div class="px-6 pt-6 center-container">
+    <div class="bg-white p-6 rounded-lg">
+      <div testid="main-area" class="flex flex-col sm:flex-row">
+          <div class={"mb-3 sm:mb-0 pt-1 sm:pl-0.5 flex sm:justify-center #{email_schedule.category_name == "Leads" && "sm:relative sm:before:absolute sm:before:top-7 sm:before:border sm:before:left-1/2 sm:before:h-full sm:before:border-base-200 sm:before:z-[-1]"}"}>
+            <span class="flex flex-row w-8 h-8 rounded-full bg-base-200 items-center justify-center">
+              <.icon name="play-icon" class="w-5 h-5 text-blue-planning-300"/>
+            </span>
+            <span class="sm:hidden text-2xl font-bold ml-3"> <%= email_schedule.category_name %> </span>
+          </div>
+          <div class="w-full sm:pb-6 pl-3 flex flex-col">
+            <div class="text-2xl font-bold mb-3 hidden sm:block"> <%= email_schedule.category_name |> String.replace(":", ": ", global: false) %> </div>
+            <%= Enum.map(email_schedule.subcategories, fn subcategory -> %>
+              <div class="mb-3 flex text-base-250 uppercase font-bold tracking-[.3em] mr-4 md:mr-8 pr-3 cursor-pointer" phx-click="toggle-section" phx-value-section_id={subcategory.subcategory_name}> <%= subcategory.subcategory_name |> String.replace_suffix(":", "") %> 
+                <div class="ml-auto">
+                  <%= if !Enum.member?(@collapsed_sections, subcategory.subcategory_name) do %>
+                    <.icon name="down" class="w-5 h-5 stroke-2 text-blue-planning-300" />
+                  <% else %>
+                    <.icon name="up" class="w-5 h-5 stroke-2 text-blue-planning-300" />
+                  <% end %>
+                </div>
+              </div>
+              <%= Enum.map(subcategory.pipelines, fn pipeline -> %>
+                <.pipeline_section id={"pipepline-#{pipeline.id}"} collapsed_sections={@collapsed_sections} pipeline={pipeline} category={email_schedule.category_id} job_id={email_schedule.job_id} category_type={email_schedule.category_type} gallery_id={email_schedule.gallery_id} type={@job.type} subcategory={subcategory.subcategory_name} subcategory_slug={subcategory.subcategory_slug} current_user={@current_user}/>
+              <% end) %>
+            <% end) %>
+          </div>
+      </div>
+    </div>
+  </div>
+<% end) %>

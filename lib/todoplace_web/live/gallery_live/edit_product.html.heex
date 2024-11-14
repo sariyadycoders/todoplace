@@ -1,0 +1,50 @@
+<div class="fixed top-0 left-0 right-0 z-50 p-4 pt-0 mx-auto my-0 editProductPopup bg-base-100 xl:px-5 lg:static" id="edit-product-component">
+  <div class="flex justify-between pt-4 mb-4">
+    <a phx-click="click" phx-value-preview_photo_id={@photo.id} phx-target={@myself} class="inline-block cursor-pointer xl">
+       <.icon name="arrow-left" class="w-4 h-4 lg:w-5 lg:h-5" />
+    </a>
+    <a phx-click="close" phx-target={@myself} class="ml-auto cursor-pointer">
+       <.icon name="close-x" class="w-4 h-4 stroke-current lg:w-5 lg:h-5 stroke-3" />
+    </a>
+  </div>
+  <div class="flex flex-col items-start w-full h-full pt-2 overflow-y-auto editProductPopup__content lg:flex-row">
+    <div class="flex items-center justify-center w-full h-full p-8 ml-0 editProductPopup__img lg:w-2/4 bg-base-250 lg:ml-12">
+      <div class="flex flex-col justify-between" id="edit_product_modal" phx-hook="DisableRightClick">
+        <div class="flex items-center justify-center photos__rect xl:h-96 js-disable-right-click">
+          <.framed_preview item_id={@photo.id} category={@category} photo={@photo} height={384} />
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col w-full h-full px-0 lg:w-2/4 lg:pl-16 lg:pr-12 pt-14 flex-start">
+      <h3 class="text-4xl font-bold productType"><%= @category.name %></h3>
+
+      <%= if length(@whcc_products) > 1 do %>
+        <div>
+          <h6 class="text-base font-bold pt-7 pb-3.5">Type</h6>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8">
+            <%= for product <- @whcc_products do %>
+              <%= if product === @current_whcc_product do %>
+                <button phx-click="update-print-type" phx-target={@myself} class={classes("btn-row py-2 px-4 justify-center text-xs 2xl:text-base hover:bg-blue-planning-100", %{"bg-blue-planning-100 border-blue-planning-300"=> 'active'})} ><%= product.whcc_name %></button>
+              <% else %>
+                <button phx-click="update-print-type" phx-target={@myself} phx-value-product-id={product.id} class="justify-center px-4 py-2 text-xs btn-row 2xl:text-base hover:bg-blue-planning-100"><%= product.whcc_name %></button>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <div>
+          <h6 class="text-base font-bold pt-9 pb-3.5">Description</h6>
+          <p class="text-base 2xl:text-lg"><%= product_description(@current_whcc_product) %></p>
+        </div>
+        <% end %>
+      <div>
+        <h6 class="text-base font-bold pt-9 pb-3.5">Size</h6>
+        <.form :let={f} for={%{}} as={:product_size} phx-change="update-product-size" phx-target={@myself}>
+          <div class="flex justify-between customSelect">
+            <%= select f, :option, product_size_options(@current_whcc_product), class: "text-base py-2" %>
+          </div>
+        </.form>
+      </div>
+      <button class="mt-12 btn-primary" phx-click="customize_and_buy" phx-target={@myself}>Customize & buy</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,253 @@
+<div class="relative mx-auto max-w-screen-xl">
+  <div class="fixed top-0 w-full z-40 bg-white max-w-screen-xl">
+    <.live_component module={ClientMenuComponent} id={@client_menu_id} live_action={@live_action} gallery={@gallery} cart_count={@cart_count} cart={show_cart?(@live_action)} album={assigns[:album]} is_proofing={@is_proofing} client_email={@client_email} credits_available={@credits_available} />
+  </div>
+
+  <.credits_available_mobile_header organization={@organization} open_profile_logout?={@open_profile_logout?} credits_available={@credits_available} client_email={@client_email} gallery={@gallery} socket={@socket} />
+
+  <hr>
+    <div class="center-container mb-24 mx-6 mt-16 md:mt-24">
+    <%= case @live_action do %>
+      <% live_action when live_action in [:cart, :proofing_album] -> %>
+        <.top_section {assigns} />
+
+        <div class="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
+          <%= unless @order do %>
+            <.empty_cart_view />
+          <% else %>
+            <div class="block col-span-1 lg:hidden">
+              <.continue_summary is_proofing={@is_proofing} checkout_routes={@checkout_routes} order={@order} id="top-summary" socket={@socket} gallery={@gallery} />
+            </div>
+
+            <div {testid("line-items")} class="col-span-1 lg:col-span-2" id="cart_images" phx-hook="DisableRightClick">
+              <%= for {%{category: %{whcc_id: whcc_id}} = product, product_lines} <- lines_by_product(@order) do %>
+                <div class="mb-5 border border-base-200 divide-y">
+                  <div class="mx-8 mb-4 mt-6">
+                    <h1 class="text-lg text-base-250 font-medium leading-10 uppercase"><%= product.whcc_name %></h1>
+                  </div>
+
+                  <%= for {%{id: id} = line_item, index} <- product_lines |> Enum.reverse |> Enum.with_index(1) do %>                  
+                    <div {testid("product-#{item_id(line_item)}")} class="py-8 mx-8 flex md:flex-row flex-col">
+                      <div class="flex md:w-2/3">
+                        <img class="object-contain w-48 h-32 mr-4 md:w-72 md:h-48 md:mr-7" src={item_image_url(line_item)}/>
+                        <div>
+                          <div class="py-4 md:py-6">
+                            <div class="text-lg"><%= product_name(line_item) %></div>
+
+                            <%= case line_item.volume_discount do %>
+                              <% ~M[0]USD -> %>
+                                <div class="text-2xl mt-2.5"><%= line_item.price %></div>
+                              <% discount -> %>
+                                <div class="flex mt-2.5 items-center flex-wrap">
+                                  <div class="mr-3 text-2xl line-through"><%= line_item.price %></div>
+                                  <div class="mr-4 text-2xl"><%= line_item.price |> Money.subtract(discount) %></div>
+                                  <div class="px-1.5 mb-1 pt-1 pb-0.5 text-xs bg-green-finances-100 text-green-finances-300">Volume Discount</div>
+                                </div>
+                            <% end %>
+                          </div>
+
+                          <div class="flex flex-wrap items-center pt-4 md:clear-none clear-left gap-2 mr-3">
+                            <dl class="flex mb-0 whitespace-nowrap">
+                              <dt class="mr-2">Quantity:</dt>
+
+                              <dd><%= product_quantity(line_item) %></dd>
+                            </dl>
+
+                            <button type="button" class="text-lg text-blue-planning-300" phx-click="edit_product" phx-value-editor-id={item_id(line_item)}>Edit</button>
+
+                            <button type="button" class="text-lg text-blue-planning-300" phx-click="delete" phx-value-editor-id={item_id(line_item)}>Delete</button>
+                          </div>
+
+                          <div class="clear-both"></div>
+                        </div>
+                      </div>
+
+                      <%= if index == 1 || whcc_id in @shipping_to_all do %>
+                        <div class="md:border-l-2 md:w-1/3">
+                          <div class="pl-6 mt-6">
+                            <.form :let={f} for={%{}} as={:shipping} id={"#{id}"} phx-change="shiping_type" class="flex gap-2 flex-col">
+                              <%= hidden_input f, :product_id, value: id %>
+                              <%= for {label, shipping_type} <- [{"Economy", "economy"}, {"3-days or less", "3_days"}, {"Priority Overnight", "1_day"}] do %>
+                                <div class="flex justify-between">
+                                  <label class="flex gap-4 items-center w-80">
+                                    <%= radio_button f, :type, shipping_type, checked: shipping_type == Atom.to_string(line_item.shipping_type), class: "w-6 h-6" %>
+                                    <span><%= label %></span>
+                                  </label>
+                                  <div> <%= Map.merge(line_item, line_item |> shipping_details(%{shipment_details: @shipment_details, das_type: @das_type, shipping_type: shipping_type})) |> add_total_markuped_sum(whcc_id in @shipping_to_all && [] || product_lines) |> shipping_price() %></div>
+                                </div>                            
+                              <% end %>
+                            </.form>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <%= if digitals?(@order) do %>
+                <div class="border border-base-225">
+                  <div class="divide-y divide-base-200">
+                    <%= unless @is_proofing do %>
+                      <div class="mx-8 mb-5 mt-7">
+                        <h1 class="text-lg uppercase">Digitals</h1>
+                      </div>
+                    <% end %>
+                    <%= if @order.bundle_price do %>
+                    
+                      <div {testid("bundle")} class="flex py-8 mx-8 border-t first:border-t-0 js-disable-right-click" >
+                        <div class="float-left w-48 h-32 mr-4 md:w-72 md:h-48 md:mr-7">
+                          <.bundle_image url={cover_photo_url(@gallery)} />
+                        </div>
+
+                        <div class="py-0 md:py-7">
+                          <div class="text-lg">Bundle - all digital downloads</div>
+
+                          <div class="text-2xl mt-2.5 mb-7 md:mb-9">
+                            <%= @order.bundle_price %>
+                          </div>
+
+                          <button type="button" phx-click="delete" phx-value-bundle={true} class="text-lg text-blue-planning-300">
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    <% end %>
+
+                    <%= for digital <- @order.digitals do %>
+                      <div {testid("digital-#{digital.id}")} class="flex py-8 mx-8 border-t first:border-t-0 js-disable-right-click" >
+                        <%= if digital.photo do %> 
+                           <div class="relative mr-4 md:mr-7 w-48 h-32 md:w-72 md:h-48 float-left pointer-events-none">
+                            <div class="w-full h-full bg-transparent absolute top-0 left-0 right-0 bottom-0 z-50 pointer-events-none"></div>
+                            <img class="object-contain w-full h-full" src={item_image_url(digital, proofing_client_view?: @is_proofing)}/>
+                          </div>
+                         <% else %>
+                           <.deleted_photo_preview/>
+                        <% end %>
+                        <div class="py-0 md:py-7">
+                          <div class="text-lg"><%= product_name(digital, @is_proofing) %></div>
+
+                          <div class="text-2xl mt-2.5 mb-7 md:mb-9">
+                            <%= price_display(digital) %>
+                          </div>
+
+                          <button type="button" phx-click="delete" phx-value-digital-id={digital.id} class="text-lg text-blue-planning-300">
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="col-span-1">
+              <.continue_summary is_proofing={@is_proofing} checkout_routes={@checkout_routes} order={@order} id="bottom-summary" socket={@socket} gallery={@gallery} />
+            </div>
+          <% end %>
+        </div>
+      <% live_action when live_action in [:address, :proofing_album_address] -> %>
+        <div class={classes("fixed top-0 left-0 flex items-center justify-center bg-base-300/90 duration-300 transition-opacity z-10", %{"opacity-0 hidden" => !@checking_out, "w-full h-full opacity-100" => @checking_out })}>
+          <div class="px-24 py-10 bg-base-100">
+            <.photographer_logo organization={@organization} />
+
+            <div class="flex items-center mt-4">
+              <svg width="16" height="16" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="18.5" cy="18.5" r="13.5" class="text-base-200" stroke="currentColor" stroke-width="5"/>
+
+                <path d="M5 19C5 11.268 10.8203 5 18 5" class="origin-center animate-spin text-base-225" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+
+              <p class="text-xs ml-1.5 mt-1">loading…</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full m-auto">
+          <.link patch={@checkout_routes.cart} class="flex w-28 text-base-250 items-center mt-6 lg:mt-8 px-4 md:px-0" >
+            <.icon name="back" class="h-3.5 w-1.5 stroke-2 mr-2" />
+
+            <p class="mt-1">Back to cart</p>
+          </.link>
+
+          <h2 class="py-5 text-xl lg:text-3xl lg:pt-8 lg:pb-10 px-4 md:px-0">
+            Enter <%= if only_digitals?(@order), do: "digital delivery", else: "your shipping" %> information
+          </h2>
+
+          <.form :let={f} for={@delivery_info_changeset} phx-change="validate_delivery_info" phx-submit="checkout" class="flex flex-col xl:flex-row">
+            <div class="w-full px-6 py-8 border border-base-225 xl:w-2/3 xl:mr-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col flex-1 md:mr-4">
+                  <label for={input_id(f, :email)} class="pb-2 text-base md:text-sm leading-8">Email address</label>
+
+                  <%= input f, :email, type: :email_input, class: "border border-base-200 focus:outline-none focus:border-base-300 h-12 px-3" %>
+                </div>
+
+                <div class="flex flex-col flex-1">
+                  <label for={input_id(f, :name)} class="pb-2 text-base md:text-sm leading-8">Name</label>
+
+                  <%= input f, :name, class: "border border-base-200 focus:outline-none focus:border-base-300 h-12 px-3" %>
+                </div>
+              </div>
+
+              <%= unless only_digitals?(@order) do %>
+                <div class="mt-6">
+                  <%= for fp <- inputs_for(f, :address) do %>
+                    <label for={input_id(fp, :addr1)} class="md:text-sm">
+                      Shipping address
+
+                      <%= for {field, {error, _}} <- Enum.take(fp.errors, 1) do %>
+                        <span phx-feedback-for={input_name(fp, field)} class="ml-8 font-normal hidden-when-no-feedback text-red-error-300"><%= dyn_gettext(to_string(field)) %> <%= error %></span>
+                      <% end %>
+                    </label>
+
+                    <div class="pt-2">
+                      <%= input fp, :addr1, placeholder: "Address line 1", class: "w-full border border-base-200 h-12 px-3", phx_hook: "PlacesAutocomplete", data_event_name: "place_changed" %>
+
+                      <div id="place-autocomplete-target" class="relative autocomplete-wrapper" phx-update="ignore"></div>
+                    </div>
+
+                    <div class="pt-4">
+                      <%= input fp, :addr2, placeholder: "Address line 2", class: "w-full border border-base-200 h-12 px-3" %>
+                    </div>
+
+                    <div class="flex flex-col pt-4 lg:flex-row">
+                      <div class="w-full lg:w-7/12">
+                        <%= input fp, :city, placeholder: "City", class: "w-full border border-base-200 h-12 px-3" %>
+                      </div>
+
+                      <div class="flex w-full pt-4 ml-0 lg:ml-4 lg:pt-0 lg:w-5/12">
+                        <div class={classes("w-1/2 lg:w-2/5 cursor-pointer mr-4", select_invalid_classes(fp, :state))}>
+                          <%= select_field fp, :state, Cart.delivery_info_address_states(), prompt: "State", class: "select w-full focus:outline-none focus:border-base-300 px-3" %>
+                        </div>
+
+                        <div class="w-1/2 lg:w-3/5">
+                          <%= input fp, :zip, placeholder: "ZIP", class: "w-full border border-base-200 h-12 px-3" %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="self-start w-full xl:w-1/3 mt-9 xl:mt-0">
+              <.summary caller={checkout_type(@is_proofing)} order={@order} gallery={@gallery}>
+                <button type="submit" disabled={!@delivery_info_changeset.valid?} class="mx-5 text-lg mb-7 btn-primary">
+                  <%= if @is_proofing do %>
+                    <%= if details(@order, checkout_type(@is_proofing)).total.amount > 0, do: "Checkout and " %>Send to Photographer 
+                  <% else %>
+                    Check out<%= unless zero_total?(@order) do %> with Stripe<% end %>
+                  <% end %>
+                </button>
+              </.summary>
+            </div>
+          </.form>
+        </div>
+    <% end %>
+  </div>
+  <%= if @is_proofing do %>
+    <.credits_footer for={:proofing_album} total_count={@gallery.gallery_digital_pricing.download_count} cart_count={@cart_count} credits={@credits} is_fixed={true} />
+  <% end %>
+</div>

@@ -1,0 +1,48 @@
+<div {intro(@current_user, "intro_leads_new")}>
+  <.live_component module={TodoplaceWeb.JobLive.Shared.JobLeadHeaderComponent} id="hero" {assigns} />
+  
+  <div class="px-6 pt-6 center-container">
+      <div class="grid grid-cols-12 gap-12">
+        <div class="bg-white p-6 rounded-lg col-span-12 md:col-span-8">
+          <%= case @tab_active do %>
+            <% "overview" -> %>
+              <.view_title title="Build your proposal" description={if @package, do: "Here’s the overview of your #{if @job.job_status.is_lead, do: "lead", else: "job"}:", else: "First things first:"} />
+              <div class="grid grid-cols-1 mt-4 gap-4">
+                <.package_details_card leads_jobs_redesign={true} package={@package} job={@job} proposal={@proposal} />
+                <.inbox_section client={@job.client} is_thanks={"true"} emails_count={@emails_count} inbox_count={@inbox_count} />
+                <.client_documents_section package={@package} proposal={@proposal} job={@job} socket={@socket} include_questionnaire={@include_questionnaire} disabled_copy_link={@disabled_copy_link} />
+              </div>
+            <% "package" -> %>
+              <.view_title title="Manage your package" description={if @package, do: "Here’s a detailed view to manage the package that you will send to your client", else: "First things first:"} />
+              <div class="grid grid-cols-1 mt-4 gap-4">
+                <.package_details_card leads_jobs_redesign={true} package={@package} job={@job} proposal={@proposal} />
+              </div>
+            <% "documents" -> %>
+              <.view_title title="Manage your client documents" description={if @package, do: "Here’s a detailed view to manage the documents that you will send to your client via their unique portal for this #{if @job.job_status.is_lead, do: "lead", else: "job"}", else: "First things first:"} />
+              <div class="grid grid-cols-1 mt-4 gap-4">
+                <.client_documents_section package={@package} proposal={@proposal} job={@job} socket={@socket} include_questionnaire={@include_questionnaire} disabled_copy_link={@disabled_copy_link} />
+              </div>
+            <% "finances" -> %>
+              <.view_title title={"Manage #{if @job.job_status.is_lead, do: "lead", else: "job"} finances"} description={if @package, do: "Here’s a detailed view of your finances for this #{if @job.job_status.is_lead, do: "lead", else: "job"}", else: "First things first:"} />
+              <div class="grid grid-cols-1 mt-4 gap-4">
+                <.finances_section package={@package} job={@job} client={@job.client} proposal={@proposal} socket={@socket} />
+              </div>
+            <% "notes" -> %>
+              <.view_title title="Notes" description="" />
+              <div class="grid grid-cols-1 mt-4 gap-4">
+                <.notes_editor {assigns} />
+              </div>
+            <% _ -> %>
+          <% end %>
+        </div>
+        <div class="col-span-12 md:col-span-4">
+          <div class="flex flex-col gap-6">
+            <.client_details_section socket={@socket} client={@job.client} />
+            <.shoot_details_section leads_jobs_redesign={true} package={@package} job={@job} current_user={@current_user} shoots={@shoots} collapsed_sections={@collapsed_sections} />
+            <.finance_details_section package={@package} job={@job} socket={@socket} />
+            <.history_card leads_jobs_redesign={true} job={@job} current_user={@current_user} />
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

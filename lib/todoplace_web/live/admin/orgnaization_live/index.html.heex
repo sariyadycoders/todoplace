@@ -1,0 +1,71 @@
+<header>
+  <div class="center-container p-6 pt-10">
+    <div class="flex content-center justify-between md:flex-row mt-6 sm:mt-0">
+      <div class="flex-col">
+        <h1 class="text-4xl font-bold center-container">
+          Organizations
+        </h1>
+      </div>
+      <div class="fixed top-12 left-0 right-0 z-10 flex flex-shrink-0 w-full sm:p-0 p-6 mt-1 sm:mt-0 sm:bottom-auto sm:static sm:items-start sm:w-auto">
+        <a
+          title="import job"
+          class="w-full md:w-auto btn-primary text-center hover:cursor-pointer"
+          phx-click="create-organization"
+        >
+          Create Organization
+        </a>
+      </div>
+    </div>
+    <hr class="mt-4 sm:mt-10" />
+  </div>
+</header>
+<div class="md:p-6 center-container">
+  <div class="hidden items-center sm:grid sm:grid-cols-3 gap-2 border-b-8 border-blue-planning-300 font-semibold text-lg pb-6">
+    <div>Name</div>
+    <div class="sm:col-span-2">Slug</div>
+    <div> </div>
+  </div>
+  <%= for organization <- @organizations do %>
+    <div
+      class="grid sm:grid-cols-4 gap-2 border p-3 items-center sm:pt-0 sm:px-0 sm:pb-2 sm:border-b sm:border-t-0 sm:border-x-0 rounded-lg sm:rounded-none border-gray-100 mt-2"
+    >
+      <div class="flex flex-col">
+        <p><%= organization.name %></p>
+      </div>
+      <hr class="sm:hidden border-gray-100 my-2" />
+      <div class="sm:col-span-1 grid sm:flex gap-2 sm:gap-0 overflow-hidden">
+        <p>
+          <%= organization.slug %>
+        </p>
+      </div>
+      <div class="sm:col-span-1 grid sm:flex gap-3 sm:gap-3 sm:justify-end overflow-hidden">
+        <.form :let={f} for={%{}} as={:toggle} phx-change="toggle">
+            <label class="flex">
+              <input type="checkbox" class="peer hidden" checked={organization.is_active} />
+              <%= hidden_input f, :organization_id, value: organization.id %>   
+
+              <div class="hidden peer-checked:flex">
+                <div class="rounded-full bg-blue-planning-300 border border-base-100 w-16 p-1 flex justify-end mr-4">
+                  <div class="rounded-full h-7 w-7 bg-base-100"></div>
+                </div>
+                <div class="mt-2">
+                  Active
+                </div>
+              </div>
+
+              <div class="flex peer-checked:hidden">
+                <div class="rounded-full w-16 p-1 flex mr-4 border border-blue-planning-300">
+                  <div class="rounded-full h-7 w-7 bg-blue-planning-300"></div>
+                </div>
+                <div class="mt-2">
+                  Inactive
+                </div>
+              </div>
+            </label>
+          </.form>
+      </div>
+      <hr class="sm:hidden border-gray-100 my-2" />
+      <.actions organization={organization}/>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,57 @@
+<div class={classes("flex flex-col photographer-gallery lg:before:bg-gray-100", %{"hidden" => is_nil(@is_mobile)})}>
+  <div class="flex flex-row bg-white lg:static relative">
+    <div class={classes("lg:flex w-full sm:max-w-[320px]", %{"hidden" => !@is_mobile})}>
+      <.live_component module={TodoplaceWeb.GalleryLive.Shared.SideNavComponent} id={@gallery.id} gallery={@gallery} total_progress={@total_progress} photos_error_count={@photos_error_count} arrow_show="product_previews" album_dropdown_show={false} is_mobile={@is_mobile} />
+    </div>
+    <.mobile_gallery_header gallery_name={@gallery.name}/>
+    <div class={classes("lg:flex w-full h-full font-sans bg-white lg:bg-gray-100 lg:min-h-screen", %{"hidden" => @is_mobile})}>
+      <div class="relative lg:pb-10 pl-10 pr-10 lg:pt-16 pt-20 mx-auto">
+        <div class="flex items-center lg:mt-0 mt-4">
+          <div class="flex lg:hidden w-8 h-8 items-center justify-center rounded-full bg-blue-planning-300" phx-click="back-to-navbar">
+            <.icon name="back" class="stroke-current items-center ml-auto mr-auto w-5 h-5 text-white" />
+          </div>
+          <div class="ml-3 flex items-center">
+            <span class="font-sans lg:text-2xl font-bold text-3xl">
+              Product Previews
+            </span>
+            <.tooltip id="product-previews" class="ml-2 hidden lg:block" content="You can edit your products to showcase your favorite photos, and create product previews that are meaningful to your client.<br>
+            100% of product sales go to you. You only pay what the print and product seller charges. The rest of the money goes to you!"/>
+          </div>
+        </div>
+        <hr class="mt-4 lg:hidden">
+        <div class="flex mt-3 lg:py-0 py-4 lg:px-0 px-6 text-xl lg:text-base text-gray-400">
+          <div class="center-container">
+            <%= cond do %>
+              <% Todoplace.Onboardings.non_us_state?(@gallery.photographer) -> %>
+                  <p>Product ordering is not available in your country yet. Please <a class="link open-help" href="#help">contact us</a> if there is a favorite vendor / lab partner you would like to see available on Todoplace.</p>
+                <% !Todoplace.Subscriptions.subscription_payment_method?(@gallery.photographer) -> %>
+                  <div class="flex flex-col items-center px-4 py-2 mt-8 text-center rounded-lg md:flex-row bg-red-sales-300/10 sm:text-left">
+                    <.icon name="warning-orange-dark" class="inline-block w-8 h-8 mr-2"/>
+                    <p class="text-black md:mr-4">It looks like you're missing a payment method. You won’t be able to sell physical products until you add one in the billing portal. Don't worry, you can still sell digitals! <a href={"#{base_url(:support)}article/131-why-do-you-need-a-payment-method-on-file-for-physical-products"} class="underline" target="_blank" rel="noopener noreferrer">Learn more</a></p>
+                    <div class="flex-shrink-0 my-1 mt-4 md:ml-auto sm:max-w-xs sm:mt-0">
+                      <button type="button" phx-click="open-billing-portal" class="btn-primary text-sm w-full py-2 mt-2">Open Billing Portal</button>
+                    </div>
+                  </div>
+                <% true -> %>
+                  <p>Showcase products your clients will love.</p>
+                  <.tooltip id="product-previews-intro" class="lg:hidden" content="You can edit your products to showcase your favorite photos, and create product previews that are meaningful to your client.<br>
+                100% of product sales go to you. You only pay what the print and product seller charges. The rest of the money goes to you!"/>       
+            <% end %>
+          </div>
+        </div>
+        <div class="center-container">
+          <div class="2xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-7 lg:px-0 px-6 grid">
+            <%= for product <- @products do %>
+              <.live_component id={product.id} module={Preview} current_user={@current_user} gallery={@gallery} product={product} disabled={disabled?(@gallery)}/>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <.sticky_upload current_user={@current_user} />
+  <div class={classes("z-40 lg:h-14", %{"relative" => !@is_mobile})}>
+    <.live_component module={TodoplaceWeb.GalleryLive.Shared.FooterComponent} id={@gallery.id} gallery={@gallery} total_progress={@total_progress} />
+  </div>
+</div>
+
