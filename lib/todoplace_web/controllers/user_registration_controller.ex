@@ -14,6 +14,7 @@ defmodule TodoplaceWeb.UserRegistrationController do
 
   def create(%{req_cookies: cookies} = conn, %{"user" => user_params}) do
     device_id = cookies |> Map.get("user_agent") |> URI.decode_www_form()
+
     onboarding_flow_source =
       case user_params do
         %{"onboarding_flow_source" => onboarding_flow_source} -> [onboarding_flow_source]
@@ -43,11 +44,11 @@ defmodule TodoplaceWeb.UserRegistrationController do
     Accounts.register_user(user_params)
     |> case do
       {:ok, user} ->
-        {:ok, _} =
-          Accounts.deliver_user_confirmation_instructions(
-            user,
-            &url(~p"/users/confirm/#{&1}")
-          )
+        # {:ok, _} =
+        #   Accounts.deliver_user_confirmation_instructions(
+        #     user,
+        #     &url(~p"/users/confirm/#{&1}")
+        #   )
 
         :ok = PrefillSigningUpUser.perform(user)
 
@@ -60,7 +61,6 @@ defmodule TodoplaceWeb.UserRegistrationController do
         render(conn, "new.html", changeset: changeset)
     end
   end
-
 
   defp add_user_to_external_tools(user) do
     %{

@@ -2,7 +2,7 @@ defmodule TodoplaceWeb.Shared.Outerbar do
   @moduledoc """
     Live component for sidebar
   """
-import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2]
 
   alias Todoplace.{
     Accounts,
@@ -10,6 +10,7 @@ import Ecto.Query, only: [from: 2]
     Repo,
     UserOrganization
   }
+
   alias Phoenix.LiveView.JS
   use TodoplaceWeb, :live_component
 
@@ -24,11 +25,12 @@ import Ecto.Query, only: [from: 2]
             user_preferences: user_preferences,
             notification_counts: notification_counts
           },
-          current_path: current_path,
+          current_path: current_path
         } = assigns,
         socket
       ) do
     user_organization_list = Todoplace.Cache.get_organizations(ids)
+
     sorted_organizations =
       user_organization_list
       |> Enum.sort_by(& &1.name)
@@ -57,22 +59,21 @@ import Ecto.Query, only: [from: 2]
     %{
       current_user: user,
       user_organizations_ids: ids,
-      notification_counts: notification_counts,
+      notification_counts: notification_counts
     } =
-    Todoplace.Cache.refresh_current_user_cache(socket.assigns.current_user_data.session_token)
+      Todoplace.Cache.refresh_current_user_cache(socket.assigns.current_user_data.session_token)
 
     user_organization_list = Todoplace.Cache.get_organizations(ids)
+
     sorted_organizations =
       user_organization_list
       |> Enum.sort_by(& &1.name)
       |> Enum.sort_by(&(&1.id == user.organization_id), :desc)
 
-
     socket
     |> assign(:notification_counts, notification_counts)
     |> assign(:user_organizations, sorted_organizations)
     |> ok()
-
   end
 
   def update(assigns, socket) do
@@ -81,13 +82,11 @@ import Ecto.Query, only: [from: 2]
     |> ok()
   end
 
-
-
   @impl true
   def handle_event(
         "change_organization",
         %{"id" => id},
-      %{assigns: %{current_user: current_user, current_path: current_path}} = socket
+        %{assigns: %{current_user: current_user, current_path: current_path}} = socket
       ) do
     organization_id = String.to_integer(id)
     update_last_visited_page(current_user.id, current_user.organization.id, current_path)
@@ -96,6 +95,7 @@ import Ecto.Query, only: [from: 2]
       Accounts.update_user(current_user.id, %{"organization_id" => organization_id})
 
     Todoplace.Cache.refresh_current_user_cache(socket.assigns.current_user_data.session_token)
+
     user_organization =
       Repo.get_by!(UserOrganization, user_id: current_user.id, organization_id: organization_id)
 
@@ -108,7 +108,6 @@ import Ecto.Query, only: [from: 2]
   end
 
   defp update_last_visited_page(user_id, organization_id, page) do
-
     {count, _} =
       Repo.update_all(
         from(u in UserOrganization,
@@ -126,10 +125,17 @@ import Ecto.Query, only: [from: 2]
 
   @impl true
   def handle_event("collapse_first_layer", _, socket) do
-    User.update_menu_collapsed(socket.assigns.current_user_data.current_user.id, !socket.assigns.firstlayer?)
+    User.update_menu_collapsed(
+      socket.assigns.current_user_data.current_user.id,
+      !socket.assigns.firstlayer?
+    )
+
     Todoplace.Cache.refresh_current_user_cache(socket.assigns.current_user_data.session_token)
 
-    send_update(TodoplaceWeb.Shared.Sidebar, id: "application-sidebar", firstlayer?: !socket.assigns.firstlayer?)
+    send_update(TodoplaceWeb.Shared.Sidebar,
+      id: "application-sidebar",
+      firstlayer?: !socket.assigns.firstlayer?
+    )
 
     socket
     |> push_event("sidebar:collapse", %{
@@ -157,16 +163,9 @@ import Ecto.Query, only: [from: 2]
   @impl true
   def render(assigns) do
     ~H"""
-    <div
-      id="sidebar-wrapper-two"
-      phx-hook="CollapseSidebar"
-      class="z-40"
-      data-target={@myself}
-    >
-    
-      <div class="h-12 bg-gray-800 flex items-center justify-between fixed left-0 right-0 top-0">
-        <div class="flex gap-3 w-1/4 items-center text-white">
-        </div>
+    <div id="sidebar-wrapper-two" phx-hook="CollapseSidebar" class="z-40" data-target={@myself}>
+      <div class="h-12 bg-white border-b border-black flex items-center justify-between fixed left-0 right-0 top-0">
+        <div class="flex gap-3 w-1/4 items-center text-white"></div>
         <div class="flex gap-3 w-1/4 items-center text-white relative">
           <div class="w-5/6">
             <.form :let={f} for={} as={:form} class="w-full">
@@ -175,12 +174,18 @@ import Ecto.Query, only: [from: 2]
           </div>
           <div
             phx-click={JS.toggle(to: "#help-popup")}
-            phx-click-away={JS.set_attribute({"style", "top: 110%; right: 10%; display: none"}, to: "#help-popup")}
+            phx-click-away={
+              JS.set_attribute({"style", "top: 110%; right: 10%; display: none"}, to: "#help-popup")
+            }
             class="cursor-pointer"
           >
-            <.icon name="question-mark" class="w-5 h-5 text-white fill-white" />
+            <.icon name="question-mark" class="w-5 h-5 text-black fill-black" />
           </div>
-          <div id="help-popup" style="top: 110%; right: 10%; display: none;" class="hidden absolute hidden bg-white border rounded-lg shadow-lg z-50 border-2 border-gray-300 w-60 flex flex-col">
+          <div
+            id="help-popup"
+            style="top: 110%; right: 10%; display: none;"
+            class="hidden absolute hidden bg-white border rounded-lg shadow-lg z-50 border-2 border-gray-300 w-60 flex flex-col"
+          >
             <div class="text-black border-b py-2 px-3 hover:bg-blue-planning-100 cursor-pointer hover:font-bold">
               User Guide
             </div>
@@ -191,10 +196,13 @@ import Ecto.Query, only: [from: 2]
               Give Feedback
             </div>
           </div>
-
         </div>
 
-        <.live_component module={TodoplaceWeb.UserControlsComponent} id={assigns[:id] || "default-topbar"} current_user_data={@current_user_data} />
+        <.live_component
+          module={TodoplaceWeb.UserControlsComponent}
+          id={assigns[:id] || "default-topbar"}
+          current_user_data={@current_user_data}
+        />
       </div>
 
       <div class="flex gap-3 items-center fixed top-2 left-4 z-50">
@@ -202,15 +210,18 @@ import Ecto.Query, only: [from: 2]
           <div
             class="rounded-lg h-8 w-8 flex items-center justify-center text-lg cursor-pointer relative"
             phx-click={JS.toggle(to: "#popover-content-menu")}
-            phx-click-away={JS.set_attribute({"style", "top: 110%; display: none"}, to: "#popover-content-menu")}
+            phx-click-away={
+              JS.set_attribute({"style", "top: 110%; display: none"}, to: "#popover-content-menu")
+            }
           >
-            <.icon name="hamburger" class="w-5 h-5 text-white fill-white" />
-            <div id="popover-content-menu" style="top: 110%; display: none;" class="hidden absolute left-0 hidden bg-white border rounded-lg shadow-lg z-50 border-2 border-gray-300 w-72">
+            <.icon name="hamburger" class="w-5 h-5 text-black fill-black" />
+            <div
+              id="popover-content-menu"
+              style="top: 110%; display: none;"
+              class="hidden absolute left-0 hidden bg-white border rounded-lg shadow-lg z-50 border-2 border-gray-300 w-72"
+            >
               <%= for app <- Todoplace.Cache.get_all_apps do %>
-                <.app_item
-                  app={app}
-                  target={@myself}
-                />
+                <.app_item app={app} target={@myself} />
               <% end %>
             </div>
           </div>
@@ -222,7 +233,7 @@ import Ecto.Query, only: [from: 2]
             phx-click="collapse_first_layer"
             phx-target={@myself}
           >
-            <.icon name="collapse" class="w-4 h-4" />
+            <.icon name="collapse" class="w-4 h-4 text-black fill-black" />
           </div>
         </div>
 
@@ -231,12 +242,20 @@ import Ecto.Query, only: [from: 2]
             <div
               class="bg-white rounded-lg h-8 w-8 flex items-center justify-center text-lg cursor-pointer relative"
               phx-click={JS.toggle(to: "#popover-content-first-org")}
-              phx-click-away={JS.set_attribute({"style", "top: 110%; display: none"}, to: "#popover-content-first-org")}
+              phx-click-away={
+                JS.set_attribute({"style", "top: 110%; display: none"},
+                  to: "#popover-content-first-org"
+                )
+              }
             >
               <.organization_logo organization={
                 Enum.find(@user_organizations, fn org -> org.id == @current_organization_id end)
               } />
-              <div id="popover-content-first-org" style="top: 110%; display: none;" class="hidden absolute left-0 hidden bg-white border rounded-lg shadow-lg z-50 border-2 border-gray-300 w-72">
+              <div
+                id="popover-content-first-org"
+                style="top: 110%; display: none;"
+                class="hidden absolute left-0 hidden bg-white border rounded-lg shadow-lg z-50 border-2 border-gray-300 w-72"
+              >
                 <%= for organization <- @user_organizations do %>
                   <.action_item
                     organization={organization}
@@ -251,8 +270,8 @@ import Ecto.Query, only: [from: 2]
           </div>
         <% end %>
 
-        <div class={["bg-white rounded-md px-2 pt-1 font-bold"]}>
-          <%=@current_user.organization.name%>
+        <div class={["bg-white rounded-md px-2 pt-1 font-bold border border-black"]}>
+          <%= @current_user.organization.name %>
         </div>
       </div>
       <div class="sm:hidden bg-white p-2 flex items-center justify-between fixed top-0 left-0 right-0 w-full">
@@ -267,7 +286,7 @@ import Ecto.Query, only: [from: 2]
           class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
         >
           <span class="sr-only">Open sidebar</span>
-          <.icon name="hamburger" class="h-4 text-base-300 w-9" />
+          <.icon name="hamburger" class="h-4 text-black fill-black w-9" />
         </button>
         <.link navigate={if @current_user, do: ~p"/home", else: ~p"/"} title="Todoplace">
           <.icon name="logo" class="my-4 w-28 h-9 mr-6" />
@@ -289,7 +308,7 @@ import Ecto.Query, only: [from: 2]
       <div
         class={
           classes(
-            "fixed top-0 bottom-0 z-40 w-16 bg-gray-800 gap-5 items-center top-12 pt-2 text-black transition-all",
+            "fixed top-0 bottom-0 z-40 w-16 bg-white border-r border-black gap-5 items-center top-12 pt-2 text-black transition-all",
             %{
               "flex flex-col left-0" => @firstlayer?,
               "mome" => @firstlayer?,
@@ -300,26 +319,26 @@ import Ecto.Query, only: [from: 2]
         id="first-layer"
       >
         <div class="flex flex-col gap-5 items-center justify-center">
-        <%= for organization <- @user_organizations do %>
-          <div
-            class="bg-white rounded-lg h-12 w-12 flex items-center justify-center text-lg cursor-pointer relative"
-            phx-click={if organization.id != @current_organization_id, do: "change_organization"}
-            phx-value-id={organization.id}
-            id={"selected-org-#{Map.get(organization, :id, "")}"}
-            phx-target={@myself}
-            phx-hook="PreventContextMenu"
-            data-org-id={organization.id}
-          >
+          <%= for organization <- @user_organizations do %>
+            <div
+              class="bg-white border border-black rounded-lg h-12 w-12 flex items-center justify-center text-lg cursor-pointer relative"
+              phx-click={if organization.id != @current_organization_id, do: "change_organization"}
+              phx-value-id={organization.id}
+              id={"selected-org-#{Map.get(organization, :id, "")}"}
+              phx-target={@myself}
+              phx-hook="PreventContextMenu"
+              data-org-id={organization.id}
+            >
               <div class="w-5 h-5 bg-green-200 absolute -top-1 -right-1 text-sm rounded-full flex items-center justify-center">
                 <%= get_organization_notification_count(@notification_counts, organization.id) %>
               </div>
 
-            <.organization_logo organization={organization} />
-          </div>
-        <% end %>
+              <.organization_logo organization={organization} />
+            </div>
+          <% end %>
         </div>
         <div
-          class="bg-white rounded-lg h-12 w-12 flex items-center justify-center text-lg cursor-pointer mb-5"
+          class="bg-white border border-black rounded-lg h-12 w-12 flex items-center justify-center text-lg cursor-pointer mb-5"
           id="nav-organization-menu"
           phx-hook="AddOrganizationMenu"
         >
@@ -397,7 +416,9 @@ import Ecto.Query, only: [from: 2]
     ~H"""
     <%= case Todoplace.Profiles.logo_url(@organization) do %>
       <% nil -> %>
-        <h1 class="text-xl font-bold"><%= String.trim(@organization.name) |> String.first() |> String.upcase() %></h1>
+        <h1 class="text-xl font-bold">
+          <%= String.trim(@organization.name) |> String.first() |> String.upcase() %>
+        </h1>
       <% url -> %>
         <img class="rounded-lg h-8 w-8" src={url} />
     <% end %>
@@ -418,7 +439,10 @@ import Ecto.Query, only: [from: 2]
       phx-target={@target}
     >
       <%= if @url do %>
-        <img class="inline-block w-9 h-9 mr-4 rounded-lg border border-black text-blue-planning-300" src={@url} />
+        <img
+          class="inline-block w-9 h-9 mr-4 rounded-lg border border-black text-blue-planning-300"
+          src={@url}
+        />
       <% else %>
         <div class="rounded-lg w-9 h-9 border border-black text-blue-planning-300 mr-4 flex items-center justify-center">
           <h1 class="">
@@ -428,7 +452,7 @@ import Ecto.Query, only: [from: 2]
       <% end %>
       <%= @organization.name %>
       <div class="w-5 h-5 bg-green-200 absolute -top-1 -right-1 text-sm rounded-full flex items-center justify-center">
-          <%= get_organization_notification_count(@notification_counts, @organization.id) %>
+        <%= get_organization_notification_count(@notification_counts, @organization.id) %>
       </div>
     </div>
     """
@@ -441,11 +465,12 @@ import Ecto.Query, only: [from: 2]
       })
 
     ~H"""
-    <div
-      class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
-    >
+    <div class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
       <%= if @url do %>
-        <img class="inline-block w-9 h-9 mr-4 rounded-lg border border-black text-blue-planning-300" src={@url} />
+        <img
+          class="inline-block w-9 h-9 mr-4 rounded-lg border border-black text-blue-planning-300"
+          src={@url}
+        />
       <% else %>
         <div class="rounded-lg w-9 h-9 border border-black text-blue-planning-300 mr-4 flex items-center justify-center">
           <h1 class="">
@@ -464,22 +489,21 @@ import Ecto.Query, only: [from: 2]
       class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
       phx-click="add-organization"
     >
-        <div class="rounded-lg w-9 h-9 mr-4 border border-black text-blue-planning-300 flex items-center justify-center">
-        </div>
+      <div class="rounded-lg w-9 h-9 mr-4 border border-black text-blue-planning-300 flex items-center justify-center">
+      </div>
       <%= "Add organization" %>
     </div>
     <div
       class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
       phx-click="create-organization"
     >
-        <div class="rounded-lg w-9 h-9 mr-4 border border-black text-blue-planning-300 flex items-center justify-center">
-          <h1 class="">
-            <%= "+" %>
-          </h1>
-        </div>
+      <div class="rounded-lg w-9 h-9 mr-4 border border-black text-blue-planning-300 flex items-center justify-center">
+        <h1 class="">
+          <%= "+" %>
+        </h1>
+      </div>
       <%= "Create organization" %>
     </div>
-
     """
   end
 end

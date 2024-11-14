@@ -49,17 +49,14 @@ defmodule Todoplace.Onboardings do
     @primary_key false
     embedded_schema do
       field(:phone, :string)
-      field(:photographer_years, :integer)
 
       field(:switching_from_softwares, {:array, Ecto.Enum},
         values: Keyword.keys(@software_options)
       )
 
-      field(:schedule, Ecto.Enum, values: [:full_time, :part_time])
       field(:completed_at, :utc_datetime)
-      field(:state, :string)
+      field(:zipcode, :string)
       field(:country, :string)
-      field(:province, :string)
       field(:interested_in, :string)
       field(:welcome_count, :integer)
       field(:sidebar_open_preference, :boolean, default: true)
@@ -68,13 +65,10 @@ defmodule Todoplace.Onboardings do
 
       @type t :: %__MODULE__{
               phone: String.t(),
-              photographer_years: integer(),
               switching_from_softwares: [atom()],
-              schedule: atom(),
               completed_at: DateTime.t(),
-              state: String.t(),
+              zipcode: String.t(),
               country: String.t(),
-              province: String.t(),
               interested_in: String.t(),
               welcome_count: integer(),
               sidebar_open_preference: boolean(),
@@ -87,18 +81,14 @@ defmodule Todoplace.Onboardings do
       onboarding
       |> cast(attrs, [
         :phone,
-        :schedule,
-        :photographer_years,
         :switching_from_softwares,
-        :state,
+        :zipcode,
         :country,
-        :province,
         :interested_in,
         :welcome_count,
         :promotion_code
       ])
-      |> validate_required([:country, :interested_in, :photographer_years, :schedule])
-      |> conditional_required_fields(attrs)
+      |> validate_required([:country, :interested_in, :zipcode])
       |> validate_change(:promotion_code, &valid_promotion_codes/2)
     end
 
@@ -135,19 +125,6 @@ defmodule Todoplace.Onboardings do
         [{field, "(code doesn't exist)"}]
       else
         []
-      end
-    end
-
-    defp conditional_required_fields(changeset, attrs) do
-      case attrs["country"] do
-        "US" ->
-          changeset |> validate_required([:state])
-
-        "CA" ->
-          changeset |> validate_required([:province])
-
-        _ ->
-          changeset
       end
     end
   end

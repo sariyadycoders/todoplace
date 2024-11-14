@@ -5,7 +5,6 @@ defmodule TodoplaceWeb.OnboardingLive.Shared do
   use Phoenix.Component
   use TodoplaceWeb, :html
 
-
   require Logger
 
   alias TodoplaceWeb.Router.Helpers, as: Routes
@@ -38,22 +37,28 @@ defmodule TodoplaceWeb.OnboardingLive.Shared do
       })
 
     ~H"""
-      <div class="bg-white" phx-update="ignore" id="timer">
-        <div class="bg-base-200 p-8">
-          <h3 class="text-4xl text-purple-marketing-300 flex justify-center gap-2">
-            <%= if @original_price do %>
-              <strike class="font-bold"><%= @original_price %></strike>
-            <% end %>
-            <%= @price %>
-          </h3>
-          <%= if @note do %>
-            <p class="text-md font-light text-center mt-4 text-purple-marketing-300"><%= @note %></p>
+    <div class="bg-white" phx-update="ignore" id="timer">
+      <div class="bg-base-200 p-8">
+        <h3 class="text-4xl text-purple-marketing-300 flex justify-center gap-2">
+          <%= if @original_price do %>
+            <strike class="font-bold"><%= @original_price %></strike>
           <% end %>
-        </div>
-        <%= if @expires_at do %>
-          <div class="border flex justify-center p-2 text-purple-marketing-300 font-light tracking-wider text-lg" id="bf-timer" phx-hook="Timer" data-end={@expires_at}></div>
+          <%= @price %>
+        </h3>
+        <%= if @note do %>
+          <p class="text-md font-light text-center mt-4 text-purple-marketing-300"><%= @note %></p>
         <% end %>
       </div>
+      <%= if @expires_at do %>
+        <div
+          class="border flex justify-center p-2 text-purple-marketing-300 font-light tracking-wider text-lg"
+          id="bf-timer"
+          phx-hook="Timer"
+          data-end={@expires_at}
+        >
+        </div>
+      <% end %>
+    </div>
     """
   end
 
@@ -69,32 +74,32 @@ defmodule TodoplaceWeb.OnboardingLive.Shared do
       })
 
     ~H"""
-      <div class="min-h-screen md:max-w-6xl container mx-auto">
-        <div class="py-8 flex items-center justify-center">
+    <div class="min-h-screen md:max-w-6xl container mx-auto">
+      <%!-- <div class="py-8 flex items-center justify-center">
           <.icon name="logo-shoot-higher" class="w-32 h-12 sm:h-20 sm:w-48" />
+        </div> --%>
+      <div class="grid sm:grid-cols-2 bg-white rounded-lg">
+        <div class={"sm:rounded-l-lg #{@left_classes}"}>
+          <%= render_slot(@inner_block) %>
         </div>
-        <div class="grid sm:grid-cols-2 bg-white rounded-lg">
-          <div class={"sm:rounded-l-lg #{@left_classes}"}>
-            <%= render_slot(@inner_block) %>
-          </div>
-          <div class={"#{@right_classes} order-1 sm:order-2 flex flex-col"}>
-            <%= if @step && @step_total do %>
-              <div class="text-sm font-bold text-gray-500">
-                <%= @step %> / <%= @step_total %>
-              </div>
-            <% end %>
-            <%= if @step_title do %>
-              <h1 class="text-3xl font-bold sm:leading-tight mt-2 mb-4"><%= @step_title %></h1>
-            <% end %>
-            <%= render_slot(@right_panel) %>
-          </div>
+        <div class={"#{@right_classes} order-1 sm:order-2 flex flex-col"}>
+          <%= if @step && @step_total do %>
+            <div class="text-sm font-bold text-gray-500">
+              <%= @step %> / <%= @step_total %>
+            </div>
+          <% end %>
+          <%= if @step_title do %>
+            <h1 class="text-3xl font-bold sm:leading-tight mt-2 mb-4"><%= @step_title %></h1>
+          <% end %>
+          <%= render_slot(@right_panel) %>
         </div>
-        <%= if @show_logout? do %>
-          <div class="flex items-center justify-center my-8">
-            <%= link("Logout", to: ~p"/users/log_out", method: :delete) %>
-          </div>
-        <% end %>
       </div>
+      <%= if @show_logout? do %>
+        <div class="flex items-center justify-center my-8">
+          <%= link("Logout", to: ~p"/users/log_out", method: :delete) %>
+        </div>
+      <% end %>
+    </div>
     """
   end
 
@@ -104,7 +109,6 @@ defmodule TodoplaceWeb.OnboardingLive.Shared do
       clients: [
         %{
           email: current_user.email,
-          state_province_region: current_user.onboarding.state,
           custom_fields: %{
             w3_T: current_user.organization.name,
             w1_T: "trial"
@@ -128,7 +132,7 @@ defmodule TodoplaceWeb.OnboardingLive.Shared do
       <%= render_slot(@inner_block) %>
 
       <%= if @error do %>
-        <%= error_tag @f, @error, prefix: @prefix, class: "text-red-sales-300 text-sm" %>
+        <%= error_tag(@f, @error, prefix: @prefix, class: "text-red-sales-300 text-sm") %>
       <% end %>
     </label>
     """
@@ -137,41 +141,52 @@ defmodule TodoplaceWeb.OnboardingLive.Shared do
   def org_job_inputs(assigns) do
     ~H"""
     <.inputs_for :let={o} field={@f[:organization]}>
+      <div class="flex flex-col pb-1">
+        <p class="py-2 font-extrabold">
+          What’s your photography speciality? <i class="italic font-light">(Select one or more)</i>
+        </p>
 
-        <div class="flex flex-col pb-1">
-          <p class="py-2 font-extrabold">
-            What’s your photography speciality?
-            <i class="italic font-light">(Select one or more)</i>
-          </p>
+        <div data-rewardful-email={@current_user.email} id="rewardful-email"></div>
 
-          <div data-rewardful-email={@current_user.email} id="rewardful-email"></div>
-
-          <div class="mt-2 grid grid-cols-2 gap-3 sm:gap-5">
-            <.inputs_for :let={jt} field={o[:organization_job_types]}>
-              <% input_name = input_name(jt, :job_type) %>
-              <%= if jt.data.job_type != "global" do %>
-                <% checked = jt |> current() |> Map.get(:show_on_business?) %>
-                <.job_type_option type="checkbox" name={input_name} form={jt} job_type={jt |> current() |> Map.get(:job_type)} checked={checked} />
-              <% else %>
-                <input class="hidden" type="checkbox" name={input_name} value={jt |> current() |> Map.get(:job_type)} checked={true} />
-              <% end %>
-              <%= hidden_input jt, :type, value: jt |> current() |> Map.get(:job_type) %>
-            </.inputs_for>
+        <div class="mt-2 grid grid-cols-2 gap-3 sm:gap-5">
+          <.inputs_for :let={jt} field={o[:organization_job_types]}>
+            <% input_name = input_name(jt, :job_type) %>
+            <%= if jt.data.job_type != "global" do %>
+              <% checked = jt |> current() |> Map.get(:show_on_business?) %>
+              <.job_type_option
+                type="checkbox"
+                name={input_name}
+                form={jt}
+                job_type={jt |> current() |> Map.get(:job_type)}
+                checked={checked}
+              />
+            <% else %>
+              <input
+                class="hidden"
+                type="checkbox"
+                name={input_name}
+                value={jt |> current() |> Map.get(:job_type)}
+                checked={true}
+              />
+            <% end %>
+            <%= hidden_input(jt, :type, value: jt |> current() |> Map.get(:job_type)) %>
+          </.inputs_for>
+        </div>
+        <div class="flex flex-row">
+          <div class="flex items-center justify-center w-7 h-7 ml-1 mr-3 mt-2 rounded-full flex-shrink-0 bg-blue-planning-300 text-white">
+            <.icon name="global" class="fill-current" width="14" height="14" />
           </div>
-          <div class="flex flex-row">
-            <div class="flex items-center justify-center w-7 h-7 ml-1 mr-3 mt-2 rounded-full flex-shrink-0 bg-blue-planning-300 text-white">
-              <.icon name="global" class="fill-current" width="14" height="14" />
-            </div>
-            <div class="flex flex-col">
-              <p class="pt-2 font-bold">
-                Not seeing yours here?
-              </p>
-              <p class="text-gray-400 font-normal">
-                All Todoplace accounts include a <strong>Global</strong> photography speciality in case yours isn’t listed here.
-              </p>
-            </div>
+          <div class="flex flex-col">
+            <p class="pt-2 font-bold">
+              Not seeing yours here?
+            </p>
+            <p class="text-gray-400 font-normal">
+              All Todoplace accounts include a <strong>Global</strong>
+              photography speciality in case yours isn’t listed here.
+            </p>
           </div>
         </div>
+      </div>
     </.inputs_for>
     """
   end
@@ -237,6 +252,7 @@ defmodule TodoplaceWeb.OnboardingLive.Shared do
     |> then(fn
       {:ok, %{user: user}} ->
         current_user_data = Todoplace.Accounts.update_user_cache(user.id)
+
         socket
         |> assign(current_user: current_user_data.current_user)
         |> assign(current_user_data: current_user_data)
@@ -305,15 +321,16 @@ defmodule TodoplaceWeb.OnboardingLive.Shared do
 
   def most_interested_select() do
     [
-      {"Booking Events", :booking_events},
-      {"All-in-one platform", :all_in_one_platform},
-      {"Business mastermind, education and community",
-       :business_mastermind_education_and_community},
-      {"Smart Profit Calculator™ and help with pricing",
-       :smart_profit_calculator_and_help_with_pricing},
-      {"Mobile-first design", :mobile_first_design},
-      {"Unlimited client photo galleries with self-serve digital image and print product orders",
-       :unlimited},
+      {"Resource Management", :resource_management},
+      {"Project Management", :project_management},
+      {"Portfolio Management", :portfolio_management},
+      {"Client Projects", :client_projects},
+      {"Requests and Approvals", :request_and_approvals},
+      {"Project Planning", :project_planning},
+      {"Goals and Strategy", :goals_and_strategy},
+      {"Task Management", :task_management},
+      {"Project Planning", :project_planning},
+      {"CRM", :unlimited},
       {"Other", :other}
     ]
   end

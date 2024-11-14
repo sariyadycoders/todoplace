@@ -21,9 +21,9 @@ defmodule Todoplace.Organization do
     Accounts.UserInvitation,
     TenantManager
   }
+
   alias Todoplace.Organization
   alias Todoplace.UserOrganization
-
 
   defmodule EmailSignature do
     @moduledoc false
@@ -160,7 +160,6 @@ defmodule Todoplace.Organization do
     |> cast_assoc(:address, required: true)
   end
 
-
   def registration_changeset(organization, attrs, "" <> user_name),
     do:
       registration_changeset(
@@ -168,7 +167,7 @@ defmodule Todoplace.Organization do
         Map.put_new(
           attrs,
           :name,
-          build_organization_name("#{user_name} Photography")
+          build_organization_name("#{user_name} Org")
           |> Utils.capitalize_all_words()
         )
       )
@@ -276,24 +275,23 @@ defmodule Todoplace.Organization do
     |> case do
       {:ok, organization} ->
         # Create tenant schema for the organization
-         tenant_schema_result = TenantManager.create_tenant_schema(organization.slug)
+        tenant_schema_result = TenantManager.create_tenant_schema(organization.slug)
 
         case tenant_schema_result do
           {:ok, _message} ->
-        #     # Insert the user-organization association after schema creation
-           insert_user_organization_association(organization.id, user_id)
-             {:ok, organization}
+            #     # Insert the user-organization association after schema creation
+            insert_user_organization_association(organization.id, user_id)
+            {:ok, organization}
 
           {:error, reason} ->
-             # Handle schema creation failure, e.g., by rolling back organization creation
+            # Handle schema creation failure, e.g., by rolling back organization creation
             Repo.rollback("Failed to create tenant schema: #{inspect(reason)}")
-         end
+        end
 
       {:error, changeset} = error ->
         error
     end
   end
-
 
   def insert_user_organization_association(organization_id, user_id) do
     %{user_id: user_id, organization_id: organization_id, role: "admin", status: "Joined"}
@@ -332,9 +330,7 @@ defmodule Todoplace.Organization do
     Todoplace.Accounts.Notification.send_notification(user_id, organization_id, payload)
   end
 
-
   def list_organizations(user_id) do
-
     from(o in Organization,
       join: uo in "users_organizations",
       on: o.id == uo.organization_id,
@@ -347,8 +343,10 @@ defmodule Todoplace.Organization do
     from(o in Organization,
       join: uo in "users_organizations",
       on: o.id == uo.organization_id,
-      where: uo.user_id == ^user_id and
-            uo.org_status == "active"  # Use a string literal
+      # Use a string literal
+      where:
+        uo.user_id == ^user_id and
+          uo.org_status == "active"
     )
     |> Repo.all()
   end
@@ -364,28 +362,36 @@ defmodule Todoplace.Organization do
   @spec toggle_org_status(integer(), integer()) :: {:ok, %UserOrganization{}} | {:error, term()}
   def toggle_org_status(user_id, organization_id) do
     # Find the specific record where both user_id and organization_id match
-    query = from(u in UserOrganization,
-                 where: u.user_id == ^user_id and u.organization_id == ^organization_id,
-                 limit: 1)  # Limit to 1 record since we're updating a single entry
+    query =
+      from(u in UserOrganization,
+        where: u.user_id == ^user_id and u.organization_id == ^organization_id,
+        # Limit to 1 record since we're updating a single entry
+        limit: 1
+      )
 
     case Repo.one(query) do
-      nil -> {:error, :not_found}  # No record found
+      # No record found
+      nil ->
+        {:error, :not_found}
+
       user_organization ->
         new_status = toggle_status(user_organization.org_status)
         # Create changeset and update the record
         Repo.update_all(
           from(u in UserOrganization,
-               where: u.user_id == ^user_id and u.organization_id == ^organization_id),
+            where: u.user_id == ^user_id and u.organization_id == ^organization_id
+          ),
           set: [org_status: new_status]
         )
+
         {:ok, %{user_organization | org_status: new_status}}
     end
   end
 
   defp toggle_status(:active), do: :inactive
   defp toggle_status(:inactive), do: :active
-  defp toggle_status(status), do: status  # Handle unexpected statuses, if needed
-
+  # Handle unexpected statuses, if needed
+  defp toggle_status(status), do: status
 
   @spec reformat_string(name :: String.t(), replace_by :: String.t()) :: String.t()
   defp reformat_string(name, replace_by \\ " "),
