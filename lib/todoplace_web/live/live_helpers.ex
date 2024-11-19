@@ -94,7 +94,6 @@ defmodule TodoplaceWeb.LiveHelpers do
   end
 
   def icon(%{name: name} = assigns) do
-
     assigns =
       assigns
       |> Enum.into(%{
@@ -106,9 +105,9 @@ defmodule TodoplaceWeb.LiveHelpers do
       })
 
     ~H"""
-      <svg width={@width} height={@height} class={@class} style={@style}>
-        <use href={@path} />
-      </svg>
+    <svg width={@width} height={@height} class={@class} style={@style}>
+      <use href={@path} />
+    </svg>
     """
   end
 
@@ -128,14 +127,27 @@ defmodule TodoplaceWeb.LiveHelpers do
         text_color: "text-#{assigns.color}"
       })
 
-      ~H"""
-      <a href={if @disabled, do: "javascript:void(0)", else: href} target={unless @disabled, do: @target} class={classes("btn-tertiary flex items-center px-2 py-1 font-sans rounded-lg hover:opacity-75 transition-colors #{@text_color} #{@class}", %{"opacity-75 hover:cursor-not-allowed" => @disabled})} {@rest}>
-        <.icon name={@icon} class={classes("w-4 h-4 fill-current text-#{@color}", %{"mr-2" => @inner_block})} />
-        <%= if @inner_block do %>
-          <%= render_slot(@inner_block) %>
-        <% end %>
-      </a>
-      """
+    ~H"""
+    <a
+      href={if @disabled, do: "javascript:void(0)", else: href}
+      target={unless @disabled, do: @target}
+      class={
+        classes(
+          "btn-tertiary flex items-center px-2 py-1 font-sans rounded-lg hover:opacity-75 transition-colors #{@text_color} #{@class}",
+          %{"opacity-75 hover:cursor-not-allowed" => @disabled}
+        )
+      }
+      {@rest}
+    >
+      <.icon
+        name={@icon}
+        class={classes("w-4 h-4 fill-current text-#{@color}", %{"mr-2" => @inner_block})}
+      />
+      <%= if @inner_block do %>
+        <%= render_slot(@inner_block) %>
+      <% end %>
+    </a>
+    """
   end
 
   def icon_button(assigns) do
@@ -162,8 +174,22 @@ defmodule TodoplaceWeb.LiveHelpers do
       )
 
     ~H"""
-    <button type="button" class={classes("btn-tertiary flex items-center whitespace-nowrap #{@text_color} #{@class}", %{"opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disabled})} disabled={@disabled} {@rest}>
-      <.icon name={@icon} class={classes("w-4 h-4 fill-current text-#{@color} #{@icon_class}", %{"mr-2" => @inner_block})} />
+    <button
+      type="button"
+      class={
+        classes("btn-tertiary flex items-center whitespace-nowrap #{@text_color} #{@class}", %{
+          "opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disabled
+        })
+      }
+      disabled={@disabled}
+      {@rest}
+    >
+      <.icon
+        name={@icon}
+        class={
+          classes("w-4 h-4 fill-current text-#{@color} #{@icon_class}", %{"mr-2" => @inner_block})
+        }
+      />
       <%= if @inner_block do %>
         <%= render_slot(@inner_block) %>
       <% end %>
@@ -181,14 +207,23 @@ defmodule TodoplaceWeb.LiveHelpers do
       |> Enum.into(%{class: "", disabled: false, inner_block: nil})
 
     ~H"""
-    <button type="button" class={classes("flex items-center px-2 py-1 font-sans hover:opacity-75 #{@class}", %{"opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disabled})}} disabled={@disabled} {@rest}>
+    <button
+      type="button"
+      class={
+        classes("flex items-center px-2 py-1 font-sans hover:opacity-75 #{@class}", %{
+          "opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disabled
+        })
+      }
+      }
+      disabled={@disabled}
+      {@rest}
+    >
       <.icon name={@icon} class={"fill-current text-#{@color} #{@icon_class}"} />
       <%= if @inner_block do %>
         <%= render_slot(@inner_block) %>
       <% end %>
     </button>
     """
-
   end
 
   def button_simple(assigns) do
@@ -202,38 +237,41 @@ defmodule TodoplaceWeb.LiveHelpers do
         disabled: false
       })
 
-
     ~H"""
-    <button type="button" class={classes("flex items-center px-2 py-1 font-sans hover:opacity-75 #{@class}", %{"opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disabled})}} disabled={@disabled}>
+    <button
+      type="button"
+      class={
+        classes("flex items-center px-2 py-1 font-sans hover:opacity-75 #{@class}", %{
+          "opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disabled
+        })
+      }
+      }
+      disabled={@disabled}
+    >
       <.icon name={@icon} class={"fill-current text-#{@color} #{@icon_class}"} />
       <%= if @inner_block do %>
         <%= render_slot(@inner_block) %>
       <% end %>
     </button>
     """
-
   end
 
   def button_element(%{element: "a"} = assigns) do
     attrs = Map.drop(assigns, [:inner_block, :__changed__, :element])
     assigns = Enum.into(assigns, %{attrs: attrs})
 
-
     ~H"""
-      <a {@attrs}><%= render_slot(@inner_block) %></a>
+    <a {@attrs}><%= render_slot(@inner_block) %></a>
     """
-
   end
 
   def button_element(%{element: "button"} = assigns) do
     attrs = Map.drop(assigns, [:inner_block, :__changed__, :element])
     assigns = Enum.into(assigns, %{attrs: attrs})
 
-
     ~H"""
-      <button {@attrs}><%= render_slot(@inner_block) %></button>
+    <button {@attrs}><%= render_slot(@inner_block) %></button>
     """
-
   end
 
   def maybe_show_photographer_logo?(assigns) do
@@ -241,8 +279,12 @@ defmodule TodoplaceWeb.LiveHelpers do
 
     ~H"""
     <%= case logo_url(@organization) do %>
-      <% nil -> %> <h1 class="pt-3 text-3xl font-light font-client text-base-300 mb-2 #{@heading_class}"><%= @organization.name %></h1>
-      <% url -> %> <img class="h-20 #{@logo_class}" src={url} />
+      <% nil -> %>
+        <h1 class="pt-3 text-3xl font-light font-client text-base-300 mb-2 #{@heading_class}">
+          <%= @organization.name %>
+        </h1>
+      <% url -> %>
+        <img class="h-20 #{@logo_class}" src={url} />
     <% end %>
     """
   end
@@ -296,11 +338,9 @@ defmodule TodoplaceWeb.LiveHelpers do
          )
 
   defp is_active(assigns) do
-
     ~H"""
-      <%= render_slot(@inner_block, path_active?(@socket, @live_action, @path)) %>
+    <%= render_slot(@inner_block, path_active?(@socket, @live_action, @path)) %>
     """
-
   end
 
   def nav_link(assigns) do
@@ -311,37 +351,39 @@ defmodule TodoplaceWeb.LiveHelpers do
         target: nil
       })
 
-
     ~H"""
-      <.is_active socket={@socket} live_action={@live_action} path={@to} :let={active} >
-        <%= if String.starts_with?(@to, "/") do %>
-          <.link navigate={@to} title={@title} class={classes(@class, %{@active_class => active})} {if @target, do: [target: @target], else: []}>
-            <%= render_slot(@inner_block, active) %>
-          </.link>
-        <% else %>
-          <a href={@to} class={@class}>
-            <%= render_slot(@inner_block, active) %>
-          </a>
-        <% end %>
-      </.is_active>
+    <.is_active :let={active} socket={@socket} live_action={@live_action} path={@to}>
+      <%= if String.starts_with?(@to, "/") do %>
+        <.link
+          navigate={@to}
+          title={@title}
+          class={classes(@class, %{@active_class => active})}
+          {if @target, do: [target: @target], else: []}
+        >
+          <%= render_slot(@inner_block, active) %>
+        </.link>
+      <% else %>
+        <a href={@to} class={@class}>
+          <%= render_slot(@inner_block, active) %>
+        </a>
+      <% end %>
+    </.is_active>
     """
-
   end
 
   def live_link(%{} = assigns) do
     {to, assigns} = Map.pop(assigns, :to)
     assigns = assign(assigns, :navigate, to)
 
-
     ~H"""
-    <.link {assigns |> Map.drop([:__changed__, :inner_block]) |> Enum.to_list()}><%= render_slot(@inner_block) %></.link>
+    <.link {assigns |> Map.drop([:__changed__, :inner_block]) |> Enum.to_list()}>
+      <%= render_slot(@inner_block) %>
+    </.link>
     """
-
   end
 
   def crumbs(assigns) do
     assigns = Enum.into(assigns, %{class: "text-xs text-base-250"})
-
 
     ~H"""
     <div class={@class} {testid("crumbs")}>
@@ -352,7 +394,6 @@ defmodule TodoplaceWeb.LiveHelpers do
       <span class="font-semibold"><%= render_slot(List.last(@crumb)) %></span>
     </div>
     """
-
   end
 
   @job_type_colors %{
@@ -366,31 +407,107 @@ defmodule TodoplaceWeb.LiveHelpers do
     {bg_light, border_dark, bg_dark} = @job_type_colors |> Map.get(assigns.color)
 
     assigns =
-      Enum.into(assigns, %{bg_light: bg_light, border_dark: border_dark, bg_dark: bg_dark})
-
+      Enum.into(assigns, %{
+        bg_light: bg_light,
+        border_dark: border_dark,
+        bg_dark: bg_dark
+      })
 
     ~H"""
-      <label class={classes(
+    <label class={
+      classes(
         "flex items-center p-2 border rounded-lg font-semibold text-sm leading-tight sm:text-base #{@class}",
-        %{"#{@border_dark} #{@bg_light}" => @checked, "cursor-not-allowed pointer-events-none" => @disabled, "hover:#{@bg_light}/60 cursor-pointer" => !@disabled}
-      )}>
-        <input class="hidden" type={@type} name={@name} value={@job_type} checked={@checked} disabled={@disabled} />
+        %{
+          "#{@border_dark} #{@bg_light}" => @checked,
+          "cursor-not-allowed pointer-events-none" => @disabled,
+          "hover:#{@bg_light}/60 cursor-pointer" => !@disabled
+        }
+      )
+    }>
+      <input
+        class="hidden"
+        type={@type}
+        name={@name}
+        value={@job_type}
+        checked={@checked}
+        disabled={@disabled}
+      />
 
-        <div testid={@job_type} class={classes(
-          "flex items-center justify-center w-7 h-7 ml-1 mr-3 rounded-full flex-shrink-0",
-          %{"#{@bg_dark} text-white" => @checked, "bg-base-200" => !@checked}
-        )}>
-          <.icon name={@job_type} class="fill-current" width="14" height="14" />
-        </div>
+      <div
+        testid={@job_type}
+        class={
+          classes(
+            "flex items-center justify-center w-7 h-7 ml-1 mr-3 rounded-full flex-shrink-0",
+            %{"#{@bg_dark} text-white" => @checked, "bg-base-200" => !@checked}
+          )
+        }
+      >
+        <.icon name={@job_type} class="fill-current" width="14" height="14" />
+      </div>
 
-        <%= if @override_global && @job_type == "global" do %>
-          <%= @override_global %>
-        <% else %>
-          <%= dyn_gettext @job_type %>
-        <% end %>
-      </label>
+      <%= if @override_global && @job_type == "global" do %>
+        <%= @override_global %>
+      <% else %>
+        <%= dyn_gettext(@job_type) %>
+      <% end %>
+    </label>
     """
+  end
 
+  def custom_checkbox(assigns) do
+    assigns =
+      Enum.into(assigns, %{disabled: false, class: "", color: "blue", override_global: nil})
+
+    {bg_light, border_dark, bg_dark} = @job_type_colors |> Map.get(assigns.color)
+
+    assigns =
+      Enum.into(assigns, %{
+        bg_light: bg_light,
+        border_dark: border_dark,
+        bg_dark: bg_dark,
+        icon: nil
+      })
+
+    ~H"""
+    <label class={
+      classes(
+        "flex items-center p-2 border rounded-lg font-semibold text-sm leading-tight sm:text-base #{@class}",
+        %{
+          "#{@border_dark} #{@bg_light}" => @checked,
+          "cursor-not-allowed pointer-events-none" => @disabled,
+          "hover:#{@bg_light}/60 cursor-pointer" => !@disabled
+        }
+      )
+    }>
+      <input
+        class="hidden"
+        type={@type}
+        name={@name}
+        value={@job_type}
+        checked={@checked}
+        disabled={@disabled}
+      />
+
+      <div
+        :if={@icon}
+        testid={@job_type}
+        class={
+          classes(
+            "flex items-center justify-center w-7 h-7 ml-1 mr-3 rounded-full flex-shrink-0",
+            %{"#{@bg_dark} text-white" => @checked, "bg-base-200" => !@checked}
+          )
+        }
+      >
+        <.icon name={@icon} class="fill-current" width="14" height="14" />
+      </div>
+
+      <%= if @override_global && @job_type == "global" do %>
+        <%= @override_global %>
+      <% else %>
+        <%= dyn_gettext(@job_type) %>
+      <% end %>
+    </label>
+    """
   end
 
   @badge_colors %{
@@ -416,13 +533,11 @@ defmodule TodoplaceWeb.LiveHelpers do
       |> Map.put(:color_style, @badge_colors |> Map.get(badge_mode) |> Map.get(color))
       |> Enum.into(%{class: ""})
 
-
     ~H"""
-    <span role="status" class={"px-2 py-0.5 text-xs font-semibold #{@color_style} #{@class}"} >
-      <%= render_slot @inner_block %>
+    <span role="status" class={"px-2 py-0.5 text-xs font-semibold #{@color_style} #{@class}"}>
+      <%= render_slot(@inner_block) %>
     </span>
     """
-
   end
 
   def filesize(byte_size) when is_integer(byte_size),
@@ -459,11 +574,11 @@ defmodule TodoplaceWeb.LiveHelpers do
       assigns
       |> Enum.into(%{class: "text-sm text-base-300 bg-gray-100 w-9 h-9 pb-0.5", style: nil})
 
-
     ~H"""
-      <div style={@style} class={"#{@class} flex flex-col items-center justify-center rounded-full"}><%= Todoplace.Accounts.User.initials @user %></div>
+    <div style={@style} class={"#{@class} flex flex-col items-center justify-center rounded-full"}>
+      <%= Todoplace.Accounts.User.initials(@user) %>
+    </div>
     """
-
   end
 
   def show_intro?(current_user, intro_id),
@@ -483,16 +598,23 @@ defmodule TodoplaceWeb.LiveHelpers do
       |> Map.put(:rest, Map.drop(assigns, [:content, :class]))
       |> Enum.into(%{class: "", id: nil, inner_block: nil})
 
-
     ~H"""
-    <span class={"inline-block relative cursor-pointer z-0 #{@class}"} data-hint={"#{@content}"} data-hintposition="middle-middle" phx-hook="Tooltip" id={@id}>
+    <span
+      class={"inline-block relative cursor-pointer z-0 #{@class}"}
+      data-hint={"#{@content}"}
+      data-hintposition="middle-middle"
+      phx-hook="Tooltip"
+      id={@id}
+    >
       <%= if @inner_block do %>
         <%= render_slot(@inner_block) %>
       <% end %>
-      <.icon name="tooltip" class="inline-block w-4 h-4 mr-2 rounded-sm fill-current text-blue-planning-300" />
+      <.icon
+        name="tooltip"
+        class="inline-block w-4 h-4 mr-2 rounded-sm fill-current text-blue-planning-300"
+      />
     </span>
     """
-
   end
 
   def empty_state_base(assigns) do
@@ -514,18 +636,36 @@ defmodule TodoplaceWeb.LiveHelpers do
     ~H"""
     <div class={"grid grid-cols-1 md:grid-cols-2 md:gap-20 gap-8 items-center md:pb-0 pb-8 relative #{@wrapper_class}"}>
       <%= if @close_event do %>
-      <button {testid("intro-state-close-button")} class="w-8 h-8 xs:w-10 xs:h-10 z-10 absolute right-5 top-5 xs:right-3 xs:top-3 bg-base-300 text-white p-2 xs:p-3 border-transparent hover:border-blue-planning-300/60 focus:ring-blue-planning-300/70 focus:ring-opacity-75 rounded-lg cursor-pointer transition-colors" phx-click={@close_event} title="dismiss intro">
-        <.icon name="close-x" class="h-full w-full stroke-current stroke-3" />
-      </button>
+        <button
+          {testid("intro-state-close-button")}
+          class="w-8 h-8 xs:w-10 xs:h-10 z-10 absolute right-5 top-5 xs:right-3 xs:top-3 bg-base-300 text-white p-2 xs:p-3 border-transparent hover:border-blue-planning-300/60 focus:ring-blue-planning-300/70 focus:ring-opacity-75 rounded-lg cursor-pointer transition-colors"
+          phx-click={@close_event}
+          title="dismiss intro"
+        >
+          <.icon name="close-x" class="h-full w-full stroke-current stroke-3" />
+        </button>
       <% end %>
       <div>
-        <%# These next 2 lines with inline styles come from a third-party tool; we highly discourage usage of inline styles as a normal practice %>
-        <div style={"position: relative; padding-bottom: #{@third_party_padding}; height: 0;"} class="shadow-xl rounded">
+        <div
+          style={"position: relative; padding-bottom: #{@third_party_padding}; height: 0;"}
+          class="shadow-xl rounded"
+        >
           <%= if Application.get_env(:todoplace, :show_arcade_tours) do %>
-            <iframe src={@tour_embed} frameborder="0" loading="lazy" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+            <iframe
+              src={@tour_embed}
+              frameborder="0"
+              loading="lazy"
+              webkitallowfullscreen
+              mozallowfullscreen
+              allowfullscreen
+              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+            >
+            </iframe>
           <% end %>
         </div>
-        <h6 class="uppercase text-base-250 text-center my-4 text-xs tracking-widest"><%= @eyebrow_text %></h6>
+        <h6 class="uppercase text-base-250 text-center my-4 text-xs tracking-widest">
+          <%= @eyebrow_text %>
+        </h6>
       </div>
       <div class="md:max-w-md">
         <h1 class="text-2xl md:text-5xl font-bold mb-4"><%= @headline %></h1>
@@ -534,12 +674,22 @@ defmodule TodoplaceWeb.LiveHelpers do
           <%= if @inner_block do %>
             <%= render_slot(@inner_block) %>
             <%= if @external_video_link do %>
-              <a class="underline text-blue-planning-300 flex gap-3 items-center flex-shrink-0" href={@external_video_link} target="_blank" rel="noopener">
+              <a
+                class="underline text-blue-planning-300 flex gap-3 items-center flex-shrink-0"
+                href={@external_video_link}
+                target="_blank"
+                rel="noopener"
+              >
                 Video tour <.icon name="external-link" class="h-4 w-4 stroke-current stroke-1" />
               </a>
             <% end %>
             <%= if @show_dismiss do %>
-              <button class="underline text-blue-planning-300 flex gap-3 items-center flex-shrink-0" type="button" phx-click={@close_event} title="dismiss intro">
+              <button
+                class="underline text-blue-planning-300 flex gap-3 items-center flex-shrink-0"
+                type="button"
+                phx-click={@close_event}
+                title="dismiss intro"
+              >
                 Dismiss
               </button>
             <% end %>

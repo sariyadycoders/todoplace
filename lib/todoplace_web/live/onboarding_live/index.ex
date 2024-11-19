@@ -47,6 +47,8 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
 
   @impl true
   def handle_event("validate", %{"user" => params}, socket) do
+    IO.inspect(params, label: "params")
+
     socket |> assign_changeset(params) |> noreply()
   end
 
@@ -205,7 +207,7 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
     <hr class="mt-6 border-base-200" />
 
     <.inputs_for :let={onboarding} field={@f[:onboarding]}>
-      <.form_field
+      <%!-- <.form_field
         label="What are you most interested in using Todoplace for?"
         error={:interested_in}
         prefix="Select one"
@@ -214,7 +216,18 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
         <%= select(onboarding, :interested_in, [{"select one", nil}] ++ most_interested_select(),
           class: "select #{@input_class} truncate pr-8"
         ) %>
-      </.form_field>
+      </.form_field> --%>
+      <%= for field <- ["AA", "BB", "CC"] do %>
+        <% input_name = input_name(onboarding, :interested_in) %>
+        <% checked = input_value(onboarding, :interested_in) == field %>
+        <.custom_checkbox
+          type="radio"
+          name={input_name}
+          form={onboarding}
+          job_type={field}
+          checked={checked}
+        />
+      <% end %>
       <hr class="mt-6 border-base-200" />
 
       <%= hidden_input(onboarding, :welcome_count, value: 0) %>
@@ -236,6 +249,20 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
         </.form_field>
       </div>
     </.inputs_for>
+
+    <%!-- <.inputs_for :let={onboarding} field={@f[:onboarding_test]}>
+      <%= for field <- ["AA", "BB", "CC"] do %>
+        <% input_name = input_name(onboarding, :test_field) %>
+        <% checked = input_value(onboarding, :test_field) == field %>
+        <.custom_checkbox
+          type="radio"
+          name={input_name}
+          form={onboarding}
+          job_type={field}
+          checked={checked}
+        />
+      <% end %>
+    </.inputs_for> --%>
     """
   end
 
@@ -276,7 +303,7 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
   def optimized_container(assigns) do
     ~H"""
     <div class="flex items-stretch w-screen min-h-screen flex-wrap">
-      <div class="lg:w-1/3 w-full flex flex-col justify-center px-8 lg:px-16 py-8">
+      <div class="lg:w-1/2 w-full flex flex-col justify-center px-8 lg:px-16 py-8">
         <div class="flex justify-between items-center">
           <%!-- <.icon name="logo-shoot-higher" class="w-32 h-12 sm:h-20 sm:w-48" /> --%>
           <div class="mb-5">
@@ -285,8 +312,8 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
         </div>
         <%= render_slot(@inner_block) %>
       </div>
-      <div class="lg:w-2/3 w-full flex flex-col items-center justify-center pl-8 lg:pl-16 bg-blue-planning-300">
-        <blockquote class="max-w-lg mx-auto py-8 lg:py-12">
+      <div class="lg:w-1/2 w-full flex flex-col items-center justify-center pl-8 lg:pl-16 bg-blue-planning-300">
+        <%!-- <blockquote class="max-w-lg mx-auto py-8 lg:py-12">
           <p class="mb-4 text-white border-solid border-l-4 border-white pl-4">
             “I love the way that Todoplace flows and so easy to use! All the information I need is easily accessible and well organized. Putting together a proposal for a client is so simple and takes only a few clicks before it's ready to send off for signing and payment.”
           </p>
@@ -299,13 +326,13 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
               <span class="block font-bold not-italic">Emma Thurgood</span> www.emmathurgood.com
             </cite>
           </div>
-        </blockquote>
-        <%!-- <img
-          class="mt-auto object-cover object-top w-full"
+        </blockquote> --%>
+        <img
+          class="object-cover object-top w-1/2"
           style="max-height:75vh;"
-          src="https://uploads-ssl.webflow.com/61147776bffed57ff3e884ef/62f45d6d8aae0229be8bafc7_large-hero.png"
+          src="/images/enter-password.png"
           alt="Todoplace Application"
-        /> --%>
+        />
       </div>
     </div>
     """
