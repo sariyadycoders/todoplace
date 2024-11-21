@@ -129,6 +129,34 @@ defmodule Todoplace.Onboardings do
     end
   end
 
+  defmodule MetaData do
+    use Ecto.Schema
+
+    @primary_key false
+    embedded_schema do
+      field(:purpose, :string)
+      field(:role, :string)
+      field(:team_size, :string)
+      field(:company_size, :string)
+      field(:first_focus, :string)
+      field(:first_manage, :string)
+
+
+    end
+
+    def changeset(%__MODULE__{} = data, attrs) do
+      data
+      |> cast(attrs, [
+        :purpose,
+        :role,
+        :team_size,
+        :company_size,
+        :first_focus,
+        :first_manage
+      ])
+    end
+  end
+
   defdelegate software_options(), to: Onboarding
 
   def changeset(%User{} = user, attrs, opts \\ []) do
@@ -148,6 +176,7 @@ defmodule Todoplace.Onboardings do
       []
     )
     |> cast_embed(:onboarding, with: &onboarding_changeset(&1, &2, step), required: true)
+    |> cast_embed(:metadata, with: &data_changeset(&1, &2, step), required: true)
     |> cast_assoc(:organization,
       with: &organization_onboarding_changeset(&1, &2, step, onboarding_type),
       required: true
@@ -302,5 +331,9 @@ defmodule Todoplace.Onboardings do
 
   defp onboarding_changeset(onboarding, attrs, _) do
     Onboarding.changeset(onboarding, attrs)
+  end
+
+  defp data_changeset(data, attrs, _) do
+    MetaData.changeset(data, attrs)
   end
 end

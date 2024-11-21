@@ -207,7 +207,7 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
     <hr class="mt-6 border-base-200" />
 
     <.inputs_for :let={onboarding} field={@f[:onboarding]}>
-      <%!-- <.form_field
+      <.form_field
         label="What are you most interested in using Todoplace for?"
         error={:interested_in}
         prefix="Select one"
@@ -216,18 +216,8 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
         <%= select(onboarding, :interested_in, [{"select one", nil}] ++ most_interested_select(),
           class: "select #{@input_class} truncate pr-8"
         ) %>
-      </.form_field> --%>
-      <%= for field <- ["AA", "BB", "CC"] do %>
-        <% input_name = input_name(onboarding, :interested_in) %>
-        <% checked = input_value(onboarding, :interested_in) == field %>
-        <.custom_checkbox
-          type="radio"
-          name={input_name}
-          form={onboarding}
-          job_type={field}
-          checked={checked}
-        />
-      <% end %>
+      </.form_field>
+
       <hr class="mt-6 border-base-200" />
 
       <%= hidden_input(onboarding, :welcome_count, value: 0) %>
@@ -250,20 +240,169 @@ defmodule TodoplaceWeb.OnboardingLive.Index do
       </div>
     </.inputs_for>
 
-    <%!-- <.inputs_for :let={onboarding} field={@f[:onboarding_test]}>
-      <%= for field <- ["AA", "BB", "CC"] do %>
-        <% input_name = input_name(onboarding, :test_field) %>
-        <% checked = input_value(onboarding, :test_field) == field %>
-        <.custom_checkbox
-          type="radio"
-          name={input_name}
-          form={onboarding}
-          job_type={field}
-          checked={checked}
-        />
-      <% end %>
-    </.inputs_for> --%>
+    <.inputs_for :let={metadata} field={@f[:metadata]}>
+      <div class="font-bold text-lg my-5">
+        What is your role?
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <%= for field <- ["Work", "Personal", "School", "Non-profits"] do %>
+          <% input_name = input_name(metadata, :purpose) %>
+          <% checked = input_value(metadata, :purpose) == field %>
+          <.custom_checkbox
+            type="radio"
+            name={input_name}
+            form={metadata}
+            job_type={field}
+            checked={checked}
+          />
+        <% end %>
+      </div>
+
+      <% role_options = get_role_options(input_value(metadata, :purpose)) %>
+      <div :if={Enum.any?(role_options)} class="font-bold text-lg my-5">
+        What is your role?
+      </div>
+      <div :if={Enum.any?(role_options)} class="grid grid-cols-3 gap-3">
+        <%= for field <- role_options do %>
+          <% input_name = input_name(metadata, :role) %>
+          <% checked = input_value(metadata, :role) == field %>
+          <.custom_checkbox
+            type="radio"
+            name={input_name}
+            form={metadata}
+            job_type={field}
+            checked={checked}
+          />
+        <% end %>
+      </div>
+
+      <div :if={input_value(metadata, :role) != "Freelancer"} class="font-bold text-lg my-5">
+        How many peopple are on your team?
+      </div>
+      <div :if={input_value(metadata, :role) != "Freelancer"} class="grid grid-cols-3 gap-3">
+        <%= for field <- ["Only me", "2 - 5", "6 - 10", "11 - 15", "16 - 25", "26 - 50", "51 - 100", "101 - 500"] do %>
+          <% input_name = input_name(metadata, :team_size) %>
+          <% checked = input_value(metadata, :team_size) == field %>
+          <.custom_checkbox
+            type="radio"
+            name={input_name}
+            form={metadata}
+            job_type={field}
+            checked={checked}
+          />
+        <% end %>
+      </div>
+
+      <div :if={input_value(metadata, :role) != "Freelancer" and input_value(metadata, :purpose) != "School"} class="font-bold text-lg my-5">
+        How many peopple work at your company?
+      </div>
+      <div :if={input_value(metadata, :role) != "Freelancer" and input_value(metadata, :purpose) != "School"} class="grid grid-cols-3 gap-3">
+        <%= for field <- ["1 - 19", "20 - 49", "50 - 99", "100 - 250", "251 - 500", "501 - 1500", "1500+"] do %>
+          <% input_name = input_name(metadata, :company_size) %>
+          <% checked = input_value(metadata, :company_size) == field %>
+          <.custom_checkbox
+            type="radio"
+            name={input_name}
+            form={metadata}
+            job_type={field}
+            checked={checked}
+          />
+        <% end %>
+      </div>
+
+      <div :if={input_value(metadata, :purpose) not in ["School", "Non-profits"]} class="font-bold text-lg my-5">
+        Select what would you like to manage first?
+      </div>
+      <div :if={input_value(metadata, :purpose) not in ["School", "Non-profits"]} class="grid grid-cols-3 gap-3">
+        <%= for field <- manage_options() do %>
+          <% input_name = input_name(metadata, :first_manage
+          ) %>
+          <% checked = input_value(metadata, :first_manage) == field %>
+          <.custom_checkbox
+            type="radio"
+            name={input_name}
+            form={metadata}
+            job_type={field}
+            checked={checked}
+          />
+        <% end %>
+      </div>
+
+      <% focus_options =
+          if input_value(metadata, :first_manage) not in [nil, ""] do
+            focus_options(input_value(metadata, :first_manage))
+          else
+            if input_value(metadata, :purpose) in ["School", "Non-profits"] do
+              separate_focus_options(input_value(metadata, :purpose))
+            else
+              []
+            end
+          end
+      %>
+      <div :if={Enum.any?(focus_options)} class="font-bold text-lg my-5">
+        Select what would you like to manage first?
+      </div>
+      <div :if={Enum.any?(focus_options)} class="grid grid-cols-3 gap-3">
+        <%= for field <- focus_options do %>
+          <% input_name = input_name(metadata, :first_focus
+          ) %>
+          <% checked = input_value(metadata, :first_focus) == field %>
+          <.custom_checkbox
+            type="radio"
+            name={input_name}
+            form={metadata}
+            job_type={field}
+            checked={checked}
+          />
+        <% end %>
+      </div>
+    </.inputs_for>
     """
+  end
+
+  defp manage_options() do
+    ["Non-profits", "Construction", "Software Development", "Finance", "Marketing", "Sales and CRM", "IT", "HR and Recruiting", "Education", "PMO", "Operations", "Design and Creative", "Product Management", "Legal", "Other"]
+  end
+
+  defp focus_options(key) do
+    %{
+      "Non-profits" => ["Tasks Management", "Donor Management", "Portfolio Management", "Grants Management", "Emergency Response", "Requests and Approvals", "CRM", "Goals and Strategy", "Event Management", "Client Projects", "Resource Management", "Project Management", "Business Operations", "Volunteer Registration Management", "Other"],
+      "Construction" => ["Portfolio Management", "Client Projects", "Construction Scheduling", "Requests and Approvals", "Resource Management", "Task Management", "Project Management", "Goals and Strategy", "CRM", "Construction Planning", "Other"],
+      "Software Development" => ["Task Management", "Project Management", "Kanban", "Roadmap Planning", "Bugs Tracking", "Reporting", "Sprint Management", "Other"],
+      "Finance" => ["Task Management", "Project Management", "Client Projects", "Resource Management", "Business Operations", "Forecast Planning and Analytics", "CRM", "Billing and Invoices", "Goals and Strategy", "Accouting", "Budget Management", "Portfolio Management", "Requests and Approvals", "Other"],
+      "Marketing" => ["CRM", "Goals and Strategy", "Requests and Approvals", "Content Calendar", "Project Management", "Compaign Tracking", "Strategin Planning", "Marketing Operations", "Task Management", "Media Production", "Resource Management", "Portfolio Management", "Email Markeing", "Creative", "Event Management", "Social Media", "Other"],
+      "Sales and CRM" => ["Project Management", "Task Management", "Sales Pipeline", "Leads Capturing", "Marketing Activities", "Quotes and Invoices", "Lead Management", "Contact Management", "Other"],
+      "IT" => ["Goals and Strategy", "CRM", "IT Service Desk", "Tasks Management", "Portfolio Management", "Resource Management", "Project Management", "Tickets and Requests", "Software Development", "Knowledge Base", "Other"],
+      "HR and Recruiting" => ["Requests and Approvals", "Task Management", "Business Operations", "HR Services", "Employee Onboarding", "Onboarding and Offboarding", "Goals and Strategy", "Recruitment Pipeline", "Project Management", "Company Events", "Employee Directory", "Employee Experience", "Portfolio Management", "Recruiting and Talent Acquisition", "Resource Management", "HR Request", "CRM", "Other"],
+      "Education" => ["Requests And Approvals", "Individual Work", "Group Assignments", "Task Management", "Administrative Work", "CRM", "Goals And Strategy", "Student Organizations", "Business Operations", "Project Management", "Portfolio Management", "Academic Research", "Resource Management", "Curriculum And Syllabus Management", "Other"],
+      "PMO" => ["Project Planning", "Project Management", "CRM", "Portfolio Management", "Task Management", "Goals And Strategy", "Requests And Approvals", "Client Projects", "Customer Projects", "Resource Management", "Other"],
+      "Operations" => ["Project Management", "Task Management", "Marketing Operations", "Remote Work", "Portfolio Management", "Operations Processes", "Business Operations", "Requests And Approvals", "CRM", "Event Management", "Resource Management", "Goals And Strategy", "Other"],
+      "Design and Creative" =>  ["Resource Management", "Creative Planning", "Client Projects", "Portfolio Management", "Task Management", "Creative Requests", "Product Launches", "Media Production", "Project Management", "Content Calendar", "Requests And Approvals", "CRM", "Goals And Strategy", "Other"],
+      "Product Management" => ["Release Plan", "Task Management", "Project Management", "Features Backlog", "Roadmap Planning", "Other"],
+      "Legal" => ["Resource Management", "Requests And Approvals", "Project Management", "Legal Requests", "Task Management", "Goals And Strategy", "Portfolio Management", "Procurement", "Client Projects", "CRM", "Other"],
+      "Other" => ["Strategic Planning", "CRM", "Portfolio Management", "Project Management", "Digital Asset Management", "Task Management", "Sales Pipeline", "Client Projects", "Requests And Approvals", "Contact Management", "Project Planning", "Resource Management", "Goals And Strategy", "Business Operations", "Event Management", "Content Calendar", "Other"]
+    }
+    |> Map.get(key)
+  end
+
+  defp separate_focus_options(key) do
+    %{
+      "School" => ["Requests And Approvals", "Individual Work", "Group Assignments", "Task Management", "Administrative Work", "CRM", "Goals And Strategy", "Student Organizations", "Business Operations", "Project Management", "Portfolio Management", "Academic Research", "Resource Management", "Curriculum And Syllabus Management", "Other"],
+      "Non-profits" => ["Task Management", "Donor Management", "Portfolio Management", "Grants Management", "Emergency Response", "Requests And Approvals", "CRM", "Goals And Strategy", "Event Management", "Client Projects", "Resource Management", "Project Management", "Business Operations", "Volunteers Registration Management", "Other"]
+    }
+    |> Map.get(key)
+  end
+
+  defp get_role_options(purpose) do
+    case purpose do
+      "" -> []
+      nil -> []
+      "Work" -> ["Business Owner", "Team Leader", "Team Member", "Freelancer", "Director", "C-Level", "VP"]
+      "Personal" -> []
+      "School" -> ["Undergraduate Student", "Graduate Student", "Faculty Member", "Other"]
+      "Non-profits" -> ["Board Member", "Executive", "Employee", "Volunteer", "IT Staff", "Other"]
+      _ -> []
+    end
   end
 
   defp step(%{step: 3} = assigns) do

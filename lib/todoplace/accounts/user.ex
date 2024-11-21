@@ -13,7 +13,8 @@ defmodule Todoplace.Accounts.User do
     Rewardful,
     Accounts.User.Promotions,
     Repo,
-    Accounts.UserPreference
+    Accounts.UserPreference,
+    Onboardings.MetaData
   }
 
   @email_regex ~r/^(?!.*\.\.)(?!^[^\w]+)(?!.*[^\w]$)[^\s]+@[^\s]+\.[^\s]+$/
@@ -31,6 +32,7 @@ defmodule Todoplace.Accounts.User do
     field :sign_up_auth_provider, Ecto.Enum, values: [:google, :password], default: :password
     field :stripe_customer_id, :string
     embeds_one(:onboarding, Onboarding, on_replace: :update)
+    embeds_one(:metadata, MetaData, on_replace: :update)
     field :onboarding_flow_source, {:array, :string}, default: []
     field :fcm_token, :string
     has_one(:subscription, Subscription)
