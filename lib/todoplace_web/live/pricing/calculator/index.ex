@@ -212,8 +212,8 @@ defmodule TodoplaceWeb.Live.Pricing.Calculator.Index do
       </div>
 
       <p class="font-extrabold mt-4">
-        How much time do you spend on your photography business per week?
-        <br /><span class="italic font-normal text-sm text-base-250">
+        How much time do you spend on your photography business per week? <br />
+        <span class="italic font-normal text-sm text-base-250">
           (include all marketing, client communications, prep, travel, shoot time, editing, accounting, admin etc)
         </span>
       </p>
@@ -275,8 +275,8 @@ defmodule TodoplaceWeb.Live.Pricing.Calculator.Index do
         <hr class="hidden mb-4 sm:block" />
         <div class="flex flex-wrap items-center justify-between px-4">
           <p class="font-extrabold">
-            Approximate Tax Bracket
-            <br /><span class="italic font-normal text-sm text-base-250">
+            Approximate Tax Bracket <br />
+            <span class="italic font-normal text-sm text-base-250">
               How did you calculate this?
               <.tooltip
                 id="tax-bracket"
@@ -293,8 +293,8 @@ defmodule TodoplaceWeb.Live.Pricing.Calculator.Index do
         <hr class="hidden mt-4 mb-4 sm:block" />
         <div class="flex flex-wrap items-center justify-between px-4">
           <p class="py-2 font-extrabold">
-            Approximate After Income Tax
-            <br /><span class="italic font-normal text-sm text-base-250">
+            Approximate After Income Tax <br />
+            <span class="italic font-normal text-sm text-base-250">
               <a
                 class="underline"
                 target="_blank"
@@ -314,8 +314,8 @@ defmodule TodoplaceWeb.Live.Pricing.Calculator.Index do
         <hr class="hidden mt-4 mb-4 sm:block" />
         <div class="flex flex-wrap items-center justify-between px-4">
           <p class="py-2 font-extrabold">
-            Self-employment tax
-            <br /><span class="italic font-normal text-sm text-base-250">
+            Self-employment tax <br />
+            <span class="italic font-normal text-sm text-base-250">
               What's this?
               <.tooltip
                 id="employment-tax"
@@ -331,8 +331,8 @@ defmodule TodoplaceWeb.Live.Pricing.Calculator.Index do
         <hr class="hidden mt-4 mb-4 sm:block" />
         <div class="flex flex-wrap items-center justify-between px-4">
           <p class="py-2 font-extrabold">
-            Approximate ‘Take Home Pay’
-            <br /><span class="italic font-normal text-sm text-base-250">
+            Approximate ‘Take Home Pay’ <br />
+            <span class="italic font-normal text-sm text-base-250">
               Approximate income after income tax and SE tax
             </span>
           </p>

@@ -98,7 +98,8 @@ defmodule TodoplaceWeb.Live.ClientLive.ClientFormComponent do
         <h1 class="mt-2 mb-4 text-3xl">
           <strong class="font-bold">
             <%= if @client, do: "Edit Client: ", else: "Add Client: " %>
-          </strong> <%= heading_subtitle(@step) %>
+          </strong>
+           <%= heading_subtitle(@step) %>
         </h1>
 
         <button

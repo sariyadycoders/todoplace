@@ -18,7 +18,6 @@ defmodule TodoplaceWeb.Live.Pricing.Category.Attribute do
   def render(assigns) do
     ~H"""
     <div class="contents">
-      
       <div class="items-center hidden py-8 pl-12 pr-4 font-bold capitalize sm:flex">
         <%= @attribute.category_name %> <%= @attribute.name %>
       </div>

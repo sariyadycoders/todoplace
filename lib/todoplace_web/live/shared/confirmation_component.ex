@@ -89,7 +89,7 @@ defmodule TodoplaceWeb.Shared.ConfirmationComponent do
             <p>
               <b>Important:</b>
               <i>
-                 Your client has purchased this photo already. We suggest you don’t delete it, please replace or cancel 
+                Your client has purchased this photo already. We suggest you don’t delete it, please replace or cancel
               </i>
             </p>
           </div>
