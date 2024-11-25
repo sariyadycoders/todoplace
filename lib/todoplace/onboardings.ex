@@ -88,7 +88,7 @@ defmodule Todoplace.Onboardings do
         :welcome_count,
         :promotion_code
       ])
-      |> validate_required([:country, :interested_in, :zipcode])
+      |> validate_required([:country, :zipcode])
       |> validate_change(:promotion_code, &valid_promotion_codes/2)
     end
 

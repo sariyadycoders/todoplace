@@ -471,7 +471,7 @@ defmodule TodoplaceWeb.LiveHelpers do
     ~H"""
     <label class={
       classes(
-        "flex items-center p-2 border rounded-lg font-semibold text-sm leading-tight sm:text-base #{@class}",
+        "flex items-center justify-center p-2 border rounded-lg font-semibold text-sm leading-tight sm:text-base #{@class}",
         %{
           "#{@border_dark} #{@bg_light}" => @checked,
           "cursor-not-allowed pointer-events-none" => @disabled,
