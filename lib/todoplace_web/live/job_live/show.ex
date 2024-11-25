@@ -133,10 +133,7 @@ defmodule TodoplaceWeb.JobLive.Show do
         %{assigns: %{is_mobile: is_mobile}} = socket
       ) do
     socket
-    |> redirect(
-      to:
-        ~p"/galleries/#{gallery_id}/pricing"
-    )
+    |> redirect(to: ~p"/galleries/#{gallery_id}/pricing")
     |> noreply
   end
 
@@ -144,9 +141,7 @@ defmodule TodoplaceWeb.JobLive.Show do
   def handle_event("view-gallery", %{"gallery_id" => gallery_id}, socket),
     do:
       socket
-      |> push_redirect(
-        to: ~p"/galleries/#{gallery_id}?#{%{is_mobile: false}}"
-      )
+      |> push_redirect(to: ~p"/galleries/#{gallery_id}?#{%{is_mobile: false}}")
       |> noreply()
 
   def handle_event("create-gallery", %{"parent_id" => parent_id}, socket) do
@@ -374,17 +369,48 @@ defmodule TodoplaceWeb.JobLive.Show do
 
   defp actions(assigns) do
     ~H"""
-    <div class="flex items-center md:ml-auto w-full md:w-auto left-3 sm:left-8" data-offset-x="-21" phx-update="ignore" data-placement="bottom-end" phx-hook="Select" id={"manage-gallery-#{@gallery.id}"}>
-      <button title="Manage" class="btn-tertiary px-3 py-2 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full">
+    <div
+      class="flex items-center md:ml-auto w-full md:w-auto left-3 sm:left-8"
+      data-offset-x="-21"
+      phx-update="ignore"
+      data-placement="bottom-end"
+      phx-hook="Select"
+      id={"manage-gallery-#{@gallery.id}"}
+    >
+      <button
+        title="Manage"
+        class="btn-tertiary px-3 py-2 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full"
+      >
         Actions
-        <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-        <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+        <.icon
+          name="down"
+          class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+        />
+        <.icon
+          name="up"
+          class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+        />
       </button>
 
       <div class="z-10 flex flex-col hidden w-68 bg-white border rounded-lg shadow-lg popover-content">
         <%= for %{title: title, action: action, icon: icon} <- actions() do %>
-          <button title={title} type="button" disabled={!@disabled} phx-click={action} phx-value-gallery_id={@gallery.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold disabled:opacity-75 disabled:cursor-not-allowed">
-            <.icon name={icon} class={classes("inline-block w-4 h-4 mr-3 fill-current", %{"text-red-sales-300" => icon == "trash", "text-blue-planning-300" => icon != "trash"})} />
+          <button
+            title={title}
+            type="button"
+            disabled={!@disabled}
+            phx-click={action}
+            phx-value-gallery_id={@gallery.id}
+            class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold disabled:opacity-75 disabled:cursor-not-allowed"
+          >
+            <.icon
+              name={icon}
+              class={
+                classes("inline-block w-4 h-4 mr-3 fill-current", %{
+                  "text-red-sales-300" => icon == "trash",
+                  "text-blue-planning-300" => icon != "trash"
+                })
+              }
+            />
             <%= title %>
           </button>
         <% end %>
@@ -412,7 +438,11 @@ defmodule TodoplaceWeb.JobLive.Show do
     <.simple_card icon="gallery" heading="Galleries">
       <div {testid("card-Gallery")}>
         <p class="text-base-250"><%= @text %></p>
-        <button class="btn-primary mt-4 intro-gallery" phx-click={@button_click} disabled={@button_disabled}>
+        <button
+          class="btn-primary mt-4 intro-gallery"
+          phx-click={@button_click}
+          disabled={@button_disabled}
+        >
           <%= @button_text %>
         </button>
       </div>
@@ -438,7 +468,11 @@ defmodule TodoplaceWeb.JobLive.Show do
     ~H"""
     <div {testid("card-Gallery")}>
       <p><%= @text %></p>
-      <button class="btn-primary mt-4 intro-gallery" phx-click={@button_click} disabled={@button_disabled}>
+      <button
+        class="btn-primary mt-4 intro-gallery"
+        phx-click={@button_click}
+        disabled={@button_disabled}
+      >
         <%= @button_text %>
       </button>
     </div>
@@ -457,19 +491,42 @@ defmodule TodoplaceWeb.JobLive.Show do
     <%= for %{name: name, type: type, child: child, orders: orders} = gallery <- @galleries do %>
       <%= case type do %>
         <% :proofing -> %>
-          <div {testid("card-proofing")} class="flex overflow-hidden border border-base-200 rounded-lg">
+          <div
+            {testid("card-proofing")}
+            class="flex overflow-hidden border border-base-200 rounded-lg"
+          >
             <div class="flex flex-col w-full p-4">
               <.card_title title={name} gallery_type={type} color="black" gallery_card?={true} />
               <div class="flex justify-between w-full">
-                <.card_content gallery={gallery} icon_name="proofing" title="Client Proofing" padding="pr-3" {assigns} />
-                <div class="h-full w-px bg-base-200"/>
-                <.card_content gallery={child || %Gallery{type: :finals, orders: []}} parent_id={gallery.id} parent_has_orders?={Enum.any?(orders, & &1.placed_at)} icon_name="finals" title="Client Finals" padding="pl-3" {assigns} />
+                <.card_content
+                  gallery={gallery}
+                  icon_name="proofing"
+                  title="Client Proofing"
+                  padding="pr-3"
+                  {assigns}
+                />
+                <div class="h-full w-px bg-base-200" />
+                <.card_content
+                  gallery={child || %Gallery{type: :finals, orders: []}}
+                  parent_id={gallery.id}
+                  parent_has_orders?={Enum.any?(orders, & &1.placed_at)}
+                  icon_name="finals"
+                  title="Client Finals"
+                  padding="pl-3"
+                  {assigns}
+                />
               </div>
             </div>
           </div>
         <% _ -> %>
           <.card title={name} gallery_card?={true} color="black" gallery_type={@build_type.(type)}>
-            <.inner_section {assigns} gallery={gallery} p_class="text-lg" btn_section_class="mt-[3.7rem]" link_class="font-semibold text-base" />
+            <.inner_section
+              {assigns}
+              gallery={gallery}
+              p_class="text-lg"
+              btn_section_class="mt-[3.7rem]"
+              link_class="font-semibold text-base"
+            />
           </.card>
       <% end %>
     <% end %>
@@ -481,7 +538,7 @@ defmodule TodoplaceWeb.JobLive.Show do
     <div class={"flex flex-col w-2/4 #{@padding}"}>
       <div class="flex">
         <div class="border p-1.5 rounded-full bg-base-200">
-          <.icon name={@icon_name} class="w-4 h-4 stroke-2 fill-current text-blue-planning-300"/>
+          <.icon name={@icon_name} class="w-4 h-4 stroke-2 fill-current text-blue-planning-300" />
         </div>
         <span class="mt-0.5 ml-3 text-base font-bold"><%= @title %></span>
       </div>
@@ -510,12 +567,22 @@ defmodule TodoplaceWeb.JobLive.Show do
         <p class={"text-base-250 font-normal #{@p_class}"}>
           <%= text %>
           <%= unless status in [:no_photo, :none_created] do %>
-            - <%= if @count == 0, do: "No orders", else: "#{@count} " <> ngettext("order", "orders", @count) %>
+            - <%= if @count == 0,
+              do: "No orders",
+              else: "#{@count} " <> ngettext("order", "orders", @count) %>
           <% end %>
         </p>
-        <div {testid("card-buttons")} class={"flex self-end items-center gap-4 #{@btn_section_class}"} >
-          <button class={"btn-primary intro-gallery font-normal rounded-lg py-2 #{@btn_class}"} phx-click={button_click} phx-value-gallery_id={@gallery.id} phx-value-parent_id={@parent_id} disabled={button_disabled}><%= button_text %></button>
-          <.actions gallery={@gallery} disabled={@parent_has_orders?}/>
+        <div {testid("card-buttons")} class={"flex self-end items-center gap-4 #{@btn_section_class}"}>
+          <button
+            class={"btn-primary intro-gallery font-normal rounded-lg py-2 #{@btn_class}"}
+            phx-click={button_click}
+            phx-value-gallery_id={@gallery.id}
+            phx-value-parent_id={@parent_id}
+            disabled={button_disabled}
+          >
+            <%= button_text %>
+          </button>
+          <.actions gallery={@gallery} disabled={@parent_has_orders?} />
         </div>
     <% end %>
     """

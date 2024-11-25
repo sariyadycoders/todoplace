@@ -122,11 +122,14 @@ defmodule Todoplace.Cache do
     case get_key_data("apps") do
       {:ok, nil} ->
         apps = Todoplace.Apps.get_all_apps()
-        put_key_value("apps",  apps)
+        put_key_value("apps", apps)
         apps
 
-      {:ok, binary} -> :erlang.binary_to_term(binary)
-      {:error, reason} -> {:error, reason}
+      {:ok, binary} ->
+        :erlang.binary_to_term(binary)
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -214,7 +217,7 @@ defmodule Todoplace.Cache do
   end
 
   defp get_notification_count(user_id, organization_id) do
-    count = 
+    count =
       Todoplace.Accounts.Notification
       |> where([n], n.user_id == ^user_id and n.organization_id == ^organization_id)
       |> Todoplace.Repo.aggregate(:count, :id)
@@ -227,9 +230,9 @@ defmodule Todoplace.Cache do
     user_all_organizations_ids = get_all_organization_ids(user)
 
     notification_counts =
-     Enum.map(user_organizations_ids, fn org_id ->
-      {org_id, get_notification_count(user.id, org_id)}
-    end)
+      Enum.map(user_organizations_ids, fn org_id ->
+        {org_id, get_notification_count(user.id, org_id)}
+      end)
 
     %{
       current_user: user,
@@ -249,7 +252,7 @@ defmodule Todoplace.Cache do
          notification_counts: notification_counts,
          session_token: token
        })
-       when is_map(user) and is_map(user_preferences)  and is_list(user_org_ids) and
+       when is_map(user) and is_map(user_preferences) and is_list(user_org_ids) and
               is_list(user_all_org_ids) and is_binary(token) do
     true
   end

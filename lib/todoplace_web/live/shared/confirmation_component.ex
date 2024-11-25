@@ -86,7 +86,12 @@ defmodule TodoplaceWeb.Shared.ConfirmationComponent do
       <%= if @purchased do %>
         <div class="mt-4 flex flex-col bg-gray-100">
           <div class="py-2 px-3">
-             <p> <b>Important:</b> <i> Your client has purchased this photo already. We suggest you don’t delete it, please replace or cancel </i></p>
+            <p>
+              <b>Important:</b>
+              <i>
+                 Your client has purchased this photo already. We suggest you don’t delete it, please replace or cancel 
+              </i>
+            </p>
           </div>
         </div>
       <% end %>
@@ -98,69 +103,123 @@ defmodule TodoplaceWeb.Shared.ConfirmationComponent do
 
   defp section(%{dropdown?: true} = assigns) do
     ~H"""
-      <.form :let={f} for={%{}} as={:dropdown} phx-submit={@confirm_event} phx-target={@myself} phx-change="validate" class="mt-2">
-        <h1 class="font-extrabold text-sm">Pick a date</h1>
-        <%= select(f, :date_id, @date_labels, class: "w-full px-2 py-3 border border-slate-400 rounded-md mt-1 cursor-pointer") %>
-        <%= if Enum.any?(@dropdown_items) do %>
-          <h1 class="font-extrabold text-sm"><%= @dropdown_label %></h1>
-          <%= select(f, :item_id, @dropdown_items, class: "w-full px-2 py-3 border border-slate-400 rounded-md mt-1 cursor-pointer") %>
-        <% else %>
-          <div>
-            <%= @empty_dropdown_description %>
-          </div>
-        <% end %>
+    <.form
+      :let={f}
+      for={%{}}
+      as={:dropdown}
+      phx-submit={@confirm_event}
+      phx-target={@myself}
+      phx-change="validate"
+      class="mt-2"
+    >
+      <h1 class="font-extrabold text-sm">Pick a date</h1>
+      <%= select(f, :date_id, @date_labels,
+        class: "w-full px-2 py-3 border border-slate-400 rounded-md mt-1 cursor-pointer"
+      ) %>
+      <%= if Enum.any?(@dropdown_items) do %>
+        <h1 class="font-extrabold text-sm"><%= @dropdown_label %></h1>
+        <%= select(f, :item_id, @dropdown_items,
+          class: "w-full px-2 py-3 border border-slate-400 rounded-md mt-1 cursor-pointer"
+        ) %>
+      <% else %>
+        <div>
+          <%= @empty_dropdown_description %>
+        </div>
+      <% end %>
 
-        <button class="w-full btn-primary text-center mt-6" disabled={Enum.empty?(@dropdown_items)} phx-disable-with="Saving&hellip;">
-          <%= @confirm_label %>
-        </button>
+      <button
+        class="w-full btn-primary text-center mt-6"
+        disabled={Enum.empty?(@dropdown_items)}
+        phx-disable-with="Saving&hellip;"
+      >
+        <%= @confirm_label %>
+      </button>
 
-        <button class="w-full btn-secondary text-center mt-4" type="button" phx-click="modal" phx-value-action="close">
-          <%= @close_label %>
-        </button>
-      </.form>
+      <button
+        class="w-full btn-secondary text-center mt-4"
+        type="button"
+        phx-click="modal"
+        phx-value-action="close"
+      >
+        <%= @close_label %>
+      </button>
+    </.form>
     """
   end
 
   defp section(assigns) do
     ~H"""
-      <%= if @gallery_name && @gallery_count do %>
-        <p class="pt-4">Are you sure you wish to permanently delete
+    <%= if @gallery_name && @gallery_count do %>
+      <p class="pt-4">
+        Are you sure you wish to permanently delete
         <span class="font-bold"><%= @gallery_name %></span>
-        gallery, and the
-        <span class="font-bold"><%= @gallery_count %> photos</span>
-        it contains?</p>
-      <% end %>
+        gallery, and the <span class="font-bold"><%= @gallery_count %> photos</span>
+        it contains?
+      </p>
+    <% end %>
 
     <%= if @purchased do %>
-          <button class={"w-full mt-6 " <> @replace_class} title={@replace_label} type="button" phx-click={@replace_event} phx-disable-with="Saving&hellip;" phx-target={@myself}>
-              <%= @replace_label %>
-            </button>
-        <% end %>
-
-    <%= if @purchased do %>
-          <button class={"w-full mt-6 " <> @replace_class} title={@replace_label} type="button" phx-click={@replace_event} phx-disable-with="Saving&hellip;" phx-target={@myself}>
-              <%= @replace_label %>
-            </button>
-        <% end %>
-
-      <%= if @confirm_event do %>
-        <button class={"w-full mt-6 " <> @confirm_class} title={@confirm_label} type="button" phx-click={@confirm_event} phx-disable-with="Saving&hellip;" phx-target={@myself}>
-          <%= @confirm_label %>
-        </button>
-      <% end %>
-
-      <%= if @copy_btn_label do %>
-        <button class="w-full mt-2 px-6 py-3 btn-tertiary text-blue-planning-300" type="button" id="copy-calendar-link" data-clipboard-text={@copy_btn_value} phx-hook="Clipboard">
-          <%= @copy_btn_label %>
-          <div class="hidden p-1 text-sm rounded shadow bg-white" role="tooltip">
-            Copied!
-          </div>
-        </button>
-      <% end %>
-
-      <button class="w-full mt-4 px-6 py-3 font-medium text-base-300 bg-white border border-base-300 rounded-lg hover:bg-base-300/10 focus:outline-none focus:ring-2 focus:ring-base-300/70 focus:ring-opacity-75" type="button" phx-click="modal" phx-value-action="close">
-        <%= @close_label %>
+      <button
+        class={"w-full mt-6 " <> @replace_class}
+        title={@replace_label}
+        type="button"
+        phx-click={@replace_event}
+        phx-disable-with="Saving&hellip;"
+        phx-target={@myself}
+      >
+        <%= @replace_label %>
       </button>
+    <% end %>
+
+    <%= if @purchased do %>
+      <button
+        class={"w-full mt-6 " <> @replace_class}
+        title={@replace_label}
+        type="button"
+        phx-click={@replace_event}
+        phx-disable-with="Saving&hellip;"
+        phx-target={@myself}
+      >
+        <%= @replace_label %>
+      </button>
+    <% end %>
+
+    <%= if @confirm_event do %>
+      <button
+        class={"w-full mt-6 " <> @confirm_class}
+        title={@confirm_label}
+        type="button"
+        phx-click={@confirm_event}
+        phx-disable-with="Saving&hellip;"
+        phx-target={@myself}
+      >
+        <%= @confirm_label %>
+      </button>
+    <% end %>
+
+    <%= if @copy_btn_label do %>
+      <button
+        class="w-full mt-2 px-6 py-3 btn-tertiary text-blue-planning-300"
+        type="button"
+        id="copy-calendar-link"
+        data-clipboard-text={@copy_btn_value}
+        phx-hook="Clipboard"
+      >
+        <%= @copy_btn_label %>
+        <div class="hidden p-1 text-sm rounded shadow bg-white" role="tooltip">
+          Copied!
+        </div>
+      </button>
+    <% end %>
+
+    <button
+      class="w-full mt-4 px-6 py-3 font-medium text-base-300 bg-white border border-base-300 rounded-lg hover:bg-base-300/10 focus:outline-none focus:ring-2 focus:ring-base-300/70 focus:ring-opacity-75"
+      type="button"
+      phx-click="modal"
+      phx-value-action="close"
+    >
+      <%= @close_label %>
+    </button>
     """
   end
 

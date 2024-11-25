@@ -58,6 +58,7 @@ defmodule Todoplace.WHCC do
     order = Map.put(order, "Orders", sub_orders)
     export = Map.put(export, :order, order)
     Logger.info("Reached create_order method for #{inspect(account_id)}")
+
     case Adapter.create_order(account_id, export) do
       {:ok, %{orders: orders} = created_order} ->
         for %{sequence_number: sequence_number} = order <- orders do

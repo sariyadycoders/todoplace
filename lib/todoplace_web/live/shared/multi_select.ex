@@ -110,7 +110,7 @@ defmodule TodoplaceWeb.Shared.MultiSelect do
     assigns = assign(assigns, :rest, rest)
 
     ~H"""
-    <.live_component module={__MODULE__} {@rest}/>
+    <.live_component module={__MODULE__} {@rest} />
     """
   end
 
@@ -248,70 +248,134 @@ defmodule TodoplaceWeb.Shared.MultiSelect do
   @doc false
   def render(assigns) do
     ~H"""
-    <div id={@id} style={} class={build_class([@class, css(:component)]) <> " #{@select_class}"} {@top_rest}>
+    <div
+      id={@id}
+      style={}
+      class={build_class([@class, css(:component)]) <> " #{@select_class}"}
+      {@top_rest}
+    >
       <div id={@id <> "-main"} tabindex="0" class={css(:main, true)} title={@title} {@main_rest}>
-        <div id={@id <> "-tags"} class={css(:tags)} phx-hook="MultiSelectHook"
-             data-target={@myself} data-wrap={Atom.to_string(@wrap)} data-filterside={@filter_side} {@tags_rest}>
+        <div
+          id={@id <> "-tags"}
+          class={css(:tags)}
+          phx-hook="MultiSelectHook"
+          data-target={@myself}
+          data-wrap={Atom.to_string(@wrap)}
+          data-filterside={@filter_side}
+          {@tags_rest}
+        >
           <%= cond do %>
             <% @selected_count == 0 -> %>
               <span class={[css(:placeholder), @placeholder_class]}><%= @placeholder %></span>
             <% @hide_tags || (@selected_count > @cur_shown and not @wrap) -> %>
               <span class={css(:tag)}>
-                <span><%= @selected_count %> <%= ngettext("item", "items", @selected_count) %> selected</span>
-                <.svg type={:close} size="4" color="" on_click="checked" params={[{"uncheck", "all"}, {"id", @id}]} target={@myself}/>
+                <span>
+                  <%= @selected_count %> <%= ngettext("item", "items", @selected_count) %> selected
+                </span>
+                <.svg
+                  type={:close}
+                  size="4"
+                  color=""
+                  on_click="checked"
+                  params={[{"uncheck", "all"}, {"id", @id}]}
+                  target={@myself}
+                />
               </span>
             <% true -> %>
               <%= for option <- @checked_options do %>
                 <span id={"#{@id}-tag-#{option.id}"} class={css(:tag) <> " flex-wrap shrink-0"}>
                   <span><%= option.label %></span>
-                  <.svg type={:close} size="4" color="" on_click="checked" params={[{"uncheck", option.id}, {"id", @id}]} target={@myself}/>
+                  <.svg
+                    type={:close}
+                    size="4"
+                    color=""
+                    on_click="checked"
+                    params={[{"uncheck", option.id}, {"id", @id}]}
+                    target={@myself}
+                  />
                 </span>
               <% end %>
           <% end %>
         </div>
         <div class={css(:main_icons)}>
-          <.svg type={:clear} :if={@selected_count > 1 && !@hide_tags}
-            title="Clear all selected items" on_click="checked"
-            params={[{"uncheck", "all"}, {"id", @id}]} target={@myself}/>
-          <.svg id={@id <> "-updown-icon"} type={:updown} size="6" {@updown_rest}/>
+          <.svg
+            :if={@selected_count > 1 && !@hide_tags}
+            type={:clear}
+            title="Clear all selected items"
+            on_click="checked"
+            params={[{"uncheck", "all"}, {"id", @id}]}
+            target={@myself}
+          />
+          <.svg id={@id <> "-updown-icon"} type={:updown} size="6" {@updown_rest} />
         </div>
       </div>
-      <div id={"#{@id}-dropdown"} tabindex="0" class={css(:body, true) <> " #{@select_class}"} {@ddown_events}>
+      <div
+        id={"#{@id}-dropdown"}
+        tabindex="0"
+        class={css(:body, true) <> " #{@select_class}"}
+        {@ddown_events}
+      >
         <%= if @search_on do %>
           <div class="w-full p-0 relative">
             <div class={css(:filter_icons)}>
-              <.svg id={"#{@id}-flt-check"} type={:check} titles={@search_cbox_titles} color={css(:icon_check_color)}
-                    class={@selected_count == 0 && "opacity-20 pointer-events-none" || nil}/>
-              <input name={"#{@id}-flt-check"} type="hidden" value={@filter_checked}>
-              <.svg id={"#{@id}-flt-clear"} type={:clear} title="Clear Filter"/>
+              <.svg
+                id={"#{@id}-flt-check"}
+                type={:check}
+                titles={@search_cbox_titles}
+                color={css(:icon_check_color)}
+                class={(@selected_count == 0 && "opacity-20 pointer-events-none") || nil}
+              />
+              <input name={"#{@id}-flt-check"} type="hidden" value={@filter_checked} />
+              <.svg id={"#{@id}-flt-clear"} type={:clear} title="Clear Filter" />
             </div>
-            <input id={@filter_id} type="text" autocomplete="off" phx-target={@myself}
-              phx-change={~s([["_",{"to":"#_"}]])
+            <input
+              id={@filter_id}
+              type="text"
+              autocomplete="off"
+              phx-target={@myself}
+              phx-change={
+                ~s([["_",{"to":"#_"}]])
                 # NOTE: JS.set_attribute prevents the input from sending a validation event to server
                 # We can either use JS.add_class("undefined", to: @filter_id) or a the surrogate
                 # command above, which will effectively ignore the event
               }
               class={css(:filter, true)}
-              placeholder={@search_placeholder} value={@filter} phx-debounce={@debounce}>
+              placeholder={@search_placeholder}
+              value={@filter}
+              phx-debounce={@debounce}
+            />
           </div>
         <% end %>
         <div id={"#{@id}-opts"} class={css(:options)}>
-          <%=
-            for opt <- @options,
+          <%= for opt <- @options,
                 id        = "#{@id}[#{opt.id}]",
                 (disabled = disabled(@selected_count, @max_selected, opt.selected)) || true,
                 rest      = disabled && [disabled: true] || [],
                 cursor    = disabled && " cursor-not-allowed" || " cursor-pointer"
-            do
-          %>
+            do %>
             <div class="pr-0 pb-2">
-              <label for={id} class={css(:option_label)}
-              ><input id={id} name={id} type="checkbox" phx-change="checked" phx-target={@myself}
-                      checked={opt.selected} value="on" class={css(:option_input) <> cursor}
-                      {rest}><%= opt.label %></label>
+              <label for={id} class={css(:option_label)}>
+                <input
+                  id={id}
+                  name={id}
+                  type="checkbox"
+                  phx-change="checked"
+                  phx-target={@myself}
+                  checked={opt.selected}
+                  value="on"
+                  class={css(:option_input) <> cursor}
+                  {rest}
+                /><%= opt.label %>
+              </label>
             </div>
           <% end %>
-          <div phx-click="select_all_options" phx-target={@myself} class="text-blue-planning-300 underline pb-2 cursor-pointer">Select all</div>
+          <div
+            phx-click="select_all_options"
+            phx-target={@myself}
+            class="text-blue-planning-300 underline pb-2 cursor-pointer"
+          >
+            Select all
+          </div>
         </div>
       </div>
     </div>
@@ -544,10 +608,17 @@ defmodule TodoplaceWeb.Shared.MultiSelect do
       )
 
     ~H"""
-    <svg id={@id} class={@svg_class} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-      phx-click={@on_click} {@rest}>
+    <svg
+      id={@id}
+      class={@svg_class}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      phx-click={@on_click}
+      {@rest}
+    >
       <title :if={@titles || @title}><%= @title %></title>
-      <%= raw @path %>
+      <%= raw(@path) %>
     </svg>
     """
   end

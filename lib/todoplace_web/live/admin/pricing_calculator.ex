@@ -30,18 +30,36 @@ defmodule TodoplaceWeb.Live.Admin.PricingCalculator do
       </div>
       <%= for(%{tax_schedule: %{id: id}, changeset: changeset} <- @tax_schedules) do %>
         <div class="mb-8 border rounded-lg">
-          <.form :let={f} for={changeset} class="contents" phx-change="save-taxes" id={"form-taxes-#{id}"}>
+          <.form
+            :let={f}
+            for={changeset}
+            class="contents"
+            phx-change="save-taxes"
+            id={"form-taxes-#{id}"}
+          >
             <div class="flex items-center justify-between mb-8 bg-gray-100  p-6 ">
               <div class="grid grid-cols-3 gap-2 items-center w-3/4">
                 <div class="col-start-1 font-bold">Tax Schedule Year</div>
                 <div class="col-start-2 font-bold">Tax Schedule Active</div>
                 <div class="col-start-3 font-bold">Tax Schedule Fixed Self Employment Tax</div>
-                <%= hidden_input f, :id %>
-                <%= select f, :year, generate_years(), class: "select py-3", phx_debounce: 200 %>
-                <%= select f, :active, [true, false], class: "select py-3", phx_debounce: 200 %>
-                <%= input f, :self_employment_percentage, type: :number_input, phx_debounce: 200, step: 0.1, min: 1.0 %>
+                <%= hidden_input(f, :id) %>
+                <%= select(f, :year, generate_years(), class: "select py-3", phx_debounce: 200) %>
+                <%= select(f, :active, [true, false], class: "select py-3", phx_debounce: 200) %>
+                <%= input(f, :self_employment_percentage,
+                  type: :number_input,
+                  phx_debounce: 200,
+                  step: 0.1,
+                  min: 1.0
+                ) %>
               </div>
-              <button class="btn-primary" type="button" phx-click="add-income-bracket" phx-value-id={id}>Add income bracket</button>
+              <button
+                class="btn-primary"
+                type="button"
+                phx-click="add-income-bracket"
+                phx-value-id={id}
+              >
+                Add income bracket
+              </button>
             </div>
             <div class="grid grid-cols-5 gap-2 items-center px-6 pb-6">
               <div class="col-start-1 font-bold">Bracket Min</div>
@@ -50,11 +68,32 @@ defmodule TodoplaceWeb.Live.Admin.PricingCalculator do
               <div class="col-start-4 font-bold">Bracket Fixed Cost Start</div>
               <div class="col-start-5 font-bold">Bracket Fixed Cost</div>
               <%= inputs_for f, :income_brackets, [], fn fp -> %>
-                <%= input fp, :income_min, phx_debounce: 200, phx_hook: "PriceMask", data_currency: "$" %>
-                <%= input fp, :income_max, phx_debounce: 200, phx_hook: "PriceMask", data_currency: "$" %>
-                <%= input fp, :percentage, type: :number_input, phx_debounce: 200, step: 0.1, min: 1.0 %>
-                <%= input fp, :fixed_cost_start, phx_debounce: 200, phx_hook: "PriceMask", data_currency: "$" %>
-                <%= input fp, :fixed_cost, phx_debounce: 200, phx_hook: "PriceMask", data_currency: "$" %>
+                <%= input(fp, :income_min,
+                  phx_debounce: 200,
+                  phx_hook: "PriceMask",
+                  data_currency: "$"
+                ) %>
+                <%= input(fp, :income_max,
+                  phx_debounce: 200,
+                  phx_hook: "PriceMask",
+                  data_currency: "$"
+                ) %>
+                <%= input(fp, :percentage,
+                  type: :number_input,
+                  phx_debounce: 200,
+                  step: 0.1,
+                  min: 1.0
+                ) %>
+                <%= input(fp, :fixed_cost_start,
+                  phx_debounce: 200,
+                  phx_hook: "PriceMask",
+                  data_currency: "$"
+                ) %>
+                <%= input(fp, :fixed_cost,
+                  phx_debounce: 200,
+                  phx_hook: "PriceMask",
+                  data_currency: "$"
+                ) %>
               <% end %>
             </div>
           </.form>
@@ -66,36 +105,46 @@ defmodule TodoplaceWeb.Live.Admin.PricingCalculator do
             <h3 class="text-2xl font-bold">Business Cost Categories & Line Items</h3>
             <p class="text-md">Add or modify the cost categories and the subsequent line items</p>
           </div>
-          <button class="mb-4 btn-secondary" phx-click="add-business-cost-category">Add cost category</button>
+          <button class="mb-4 btn-secondary" phx-click="add-business-cost-category">
+            Add cost category
+          </button>
         </div>
         <%= for(%{business_cost: %{id: id}, changeset: changeset} <- @business_costs) do %>
-        <div class="mb-8 border rounded-lg">
-          <.form :let={fcosts} for={changeset} class="contents" phx-change="save-line-items" id={"form-line-items-#{id}"}>
-            <div class="flex items-center justify-between mb-8 bg-gray-100  p-6 ">
-              <div class="grid grid-cols-3 gap-2 items-center w-3/4">
-                <div class="col-start-1 font-bold">Category Title</div>
-                <div class="col-start-2 font-bold">Category Description</div>
-                <div class="col-start-3 font-bold">Should this cost category by a default?</div>
-                <%= hidden_input fcosts, :id %>
-                <%= input fcosts, :category, phx_debounce: 200 %>
-                <%= input fcosts, :description, phx_debounce: 200 %>
-                <%= select fcosts, :active, [true, false], class: "select py-3", phx_debounce: 200 %>
+          <div class="mb-8 border rounded-lg">
+            <.form
+              :let={fcosts}
+              for={changeset}
+              class="contents"
+              phx-change="save-line-items"
+              id={"form-line-items-#{id}"}
+            >
+              <div class="flex items-center justify-between mb-8 bg-gray-100  p-6 ">
+                <div class="grid grid-cols-3 gap-2 items-center w-3/4">
+                  <div class="col-start-1 font-bold">Category Title</div>
+                  <div class="col-start-2 font-bold">Category Description</div>
+                  <div class="col-start-3 font-bold">Should this cost category by a default?</div>
+                  <%= hidden_input(fcosts, :id) %>
+                  <%= input(fcosts, :category, phx_debounce: 200) %>
+                  <%= input(fcosts, :description, phx_debounce: 200) %>
+                  <%= select(fcosts, :active, [true, false], class: "select py-3", phx_debounce: 200) %>
+                </div>
+                <button class="btn-primary" type="button" phx-click="add-line-item" phx-value-id={id}>
+                  Add line item
+                </button>
               </div>
-              <button class="btn-primary" type="button" phx-click="add-line-item" phx-value-id={id}>Add line item</button>
-            </div>
-            <div class="grid grid-cols-3 gap-2 items-center px-6 pb-6">
-              <div class="col-start-1 font-bold">Title</div>
-              <div class="col-start-2 font-bold">Description</div>
-              <div class="col-start-3 font-bold">Yearly cost</div>
-              <%= inputs_for fcosts, :line_items, [], fn fl -> %>
-                <%= input fl, :title, phx_debounce: 200 %>
-                <%= input fl, :description, phx_debounce: 200 %>
-                <%= input fl, :yearly_cost, phx_debounce: 200, phx_hook: "PriceMask" %>
-              <% end %>
-            </div>
-          </.form>
-        </div>
-      <% end %>
+              <div class="grid grid-cols-3 gap-2 items-center px-6 pb-6">
+                <div class="col-start-1 font-bold">Title</div>
+                <div class="col-start-2 font-bold">Description</div>
+                <div class="col-start-3 font-bold">Yearly cost</div>
+                <%= inputs_for fcosts, :line_items, [], fn fl -> %>
+                  <%= input(fl, :title, phx_debounce: 200) %>
+                  <%= input(fl, :description, phx_debounce: 200) %>
+                  <%= input(fl, :yearly_cost, phx_debounce: 200, phx_hook: "PriceMask") %>
+                <% end %>
+              </div>
+            </.form>
+          </div>
+        <% end %>
       </div>
     </div>
     """

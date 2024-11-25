@@ -9,9 +9,8 @@ defmodule TodoplaceWeb.Live.Profile.EditWebsiteComponent do
       <h1 class="text-3xl font-bold">Edit Link</h1>
 
       <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself}>
-
         <%= for b <- inputs_for(f, :brand_links) do %>
-          <%= hidden_inputs_for b %>
+          <%= hidden_inputs_for(b) %>
           <.website_field form={b} class="mt-4" placeholder="Add your website…" />
         <% end %>
 

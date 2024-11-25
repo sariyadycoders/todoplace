@@ -3,7 +3,8 @@ defmodule Todoplace.Accounts.UserPreference do
   import Ecto.Changeset
 
   schema "user_preferences" do
-    field :settings, :map, default: %{}  # JSON field for flexible storage
+    # JSON field for flexible storage
+    field :settings, :map, default: %{}
 
     belongs_to :user, Todoplace.Accounts.User
 

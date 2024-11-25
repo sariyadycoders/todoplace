@@ -61,108 +61,196 @@ defmodule TodoplaceWeb.Live.ClientLive.ClientFormComponent do
   @impl true
   def render(%{changeset: _} = assigns) do
     ~H"""
-      <div class="flex flex-col modal">
+    <div class="flex flex-col modal">
+      <%= if @pre_todoplace_client do %>
+        <div class="flex mb-2">
+          <a
+            {if step_number(@step, @steps) > 1, do: %{href: "#", phx_click: "back", phx_target: @myself, title: "back"}, else: %{}}
+            class="flex"
+          >
+            <span
+              {testid("step-number")}
+              class="px-2 py-0.5 mr-2 text-xs font-semibold rounded bg-blue-planning-100 text-blue-planning-300"
+            >
+              Step <%= step_number(@step, @steps) %>
+            </span>
 
-        <%= if @pre_todoplace_client do %>
-          <div class="flex mb-2">
-            <a {if step_number(@step, @steps) > 1, do: %{href: "#", phx_click: "back", phx_target: @myself, title: "back"}, else: %{}} class="flex">
-              <span {testid("step-number")} class="px-2 py-0.5 mr-2 text-xs font-semibold rounded bg-blue-planning-100 text-blue-planning-300">
-                Step <%= step_number(@step, @steps) %>
-              </span>
-
-              <ul class="flex items-center inline-block">
-                <%= for step <- @steps do %>
-                  <li class={classes(
+            <ul class="flex items-center inline-block">
+              <%= for step <- @steps do %>
+                <li class={
+                  classes(
                     "block w-5 h-5 sm:w-3 sm:h-3 rounded-full ml-3 sm:ml-2",
-                    %{ "bg-blue-planning-300" => step == @step, "bg-gray-200" => step != @step }
-                    )}>
-                  </li>
-                <% end %>
-              </ul>
-            </a>
+                    %{"bg-blue-planning-300" => step == @step, "bg-gray-200" => step != @step}
+                  )
+                }>
+                </li>
+              <% end %>
+            </ul>
+          </a>
 
-            <%= if step_number(@step, @steps) > 1 do%>
-              <.client_name_box changeset={@changeset} assigns={assigns} />
-            <% end %>
-          </div>
-        <% end %>
-
-        <div class="flex items-start justify-between flex-shrink-0">
-          <h1 class="mt-2 mb-4 text-3xl"><strong class="font-bold"><%= if @client, do: "Edit Client: ", else: "Add Client: "%></strong> <%= heading_subtitle(@step) %></h1>
-
-          <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-            <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
-          </button>
+          <%= if step_number(@step, @steps) > 1 do %>
+            <.client_name_box changeset={@changeset} assigns={assigns} />
+          <% end %>
         </div>
+      <% end %>
 
-        <.step {assigns} />
+      <div class="flex items-start justify-between flex-shrink-0">
+        <h1 class="mt-2 mb-4 text-3xl">
+          <strong class="font-bold">
+            <%= if @client, do: "Edit Client: ", else: "Add Client: " %>
+          </strong> <%= heading_subtitle(@step) %>
+        </h1>
+
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
+        </button>
       </div>
+
+      <.step {assigns} />
+    </div>
     """
   end
 
   def step(%{step: :add_client} = assigns) do
     ~H"""
-      <.form for={@changeset} :let={f} phx-submit="submit" phx-change="validate" phx-target={@myself}>
-        <div class="px-1.5 grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <%= labeled_input f, :name, placeholder: "First and last name", autocapitalize: "words", autocorrect: "false", spellcheck: "false", autocomplete: "name", phx_debounce: "500" %>
-          <%= labeled_input f, :email, type: :email_input, placeholder: "email@example.com", phx_debounce: "500" %>
-          <div class="flex flex-col" >
-             <%= label_for f, :phone, optional: true %>
-             <.live_component module={LivePhone} id="phone" form={f} field={:phone} tabindex={0} preferred={["US", "CA"]} />
-          </div>
-          <%= labeled_input f, :address, placeholder: "Street Address", phx_debounce: "500", optional: true %>
+    <.form :let={f} for={@changeset} phx-submit="submit" phx-change="validate" phx-target={@myself}>
+      <div class="px-1.5 grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <%= labeled_input(f, :name,
+          placeholder: "First and last name",
+          autocapitalize: "words",
+          autocorrect: "false",
+          spellcheck: "false",
+          autocomplete: "name",
+          phx_debounce: "500"
+        ) %>
+        <%= labeled_input(f, :email,
+          type: :email_input,
+          placeholder: "email@example.com",
+          phx_debounce: "500"
+        ) %>
+        <div class="flex flex-col">
+          <%= label_for(f, :phone, optional: true) %>
+          <.live_component
+            module={LivePhone}
+            id="phone"
+            form={f}
+            field={:phone}
+            tabindex={0}
+            preferred={["US", "CA"]}
+          />
         </div>
-        <%= if !@client do %>
-          <div class="mt-2">
-            <div class="flex items-center justify-between mb-2">
-              <%= label_for f, :notes, label: "Notes", optional: true %>
+        <%= labeled_input(f, :address,
+          placeholder: "Street Address",
+          phx_debounce: "500",
+          optional: true
+        ) %>
+      </div>
+      <%= if !@client do %>
+        <div class="mt-2">
+          <div class="flex items-center justify-between mb-2">
+            <%= label_for(f, :notes, label: "Notes", optional: true) %>
 
-              <.icon_button color="red-sales-300" icon="trash" phx-hook="ClearInput" id="clear-notes" data-input-name={input_name(f,:notes)}>
-                Clear
-              </.icon_button>
-            </div>
-
-            <fieldset>
-              <%= input f, :notes, type: :textarea, placeholder: "Optional notes", class: "w-full max-h-60", phx_hook: "AutoHeight", phx_update: "ignore" %>
-            </fieldset>
+            <.icon_button
+              color="red-sales-300"
+              icon="trash"
+              phx-hook="ClearInput"
+              id="clear-notes"
+              data-input-name={input_name(f, :notes)}
+            >
+              Clear
+            </.icon_button>
           </div>
 
-          <h1 class="mt-5 text-xl font-bold">Pre-Todoplace Client</h1>
-          <label class="flex items-center mt-4">
-            <input id="pre-todoplace-check" type="checkbox" class="w-6 h-6 mt-1 checkbox" phx-click="toggle-pre-todoplace" checked={@pre_todoplace_client} phx-target={@myself} />
-            <p class="ml-3"> This is an old client and I want to add some historic information</p>
-          </label>
-          <p class="ml-8"><i>(Adds a few more steps - if you don't know what this is, leave unchecked)</i></p>
-          <%= if @pre_todoplace_client do %>
-            <div id="show-div" class="sm:col-span-3 mt-3">
-              <p class="ml-8 mt-4 font-bold">In order for this client import to sync with your Todoplace account, select the type of job to start import.</p>
-              <div class="ml-8 grid grid-cols-2 gap-3 mt-2 sm:grid-cols-4 sm:gap-5">
-                <%= for job_type <- @job_types do %>
-                  <.job_type_option type="radio" class={"checkbox-#{job_type}"} name={input_name(f, :type)} job_type={job_type} checked={input_value(f, :type) == job_type} />
-                <% end %>
-              </div>
+          <fieldset>
+            <%= input(f, :notes,
+              type: :textarea,
+              placeholder: "Optional notes",
+              class: "w-full max-h-60",
+              phx_hook: "AutoHeight",
+              phx_update: "ignore"
+            ) %>
+          </fieldset>
+        </div>
+
+        <h1 class="mt-5 text-xl font-bold">Pre-Todoplace Client</h1>
+        <label class="flex items-center mt-4">
+          <input
+            id="pre-todoplace-check"
+            type="checkbox"
+            class="w-6 h-6 mt-1 checkbox"
+            phx-click="toggle-pre-todoplace"
+            checked={@pre_todoplace_client}
+            phx-target={@myself}
+          />
+          <p class="ml-3">This is an old client and I want to add some historic information</p>
+        </label>
+        <p class="ml-8">
+          <i>(Adds a few more steps - if you don't know what this is, leave unchecked)</i>
+        </p>
+        <%= if @pre_todoplace_client do %>
+          <div id="show-div" class="sm:col-span-3 mt-3">
+            <p class="ml-8 mt-4 font-bold">
+              In order for this client import to sync with your Todoplace account, select the type of job to start import.
+            </p>
+            <div class="ml-8 grid grid-cols-2 gap-3 mt-2 sm:grid-cols-4 sm:gap-5">
+              <%= for job_type <- @job_types do %>
+                <.job_type_option
+                  type="radio"
+                  class={"checkbox-#{job_type}"}
+                  name={input_name(f, :type)}
+                  job_type={job_type}
+                  checked={input_value(f, :type) == job_type}
+                />
+              <% end %>
             </div>
-          <% end %>
+          </div>
         <% end %>
-        <div class="pt-40"></div>
-        <div {testid("modal-buttons")} class="sticky px-4 -m-4 bg-white -bottom-6 sm:px-8 sm:-m-8 sm:-bottom-8">
-          <div class="flex flex-col py-6 bg-white gap-2 sm:flex-row-reverse">
-            <%= if @pre_todoplace_client do %>
-              <button class="btn-primary" title="next" disabled={!(@changeset.valid? and input_value(f, :type))} type="submit">
-                Next
-              </button>
-            <% else %>
-              <button class="btn-primary" title="save" type="submit" disabled={!@changeset.valid?} phx-disable-with="Save">
-                Save
-              </button>
-            <% end %>
-
-            <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
-              Cancel
+      <% end %>
+      <div class="pt-40"></div>
+      <div
+        {testid("modal-buttons")}
+        class="sticky px-4 -m-4 bg-white -bottom-6 sm:px-8 sm:-m-8 sm:-bottom-8"
+      >
+        <div class="flex flex-col py-6 bg-white gap-2 sm:flex-row-reverse">
+          <%= if @pre_todoplace_client do %>
+            <button
+              class="btn-primary"
+              title="next"
+              disabled={!(@changeset.valid? and input_value(f, :type))}
+              type="submit"
+            >
+              Next
             </button>
-          </div>
+          <% else %>
+            <button
+              class="btn-primary"
+              title="save"
+              type="submit"
+              disabled={!@changeset.valid?}
+              phx-disable-with="Save"
+            >
+              Save
+            </button>
+          <% end %>
+
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
+            Cancel
+          </button>
         </div>
-      </.form>
+      </div>
+    </.form>
     """
   end
 

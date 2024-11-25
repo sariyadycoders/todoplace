@@ -24,33 +24,75 @@ defmodule TodoplaceWeb.Live.Admin.NextUpCards do
       <div class="flex items-center justify-between  mb-8">
         <div>
           <h3 class="text-2xl font-bold">Cards</h3>
-          <p class="text-md"><span class="text-red-sales-300 font-bold block">CAREFUL deleting cards, it will remove from all organizations on Todoplace!</span> Add a card here (we still do have to run a deploy to get them to populate)</p>
+          <p class="text-md">
+            <span class="text-red-sales-300 font-bold block">
+              CAREFUL deleting cards, it will remove from all organizations on Todoplace!
+            </span>
+            Add a card here (we still do have to run a deploy to get them to populate)
+          </p>
         </div>
         <button class="mb-4 btn-primary" phx-click="add-card">Add card</button>
       </div>
       <%= for({%{card: %{id: id, buttons: buttons}, changeset: changeset}, index} <- @cards |> Enum.with_index()) do %>
-        <.form :let={f} for={changeset} class="contents" phx-change="update-card" id={"form-cards-#{id}"}>
-          <%= hidden_input f, :id %>
+        <.form
+          :let={f}
+          for={changeset}
+          class="contents"
+          phx-change="update-card"
+          id={"form-cards-#{id}"}
+        >
+          <%= hidden_input(f, :id) %>
           <div class="flex items-center gap-4 bg-gray-100 rounded-t-lg py-4 px-6">
-            <h4 class="font-bold text-lg">Card—<%= input_value f, :title %></h4>
-            <button title="Trash" type="button" phx-click="delete-card" phx-value-id={id} class="flex items-center px-3 py-2 rounded-lg border border-red-sales-300 hover:bg-red-sales-100 hover:font-bold">
+            <h4 class="font-bold text-lg">Card—<%= input_value(f, :title) %></h4>
+            <button
+              title="Trash"
+              type="button"
+              phx-click="delete-card"
+              phx-value-id={id}
+              class="flex items-center px-3 py-2 rounded-lg border border-red-sales-300 hover:bg-red-sales-100 hover:font-bold"
+            >
               <.icon name="trash" class="inline-block w-4 h-4 fill-current text-red-sales-300" />
             </button>
           </div>
           <div class="p-6 border rounded-b-lg mb-8">
             <div>
-              <%= labeled_input f, :title, label: "Card Title", wrapper_class: "", phx_debounce: "500" %>
+              <%= labeled_input(f, :title,
+                label: "Card Title",
+                wrapper_class: "",
+                phx_debounce: "500"
+              ) %>
             </div>
             <div>
-              <%= labeled_input f, :body, label: "Card Body", wrapper_class: "", phx_debounce: "500" %>
+              <%= labeled_input(f, :body, label: "Card Body", wrapper_class: "", phx_debounce: "500") %>
             </div>
             <h4 class="mt-6 mb-2 font-bold text-lg">Card Options</h4>
             <div class="sm:grid grid-cols-5 gap-2 items-center">
-              <%= labeled_input f, :concise_name, label: "Concise Name", wrapper_class: "col-start-1", phx_debounce: "500" %>
-              <%= labeled_input f, :icon, label: "Icon", wrapper_class: "col-start-2", phx_debounce: "500" %>
-              <%= labeled_input f, :color, label: "Color", wrapper_class: "col-start-3", phx_debounce: "500" %>
-              <%= labeled_input f, :class, label: "Class", wrapper_class: "col-start-4", phx_debounce: "500" %>
-              <%= labeled_input f, :index, type: :number_input, label: "Index", wrapper_class: "col-start-5", phx_debounce: "500" %>
+              <%= labeled_input(f, :concise_name,
+                label: "Concise Name",
+                wrapper_class: "col-start-1",
+                phx_debounce: "500"
+              ) %>
+              <%= labeled_input(f, :icon,
+                label: "Icon",
+                wrapper_class: "col-start-2",
+                phx_debounce: "500"
+              ) %>
+              <%= labeled_input(f, :color,
+                label: "Color",
+                wrapper_class: "col-start-3",
+                phx_debounce: "500"
+              ) %>
+              <%= labeled_input(f, :class,
+                label: "Class",
+                wrapper_class: "col-start-4",
+                phx_debounce: "500"
+              ) %>
+              <%= labeled_input(f, :index,
+                type: :number_input,
+                label: "Index",
+                wrapper_class: "col-start-5",
+                phx_debounce: "500"
+              ) %>
             </div>
             <div class="flex items-center justify-between mt-8 mb-4">
               <div>
@@ -58,7 +100,14 @@ defmodule TodoplaceWeb.Live.Admin.NextUpCards do
                 <p class="text-md">Add up to 2 buttons for your card</p>
               </div>
               <%= if length(buttons) < 2 do %>
-              <button class="btn-secondary" phx-click="add-button" type="button" phx-value-index={index}>Add button</button>
+                <button
+                  class="btn-secondary"
+                  phx-click="add-button"
+                  type="button"
+                  phx-value-index={index}
+                >
+                  Add button
+                </button>
               <% end %>
             </div>
             <div class="sm:grid grid-cols-2 gap-2">
@@ -66,17 +115,30 @@ defmodule TodoplaceWeb.Live.Admin.NextUpCards do
                 <div>
                   <div class="flex items-center gap-4 bg-gray-100 rounded-t-lg py-4 px-6">
                     <h4 class="font-bold text-lg">Button</h4>
-                    <button title="Trash" type="button" phx-click="delete-button" class="flex items-center px-3 py-2 rounded-lg border border-red-sales-300 hover:bg-red-sales-100 hover:font-bold" phx-value-index={index} phx-value-button-index={button_index}>
-                      <.icon name="trash" class="inline-block w-4 h-4 fill-current text-red-sales-300" />
+                    <button
+                      title="Trash"
+                      type="button"
+                      phx-click="delete-button"
+                      class="flex items-center px-3 py-2 rounded-lg border border-red-sales-300 hover:bg-red-sales-100 hover:font-bold"
+                      phx-value-index={index}
+                      phx-value-button-index={button_index}
+                    >
+                      <.icon
+                        name="trash"
+                        class="inline-block w-4 h-4 fill-current text-red-sales-300"
+                      />
                     </button>
                   </div>
                   <div class="p-6 border rounded-b-lg mb-8">
                     <div class="sm:grid grid-cols-3 gap-2 items-center">
-                      <%= labeled_input fp, :class, label: "Class", phx_debounce: "500" %>
-                      <%= labeled_input fp, :label, label: "Label", phx_debounce: "500" %>
-                      <%= labeled_input fp, :external_link, label: "External Link", phx_debounce: "500" %>
-                      <%= labeled_input fp, :action, label: "Action", phx_debounce: "500" %>
-                      <%= labeled_input fp, :link, label: "Link", phx_debounce: "500" %>
+                      <%= labeled_input(fp, :class, label: "Class", phx_debounce: "500") %>
+                      <%= labeled_input(fp, :label, label: "Label", phx_debounce: "500") %>
+                      <%= labeled_input(fp, :external_link,
+                        label: "External Link",
+                        phx_debounce: "500"
+                      ) %>
+                      <%= labeled_input(fp, :action, label: "Action", phx_debounce: "500") %>
+                      <%= labeled_input(fp, :link, label: "Link", phx_debounce: "500") %>
                     </div>
                   </div>
                 </div>

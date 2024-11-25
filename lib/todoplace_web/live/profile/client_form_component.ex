@@ -19,67 +19,118 @@ defmodule TodoplaceWeb.Live.Profile.ClientFormComponent do
 
     ~H"""
     <div class="mt-20 border p-9 border-base-200">
-
       <%= if @changeset do %>
         <h2 class="text-3xl max-w-md">Let's work together!<%= @header_suffix %></h2>
-        <.form for={@changeset} :let={f} phx-change="validate-client" phx-submit="save-client" id="contact-form" phx-target={@myself}>
+        <.form
+          :let={f}
+          for={@changeset}
+          phx-change="validate-client"
+          phx-submit="save-client"
+          id="contact-form"
+          phx-target={@myself}
+        >
           <div class="flex flex-col mt-3">
-            <%= label_for f, :name, autocapitalize: "words", autocorrect: "false", spellcheck: "false", autocomplete: "name", label: "Name", class: "py-2 font-bold" %>
+            <%= label_for(f, :name,
+              autocapitalize: "words",
+              autocorrect: "false",
+              spellcheck: "false",
+              autocomplete: "name",
+              label: "Name",
+              class: "py-2 font-bold"
+            ) %>
 
-            <%= input f, :name, placeholder: "Type your first and last name...", phx_debounce: 300 %>
+            <%= input(f, :name, placeholder: "Type your first and last name...", phx_debounce: 300) %>
           </div>
 
           <div class="flex flex-col lg:flex-row">
             <div class="flex flex-col flex-1 mt-3 mr-0 lg:mr-4">
-              <%= label_for f, :email, label: "Email", class: "py-2 font-bold" %>
+              <%= label_for(f, :email, label: "Email", class: "py-2 font-bold") %>
 
-              <%= input f, :email, type: :email_input, placeholder: "Type email...", phx_debounce: 300 %>
+              <%= input(f, :email,
+                type: :email_input,
+                placeholder: "Type email...",
+                phx_debounce: 300
+              ) %>
             </div>
 
             <div class="flex flex-col flex-1 mt-3">
-              <%= label_for f, :phone, label: "Phone Number", class: "py-2 font-bold" %>
+              <%= label_for(f, :phone, label: "Phone Number", class: "py-2 font-bold") %>
 
-              <.live_component module={LivePhone} id="phone" form={f} field={:phone} tabindex={0} preferred={@preferred_phone_country} />
+              <.live_component
+                module={LivePhone}
+                id="phone"
+                form={f}
+                field={:phone}
+                tabindex={0}
+                preferred={@preferred_phone_country}
+              />
             </div>
           </div>
 
           <div class="flex flex-col mt-3">
-            <%= labeled_select f, :referred_by, referred_by_options(), label: "How did you hear about #{@organization.name}?", prompt: "select one...", phx_debounce: 300, phx_update: "ignore" %>
+            <%= labeled_select(f, :referred_by, referred_by_options(),
+              label: "How did you hear about #{@organization.name}?",
+              prompt: "select one...",
+              phx_debounce: 300,
+              phx_update: "ignore"
+            ) %>
             <em class="text-base-250 font-normal pt-1 text-xs">optional</em>
           </div>
 
-            <%= if @additional_field? do %>
-              <div class="flex flex-col mt-3">
-                <% info = referral_info(f.params) %>
-                <%= label_for f, :referral_name, label: info.label, class: "py-2 font-bold" %>
+          <%= if @additional_field? do %>
+            <div class="flex flex-col mt-3">
+              <% info = referral_info(f.params) %>
+              <%= label_for(f, :referral_name, label: info.label, class: "py-2 font-bold") %>
 
-                <%= input f, :referral_name, placeholder: info.placeholder, phx_debounce: 300 %>
-                <em class="text-base-250 font-normal pt-1 text-xs">optional</em>
-              </div>
-            <% end %>
+              <%= input(f, :referral_name, placeholder: info.placeholder, phx_debounce: 300) %>
+              <em class="text-base-250 font-normal pt-1 text-xs">optional</em>
+            </div>
+          <% end %>
           <%= if Enum.any?(@job_types) do %>
             <div class="mt-4">
-              <%= label_for f, :job_type, label: "What type of session are you looking for?", class: "font-light" %>
+              <%= label_for(f, :job_type,
+                label: "What type of session are you looking for?",
+                class: "font-light"
+              ) %>
               <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-1">
                 <%= for job_type <- @job_types do %>
-                  <.job_type_option name={input_name(f, :job_type)} type={:radio} job_type={job_type} checked={input_value(f, :job_type) == job_type} color="black" class="rounded-none" override_global="Other" />
+                  <.job_type_option
+                    name={input_name(f, :job_type)}
+                    type={:radio}
+                    job_type={job_type}
+                    checked={input_value(f, :job_type) == job_type}
+                    color="black"
+                    class="rounded-none"
+                    override_global="Other"
+                  />
                 <% end %>
               </div>
             </div>
           <% end %>
 
           <div class="flex flex-col mt-3">
-            <%= label_for f, :message, label: "Your message", class: "py-2 font-light" %>
+            <%= label_for(f, :message, label: "Your message", class: "py-2 font-light") %>
 
-            <%= input f, :message, type: :textarea, placeholder: "Tell me more about what you are looking for. I love details!", rows: 5, phx_debounce: 300 %>
+            <%= input(f, :message,
+              type: :textarea,
+              placeholder: "Tell me more about what you are looking for. I love details!",
+              rows: 5,
+              phx_debounce: 300
+            ) %>
           </div>
 
-          <div class="mt-8 text-right"><button type="submit" disabled={!@changeset.valid?} class="w-full lg:w-auto btn-primary">Submit</button></div>
+          <div class="mt-8 text-right">
+            <button type="submit" disabled={!@changeset.valid?} class="w-full lg:w-auto btn-primary">
+              Submit
+            </button>
+          </div>
         </.form>
       <% else %>
         <div class="text-center">
           <h2 class="text-2xl font-light uppercase tracking-widest">Thank you for contacting me!</h2>
-          <p class="text-lg">I’ll be in touch soon. If you don’t see my email, check spam. Important stuff can get lost there!</p>
+          <p class="text-lg">
+            I’ll be in touch soon. If you don’t see my email, check spam. Important stuff can get lost there!
+          </p>
         </div>
       <% end %>
     </div>

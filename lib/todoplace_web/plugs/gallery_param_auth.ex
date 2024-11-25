@@ -13,8 +13,8 @@ defmodule TodoplaceWeb.Plugs.GalleryParamAuth do
     case params do
       %{"pw" => "" <> password, "email" => email} ->
         with nil <- get_session(conn, "gallery_session_token"),
-            {:ok, token} <-
-              Galleries.build_gallery_session_token(hash, password, email) do
+             {:ok, token} <-
+               Galleries.build_gallery_session_token(hash, password, email) do
           put_session(conn, "gallery_session_token", token)
         else
           _ -> conn

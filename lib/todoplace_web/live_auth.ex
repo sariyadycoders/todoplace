@@ -3,7 +3,16 @@ defmodule TodoplaceWeb.LiveAuth do
   @moduledoc false
   import Phoenix.LiveView
   import Phoenix.Component
-  alias Todoplace.{Accounts, Accounts.User, Subscriptions, UserCurrencies, Repo, Galleries, Albums}
+
+  alias Todoplace.{
+    Accounts,
+    Accounts.User,
+    Subscriptions,
+    UserCurrencies,
+    Repo,
+    Galleries,
+    Albums
+  }
 
   def on_mount(:default, params, session, socket) do
     socket |> allow_sandbox() |> mount(params, session)
@@ -86,15 +95,15 @@ defmodule TodoplaceWeb.LiveAuth do
 
   defp assign_current_path(socket) do
     if connected?(socket) do
-        uri =
-          Map.get(socket.assigns, :current_path, nil)
-          |> case do
-            nil -> "/home"
-            uri -> uri
-          end
+      uri =
+        Map.get(socket.assigns, :current_path, nil)
+        |> case do
+          nil -> "/home"
+          uri -> uri
+        end
 
-        socket
-        # |> assign(current_path: uri)
+      socket
+      # |> assign(current_path: uri)
     else
       assign(socket, current_path: get_uri(socket))
     end
@@ -114,7 +123,10 @@ defmodule TodoplaceWeb.LiveAuth do
 
     if current_user_data && connected?(socket),
       do:
-        Phoenix.PubSub.subscribe(Todoplace.PubSub, "organization:#{current_user_data.current_user.id}")
+        Phoenix.PubSub.subscribe(
+          Todoplace.PubSub,
+          "organization:#{current_user_data.current_user.id}"
+        )
 
     socket
     |> assign_new(:current_user, fn ->

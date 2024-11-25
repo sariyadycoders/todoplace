@@ -18,120 +18,153 @@ defmodule TodoplaceWeb.Live.Admin.AutomatedEmails do
   @impl true
   def render(assigns) do
     ~H"""
-      <header class="p-8 bg-gray-100">
-        <h1 class="text-4xl font-bold">Manage Automated Emails</h1>
-      </header>
+    <header class="p-8 bg-gray-100">
+      <h1 class="text-4xl font-bold">Manage Automated Emails</h1>
+    </header>
 
-      <div class="p-12 flex flex-row space-between items-center">
-        <%= if Enum.any?(@organization_emails) do %>
-          <div class="flex flex-col">
-            <div class="flex items-center flex-wrap">
-              <h1 class="text-4xl font-bold">Ready to Send Emails</h1>
-            </div>
-            <div class="max-w-4xl mt-2 text-base-250">
-              <p>Unlock Seamless Communication: Your Emails, Perfected and Ready for Dispatch! 🚀</p>
-            </div>
+    <div class="p-12 flex flex-row space-between items-center">
+      <%= if Enum.any?(@organization_emails) do %>
+        <div class="flex flex-col">
+          <div class="flex items-center flex-wrap">
+            <h1 class="text-4xl font-bold">Ready to Send Emails</h1>
           </div>
-          <div class="flex ml-auto">
-            <button testid="send-global" class="h-8 flex items-center px-2 py-1 btn-tertiary text-black font-bold hover:border-blue-planning-300 mr-2 whitespace-nowrap" phx-click="confirm-global-send">
-              Send Emails Globally
-            </button>
+          <div class="max-w-4xl mt-2 text-base-250">
+            <p>Unlock Seamless Communication: Your Emails, Perfected and Ready for Dispatch! 🚀</p>
           </div>
-        <% else %>
-          <div class="flex flex-col">
-            <div class="flex items-center flex-wrap">
-              <h1 class="text-4xl font-bold">No Emails are ready to dispatch</h1>
-            </div>
-            <div class="max-w-4xl mt-2 text-base-250">
-              <p>Make sure you have some in pipeline before coming here!</p>
-            </div>
+        </div>
+        <div class="flex ml-auto">
+          <button
+            testid="send-global"
+            class="h-8 flex items-center px-2 py-1 btn-tertiary text-black font-bold hover:border-blue-planning-300 mr-2 whitespace-nowrap"
+            phx-click="confirm-global-send"
+          >
+            Send Emails Globally
+          </button>
+        </div>
+      <% else %>
+        <div class="flex flex-col">
+          <div class="flex items-center flex-wrap">
+            <h1 class="text-4xl font-bold">No Emails are ready to dispatch</h1>
           </div>
-        <% end %>
-      </div>
-      <.pipeline_section organization_emails={@organization_emails} collapsed_sections={@collapsed_sections}/>
+          <div class="max-w-4xl mt-2 text-base-250">
+            <p>Make sure you have some in pipeline before coming here!</p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <.pipeline_section
+      organization_emails={@organization_emails}
+      collapsed_sections={@collapsed_sections}
+    />
     """
   end
 
   defp pipeline_section(assigns) do
     ~H"""
-      <div class="flex flex-col px-32">
-        <%= Enum.map(@organization_emails, fn organization -> %>
-          <div testid="pipeline-section" class="mb-3 md:mr-4 border border-base-200 rounded-lg">
-            <div class="flex bg-base-200 pl-2 pr-7 py-3 items-center cursor-pointer" phx-click="toggle-section" phx-value-organization_id={organization.id}>
-              <div class="flex flex-col">
-                <div class=" flex flex-row items-center">
-                  <div class="flex-row w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                      <.icon name="play-icon" class="w-5 h-5 text-blue-planning-300" />
-                  </div>
-                  <span class="flex items-center text-blue-planning-300 text-xl ml-2">
-                    <span class="font-bold">Organization name:</span> &nbsp; <%= organization.name %>
-                    <span class="text-base-300 ml-2 rounded-md bg-white px-2 text-sm font-bold whitespace-nowrap"><%= organization.emails |> Enum.count() %></span>
-                  </span>
+    <div class="flex flex-col px-32">
+      <%= Enum.map(@organization_emails, fn organization -> %>
+        <div testid="pipeline-section" class="mb-3 md:mr-4 border border-base-200 rounded-lg">
+          <div
+            class="flex bg-base-200 pl-2 pr-7 py-3 items-center cursor-pointer"
+            phx-click="toggle-section"
+            phx-value-organization_id={organization.id}
+          >
+            <div class="flex flex-col">
+              <div class=" flex flex-row items-center">
+                <div class="flex-row w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                  <.icon name="play-icon" class="w-5 h-5 text-blue-planning-300" />
                 </div>
-                <p class="text:xs text-base-250 lg:text-base ml-10">
-                  Open the dropdown to see and send the ready-emails for this organization
-                  <br />
-                  <span class="font-bold">Org id:</span> &nbsp; <%= organization.id %>
-                  <br />
-                  <span class="font-bold">Photographer email:</span> &nbsp; <%= organization.photographer_email %>
-                </p>
+                <span class="flex items-center text-blue-planning-300 text-xl ml-2">
+                  <span class="font-bold">Organization name:</span>
+                  &nbsp; <%= organization.name %>
+                  <span class="text-base-300 ml-2 rounded-md bg-white px-2 text-sm font-bold whitespace-nowrap">
+                    <%= organization.emails |> Enum.count() %>
+                  </span>
+                </span>
               </div>
-
-              <div class="flex items-center ml-auto">
-                <%= if Enum.any?(organization.emails) do %>
-                  <button class="h-8 flex items-center px-2 py-1 bg-blue-planning-300 text-white font-bold mr-2 whitespace-nowrap rounded-md hover:opacity-75" phx-click="confirm-send-all-emails" phx-value-organization_id={organization.id}>
-                    Send All
-                  </button>
-                  <button class="h-8 flex items-center px-2 py-1 bg-blue-planning-300 text-white font-bold mr-2 whitespace-nowrap rounded-md hover:opacity-75" phx-click="confirm-stop-all-emails" phx-value-organization_id={organization.id}>
-                    Stopped All
-                  </button>
-                <% end %>
-                <%= if Enum.member?(@collapsed_sections, organization.id) do %>
-                  <.icon name="down" class="w-5 h-5 stroke-2 text-blue-planning-300" />
-                <% else %>
-                  <.icon name="up" class="w-5 h-5 stroke-2 text-blue-planning-300" />
-                <% end %>
-              </div>
+              <p class="text:xs text-base-250 lg:text-base ml-10">
+                Open the dropdown to see and send the ready-emails for this organization <br />
+                <span class="font-bold">Org id:</span>
+                &nbsp; <%= organization.id %>
+                <br />
+                <span class="font-bold">Photographer email:</span>
+                &nbsp; <%= organization.photographer_email %>
+              </p>
             </div>
 
-            <div class="flex flex-col">
-              <% emails = organization.emails %>
-              <%= if !Enum.member?(@collapsed_sections, organization.id) do %>
-                <%= Enum.map(emails, fn email -> %>
-                  <div class="flex flex-col md:flex-row pl-2 pr-7 md:items-center justify-between p-6">
-                    <div class="flex flex-col ml-8 h-max items-center">
-                      <div class="flex gap-2 flex-col">
-                        <div class="flex flex-row items-center">
-                          <.icon name="play-icon" class="w-4 h-4 text-blue-planning-300" />
-                          <div class="flex gap-4 ml-2">
-                            <% {state_name, email_name} = generate_email_name(email) %>
-                            <p><span class="font-bold"><%= state_name %></span> <%= email_name %></p>
-                          </div>
-                        </div>
-                        <div class="text-base-250">
-                          The email you're seeing above is ready to be sent
-                          <p><span class="font-bold">Email id:</span> <%= email.id %></p>
-                          <p><span class="font-bold">Job id:</span> <%= email.job_id %></p>
-                          <p><span class="font-bold">Send Date:</span> <%= get_marked_date(email) %></p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="flex justify-end mr-2">
-                      <button class="h-8 flex items-center px-2 py-1 btn-tertiary text-black font-bold hover:border-blue-planning-300 mr-2 whitespace-nowrap" phx-click="confirm-send-now" phx-value-email_id={email.id}}>
-                        Send now
-                      </button>
-                      <button class="h-8 flex items-center px-2 py-1 btn-tertiary text-black font-bold hover:border-blue-planning-300 mr-2 whitespace-nowrap" phx-click="confirm-stop-now" phx-value-email_id={email.id}}>
-                        Stop now
-                      </button>
-                    </div>
-                  </div>
-                  <hr class="md:ml-8 ml-6">
-                <% end) %>
+            <div class="flex items-center ml-auto">
+              <%= if Enum.any?(organization.emails) do %>
+                <button
+                  class="h-8 flex items-center px-2 py-1 bg-blue-planning-300 text-white font-bold mr-2 whitespace-nowrap rounded-md hover:opacity-75"
+                  phx-click="confirm-send-all-emails"
+                  phx-value-organization_id={organization.id}
+                >
+                  Send All
+                </button>
+                <button
+                  class="h-8 flex items-center px-2 py-1 bg-blue-planning-300 text-white font-bold mr-2 whitespace-nowrap rounded-md hover:opacity-75"
+                  phx-click="confirm-stop-all-emails"
+                  phx-value-organization_id={organization.id}
+                >
+                  Stopped All
+                </button>
+              <% end %>
+              <%= if Enum.member?(@collapsed_sections, organization.id) do %>
+                <.icon name="down" class="w-5 h-5 stroke-2 text-blue-planning-300" />
+              <% else %>
+                <.icon name="up" class="w-5 h-5 stroke-2 text-blue-planning-300" />
               <% end %>
             </div>
           </div>
-        <% end) %>
-      </div>
+
+          <div class="flex flex-col">
+            <% emails = organization.emails %>
+            <%= if !Enum.member?(@collapsed_sections, organization.id) do %>
+              <%= Enum.map(emails, fn email -> %>
+                <div class="flex flex-col md:flex-row pl-2 pr-7 md:items-center justify-between p-6">
+                  <div class="flex flex-col ml-8 h-max items-center">
+                    <div class="flex gap-2 flex-col">
+                      <div class="flex flex-row items-center">
+                        <.icon name="play-icon" class="w-4 h-4 text-blue-planning-300" />
+                        <div class="flex gap-4 ml-2">
+                          <% {state_name, email_name} = generate_email_name(email) %>
+                          <p><span class="font-bold"><%= state_name %></span> <%= email_name %></p>
+                        </div>
+                      </div>
+                      <div class="text-base-250">
+                        The email you're seeing above is ready to be sent
+                        <p><span class="font-bold">Email id:</span> <%= email.id %></p>
+                        <p><span class="font-bold">Job id:</span> <%= email.job_id %></p>
+                        <p><span class="font-bold">Send Date:</span> <%= get_marked_date(email) %></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex justify-end mr-2">
+                    <button
+                      class="h-8 flex items-center px-2 py-1 btn-tertiary text-black font-bold hover:border-blue-planning-300 mr-2 whitespace-nowrap"
+                      phx-click="confirm-send-now"
+                      phx-value-email_id={email.id}
+                      }
+                    >
+                      Send now
+                    </button>
+                    <button
+                      class="h-8 flex items-center px-2 py-1 btn-tertiary text-black font-bold hover:border-blue-planning-300 mr-2 whitespace-nowrap"
+                      phx-click="confirm-stop-now"
+                      phx-value-email_id={email.id}
+                      }
+                    >
+                      Stop now
+                    </button>
+                  </div>
+                </div>
+                <hr class="md:ml-8 ml-6" />
+              <% end) %>
+            <% end %>
+          </div>
+        </div>
+      <% end) %>
+    </div>
     """
   end
 

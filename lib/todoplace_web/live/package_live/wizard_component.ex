@@ -377,7 +377,14 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
       <.steps step={@step} steps={@steps} target={@myself} />
       <.step_heading name={@step} is_edit={@package.id} />
 
-      <.form for={@changeset} :let={f} phx-change="validate" phx-submit="submit" phx-target={@myself} id={"form-#{@step}"}>
+      <.form
+        :let={f}
+        for={@changeset}
+        phx-change="validate"
+        phx-submit="submit"
+        phx-target={@myself}
+        id={"form-#{@step}"}
+      >
         <input type="hidden" name="step" value={@step} />
 
         <.wizard_state form={f} contract_changeset={@contract_changeset} />
@@ -387,7 +394,13 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
         <.footer class="pt-10">
           <.step_buttons name={@step} form={f} is_valid={step_valid?(assigns)} myself={@myself} />
 
-          <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Cancel
           </button>
         </.footer>
@@ -419,26 +432,28 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
     assigns = assign(assigns, fields: @all_fields)
 
     ~H"""
-      <%= for field <- @fields, input_value(@form, field) do %>
-        <%= hidden_input @form, field, id: nil %>
-      <% end %>
+    <%= for field <- @fields, input_value(@form, field) do %>
+      <%= hidden_input(@form, field, id: nil) %>
+    <% end %>
 
-      <% c = to_form(@contract_changeset) %>
-      <%= for field <- [:name, :content, :contract_template_id, :edited], input_value(c, field) do %>
-        <%= hidden_input c, field, id: nil %>
-      <% end %>
+    <% c = to_form(@contract_changeset) %>
+    <%= for field <- [:name, :content, :contract_template_id, :edited], input_value(c, field) do %>
+      <%= hidden_input(c, field, id: nil) %>
+    <% end %>
     """
   end
 
   def step_heading(%{name: :choose_template} = assigns) do
     ~H"""
-      <h1 class="mt-2 mb-4 text-3xl font-bold">Package Templates</h1>
+    <h1 class="mt-2 mb-4 text-3xl font-bold">Package Templates</h1>
     """
   end
 
   def step_heading(assigns) do
     ~H"""
-      <h1 class="mt-2 mb-4 text-3xl"><strong class="font-bold"><%= heading_title(@is_edit) %>:</strong> <%= heading_subtitle(@name) %></h1>
+    <h1 class="mt-2 mb-4 text-3xl">
+      <strong class="font-bold"><%= heading_title(@is_edit) %>:</strong> <%= heading_subtitle(@name) %>
+    </h1>
     """
   end
 
@@ -463,22 +478,40 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
 
   def step_subheading(assigns) do
     ~H"""
-      <p>Create a new package</p>
+    <p>Create a new package</p>
     """
   end
 
   def step_buttons(%{name: :choose_template} = assigns) do
     ~H"""
-    <button class="btn-primary" title="Use template" type="submit" phx-disable-with="Use Template" disabled={!template_selected?(@form)}>
+    <button
+      class="btn-primary"
+      title="Use template"
+      type="submit"
+      phx-disable-with="Use Template"
+      disabled={!template_selected?(@form)}
+    >
       Use template
     </button>
 
     <%= if template_selected?(@form) do %>
-      <button class="btn-primary" title="Customize" type="button" phx-click="customize-template" phx-target={@myself}>
+      <button
+        class="btn-primary"
+        title="Customize"
+        type="button"
+        phx-click="customize-template"
+        phx-target={@myself}
+      >
         Customize
       </button>
     <% else %>
-      <button class="btn-primary" title="New Package" type="button" phx-click="new-package" phx-target={@myself}>
+      <button
+        class="btn-primary"
+        title="New Package"
+        type="button"
+        phx-click="new-package"
+        phx-target={@myself}
+      >
         New Package
       </button>
     <% end %>
@@ -487,7 +520,13 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
 
   def step_buttons(%{name: step} = assigns) when step in [:details, :documents, :pricing] do
     ~H"""
-    <button class="btn-primary" title="Next" type="submit" disabled={!@is_valid} phx-disable-with="Next">
+    <button
+      class="btn-primary"
+      title="Next"
+      type="submit"
+      disabled={!@is_valid}
+      phx-disable-with="Next"
+    >
       Next
     </button>
     """
@@ -495,7 +534,13 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
 
   def step_buttons(%{name: :payment} = assigns) do
     ~H"""
-    <button class="px-8 mb-2 sm:mb-0 btn-primary" title="Save" type="submit" disabled={!@is_valid} phx-disable-with="Save">
+    <button
+      class="px-8 mb-2 sm:mb-0 btn-primary"
+      title="Save"
+      type="submit"
+      disabled={!@is_valid}
+      phx-disable-with="Save"
+    >
       Save
     </button>
     """
@@ -503,22 +548,35 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
 
   def step(%{name: :choose_template} = assigns) do
     ~H"""
-    <.packages_search_component id="packages" target={@myself} module={TodoplaceWeb.PackageLive.PackagesSearchComponent} job_types={@job_types} current_user={@current_user} />
-    <h1 class="mt-6 text-xl font-bold">Select Package <%= if template_selected?(@f), do: "(1 selected)", else: "" %></h1>
+    <.packages_search_component
+      id="packages"
+      target={@myself}
+      module={TodoplaceWeb.PackageLive.PackagesSearchComponent}
+      job_types={@job_types}
+      current_user={@current_user}
+    />
+    <h1 class="mt-6 text-xl font-bold">
+      Select Package <%= if template_selected?(@f), do: "(1 selected)", else: "" %>
+    </h1>
     <div class="hidden sm:flex items-center justify-between border-b-8 border-blue-planning-300 font-semibold text-lg pb-3 mt-4 text-base-250">
       <%= for title <- ["Package name", "Package pricing", "Select package"] do %>
         <div class="w-1/3 last:text-center"><%= title %></div>
       <% end %>
     </div>
     <%= if @templates == [] do %>
-        <div class="p-6 text-center text-base-300 w-full">
+      <div class="p-6 text-center text-base-300 w-full">
         No packages found using that search criteria
-        </div>
+      </div>
     <% else %>
       <%= for template <- @templates do %>
         <% checked = is_checked(input_value(@f, :package_template_id), template) %>
         <.package_row package={template} checked={checked}>
-          <input class={classes("w-5 h-5 mr-2.5   radio", %{"checked" => checked})} type="radio" name={input_name(@f, :package_template_id)} value={template.id} />
+          <input
+            class={classes("w-5 h-5 mr-2.5   radio", %{"checked" => checked})}
+            type="radio"
+            name={input_name(@f, :package_template_id)}
+            value={template.id}
+          />
         </.package_row>
       <% end %>
     <% end %>
@@ -541,127 +599,196 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
       })
 
     ~H"""
-      <%= if !@is_template && Map.get(assigns, :job) do %>
+    <%= if !@is_template && Map.get(assigns, :job) do %>
       <div class="rounded bg-gray-100 p-4">
-        <h6 class="rounded uppercase bg-blue-planning-300 text-white px-2 py-0.5 text-sm font-semibold mb-1 inline-block">Note</h6>
-        <p class="text-base-250">If you don't see any of your packages to select from, you likely selected the wrong photography type when creating the lead. Your package needs to match the lead photography type.</p>
+        <h6 class="rounded uppercase bg-blue-planning-300 text-white px-2 py-0.5 text-sm font-semibold mb-1 inline-block">
+          Note
+        </h6>
+        <p class="text-base-250">
+          If you don't see any of your packages to select from, you likely selected the wrong photography type when creating the lead. Your package needs to match the lead photography type.
+        </p>
       </div>
-      <% end %>
+    <% end %>
 
-      <.package_basic_fields form={@f} job_type={@placeholder_job_type} />
+    <.package_basic_fields form={@f} job_type={@placeholder_job_type} />
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-4">
+      <div>
+        <.input_label
+          form={@f}
+          class="flex items-end justify-between mb-3 text-sm font-semibold"
+          field={:thumbnail_url}
+        >
+          <span>Package Thumbnail <%= error_tag(@f, :thumbnail_url) %></span>
+        </.input_label>
+        <.image_upload_input
+          current_user={@current_user}
+          upload_folder="package_image"
+          name={input_name(@f, :thumbnail_url)}
+          url={input_value(@f, :thumbnail_url)}
+        >
+          <:image_slot>
+            <.blurred_thumbnail class="h-full w-full" url={input_value(@f, :thumbnail_url)} />
+          </:image_slot>
+        </.image_upload_input>
+      </div>
+      <div class="flex flex-col">
+        <.input_label
+          form={@f}
+          class="flex items-start justify-between mb-3 text-sm font-semibold"
+          field={:description}
+        >
+          <span>Description <%= error_tag(@f, :description) %></span>
+          <button
+            type="button"
+            phx-hook="ClearQuillInput"
+            id="clear-description"
+            data-input-name={input_name(@f, :description)}
+            class="text-red-sales-300 underline"
+          >
+            Clear
+          </button>
+        </.input_label>
+        <div class="flex-grow">
+          <.quill_input
+            f={@f}
+            html_field={:description}
+            editor_class="min-h-[16rem]"
+            class="flex flex-col h-full"
+            placeholder={"Description of your#{@placeholder_job_type} offering and pricing "}
+          />
+        </div>
+      </div>
+    </div>
+
+    <%= if @is_template || @is_booking_event do %>
+      <hr class="mt-6" />
+
+      <div class="flex flex-col mt-6">
         <div>
-          <.input_label form={@f} class="flex items-end justify-between mb-3 text-sm font-semibold" field={:thumbnail_url}
-          >
-            <span>Package Thumbnail <%= error_tag(@f, :thumbnail_url) %></span>
+          <.input_label form={@f} class="mb-1 text-sm font-semibold" field={:job_type}>
+            Select a Photography Type
           </.input_label>
-          <.image_upload_input
-            current_user={@current_user}
-            upload_folder="package_image"
-            name={input_name(@f, :thumbnail_url)}
-            url={input_value(@f, :thumbnail_url)}
+          <.tooltip
+            class=""
+            content="You can enable more photography types in your <a class='underline' href='/package_templates?edit_photography_types=true'>package settings</a>."
+            id="photography-type-tooltip"
           >
-            <:image_slot>
-              <.blurred_thumbnail class="h-full w-full" url={input_value(@f, :thumbnail_url)} />
-            </:image_slot>
-          </.image_upload_input>
+            <.link navigate="/package_templates?edit_photography_types=true">
+              <span class="link text-sm">Not seeing your photography type?</span>
+            </.link>
+          </.tooltip>
         </div>
-        <div class="flex flex-col">
-          <.input_label form={@f} class="flex items-start justify-between mb-3 text-sm font-semibold" field={:description}>
-            <span>Description <%= error_tag(@f, :description) %></span>
-            <button type="button" phx-hook="ClearQuillInput" id="clear-description" data-input-name={input_name(@f,:description)} class="text-red-sales-300 underline">
-              Clear
-            </button>
-          </.input_label>
-          <div class="flex-grow">
-            <.quill_input f={@f} html_field={:description} editor_class="min-h-[16rem]" class="flex flex-col h-full" placeholder={"Description of your#{@placeholder_job_type} offering and pricing "} />
-          </div>
-        </div>
-      </div>
 
-      <%= if @is_template || @is_booking_event do %>
-        <hr class="mt-6" />
-
-        <div class="flex flex-col mt-6">
-          <div>
-            <.input_label form={@f} class="mb-1 text-sm font-semibold" field={:job_type}>
-              Select a Photography Type
-            </.input_label>
-            <.tooltip class="" content="You can enable more photography types in your <a class='underline' href='/package_templates?edit_photography_types=true'>package settings</a>." id="photography-type-tooltip">
-              <.link navigate="/package_templates?edit_photography_types=true">
-                <span class="link text-sm">Not seeing your photography type?</span>
-              </.link>
-            </.tooltip>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3 mt-2 sm:grid-cols-4 sm:gap-5">
-            <%= for job_type <- @job_types do %>
-              <.job_type_option type="radio" name={input_name(@f, :job_type)} job_type={job_type} checked={input_value(@f, :job_type) == job_type} />
-            <% end %>
-          </div>
-
-          <%= unless @is_booking_event do %>
-            <div class="col-start-7">
-              <label class="flex items-center mt-8">
-                <%= checkbox @f, :show_on_public_profile, class: "w-6 h-6 checkbox" %>
-                <h1 class="text-xl ml-2 mr-1 font-bold">Show package on my Public Profile</h1>
-              </label>
-              <p class="ml-8 text-gray-500"> Keep this package hidden from potential clients until you're ready to showcase it</p>
-            </div>
+        <div class="grid grid-cols-2 gap-3 mt-2 sm:grid-cols-4 sm:gap-5">
+          <%= for job_type <- @job_types do %>
+            <.job_type_option
+              type="radio"
+              name={input_name(@f, :job_type)}
+              job_type={job_type}
+              checked={input_value(@f, :job_type) == job_type}
+            />
           <% end %>
         </div>
-      <% end %>
+
+        <%= unless @is_booking_event do %>
+          <div class="col-start-7">
+            <label class="flex items-center mt-8">
+              <%= checkbox(@f, :show_on_public_profile, class: "w-6 h-6 checkbox") %>
+              <h1 class="text-xl ml-2 mr-1 font-bold">Show package on my Public Profile</h1>
+            </label>
+            <p class="ml-8 text-gray-500">
+              Keep this package hidden from potential clients until you're ready to showcase it
+            </p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
     """
   end
 
   def step(%{name: :documents} = assigns) do
     ~H"""
     <div class="font-normal text-base-250 w-fit">
-      As with most things in Todoplace, we have created default contracts/questionnaires for you to use. If you’d like to make your own, check out global questionnaire and contract management. <strong>NOTE: Make sure to save your work and come back to this page to select your custom documents.</strong>
+      As with most things in Todoplace, we have created default contracts/questionnaires for you to use. If you’d like to make your own, check out global questionnaire and contract management.
+      <strong>
+        NOTE: Make sure to save your work and come back to this page to select your custom documents.
+      </strong>
     </div>
 
     <div class="flex flex-row gap-4 mt-2 mb-8">
-      <a class="items-center text-blue-planning-300 underline font-normal flex gap-2" target="_blank" href={~p"/contracts"}>
-        Manage contracts <.icon name="external-link" class="w-3.5 h-3.5"/>
+      <a
+        class="items-center text-blue-planning-300 underline font-normal flex gap-2"
+        target="_blank"
+        href={~p"/contracts"}
+      >
+        Manage contracts <.icon name="external-link" class="w-3.5 h-3.5" />
       </a>
-      <a class="items-center text-blue-planning-300 underline font-normal flex gap-2" target="_blank" href={~p"/questionnaires"}>
-        Manage questionnaires <.icon name="external-link" class="w-3.5 h-3.5"/>
+      <a
+        class="items-center text-blue-planning-300 underline font-normal flex gap-2"
+        target="_blank"
+        href={~p"/questionnaires"}
+      >
+        Manage questionnaires <.icon name="external-link" class="w-3.5 h-3.5" />
       </a>
     </div>
 
     <div class="flex flex-row text-blue-planning-300 mb-4">
       <%= for %{name: name, concise_name: concise_name} <- @tabs do %>
-        <div class={classes("flex px-3 font-bold rounded-lg whitespace-nowrap text-lg", %{"bg-blue-planning-100 text-base-300" => Atom.to_string(@active_tab) == concise_name})}>
-          <button type="button" phx-click={"toggle-tab"} phx-value-active={concise_name} phx-target={@myself} ><%= name %></button>
+        <div class={
+          classes("flex px-3 font-bold rounded-lg whitespace-nowrap text-lg", %{
+            "bg-blue-planning-100 text-base-300" => Atom.to_string(@active_tab) == concise_name
+          })
+        }>
+          <button
+            type="button"
+            phx-click="toggle-tab"
+            phx-value-active={concise_name}
+            phx-target={@myself}
+          >
+            <%= name %>
+          </button>
         </div>
       <% end %>
     </div>
 
     <span class="hidden sm:flex items-center justify-between border-b-4 border-blue-planning-300 font-semibold text-lg text-base-250" />
-    <section {testid("document-contracts")} class="border border-base-200 rounded-lg mt-6 overflow-hidden">
+    <section
+      {testid("document-contracts")}
+      class="border border-base-200 rounded-lg mt-6 overflow-hidden"
+    >
       <div class={classes(%{"hidden" => !(@active_tab == :contract)})}>
         <% c = to_form(@contract_changeset) %>
-          <div class="hidden sm:flex items-center justify-between table-auto font-semibold text-lg p-3 rounded-t-lg bg-base-200">
-            <div class="w-1/3">Contract name</div>
-            <div class="w-1/3 text-center">Job type</div>
-            <div class="w-1/3 text-center">Select contract</div>
+        <div class="hidden sm:flex items-center justify-between table-auto font-semibold text-lg p-3 rounded-t-lg bg-base-200">
+          <div class="w-1/3">Contract name</div>
+          <div class="w-1/3 text-center">Job type</div>
+          <div class="w-1/3 text-center">Select contract</div>
+        </div>
+        <%= for contract <- @contract_options do %>
+          <div
+            {testid("contracts-row")}
+            class="md:mx-3 md:px-0 px-3 mx-0 border py-3 sm:py-4 md:border-none border-b md:rounded-lg rounded-none"
+          >
+            <label class="flex items-center justify-between cursor-pointer">
+              <h3 class="font-xl font-bold w-1/3"><%= contract.name %></h3>
+              <p class="w-1/3 text-center"><%= contract.job_type %></p>
+              <div class="w-1/3 text-center">
+                <%= radio_button(c, :contract_template_id, contract.id,
+                  class: "w-5 h-5 mr-2.5 radio cursor-pointer"
+                ) %>
+              </div>
+            </label>
           </div>
-          <%= for contract <- @contract_options do %>
-            <div {testid("contracts-row")} class="md:mx-3 md:px-0 px-3 mx-0 border py-3 sm:py-4 md:border-none border-b md:rounded-lg rounded-none">
-              <label class="flex items-center justify-between cursor-pointer">
-                <h3 class="font-xl font-bold w-1/3"><%= contract.name %></h3>
-                <p class="w-1/3 text-center"><%= contract.job_type %></p>
-                <div class="w-1/3 text-center">
-                  <%= radio_button(c, :contract_template_id, contract.id, class: "w-5 h-5 mr-2.5 radio cursor-pointer") %>
-                </div>
-              </label>
-            </div>
-          <% end %>
+        <% end %>
       </div>
       <div class={classes(%{"hidden" => !(@active_tab == :question)})}>
         <%= if Enum.empty?(@questionnaires) do %>
-          <p>Looks like you don't have any questionnaires. Please add one first <.live_link to={~p"/questionnaires"} class="underline text-blue-planning-300">here</.live_link>. (You're modal will close and you'll have to come back)</p>
+          <p>
+            Looks like you don't have any questionnaires. Please add one first
+            <.live_link to={~p"/questionnaires"} class="underline text-blue-planning-300">
+              here
+            </.live_link>. (You're modal will close and you'll have to come back)
+          </p>
         <% else %>
           <div class="hidden sm:flex items-center justify-between table-auto font-semibold text-lg p-3 rounded-t-lg bg-base-200">
             <div class="w-1/3">Questionnaire name</div>
@@ -674,7 +801,9 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
                 <h3 class="font-xl font-bold w-1/3"><%= questionnaire.name %></h3>
                 <p class="w-1/3 text-center"><%= questionnaire.job_type %></p>
                 <div class="w-1/3 text-center">
-                  <%= radio_button(@f, :questionnaire_template_id, questionnaire.id, class: "w-5 h-5 mr-2.5 radio cursor-pointer") %>
+                  <%= radio_button(@f, :questionnaire_template_id, questionnaire.id,
+                    class: "w-5 h-5 mr-2.5 radio cursor-pointer"
+                  ) %>
                 </div>
               </label>
             </div>
@@ -687,145 +816,254 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
 
   def step(%{name: :pricing} = assigns) do
     ~H"""
-      <div class="">
-        <div class="flex flex-row text-base-250 font-bold">
-          <div class="flex w-4/5">Item</div>
-          <div class="flex w-1/5">Total</div>
-        </div>
-        <div class="border-blue-planning-300 border-2 mt-4"></div>
+    <div class="">
+      <div class="flex flex-row text-base-250 font-bold">
+        <div class="flex w-4/5">Item</div>
+        <div class="flex w-1/5">Total</div>
+      </div>
+      <div class="border-blue-planning-300 border-2 mt-4"></div>
 
-        <div class="flex mt-6">
-          <div class="flex flex-col w-4/5 items-center md:items-start">
-            <label class="mb-3" for={input_id(@f, :base_price)}>
-              <h2 class="mb-1 text-xl font-bold">Creative Session Fee</h2>
-              <span class="text-base-250">Input your base session fee; if your location charges taxes, we’ll calculate those for your client at checkout.</span>
-            </label>
+      <div class="flex mt-6">
+        <div class="flex flex-col w-4/5 items-center md:items-start">
+          <label class="mb-3" for={input_id(@f, :base_price)}>
+            <h2 class="mb-1 text-xl font-bold">Creative Session Fee</h2>
+            <span class="text-base-250">
+              Input your base session fee; if your location charges taxes, we’ll calculate those for your client at checkout.
+            </span>
+          </label>
 
-            <div class="flex flex-row items-center w-auto mt-6 border rounded-lg">
-              <%= input @f, :base_price, placeholder: "#{@currency_symbol}0.00", class: "sm:w-32 w-full bg-white px-1 border-none text-lg sm:mt-0 font-normal text-center", phx_hook: "PriceMask", data_currency: @currency_symbol %>
-            </div>
-            <%= text_input @f, :currency, value: @currency, class: "form-control border-none text-base-250", phx_debounce: "500", maxlength: 3, autocomplete: "off", readonly: true %>
+          <div class="flex flex-row items-center w-auto mt-6 border rounded-lg">
+            <%= input(@f, :base_price,
+              placeholder: "#{@currency_symbol}0.00",
+              class:
+                "sm:w-32 w-full bg-white px-1 border-none text-lg sm:mt-0 font-normal text-center",
+              phx_hook: "PriceMask",
+              data_currency: @currency_symbol
+            ) %>
           </div>
-          <b class="flex w-1/5"> <%= current(@f) |> Map.get(:base_price) %> </b>
+          <%= text_input(@f, :currency,
+            value: @currency,
+            class: "form-control border-none text-base-250",
+            phx_debounce: "500",
+            maxlength: 3,
+            autocomplete: "off",
+            readonly: true
+          ) %>
         </div>
+        <b class="flex w-1/5"><%= current(@f) |> Map.get(:base_price) %></b>
+      </div>
 
-        <hr class="w-full mt-6"/>
-        <%= if @currency in products_currency() do %>
-          <.package_print_credit_fields f={@f} package_pricing={@package_pricing} target={@myself} show_print_credits={@show_print_credits} currency_symbol={@currency_symbol} currency={@currency}/>
+      <hr class="w-full mt-6" />
+      <%= if @currency in products_currency() do %>
+        <.package_print_credit_fields
+          f={@f}
+          package_pricing={@package_pricing}
+          target={@myself}
+          show_print_credits={@show_print_credits}
+          currency_symbol={@currency_symbol}
+          currency={@currency}
+        />
 
-          <hr class="w-full mt-6"/>
-        <% end %>
+        <hr class="w-full mt-6" />
+      <% end %>
 
-        <.digital_download_fields package_form={@f} download_changeset={@download_changeset} package_pricing={@package_pricing} target={@myself} show_digitals={@show_digitals} currency_symbol={@currency_symbol} currency={@currency}/>
+      <.digital_download_fields
+        package_form={@f}
+        download_changeset={@download_changeset}
+        package_pricing={@package_pricing}
+        target={@myself}
+        show_digitals={@show_digitals}
+        currency_symbol={@currency_symbol}
+        currency={@currency}
+      />
 
-        <hr class="w-full mt-6"/>
-        <% changeset = current(@f) %>
-        <% multiplier = current(@multiplier) %>
-        <% print_credits_include_in_total = Map.get(changeset, :print_credits_include_in_total) %>
-        <% digitals_include_in_total = Map.get(changeset, :digitals_include_in_total) %>
+      <hr class="w-full mt-6" />
+      <% changeset = current(@f) %>
+      <% multiplier = current(@multiplier) %>
+      <% print_credits_include_in_total = Map.get(changeset, :print_credits_include_in_total) %>
+      <% digitals_include_in_total = Map.get(changeset, :digitals_include_in_total) %>
 
-        <div class="flex md:flex-row flex-col">
-          <div class="flex flex-col w-full md:w-2/3">
-            <div class="mt-9 md:mt-1">
-              <h2 class="mb-2 text-xl font-bold justify-self-start sm:mr-4 whitespace-nowrap">Package Total</h2>
-              <p class="text-base-250 mb-2">Taxes will be calculated at checkout for your client.</p>
+      <div class="flex md:flex-row flex-col">
+        <div class="flex flex-col w-full md:w-2/3">
+          <div class="mt-9 md:mt-1">
+            <h2 class="mb-2 text-xl font-bold justify-self-start sm:mr-4 whitespace-nowrap">
+              Package Total
+            </h2>
+            <p class="text-base-250 mb-2">Taxes will be calculated at checkout for your client.</p>
+          </div>
+          <button
+            {testid("add-discount-surcharge")}
+            class={
+              classes("underline text-blue-planning-300 inline-block w-max", %{
+                "hidden" => @show_discounts
+              })
+            }
+            type="button"
+            phx-target={@myself}
+            phx-click="edit-discounts"
+          >
+            Add a discount or surcharge
+          </button>
+
+          <div class={
+            classes("border border-solid mt-6 rounded-lg md:w-3/4 w-full", %{
+              "hidden" => !@show_discounts
+            })
+          }>
+            <div class="p-2 font-bold bg-base-200 flex flex-row">
+              Discount or Surcharge Settings
+              <a
+                phx-target={@myself}
+                phx-click="edit-discounts"
+                class="flex items-center cursor-pointer ml-auto"
+              >
+                <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2" />
+              </a>
             </div>
-            <button {testid("add-discount-surcharge")} class={classes("underline text-blue-planning-300 inline-block w-max", %{"hidden" => @show_discounts})} type="button" phx-target={@myself} phx-click="edit-discounts">Add a discount or surcharge</button>
+            <% m = to_form(@multiplier) %>
 
-            <div class={classes("border border-solid mt-6 rounded-lg md:w-3/4 w-full", %{"hidden" => !@show_discounts})}>
-              <div class="p-2 font-bold bg-base-200 flex flex-row">
-                Discount or Surcharge Settings
-                <a phx-target={@myself} phx-click="edit-discounts" class="flex items-center cursor-pointer ml-auto"><.icon name="close-x" class="w-3 h-3 stroke-current stroke-2"/></a>
-              </div>
-              <% m = to_form(@multiplier) %>
+            <div class="mt-4 px-6 pb-6">
+              <label class="flex sm:mt-8 justify-self-start font-bold">
+                <%= checkbox(m, :is_enabled, class: "w-5 h-5 mr-2 mt-1 checkbox") %>
+                <div class="flex flex-col">
+                  Apply a discount or surcharge
+                  <span class="font-normal text-sm text-base-250">
+                    Please select all the options to which the discount should be applied
+                  </span>
+                </div>
+              </label>
 
-              <div class="mt-4 px-6 pb-6">
-                <label class="flex sm:mt-8 justify-self-start font-bold">
-                  <%= checkbox(m, :is_enabled, class: "w-5 h-5 mr-2 mt-1 checkbox") %>
-                  <div class="flex flex-col">
-                    Apply a discount or surcharge
-                    <span class="font-normal text-sm text-base-250">Please select all the options to which the discount should be applied</span>
+              <%= if m |> current() |> Map.get(:is_enabled) do %>
+                <div class="flex flex-col items-center pl-0 my-6 sm:flex-row sm:pl-16">
+                  <h2 class="self-start mt-3 text-base-250 sm:self-auto sm:mt-0 justify-self-start sm:mr-4 whitespace-nowrap">
+                    Apply a
+                  </h2>
+
+                  <div class="flex w-full mt-3 sm:mt-0 gap-2 items-center">
+                    <%= input(m, :percent,
+                      placeholder: "0.00%",
+                      value: "#{input_value(m, :percent)}",
+                      class: "w-24 text-center p-3 border rounded-lg border-blue-planning-300",
+                      phx_hook: "PercentMask",
+                      data_include: false,
+                      data_include_sign: "false"
+                    ) %>
+                    <p>%</p>
+                    <%= select_field(m, :sign, Multiplier.sign_options(),
+                      class: "text-left flex-grow sm:flex-grow-0 px-4 py-4 pr-10"
+                    ) %>
                   </div>
-                </label>
+                </div>
 
-                <%= if m |> current() |> Map.get(:is_enabled) do %>
-                  <div class="flex flex-col items-center pl-0 my-6 sm:flex-row sm:pl-16">
-                    <h2 class="self-start mt-3 text-base-250 sm:self-auto sm:mt-0 justify-self-start sm:mr-4 whitespace-nowrap">Apply a</h2>
-
-                    <div class="flex w-full mt-3 sm:mt-0 gap-2 items-center">
-                      <%= input m, :percent, placeholder: "0.00%", value: "#{input_value(m, :percent)}", class: "w-24 text-center p-3 border rounded-lg border-blue-planning-300", phx_hook: "PercentMask", data_include: false, data_include_sign: "false" %>
-                      <p>%</p>
-                      <%= select_field(m, :sign, Multiplier.sign_options(), class: "text-left flex-grow sm:flex-grow-0 px-4 py-4 pr-10") %>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center pl-0 sm:flex-row sm:pl-16">
-                    <%= checkbox m, :discount_base_price, class: "w-5 h-5 mr-2.5 checkbox" %>
-                    <%= label_for m, :discount_base_price, label: "Apply to creative session", class: "font-normal" %>
-                  </div>
-                  <%= if @currency in products_currency() do%>
-                    <div class={classes("flex items-center pl-0 sm:flex-row sm:pl-16", %{"text-base-250 cursor-none" => !print_credits_include_in_total})}>
-                      <%= checkbox m, :discount_print_credits, class: "w-5 h-5 mr-2.5 checkbox", disabled: !print_credits_include_in_total %>
-                      <%= label_for m, :discount_print_credits, label: "Apply to print credit", class: "font-normal" %>
-                      <.tooltip class="ml-1" content="<strong>To apply a print credit discount/surcharge</strong>: you need to add an amount to your print credits and check “Include in package total calculation”" id="include-print" />
-                    </div>
-                  <% end %>
-                  <div class={classes("flex items-center pl-0 sm:flex-row sm:pl-16", %{"text-base-250 cursor-none" => !digitals_include_in_total})}>
-                    <%= checkbox m, :discount_digitals, class: "w-5 h-5 mr-2.5 checkbox", disabled: !digitals_include_in_total %>
-                    <%= label_for m, :discount_digitals, label: "Apply to digitals", class: "font-normal" %>
-                    <.tooltip class="ml-1" content="<strong>To apply a digital collection discount/surcharge</strong>: select “Clients don’t have to pay for some Digital Images”, add some images you want to provide them, and check “Include in package total calculation”" id="include-digital" />
+                <div class="flex items-center pl-0 sm:flex-row sm:pl-16">
+                  <%= checkbox(m, :discount_base_price, class: "w-5 h-5 mr-2.5 checkbox") %>
+                  <%= label_for(m, :discount_base_price,
+                    label: "Apply to creative session",
+                    class: "font-normal"
+                  ) %>
+                </div>
+                <%= if @currency in products_currency() do %>
+                  <div class={
+                    classes("flex items-center pl-0 sm:flex-row sm:pl-16", %{
+                      "text-base-250 cursor-none" => !print_credits_include_in_total
+                    })
+                  }>
+                    <%= checkbox(m, :discount_print_credits,
+                      class: "w-5 h-5 mr-2.5 checkbox",
+                      disabled: !print_credits_include_in_total
+                    ) %>
+                    <%= label_for(m, :discount_print_credits,
+                      label: "Apply to print credit",
+                      class: "font-normal"
+                    ) %>
+                    <.tooltip
+                      class="ml-1"
+                      content="<strong>To apply a print credit discount/surcharge</strong>: you need to add an amount to your print credits and check “Include in package total calculation”"
+                      id="include-print"
+                    />
                   </div>
                 <% end %>
-              </div>
+                <div class={
+                  classes("flex items-center pl-0 sm:flex-row sm:pl-16", %{
+                    "text-base-250 cursor-none" => !digitals_include_in_total
+                  })
+                }>
+                  <%= checkbox(m, :discount_digitals,
+                    class: "w-5 h-5 mr-2.5 checkbox",
+                    disabled: !digitals_include_in_total
+                  ) %>
+                  <%= label_for(m, :discount_digitals,
+                    label: "Apply to digitals",
+                    class: "font-normal"
+                  ) %>
+                  <.tooltip
+                    class="ml-1"
+                    content="<strong>To apply a digital collection discount/surcharge</strong>: select “Clients don’t have to pay for some Digital Images”, add some images you want to provide them, and check “Include in package total calculation”"
+                    id="include-digital"
+                  />
+                </div>
+              <% end %>
             </div>
-
-          </div>
-          <div {testid("sumup-grid")} class="grid w-full md:w-1/3 h-fit">
-            <.show_discounts>
-              <span class="flex w-2/3 mt-4 font-bold">Creative Session Fee</span>
-              <span class="flex w-1/3 mt-4 justify-end mr-5">+<%= Map.get(changeset, :base_price) %></span>
-            </.show_discounts>
-            <%= if Map.get(multiplier, :discount_base_price) do %>
-              <.show_discounts>
-              <span class="flex w-2/3 text-base-250"><%= get_discount_text(multiplier) %></span>
-              <span class="flex w-1/3 text-base-250 justify-end mr-5"><%= base_adjustment(@f) %></span>
-              </.show_discounts>
-            <% end %>
-            <%= if print_credits_include_in_total do %>
-              <.show_discounts>
-                <span class="flex w-2/3 mt-2 font-bold">Professional Print Credit</span>
-                <span class="flex w-1/3 mt-2 justify-end mr-5">+<%= Map.get(changeset, :print_credits) %></span>
-              </.show_discounts>
-            <% end %>
-            <%= if Map.get(multiplier, :discount_print_credits) do %>
-              <.show_discounts>
-                <span class="flex w-2/3 text-base-250"><%= get_discount_text(multiplier) %></span>
-                <span class="flex w-1/3 text-base-250 justify-end mr-5"><%= print_cridets_adjustment(@f) %></span>
-              </.show_discounts>
-            <% end %>
-            <%= if digitals_include_in_total do %>
-            <.show_discounts>
-                <span class="flex w-2/3 mt-2 font-bold">Digital Collection</span>
-                <span class="flex w-1/3 mt-2 justify-end mr-5">+<%= digitals_total(@download_changeset) %></span>
-              </.show_discounts>
-            <% end %>
-            <%= if Map.get(multiplier, :discount_digitals) do %>
-              <.show_discounts>
-                <span class="flex w-2/3 text-base-250"><%= get_discount_text(multiplier) %></span>
-                <span class="flex w-1/3 text-base-250 justify-end mr-5"><%= digitals_adjustment(@f) %></span>
-              </.show_discounts>
-            <% end %>
-            <.show_discounts>
-              <div class="flex flex-row gap-4 p-2 mt-4 w-full bg-base-200 rounded-lg mb-2 mt-4 text-xl font-bold justify-self-start whitespace-nowrap">
-                <span class="flex w-2/3 font-bold">Package Total</span>
-                <span class="flex w-1/3 font-bold justify-end mr-3"><%= total_price(@f) %></span>
-              </div>
-            </.show_discounts>
           </div>
         </div>
-
-      <hr class="w-full mt-6"/>
+        <div {testid("sumup-grid")} class="grid w-full md:w-1/3 h-fit">
+          <.show_discounts>
+            <span class="flex w-2/3 mt-4 font-bold">Creative Session Fee</span>
+            <span class="flex w-1/3 mt-4 justify-end mr-5">
+              +<%= Map.get(changeset, :base_price) %>
+            </span>
+          </.show_discounts>
+          <%= if Map.get(multiplier, :discount_base_price) do %>
+            <.show_discounts>
+              <span class="flex w-2/3 text-base-250"><%= get_discount_text(multiplier) %></span>
+              <span class="flex w-1/3 text-base-250 justify-end mr-5">
+                <%= base_adjustment(@f) %>
+              </span>
+            </.show_discounts>
+          <% end %>
+          <%= if print_credits_include_in_total do %>
+            <.show_discounts>
+              <span class="flex w-2/3 mt-2 font-bold">Professional Print Credit</span>
+              <span class="flex w-1/3 mt-2 justify-end mr-5">
+                +<%= Map.get(changeset, :print_credits) %>
+              </span>
+            </.show_discounts>
+          <% end %>
+          <%= if Map.get(multiplier, :discount_print_credits) do %>
+            <.show_discounts>
+              <span class="flex w-2/3 text-base-250"><%= get_discount_text(multiplier) %></span>
+              <span class="flex w-1/3 text-base-250 justify-end mr-5">
+                <%= print_cridets_adjustment(@f) %>
+              </span>
+            </.show_discounts>
+          <% end %>
+          <%= if digitals_include_in_total do %>
+            <.show_discounts>
+              <span class="flex w-2/3 mt-2 font-bold">Digital Collection</span>
+              <span class="flex w-1/3 mt-2 justify-end mr-5">
+                +<%= digitals_total(@download_changeset) %>
+              </span>
+            </.show_discounts>
+          <% end %>
+          <%= if Map.get(multiplier, :discount_digitals) do %>
+            <.show_discounts>
+              <span class="flex w-2/3 text-base-250"><%= get_discount_text(multiplier) %></span>
+              <span class="flex w-1/3 text-base-250 justify-end mr-5">
+                <%= digitals_adjustment(@f) %>
+              </span>
+            </.show_discounts>
+          <% end %>
+          <.show_discounts>
+            <div class="flex flex-row gap-4 p-2 mt-4 w-full bg-base-200 rounded-lg mb-2 mt-4 text-xl font-bold justify-self-start whitespace-nowrap">
+              <span class="flex w-2/3 font-bold">Package Total</span>
+              <span class="flex w-1/3 font-bold justify-end mr-3"><%= total_price(@f) %></span>
+            </div>
+          </.show_discounts>
+        </div>
       </div>
+
+      <hr class="w-full mt-6" />
+    </div>
     """
   end
 
@@ -854,10 +1092,17 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
       </div>
       <% pc = to_form(@payments_changeset) %>
       <div {testid("select-preset-type")} class="grid gap-6 md:grid-cols-2 grid-cols-1 mt-8">
-        <%= select pc, :schedule_type, payment_dropdown_options(@job_type, input_value(pc, :schedule_type)), wrapper_class: "mt-4", class: "py-3 border rounded-lg border-base-200 cursor-pointer", phx_update: "update" %>
+        <%= select(
+          pc,
+          :schedule_type,
+          payment_dropdown_options(@job_type, input_value(pc, :schedule_type)),
+          wrapper_class: "mt-4",
+          class: "py-3 border rounded-lg border-base-200 cursor-pointer",
+          phx_update: "update"
+        ) %>
         <div {testid("preset-summary")} class="flex items-center"><%= get_tags(pc, @currency) %></div>
       </div>
-      <hr class="w-full my-6 md:my-8"/>
+      <hr class="w-full my-6 md:my-8" />
       <div class="flex flex-col items-start justify-between w-full sm:items-center sm:flex-row sm:w-auto">
         <div class="mb-2">
           <h2 class="mb-1 text-xl font-bold">Payment Schedule Details</h2>
@@ -868,32 +1113,49 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
         <div class="mb-8">
           <h2 class="mb-1 font-bold">Payment By:</h2>
           <div class="flex flex-col">
-            <label class="my-2"><%= radio_button(pc, :fixed, true, class: "w-5 h-5 mr-2 radio cursor-pointer") %>Fixed amount</label>
-            <label><%= radio_button(pc, :fixed, false, class: "w-5 h-5 mr-2 radio cursor-pointer") %>Percentage</label>
+            <label class="my-2">
+              <%= radio_button(pc, :fixed, true, class: "w-5 h-5 mr-2 radio cursor-pointer") %>Fixed amount
+            </label>
+            <label>
+              <%= radio_button(pc, :fixed, false, class: "w-5 h-5 mr-2 radio cursor-pointer") %>Percentage
+            </label>
           </div>
         </div>
       </div>
       <div class="flex mb-6 md:w-1/2">
         <h2 class="font-bold">Balance to collect:</h2>
-        <div {testid("balance-to-collect")} class="ml-auto"><%= total_price(@f) %> <%= unless input_value(pc, :fixed), do: "(100%)" %></div>
+        <div {testid("balance-to-collect")} class="ml-auto">
+          <%= total_price(@f) %> <%= unless input_value(pc, :fixed), do: "(100%)" %>
+        </div>
       </div>
-      <%= hidden_input pc, :total_price %>
-      <%= hidden_input pc, :remaining_price %>
+      <%= hidden_input(pc, :total_price) %>
+      <%= hidden_input(pc, :remaining_price) %>
       <%= inputs_for pc, :payment_schedules, fn p -> %>
-        <%= hidden_input p, :shoot_date %>
-        <%= hidden_input p, :last_shoot_date %>
-        <%= hidden_input p, :schedule_date %>
-        <%= hidden_input p, :description, value: get_tag(p, input_value(pc, :fixed), @currency) %>
-        <%= hidden_input p, :payment_field_index, value: p.index %>
-        <%= hidden_input p, :fields_count, value: length(input_value(pc, :payment_schedules)) %>
-        <div {testid("payment-count-card")} class="border rounded-lg border-base-200 md:w-1/2 pb-2 mt-3">
+        <%= hidden_input(p, :shoot_date) %>
+        <%= hidden_input(p, :last_shoot_date) %>
+        <%= hidden_input(p, :schedule_date) %>
+        <%= hidden_input(p, :description, value: get_tag(p, input_value(pc, :fixed), @currency)) %>
+        <%= hidden_input(p, :payment_field_index, value: p.index) %>
+        <%= hidden_input(p, :fields_count, value: length(input_value(pc, :payment_schedules))) %>
+        <div
+          {testid("payment-count-card")}
+          class="border rounded-lg border-base-200 md:w-1/2 pb-2 mt-3"
+        >
           <div class="flex items-center bg-base-200 px-2 p-2">
             <div class="mb-2 text-xl font-bold">Payment <%= p.index + 1 %></div>
-              <%= if p.index != 0 do %>
-                <.icon_button class="ml-auto" title="remove" phx-value-index={p.index} phx-click="remove-payment" phx-target={@myself} color="red-sales-300" icon="trash">
-                  Remove
-                </.icon_button>
-              <% end %>
+            <%= if p.index != 0 do %>
+              <.icon_button
+                class="ml-auto"
+                title="remove"
+                phx-value-index={p.index}
+                phx-click="remove-payment"
+                phx-target={@myself}
+                color="red-sales-300"
+                icon="trash"
+              >
+                Remove
+              </.icon_button>
+            <% end %>
           </div>
           <h2 class="my-2 px-2 font-bold">Payment Due</h2>
           <div class="flex flex-col w-full px-2">
@@ -903,14 +1165,30 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
                 <span class="font-medium">At the following interval</span>
               </div>
             </label>
-            <div class={classes("flex my-1 ml-8 items-center text-base-250", %{"hidden" => is_nil(@job)})}>
-              <.icon name="calendar" class="w-4 h-4 mr-1 text-base-250"/>
-              <%= if input_value(p, :shoot_date) |> is_value_set(), do: input_value(p, :schedule_date) |> Calendar.strftime("%m-%d-%Y"), else: "Add shoot to generate date" %>
+            <div class={
+              classes("flex my-1 ml-8 items-center text-base-250", %{"hidden" => is_nil(@job)})
+            }>
+              <.icon name="calendar" class="w-4 h-4 mr-1 text-base-250" />
+              <%= if input_value(p, :shoot_date) |> is_value_set(),
+                do: input_value(p, :schedule_date) |> Calendar.strftime("%m-%d-%Y"),
+                else: "Add shoot to generate date" %>
             </div>
-            <div {testid("due-interval")} class={classes("flex flex-col my-2 ml-8", %{"hidden" => !input_value(p, :interval)})}>
-              <%= select p, :due_interval, interval_dropdown_options(input_value(p, :due_interval), p.index), wrapper_class: "mt-4", class: "w-full py-3 border rounded-lg border-base-200", phx_update: "update" %>
+            <div
+              {testid("due-interval")}
+              class={classes("flex flex-col my-2 ml-8", %{"hidden" => !input_value(p, :interval)})}
+            >
+              <%= select(
+                p,
+                :due_interval,
+                interval_dropdown_options(input_value(p, :due_interval), p.index),
+                wrapper_class: "mt-4",
+                class: "w-full py-3 border rounded-lg border-base-200",
+                phx_update: "update"
+              ) %>
               <%= if message = p.errors[:schedule_date] do %>
-                <div class="flex py-1 w-full text-red-sales-300 text-sm"><%= translate_error(message) %></div>
+                <div class="flex py-1 w-full text-red-sales-300 text-sm">
+                  <%= translate_error(message) %>
+                </div>
               <% end %>
             </div>
             <label>
@@ -922,26 +1200,50 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
             <%= unless input_value(p, :interval) do %>
               <%= if input_value(p, :due_at) || (input_value(p, :shoot_date) |> is_value_set()) do %>
                 <div class="flex flex-col my-2 ml-8 cursor-pointer">
-                  <.date_picker_field class="w-full px-4 text-lg cursor-pointer" id={"payment-interval-#{p.index}"} form={p} field={:due_at} input_placeholder="mm/dd/yyyy" input_label="Payment Date" data_min_data={Date.utc_today()} />
+                  <.date_picker_field
+                    class="w-full px-4 text-lg cursor-pointer"
+                    id={"payment-interval-#{p.index}"}
+                    form={p}
+                    field={:due_at}
+                    input_placeholder="mm/dd/yyyy"
+                    input_label="Payment Date"
+                    data_min_data={Date.utc_today()}
+                  />
                   <%= if message = p.errors[:schedule_date] do %>
-                    <div class="flex py-1 w-full text-red-sales-300 text-sm"><%= translate_error(message) %></div>
+                    <div class="flex py-1 w-full text-red-sales-300 text-sm">
+                      <%= translate_error(message) %>
+                    </div>
                   <% end %>
                 </div>
               <% else %>
                 <div class="flex flex-col ml-8">
                   <div class="flex w-full my-2">
                     <div class="w-2/12">
-                      <%= select p, :count_interval, 1..10, wrapper_class: "mt-4", class: "w-full py-3 border rounded-lg border-base-200", phx_update: "update" %>
+                      <%= select(p, :count_interval, 1..10,
+                        wrapper_class: "mt-4",
+                        class: "w-full py-3 border rounded-lg border-base-200",
+                        phx_update: "update"
+                      ) %>
                     </div>
-                      <div class="ml-2 w-2/5">
-                      <%= select p, :time_interval, ["Day", "Month", "Year"], wrapper_class: "mt-4", class: "w-full py-3 border rounded-lg border-base-200", phx_update: "update" %>
+                    <div class="ml-2 w-2/5">
+                      <%= select(p, :time_interval, ["Day", "Month", "Year"],
+                        wrapper_class: "mt-4",
+                        class: "w-full py-3 border rounded-lg border-base-200",
+                        phx_update: "update"
+                      ) %>
                     </div>
                     <div class="ml-2 w-2/3">
-                      <%= select p, :shoot_interval, ["Before 1st Shoot", "Before Last Shoot"], wrapper_class: "mt-4", class: "w-full py-3 border rounded-lg border-base-200", phx_update: "update" %>
+                      <%= select(p, :shoot_interval, ["Before 1st Shoot", "Before Last Shoot"],
+                        wrapper_class: "mt-4",
+                        class: "w-full py-3 border rounded-lg border-base-200",
+                        phx_update: "update"
+                      ) %>
                     </div>
                   </div>
                   <%= if message = p.errors[:schedule_date] do %>
-                    <div class="flex py-1 w-full text-red-sales-300 text-sm"><%= translate_error(message) %></div>
+                    <div class="flex py-1 w-full text-red-sales-300 text-sm">
+                      <%= translate_error(message) %>
+                    </div>
                   <% end %>
                 </div>
               <% end %>
@@ -949,17 +1251,50 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
             <div class="flex my-2">
               <div class="flex flex-col ml-auto">
                 <div class="flex flex-row items-center w-auto mt-6 border rounded-lg relative border-blue-planning-300">
-                  <%= input p, :price, placeholder: "#{@currency_symbol}0.00", class: classes("w-32 bg-white p-3 border-none text-lg sm:mt-0 font-normal text-center", %{"hidden" => !input_value(pc, :fixed)}), phx_hook: "PriceMask", data_currency: @currency_symbol %>
+                  <%= input(p, :price,
+                    placeholder: "#{@currency_symbol}0.00",
+                    class:
+                      classes(
+                        "w-32 bg-white p-3 border-none text-lg sm:mt-0 font-normal text-center",
+                        %{"hidden" => !input_value(pc, :fixed)}
+                      ),
+                    phx_hook: "PriceMask",
+                    data_currency: @currency_symbol
+                  ) %>
                 </div>
-                <%= text_input p, :currency, value: @currency, class: classes("w-32 form-control text-base-250 border-none", %{"hidden" => !input_value(pc, :fixed)}), phx_debounce: "500", maxlength: 3, autocomplete: "off" %>
+                <%= text_input(p, :currency,
+                  value: @currency,
+                  class:
+                    classes("w-32 form-control text-base-250 border-none", %{
+                      "hidden" => !input_value(pc, :fixed)
+                    }),
+                  phx_debounce: "500",
+                  maxlength: 3,
+                  autocomplete: "off"
+                ) %>
               </div>
-              <%= input p, :percentage, placeholder: "0.00%", value: "#{input_value(p, :percentage)}%", class: classes("w-24 text-center p-3 border rounded-lg border-blue-planning-300 ml-auto", %{"hidden" => input_value(pc, :fixed)}), phx_hook: "PercentMask" %>
+              <%= input(p, :percentage,
+                placeholder: "0.00%",
+                value: "#{input_value(p, :percentage)}%",
+                class:
+                  classes(
+                    "w-24 text-center p-3 border rounded-lg border-blue-planning-300 ml-auto",
+                    %{"hidden" => input_value(pc, :fixed)}
+                  ),
+                phx_hook: "PercentMask"
+              ) %>
             </div>
           </div>
         </div>
       <% end %>
 
-      <.icon_button phx-click="add-payment" phx-target={@myself} class={classes("text-sm bg-white py-1.5 shadow-lg mt-5", %{"hidden" => hide_add_button(pc)})} color="blue-planning-300" icon="plus">
+      <.icon_button
+        phx-click="add-payment"
+        phx-target={@myself}
+        class={classes("text-sm bg-white py-1.5 shadow-lg mt-5", %{"hidden" => hide_add_button(pc)})}
+        color="blue-planning-300"
+        icon="plus"
+      >
         Add another payment
       </.icon_button>
 
@@ -968,11 +1303,15 @@ defmodule TodoplaceWeb.PackageLive.WizardComponent do
         <div {testid("remaining-to-collect")} class="ml-auto">
           <%= case input_value(pc, :remaining_price) do %>
             <% value -> %>
-            <%= if Money.zero?(value) do %>
-              <span class="text-green-finances-300"><%= get_remaining_price(input_value(pc, :fixed), value, total_price(@f)) %></span>
-            <% else %>
-              <span class="text-red-sales-300"><%= get_remaining_price(input_value(pc, :fixed), value, total_price(@f)) %></span>
-            <% end %>
+              <%= if Money.zero?(value) do %>
+                <span class="text-green-finances-300">
+                  <%= get_remaining_price(input_value(pc, :fixed), value, total_price(@f)) %>
+                </span>
+              <% else %>
+                <span class="text-red-sales-300">
+                  <%= get_remaining_price(input_value(pc, :fixed), value, total_price(@f)) %>
+                </span>
+              <% end %>
           <% end %>
         </div>
       </div>

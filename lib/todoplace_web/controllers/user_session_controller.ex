@@ -33,7 +33,8 @@ defmodule TodoplaceWeb.UserSessionController do
         # Insert entry into users_organizations table
         case Todoplace.Organization.insert_user_organization_association(organization_id, user.id) do
           :ok ->
-              UserAuth.log_in_user(conn, user, %{"device_id" => device_id})
+            UserAuth.log_in_user(conn, user, %{"device_id" => device_id})
+
           {:error, reason} ->
             # Handle insertion error if needed
             render(conn, "new.html", error_message: "failed to join organization try again")
@@ -59,8 +60,9 @@ defmodule TodoplaceWeb.UserSessionController do
     |> UserAuth.log_out(gallery)
   end
 
-  def delete(%{req_cookies: cookies} = conn,  _params) do
+  def delete(%{req_cookies: cookies} = conn, _params) do
     device_id = Map.get(cookies, "user_agent") |> URI.decode_www_form()
+
     conn
     |> delete_resp_cookie("show_admin_banner")
     |> put_flash(:info, "Logged out successfully.")

@@ -39,7 +39,12 @@ defmodule TodoplaceWeb.Live.FinanceSettings do
   @impl true
   def render(assigns) do
     ~H"""
-    <.settings_nav socket={@socket} live_action={@live_action} current_user={@current_user} intro_id="intro_settings_finances">
+    <.settings_nav
+      socket={@socket}
+      live_action={@live_action}
+      current_user={@current_user}
+      intro_id="intro_settings_finances"
+    >
       <div class="flex flex-col justify-between flex-1 flex-grow-0 mt-5 sm:flex-row">
         <div>
           <h1 class="text-2xl font-bold" {testid("settings-heading")}>Payments</h1>
@@ -48,25 +53,45 @@ defmodule TodoplaceWeb.Live.FinanceSettings do
       <hr class="my-4 sm:my-10" />
       <div class="grid gap-6 sm:grid-cols-2">
         <.card title="Stripe account" class="intro-stripe">
-          <p class="mt-2 text-base-250">Todoplace uses Stripe so your payments are always secure. View and manage your payments through your Stripe account.</p>
+          <p class="mt-2 text-base-250">
+            Todoplace uses Stripe so your payments are always secure. View and manage your payments through your Stripe account.
+          </p>
           <div class="flex mt-6 justify-end">
-            <.live_component module={TodoplaceWeb.StripeOnboardingComponent} id={:stripe_onboarding}
-            error_class="text-right"
-            class="px-8 text-center btn-primary sm:w-auto w-full"
-            container_class="sm:w-auto w-full"
-            current_user={@current_user}
-            return_url={~p"/home"}
-            stripe_status={@stripe_status} />
+            <.live_component
+              module={TodoplaceWeb.StripeOnboardingComponent}
+              id={:stripe_onboarding}
+              error_class="text-right"
+              class="px-8 text-center btn-primary sm:w-auto w-full"
+              container_class="sm:w-auto w-full"
+              current_user={@current_user}
+              return_url={~p"/home"}
+              stripe_status={@stripe_status}
+            />
           </div>
         </.card>
         <.card title="Currency" class="intro-taxes">
-          <p class="mt-2 text-base-250">For non-US countries supported by Stripe, you can adjust settings to reflect and charge clients in your native currency. To confirm if your currency is supported, <a class="underline" href="https://stripe.com/docs/currencies" target="_blank" rel="noopener noreferrer">go to Stripe.</a></p>
+          <p class="mt-2 text-base-250">
+            For non-US countries supported by Stripe, you can adjust settings to reflect and charge clients in your native currency. To confirm if your currency is supported,
+            <a
+              class="underline"
+              href="https://stripe.com/docs/currencies"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              go to Stripe.
+            </a>
+          </p>
           <b class=" mt-6">Selected</b>
           <div class="flex md:flex-row flex-col justify-between gap-4">
             <div class="flex items-center flex-col">
-              <p class="text-center inline-block bg-base-200 py-2 px-8 rounded-lg align-middle sm:w-auto w-full"><%= @user_currency.currency %></p>
+              <p class="text-center inline-block bg-base-200 py-2 px-8 rounded-lg align-middle sm:w-auto w-full">
+                <%= @user_currency.currency %>
+              </p>
             </div>
-            <a class="text-center block btn-primary sm:w-auto w-full cursor-pointer" phx-click="choose_currency">
+            <a
+              class="text-center block btn-primary sm:w-auto w-full cursor-pointer"
+              phx-click="choose_currency"
+            >
               Edit
             </a>
           </div>
@@ -74,19 +99,53 @@ defmodule TodoplaceWeb.Live.FinanceSettings do
       </div>
       <div class="grid gap-6 mt-6">
         <.card title="Accepted payment types" class="intro-payments">
-          <p class="mt-2 text-base-250">Here you can enable payment methods you would like to accept. Note, payment methods available may be contingent upon the currency selected.</p>
+          <p class="mt-2 text-base-250">
+            Here you can enable payment methods you would like to accept. Note, payment methods available may be contingent upon the currency selected.
+          </p>
           <.form :let={f} for={@payment_options_changeset} phx-change="update-payment-options">
             <%= inputs_for f, :payment_options, fn fp -> %>
               <%= hidden_inputs_for(fp) %>
               <%= if @user_currency.currency in Utils.payment_options_currency() do %>
                 <div>
                   <h3 class="font-bold text-xl mb-3 mt-4">Via Stripe Online</h3>
-                  <hr class=""/>
+                  <hr class="" />
                   <div class="grid gap-6 sm:gap-x-16 sm:gap-y-4 sm:grid-cols-2">
-                    <.toggle stripe_status={@stripe_status} current_user={@current_user} heading="Afterpay" description="Buy now pay later" input_name={:allow_afterpay_clearpay} f={fp} icon="payment-afterpay" />
-                    <.toggle stripe_status={@stripe_status} current_user={@current_user} heading="Klarna" description="Buy now pay later" input_name={:allow_klarna} f={fp} icon="payment-klarna" />
-                    <.toggle stripe_status={@stripe_status} current_user={@current_user} heading="Affirm" description="Buy now pay later" input_name={:allow_affirm} f={fp} icon="payment-affirm" />
-                    <.toggle stripe_status={@stripe_status} current_user={@current_user} heading="Cash App Pay" description="Pay with CashApp" input_name={:allow_cashapp} f={fp} icon="payment-cashapp" />
+                    <.toggle
+                      stripe_status={@stripe_status}
+                      current_user={@current_user}
+                      heading="Afterpay"
+                      description="Buy now pay later"
+                      input_name={:allow_afterpay_clearpay}
+                      f={fp}
+                      icon="payment-afterpay"
+                    />
+                    <.toggle
+                      stripe_status={@stripe_status}
+                      current_user={@current_user}
+                      heading="Klarna"
+                      description="Buy now pay later"
+                      input_name={:allow_klarna}
+                      f={fp}
+                      icon="payment-klarna"
+                    />
+                    <.toggle
+                      stripe_status={@stripe_status}
+                      current_user={@current_user}
+                      heading="Affirm"
+                      description="Buy now pay later"
+                      input_name={:allow_affirm}
+                      f={fp}
+                      icon="payment-affirm"
+                    />
+                    <.toggle
+                      stripe_status={@stripe_status}
+                      current_user={@current_user}
+                      heading="Cash App Pay"
+                      description="Pay with CashApp"
+                      input_name={:allow_cashapp}
+                      f={fp}
+                      icon="payment-cashapp"
+                    />
                   </div>
                 </div>
               <% end %>
@@ -94,7 +153,13 @@ defmodule TodoplaceWeb.Live.FinanceSettings do
                 <h3 class="font-bold text-xl mb-3 mt-6">Via Manual Methods</h3>
                 <hr class="" />
                 <div class="grid gap-6 sm:gap-16 sm:grid-cols-2">
-                  <.toggle current_user={@current_user} heading="Manual" description="All others including Cash, Check, Venmo, etc." input_name={:allow_cash} f={fp} />
+                  <.toggle
+                    current_user={@current_user}
+                    heading="Manual"
+                    description="All others including Cash, Check, Venmo, etc."
+                    input_name={:allow_cash}
+                    f={fp}
+                  />
                 </div>
               </div>
             <% end %>
@@ -103,11 +168,20 @@ defmodule TodoplaceWeb.Live.FinanceSettings do
       </div>
       <div class="grid gap-6 sm:grid-cols-2 mt-6">
         <.card title="Tax info" class="intro-taxes">
-          <p class="mt-2 text-base-250">Stripe can easily manage your tax settings to simplify filing.</p>
-          <a class="link" target="_blank" href={"#{base_url(:support)}article/113-stripe-taxes"}>Do I need this?</a>
+          <p class="mt-2 text-base-250">
+            Stripe can easily manage your tax settings to simplify filing.
+          </p>
+          <a class="link" target="_blank" href={"#{base_url(:support)}article/113-stripe-taxes"}>
+            Do I need this?
+          </a>
           <div class="flex mt-6 justify-end">
             <%= if @stripe_status == :charges_enabled do %>
-              <a class="text-center block btn-primary sm:w-auto w-full" href="https://dashboard.stripe.com/settings/tax" target="_blank" rel="noopener noreferrer">
+              <a
+                class="text-center block btn-primary sm:w-auto w-full"
+                href="https://dashboard.stripe.com/settings/tax"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 View tax settings in Stripe
               </a>
             <% else %>
@@ -131,7 +205,12 @@ defmodule TodoplaceWeb.Live.FinanceSettings do
       })
 
     ~H"""
-    <div class={classes("grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 items-center mt-2 justify-between" , %{"opacity-50 pointer-events-none" => !Enum.member?([:charges_enabled, :loading], @stripe_status)})}>
+    <div class={
+      classes("grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 items-center mt-2 justify-between", %{
+        "opacity-50 pointer-events-none" =>
+          !Enum.member?([:charges_enabled, :loading], @stripe_status)
+      })
+    }>
       <div class="flex">
         <%= if @icon do %>
           <.icon name={@icon} class="mr-2 mt-2 w-6 h-6 flex-shrink-0" />
@@ -143,7 +222,10 @@ defmodule TodoplaceWeb.Live.FinanceSettings do
       </div>
       <div class="flex justify-end sm:justify-start lg:justify-end items-center">
         <label class="mt-4 text-lg flex">
-          <%= checkbox(@f, @input_name, class: "peer hidden", disabled: !Enum.member?([:charges_enabled, :loading], @stripe_status)) %>
+          <%= checkbox(@f, @input_name,
+            class: "peer hidden",
+            disabled: !Enum.member?([:charges_enabled, :loading], @stripe_status)
+          ) %>
           <div class="hidden peer-checked:flex cursor-pointer">
             <div class="rounded-full bg-blue-planning-300 border border-base-100 w-12 p-1 flex justify-end mr-4">
               <div class="rounded-full h-5 w-5 bg-base-100"></div>

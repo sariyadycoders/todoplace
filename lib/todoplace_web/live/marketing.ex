@@ -34,26 +34,47 @@ defmodule TodoplaceWeb.Live.Marketing do
           <%= case @attention_items do %>
             <% [] -> %>
             <% items -> %>
-              <h2 class="px-6 mt-8 mb-4 text-sm font-bold tracking-widest text-gray-400 uppercase">Next Up</h2>
+              <h2 class="px-6 mt-8 mb-4 text-sm font-bold tracking-widest text-gray-400 uppercase">
+                Next Up
+              </h2>
               <ul class="flex px-6 pb-4 overflow-auto lg:pb-0 lg:overflow-none intro-next-up">
                 <%= for %{title: title, body: body, icon: icon, button_label: button_label, button_class: button_class, color: color, action: action, class: class, external_link: external_link} <- items do %>
-                <li {testid("marketing-attention-item")} class={"flex-shrink-0 flex lg:flex-1 flex-col justify-between max-w-sm w-3/4 p-5 cursor-pointer mr-4 border rounded-lg #{class} bg-white border-gray-250"}>
-                  <div>
-                    <h3 class="text-lg font-bold">
-                      <.icon name={icon} width="23" height="20" class={"inline-block mr-2 rounded-sm fill-current bg-blue-planning-100 text-#{color}"} />
-                      <%= title %>
-                    </h3>
-                    <p class="my-2 text-sm"><%= body %></p>
-                    <%= case action do %>
-                      <% "public-profile" -> %>
-                        <button type="button" phx-click={action} class={"#{button_class} text-sm w-full py-2 mt-2"}><%= button_label %></button>
-                      <% _ -> %>
-                        <a href={external_link} class={"#{button_class} text-center text-sm w-full py-2 mt-2 inline-block"} target="_blank" rel="noopener noreferrer">
-                          <%= button_label %>
-                        </a>
-                    <% end %>
-                  </div>
-                </li>
+                  <li
+                    {testid("marketing-attention-item")}
+                    class={"flex-shrink-0 flex lg:flex-1 flex-col justify-between max-w-sm w-3/4 p-5 cursor-pointer mr-4 border rounded-lg #{class} bg-white border-gray-250"}
+                  >
+                    <div>
+                      <h3 class="text-lg font-bold">
+                        <.icon
+                          name={icon}
+                          width="23"
+                          height="20"
+                          class={"inline-block mr-2 rounded-sm fill-current bg-blue-planning-100 text-#{color}"}
+                        />
+                        <%= title %>
+                      </h3>
+                      <p class="my-2 text-sm"><%= body %></p>
+                      <%= case action do %>
+                        <% "public-profile" -> %>
+                          <button
+                            type="button"
+                            phx-click={action}
+                            class={"#{button_class} text-sm w-full py-2 mt-2"}
+                          >
+                            <%= button_label %>
+                          </button>
+                        <% _ -> %>
+                          <a
+                            href={external_link}
+                            class={"#{button_class} text-center text-sm w-full py-2 mt-2 inline-block"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <%= button_label %>
+                          </a>
+                      <% end %>
+                    </div>
+                  </li>
                 <% end %>
               </ul>
           <% end %>
@@ -64,53 +85,111 @@ defmodule TodoplaceWeb.Live.Marketing do
           <.card title="Brand links" class="relative intro-brand-links">
             <div class="flex items-center flex-wrap justify-between text-base-250">
               <%= if active?(@brand_links) do %>
-                <p class="lg:flex hidden">Add links to your web platforms so you can quickly open them to login or use them in your marketing emails.</p>
-                <p class="lg:hidden mb-5">Add links to your web platforms so you can quickly open them from your Marketing Hub.</p>
+                <p class="lg:flex hidden">
+                  Add links to your web platforms so you can quickly open them to login or use them in your marketing emails.
+                </p>
+                <p class="lg:hidden mb-5">
+                  Add links to your web platforms so you can quickly open them from your Marketing Hub.
+                </p>
               <% else %>
-                <p class="lg:flex hidden">Looks like you don’t have any links. Go ahead and add one!</p>
-                <p class="lg:hidden mb-5">Looks like you don’t have any links. Go ahead and add one!</p>
+                <p class="lg:flex hidden">
+                  Looks like you don’t have any links. Go ahead and add one!
+                </p>
+                <p class="lg:hidden mb-5">
+                  Looks like you don’t have any links. Go ahead and add one!
+                </p>
               <% end %>
-              <button type="button" phx-click="edit-link" phx-value-link-id="website" class="w-full sm:w-auto text-center btn-primary">Manage links</button>
+              <button
+                type="button"
+                phx-click="edit-link"
+                phx-value-link-id="website"
+                class="w-full sm:w-auto text-center btn-primary"
+              >
+                Manage links
+              </button>
             </div>
-            <div id="marketing-links" class={classes("hiddden gap-5 mt-10 lg:grid-cols-4 md:grid-cols-2 grid-cols-1", %{"grid" => active?(@brand_links)})}>
+            <div
+              id="marketing-links"
+              class={
+                classes("hiddden gap-5 mt-10 lg:grid-cols-4 md:grid-cols-2 grid-cols-1", %{
+                  "grid" => active?(@brand_links)
+                })
+              }
+            >
               <%= case @brand_links do %>
                 <% [] -> %>
                 <% brand_links -> %>
-                <%= for %{title: title, link: link, link_id: link_id, active?: active?} <- brand_links do %>
-                  <div {testid("marketing-links")} class={classes("flex items-center mb-4", %{"hidden" => !active?})}>
-                    <div class="flex items-center justify-center w-20 h-20 ml-1 mr-3 rounded-full flex-shrink-0 bg-base-200 p-6">
-                      <.icon name={get_brand_link_icon(link_id)} />
-                    </div>
-                    <div>
-                      <h4 class="text-xl font-bold mb-2"><a href={link} target="_blank" rel="noopener noreferrer"><%= title %></a></h4>
-                      <div class="flex">
-                        <%= if link do %>
-                          <a href={link} target="_blank" rel="noopener noreferrer" class="px-1 pb-1 font-bold bg-white border rounded-lg border-blue-planning-300 text-blue-planning-300 hover:bg-blue-planning-100">Open</a>
-                        <% end %>
-                        <button phx-click="edit-link" phx-value-link-id={link_id} class="ml-2 text-blue-planning-300 underline">Edit</button>
+                  <%= for %{title: title, link: link, link_id: link_id, active?: active?} <- brand_links do %>
+                    <div
+                      {testid("marketing-links")}
+                      class={classes("flex items-center mb-4", %{"hidden" => !active?})}
+                    >
+                      <div class="flex items-center justify-center w-20 h-20 ml-1 mr-3 rounded-full flex-shrink-0 bg-base-200 p-6">
+                        <.icon name={get_brand_link_icon(link_id)} />
+                      </div>
+                      <div>
+                        <h4 class="text-xl font-bold mb-2">
+                          <a href={link} target="_blank" rel="noopener noreferrer"><%= title %></a>
+                        </h4>
+                        <div class="flex">
+                          <%= if link do %>
+                            <a
+                              href={link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="px-1 pb-1 font-bold bg-white border rounded-lg border-blue-planning-300 text-blue-planning-300 hover:bg-blue-planning-100"
+                            >
+                              Open
+                            </a>
+                          <% end %>
+                          <button
+                            phx-click="edit-link"
+                            phx-value-link-id={link_id}
+                            class="ml-2 text-blue-planning-300 underline"
+                          >
+                            Edit
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                <% end %>
+                  <% end %>
               <% end %>
             </div>
           </.card>
         </div>
-        <.card title="Marketing Emails" class={classes("relative", %{"sm:col-span-2" => Enum.any?(@campaigns)})}>
-          <p class="mb-8 text-base-250">Send marketing campaigns to your current/past and new clients.</p>
+        <.card
+          title="Marketing Emails"
+          class={classes("relative", %{"sm:col-span-2" => Enum.any?(@campaigns)})}
+        >
+          <p class="mb-8 text-base-250">
+            Send marketing campaigns to your current/past and new clients.
+          </p>
           <div class="p-4 border rounded">
             <header class="flex items-center flex-wrap justify-between">
               <div class="flex items-center lg:mb-0 mb-4">
                 <.icon name="camera-check" class="text-purple-marketing-300 w-12 h-12 mr-4" />
                 <h3 class="text-xl font-bold intro-promotional">Promote your business</h3>
               </div>
-              <button type="button" phx-click="new-campaign" class="w-full sm:w-auto text-center btn-primary">Create an email</button>
+              <button
+                type="button"
+                phx-click="new-campaign"
+                class="w-full sm:w-auto text-center btn-primary"
+              >
+                Create an email
+              </button>
             </header>
             <%= unless Enum.empty?(@campaigns) do %>
-              <h2 class="mt-4 mb-4 text-sm font-bold tracking-widest text-gray-400 uppercase">Most Recent</h2>
+              <h2 class="mt-4 mb-4 text-sm font-bold tracking-widest text-gray-400 uppercase">
+                Most Recent
+              </h2>
               <ul class="text-left grid gap-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
                 <%= for campaign <- @campaigns do %>
-                  <.campaign_item id={campaign.id} subject={campaign.subject} date={strftime(@current_user.time_zone, campaign.inserted_at, "%B %d, %Y")} clients_count={campaign.clients_count} />
+                  <.campaign_item
+                    id={campaign.id}
+                    subject={campaign.subject}
+                    date={strftime(@current_user.time_zone, campaign.inserted_at, "%B %d, %Y")}
+                    clients_count={campaign.clients_count}
+                  />
                 <% end %>
               </ul>
             <% end %>
@@ -139,10 +218,17 @@ defmodule TodoplaceWeb.Live.Marketing do
 
   defp campaign_item(assigns) do
     ~H"""
-    <li {testid("campaign-item")} phx-click="open-campaign" phx-value-campaign-id={@id} class="border rounded-lg p-4 hover:bg-purple-marketing-100 hover:border-purple-marketing-300 cursor-pointer">
+    <li
+      {testid("campaign-item")}
+      phx-click="open-campaign"
+      phx-value-campaign-id={@id}
+      class="border rounded-lg p-4 hover:bg-purple-marketing-100 hover:border-purple-marketing-300 cursor-pointer"
+    >
       <.badge color={:green}>Sent</.badge>
       <div class="text-xl font-semibold"><%= @subject %></div>
-      <div class="text-gray-400 mt-1">Sent on <%= @date %> to <%= ngettext "1 client", "%{count} clients", @clients_count %></div>
+      <div class="text-gray-400 mt-1">
+        Sent on <%= @date %> to <%= ngettext("1 client", "%{count} clients", @clients_count) %>
+      </div>
     </li>
     """
   end
@@ -155,10 +241,7 @@ defmodule TodoplaceWeb.Live.Marketing do
   @impl true
   def handle_event("open-campaign", %{"campaign-id" => campaign_id}, socket) do
     socket
-    |> push_patch(
-      to:
-        ~p"/marketing/#{campaign_id}"
-    )
+    |> push_patch(to: ~p"/marketing/#{campaign_id}")
     |> noreply()
   end
 

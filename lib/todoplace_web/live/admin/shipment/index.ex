@@ -35,7 +35,11 @@ defmodule TodoplaceWeb.Live.Admin.Shippment.Index do
     <div class="p-4">
       <div class="grid grid-cols-2 w-fit border-2 rounded border-cyan-800">
         <%= for section <- @all_sections do %>
-          <div phx-click="change_section" phx-value-name={section} class={"cursor-pointer text-sm p-1 border border-cyan-800 hover:text-white hover:bg-slate-500 #{section == @section && 'bg-slate-500 text-white'}"}>
+          <div
+            phx-click="change_section"
+            phx-value-name={section}
+            class={"cursor-pointer text-sm p-1 border border-cyan-800 hover:text-white hover:bg-slate-500 #{section == @section && 'bg-slate-500 text-white'}"}
+          >
             <%= section |> to_string() |> String.replace("_", " ") |> String.capitalize() %>
           </div>
         <% end %>
@@ -49,47 +53,60 @@ defmodule TodoplaceWeb.Live.Admin.Shippment.Index do
 
   defp section(%{section: :details} = assigns) do
     ~H"""
-      <.heading values={["Type", "Order Attribute ID", "Base Charge", "Default Upcharge", "Wallart Upcharge", "Das Carrier Type"]} />
+    <.heading values={[
+      "Type",
+      "Order Attribute ID",
+      "Base Charge",
+      "Default Upcharge",
+      "Wallart Upcharge",
+      "Das Carrier Type"
+    ]} />
 
-      <%= for {%{data: data} = changeset, i} <- @changesets do %>
-        <div class="contents">
-          <.form :let={f} for={changeset} class="contents" phx-change="save" id={"form-#{i}"}>
-            <div class="col-start-1"><%= data.type %></div>
-            <div><%= data.order_attribute_id %></div>
+    <%= for {%{data: data} = changeset, i} <- @changesets do %>
+      <div class="contents">
+        <.form :let={f} for={changeset} class="contents" phx-change="save" id={"form-#{i}"}>
+          <div class="col-start-1"><%= data.type %></div>
+          <div><%= data.order_attribute_id %></div>
 
-            <%= hidden_input f, :id %>
-            <%= hidden_input f, :index, value: i %>
+          <%= hidden_input(f, :id) %>
+          <%= hidden_input(f, :index, value: i) %>
 
-            <%= input f, :base_charge, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24" %>
-            <%= inputs_for f, :upcharge, fn u -> %>
-              <%= input u, :default, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24" %>
-              <%= input u, :wallart, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24", disabled: data.type == :economy_usps %>
-            <% end %>
+          <%= input(f, :base_charge, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24") %>
+          <%= inputs_for f, :upcharge, fn u -> %>
+            <%= input(u, :default, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24") %>
+            <%= input(u, :wallart,
+              phx_debounce: 200,
+              step: 0.1,
+              min: 0.0,
+              class: "w-24",
+              disabled: data.type == :economy_usps
+            ) %>
+          <% end %>
 
-            <%= select f, :das_carrier, [:mail, :parcel], phx_debounce: 200 %>
-          </.form>
-        </div>
-      <% end %>
+          <%= select(f, :das_carrier, [:mail, :parcel], phx_debounce: 200) %>
+        </.form>
+      </div>
+    <% end %>
     """
   end
 
   defp section(%{section: :das_types} = assigns) do
     ~H"""
-      <.heading values={["Name", "Mail Cost", "Parcel Cost"]} />
+    <.heading values={["Name", "Mail Cost", "Parcel Cost"]} />
 
-      <%= for {%{data: data} = changeset, i} <- @das_changesets do %>
-        <div class="contents">
-          <.form :let={f} for={changeset} class="contents" phx-change="save" id={"form-#{i}"}>
-            <div class="col-start-1"><%= data.name %></div>
+    <%= for {%{data: data} = changeset, i} <- @das_changesets do %>
+      <div class="contents">
+        <.form :let={f} for={changeset} class="contents" phx-change="save" id={"form-#{i}"}>
+          <div class="col-start-1"><%= data.name %></div>
 
-            <%= hidden_input f, :id %>
-            <%= hidden_input f, :index, value: i %>
+          <%= hidden_input(f, :id) %>
+          <%= hidden_input(f, :index, value: i) %>
 
-            <%= input f, :mail_cost, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24" %>
-            <%= input f, :parcel_cost, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24" %>
-          </.form>
-        </div>
-      <% end %>
+          <%= input(f, :mail_cost, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24") %>
+          <%= input(f, :parcel_cost, phx_debounce: 200, step: 0.1, min: 0.0, class: "w-24") %>
+        </.form>
+      </div>
+    <% end %>
     """
   end
 

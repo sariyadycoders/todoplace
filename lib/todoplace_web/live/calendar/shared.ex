@@ -7,8 +7,11 @@ defmodule TodoplaceWeb.Live.Calendar.Shared do
 
   def back_button(assigns) do
     ~H"""
-    <.live_link to={@to} class={"#{@class} rounded-full bg-base-200 flex items-center justify-center p-2.5 mr-4"}>
-      <.icon name="back" class="w-4 h-4 stroke-2"/>
+    <.live_link
+      to={@to}
+      class={"#{@class} rounded-full bg-base-200 flex items-center justify-center p-2.5 mr-4"}
+    >
+      <.icon name="back" class="w-4 h-4 stroke-2" />
     </.live_link>
     """
   end

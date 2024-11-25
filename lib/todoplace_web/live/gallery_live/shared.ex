@@ -10,7 +10,6 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
   import TodoplaceWeb.EmailAutomationLive.Shared, only: [sort_emails: 2]
   import TodoplaceWeb.CoreComponents, except: [button: 1]
 
-
   alias Todoplace.{
     Job,
     Repo,
@@ -356,16 +355,11 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     case GalleryProducts.editor_type(product) do
       :card when is_finals ->
         socket
-        |> push_redirect(
-          to:
-            ~p"/album/#{socket.assigns.album.client_link_hash}/cards"
-        )
+        |> push_redirect(to: ~p"/album/#{socket.assigns.album.client_link_hash}/cards")
 
       :card ->
         socket
-        |> push_redirect(
-          to: ~p"/album/#{gallery.client_link_hash}/cards"
-        )
+        |> push_redirect(to: ~p"/album/#{gallery.client_link_hash}/cards")
 
       _ ->
         socket
@@ -442,12 +436,12 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
            socket
        ) do
     [
-      complete_url:
-        url(~p"/album/#{album.client_link_hash}?editorId=%EDITOR_ID%"),
+      complete_url: url(~p"/album/#{album.client_link_hash}?editorId=%EDITOR_ID%"),
       secondary_url:
-        url(~p"/album/#{album.client_link_hash}?editorId=%EDITOR_ID%&clone=true&clientEmail=#{gallery_client.email}"),
-      cancel_url:
-        url(~p"/album/#{album.client_link_hash}"),
+        url(
+          ~p"/album/#{album.client_link_hash}?editorId=%EDITOR_ID%&clone=true&clientEmail=#{gallery_client.email}"
+        ),
+      cancel_url: url(~p"/album/#{album.client_link_hash}")
     ]
   end
 
@@ -456,12 +450,12 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
            socket
        ) do
     [
-      complete_url:
-        url(~p"/gallery/#{gallery.client_link_hash}?editorId=%EDITOR_ID%"),
+      complete_url: url(~p"/gallery/#{gallery.client_link_hash}?editorId=%EDITOR_ID%"),
       secondary_url:
-        url(~p"/gallery/#{gallery.client_link_hash}?editorId=%EDITOR_ID%&clone=true&clientEmail=#{gallery_client.email}"),
-      cancel_url:
-        url(~p"/gallery/#{gallery.client_link_hash}")
+        url(
+          ~p"/gallery/#{gallery.client_link_hash}?editorId=%EDITOR_ID%&clone=true&clientEmail=#{gallery_client.email}"
+        ),
+      cancel_url: url(~p"/gallery/#{gallery.client_link_hash}")
     ]
   end
 
@@ -674,13 +668,13 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     <div class={"flex items-center pt-3 md:px-8 #{@class}"}>
       <%= case tracking_info(@order, @item) do %>
         <% nil -> %>
-          <.icon name="tracking-info" class="mr-2 w-7 h-7 md:mr-4"/>
+          <.icon name="tracking-info" class="mr-2 w-7 h-7 md:mr-4" />
           <p class="text-xs md:text-sm">We’ll provide tracking info once your item ships</p>
-
         <% %{shipping_info: info} -> %>
-          <.icon name="order-shipped" class="mr-2 w-7 h-7 md:mr-4"/>
+          <.icon name="order-shipped" class="mr-2 w-7 h-7 md:mr-4" />
 
-          <p class="text-xs md:text-sm"><span class="font-bold">Item shipped:</span>
+          <p class="text-xs md:text-sm">
+            <span class="font-bold">Item shipped:</span>
             <%= for %{carrier: carrier, tracking_url: url, tracking_number: tracking_number} <- info do %>
               <a href={url} target="_blank" class="underline cursor-pointer">
                 <%= carrier %>
@@ -721,7 +715,14 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     assigns = assigns |> Enum.into(%{any_client_liked_photo?: any_client_liked_photo?})
 
     ~H"""
-    <div id={@id} class={classes("relative",  %{"pointer-events-none opacity-40" => !@photo_selected || @disabled})} phx-update={@update_mode} phx-hook="Select">
+    <div
+      id={@id}
+      class={
+        classes("relative", %{"pointer-events-none opacity-40" => !@photo_selected || @disabled})
+      }
+      phx-update={@update_mode}
+      phx-hook="Select"
+    >
       <div {testid("dropdown-#{@id}")} class={"flex items-center lg:p-0 p-3 pb-2 dropdown " <> @class}>
         <div class="lg:mx-3">
           <span>Actions</span>
@@ -732,12 +733,20 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
       <ul class="absolute z-30 hidden mt-2 bg-white border rounded-md popover-content border-base-200">
         <%= render_slot(@inner_block) %>
         <%= if @has_orders && !@favorite_album? do %>
-        <li class={classes("flex items-center py-1 bg-base-200 rounded-b-md hover:opacity-75", %{"hidden" => @selection_filter || @client_liked_album || @any_client_liked_photo?})}>
-          <button phx-click={@delete_event} phx-value-id={@delete_value} class="flex items-center w-full h-6 py-2.5 pl-2 overflow-hidden font-sans text-gray-700 transition duration-300 ease-in-out text-ellipsis hover:opacity-75">
-            <%= @delete_title %>
-          </button>
-          <.icon name="trash" class="flex w-4 h-5 mr-3 text-red-400 hover:opacity-75" />
-        </li>
+          <li class={
+            classes("flex items-center py-1 bg-base-200 rounded-b-md hover:opacity-75", %{
+              "hidden" => @selection_filter || @client_liked_album || @any_client_liked_photo?
+            })
+          }>
+            <button
+              phx-click={@delete_event}
+              phx-value-id={@delete_value}
+              class="flex items-center w-full h-6 py-2.5 pl-2 overflow-hidden font-sans text-gray-700 transition duration-300 ease-in-out text-ellipsis hover:opacity-75"
+            >
+              <%= @delete_title %>
+            </button>
+            <.icon name="trash" class="flex w-4 h-5 mr-3 text-red-400 hover:opacity-75" />
+          </li>
         <% end %>
       </ul>
     </div>
@@ -757,11 +766,14 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     assigns = Enum.into(assigns, %{button_attrs: button_attrs})
 
     ~H"""
-    <.button_element {@button_attrs} class={"#{@class}
+    <.button_element
+      {@button_attrs}
+      class={"#{@class}
         flex items-center justify-center p-2 font-medium text-base-300 bg-base-100 border border-base-300 min-w-[12rem]
         hover:text-base-100 hover:bg-base-300
         disabled:border-base-250 disabled:text-base-250 disabled:cursor-not-allowed disabled:opacity-60
-    "}>
+    "}
+    >
       <%= render_slot(@inner_block) %>
 
       <.icon name={@icon} class={"#{@icon_class} ml-2"} />
@@ -772,43 +784,58 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
   def preview(assigns) do
     ~H"""
     <div class="fixed z-30 bg-white scroll-shadow w-screen">
-        <div class="absolute 2xl:top-5 top-2 2xl:right-6 right-4">
-            <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-            <.icon name="close-x" class="w-4 h-4 stroke-current stroke-2 sm:stroke-1"/>
-            </button>
+      <div class="absolute 2xl:top-5 top-2 2xl:right-6 right-4">
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-4 h-4 stroke-current stroke-2 sm:stroke-1" />
+        </button>
+      </div>
+      <div class="flex items-center mx-24 mt-2 font-sans text-2xl font-bold 2xl:mt-7 text-base-300 lg:justify-start">
+        <p><%= @page_title %></p>
+      </div>
+      <%= if @title  do %>
+        <h1 class="mx-24 mt-2 font-sans text-md 2xl:mt-5 text-base-300">
+          <%= @title %>
+        </h1>
+      <% end %>
+      <div class="flex pt-3 pb-6 mx-24 2xl:pt-6 grid lg:grid-cols-3 grid-cols-1 lg:grid-rows-preview">
+        <%= render_slot(@inner_block) %>
+        <div class="description lg:ml-11 row-span-2 col-span-2">
+          <p class="pt-3 pb-6 font-sans text-base 2xl:pt-6 lg:pb-11"><%= @description %></p>
+          <button
+            phx-click="save"
+            phx-target={@myself}
+            disabled={!@selected}
+            class="w-full rounded-lg save-button btn-settings"
+          >
+            Save
+          </button>
         </div>
-        <div class="flex items-center mx-24 mt-2 font-sans text-2xl font-bold 2xl:mt-7 text-base-300 lg:justify-start">
-            <p><%= @page_title %></p>
-        </div>
-        <%= if @title  do%>
-          <h1 class="mx-24 mt-2 font-sans text-md 2xl:mt-5 text-base-300">
-              <%= @title %>
-          </h1>
-        <% end %>
-        <div class="flex pt-3 pb-6 mx-24 2xl:pt-6 grid lg:grid-cols-3 grid-cols-1 lg:grid-rows-preview">
-          <%= render_slot(@inner_block) %>
-          <div class="description lg:ml-11 row-span-2 col-span-2">
-              <p class="pt-3 pb-6 font-sans text-base 2xl:pt-6 lg:pb-11"><%= @description %></p>
-              <button phx-click="save" phx-target={@myself} disabled={!@selected} class="w-full rounded-lg save-button btn-settings">Save</button>
-          </div>
-        </div>
+      </div>
     </div>
     <div id="gallery_form" class="pb-20 2xl:pt-60 lg:pt-40 pt-80 px-11 lg:mt-56 mt-72">
       <div
-          phx-hook="MasonryGrid"
-          phx-update="stream"
-          id="muuri-grid"
-          class="mb-6 grid muuri"
-          data-page={@page}
-          data-id="muuri-grid"
-          data-photo-width="300">
-          <%= for {_, photo} <- @streams.photos_new do %>
-          <.live_component module={TodoplaceWeb.GalleryLive.Photos.ThumbnailPhoto}
-              id={photo.id}
-              photo={photo}
-              component={@myself}
+        phx-hook="MasonryGrid"
+        phx-update="stream"
+        id="muuri-grid"
+        class="mb-6 grid muuri"
+        data-page={@page}
+        data-id="muuri-grid"
+        data-photo-width="300"
+      >
+        <%= for {_, photo} <- @streams.photos_new do %>
+          <.live_component
+            module={TodoplaceWeb.GalleryLive.Photos.ThumbnailPhoto}
+            id={photo.id}
+            photo={photo}
+            component={@myself}
           />
-          <% end %>
+        <% end %>
       </div>
     </div>
     """
@@ -818,13 +845,16 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     assigns = Enum.into(assigns, %{min_price: nil, selected: nil})
 
     ~H"""
-    <div {testid("product_option_#{@testid}")} class="p-3 mb-4 border rounded xl:p-3 border-base-225 lg:mb-7">
+    <div
+      {testid("product_option_#{@testid}")}
+      class="p-3 mb-4 border rounded xl:p-3 border-base-225 lg:mb-7"
+    >
       <div class="flex items-center justify-between">
         <div class="flex flex-col mr-2">
           <p class="text-lg text-base-300"><%= @title %></p>
 
           <%= if @min_price do %>
-            <p class="text-base text-base-300 pt-1.5 text-opacity-60"> <%= @min_price %></p>
+            <p class="text-base text-base-300 pt-1.5 text-opacity-60"><%= @min_price %></p>
           <% end %>
         </div>
 
@@ -846,22 +876,36 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
 
     ~H"""
     <%= if @credits_available do %>
-      <div class={classes("bg-gray-100 p-1 block lg:hidden mt-16", %{"hidden" => @open_profile_logout?, "mt-24" => not is_nil(Profiles.logo_url(@organization))})}>
+      <div class={
+        classes("bg-gray-100 p-1 block lg:hidden mt-16", %{
+          "hidden" => @open_profile_logout?,
+          "mt-24" => not is_nil(Profiles.logo_url(@organization))
+        })
+      }>
         <div class="flex border border-base-200 px-4 justify-between px:7 sm:px-16 mt-2.5">
           <div class="flex items-center gap-1">
-            <.icon name="gallery-credit" class="w-4 h-4 fill-current"/>
-            <p class="text-base-250"><%= @gallery.gallery_digital_pricing.print_credits %> print credit</p>
+            <.icon name="gallery-credit" class="w-4 h-4 fill-current" />
+            <p class="text-base-250">
+              <%= @gallery.gallery_digital_pricing.print_credits %> print credit
+            </p>
           </div>
           <div class="flex items-center gap-1">
-            <.icon name="download-credit" class="w-4 h-4 fill-current"/>
-            <p class="text-base-250"><%= @gallery.gallery_digital_pricing.download_count %> digital credits</p>
+            <.icon name="download-credit" class="w-4 h-4 fill-current" />
+            <p class="text-base-250">
+              <%= @gallery.gallery_digital_pricing.download_count %> digital credits
+            </p>
           </div>
         </div>
       </div>
     <% end %>
 
     <%= if @client_email do %>
-      <div class={classes("bg-gray-100 p-1 block lg:hidden mt-20", %{"hidden lg:block" => !@open_profile_logout?, "mt-28" => not is_nil(Profiles.logo_url(@organization))})}>
+      <div class={
+        classes("bg-gray-100 p-1 block lg:hidden mt-20", %{
+          "hidden lg:block" => !@open_profile_logout?,
+          "mt-28" => not is_nil(Profiles.logo_url(@organization))
+        })
+      }>
         <.logout_wrapper client_email={@client_email} gallery={@gallery} socket={@socket} />
       </div>
     <% end %>
@@ -879,7 +923,7 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     <div class="relative w-full h-full">
       <%= for c <- ~w[-rotate-3 rotate-2 rotate-0] do %>
         <div class="absolute top-0 bottom-0 left-0 right-0 flex justify-center">
-          <img src={@url} class={"h-full object-contain object-center shadow #{c}"}>
+          <img src={@url} class={"h-full object-contain object-center shadow #{c}"} />
         </div>
       <% end %>
     </div>
@@ -901,27 +945,39 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
       )
 
     ~H"""
-      <div class={classes("relative", %{"hidden" => @for == :proofing_album_order || Enum.empty?(build_credits(@for, @credits, @total_count))})}>
-          <div class={classes("bottom-0 left-0 right-0 z-10 w-full h-24 sm:h-20 bg-base-100 pointer-events-none", %{"fixed shadow-top" => @is_fixed and @for != :proofing_album, "absolute border-t border-base-225" => !@is_fixed or @for == :proofing_album })}>
-          <div class="center-container gallery__container flex items-center justify-between h-full mx-auto px-7 sm:px-16">
-            <div class="flex flex-col items-start h-full py-4 justify-evenly sm:flex-row sm:items-center">
-              <%= for {label, value} <- build_credits(@for, @credits, @total_count) do %>
-                <div>
-                  <dl class="flex items-center sm:mr-5" >
-                    <dt class="mr-2 font-extrabold">
-                      <%= label %><span class="hidden sm:inline"> available</span>:
-                    </dt>
+    <div class={
+      classes("relative", %{
+        "hidden" =>
+          @for == :proofing_album_order || Enum.empty?(build_credits(@for, @credits, @total_count))
+      })
+    }>
+      <div class={
+        classes("bottom-0 left-0 right-0 z-10 w-full h-24 sm:h-20 bg-base-100 pointer-events-none", %{
+          "fixed shadow-top" => @is_fixed and @for != :proofing_album,
+          "absolute border-t border-base-225" => !@is_fixed or @for == :proofing_album
+        })
+      }>
+        <div class="center-container gallery__container flex items-center justify-between h-full mx-auto px-7 sm:px-16">
+          <div class="flex flex-col items-start h-full py-4 justify-evenly sm:flex-row sm:items-center">
+            <%= for {label, value} <- build_credits(@for, @credits, @total_count) do %>
+              <div>
+                <dl class="flex items-center sm:mr-5">
+                  <dt class="mr-2 font-extrabold">
+                    <%= label %><span class="hidden sm:inline"> available</span>:
+                  </dt>
 
-                    <dd class="font-semibold"><%= value %></dd>
-                  </dl>
-                  <div {testid("selections")} class={!@for && "hidden"}>Selections <%= @cart_count %></div>
+                  <dd class="font-semibold"><%= value %></dd>
+                </dl>
+                <div {testid("selections")} class={!@for && "hidden"}>
+                  Selections <%= @cart_count %>
                 </div>
-              <% end %>
-            </div>
-            <.icon name="gallery-info" class="fill-current hidden text-base-300 w-7 h-7" />
+              </div>
+            <% end %>
           </div>
+          <.icon name="gallery-info" class="fill-current hidden text-base-300 w-7 h-7" />
         </div>
       </div>
+    </div>
     """
   end
 
@@ -947,31 +1003,42 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
 
   def mobile_gallery_header(assigns) do
     ~H"""
-      <div class="absolute top-0 left-0 z-30 w-screen h-20 px-10 py-6 lg:hidden shrink-0 bg-base-200 z-[32]">
-        <p class="font-sans text-2xl font-bold"><%= @gallery_name %></p>
-      </div>
+    <div class="absolute top-0 left-0 z-30 w-screen h-20 px-10 py-6 lg:hidden shrink-0 bg-base-200 z-[32]">
+      <p class="font-sans text-2xl font-bold"><%= @gallery_name %></p>
+    </div>
     """
   end
 
   def add_album_button(assigns) do
     ~H"""
-      <.icon_button {testid("add-album-popup")} disabled={@disabled} class={"text-sm border #{@class}"} title="Add Album" phx-click="add_album_popup" color="blue-planning-300" icon="plus">
-        Add Album
-      </.icon_button>
+    <.icon_button
+      {testid("add-album-popup")}
+      disabled={@disabled}
+      class={"text-sm border #{@class}"}
+      title="Add Album"
+      phx-click="add_album_popup"
+      color="blue-planning-300"
+      icon="plus"
+    >
+      Add Album
+    </.icon_button>
     """
   end
 
   def mobile_banner(assigns) do
     ~H"""
-      <div class={"lg:hidden flex flex-row items-center #{@class}"}>
-        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-planning-300" phx-click="back_to_navbar">
-          <.icon name="back" class="items-center w-5 h-5 ml-auto mr-auto text-white stroke-current" />
-        </div>
-        <div class="flex flex-col ml-4">
-          <div class="flex font-sans text-2xl font-bold"><%= @title %></div>
-          <%= render_slot(@inner_block) %>
-        </div>
+    <div class={"lg:hidden flex flex-row items-center #{@class}"}>
+      <div
+        class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-planning-300"
+        phx-click="back_to_navbar"
+      >
+        <.icon name="back" class="items-center w-5 h-5 ml-auto mr-auto text-white stroke-current" />
       </div>
+      <div class="flex flex-col ml-4">
+        <div class="flex font-sans text-2xl font-bold"><%= @title %></div>
+        <%= render_slot(@inner_block) %>
+      </div>
+    </div>
     """
   end
 
@@ -981,28 +1048,33 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     ~H"""
     <div class={@class} id="order_images" phx-hook="DisableRightClick">
       <div class="mt-0 mb-4 ml-0 md:ml-5 md:mt-2">
-      <h4 class="text-lg font-bold md:text-2xl"><%= if @is_proofing, do: "Your Selected Favorites", else: "Order details" %></h4>
+        <h4 class="text-lg font-bold md:text-2xl">
+          <%= if @is_proofing, do: "Your Selected Favorites", else: "Order details" %>
+        </h4>
         <%= unless @is_proofing do %>
-          <p class="pt-3 md:text-lg md:pt-5">Order number: <span class="font-medium"><%= @order.number %></span></p>
+          <p class="pt-3 md:text-lg md:pt-5">
+            Order number: <span class="font-medium"><%= @order.number %></span>
+          </p>
         <% end %>
       </div>
 
       <hr class="hidden md:block mt-7 border-t-base-200" />
 
       <div class="divide-y divide-base-200">
-
         <%= for item <- @order.products do %>
           <div class="relative py-5 md:py-7 md:first:border-t md:border-base-200">
             <div class="grid grid-rows-1 grid-cols-cart md:grid-cols-cartWide">
-              <img src={item_image_url(item)} class="h-24 mx-auto md:h-40"/>
+              <img src={item_image_url(item)} class="h-24 mx-auto md:h-40" />
 
               <div class="flex flex-col px-4 md:px-8 md:pt-4">
-                <span class="text-sm md:text-base md:font-medium"> <%= product_name(item) %></span>
+                <span class="text-sm md:text-base md:font-medium"><%= product_name(item) %></span>
 
                 <span class="pt-2 text-xs md:text-sm md:py-5">Quantity: <%= quantity(item) %></span>
               </div>
 
-              <span class="text-base font-bold lg:text-2xl md:pr-8 md:self-center"><%= price_display(item) %></span>
+              <span class="text-base font-bold lg:text-2xl md:pr-8 md:self-center">
+                <%= price_display(item) %>
+              </span>
             </div>
 
             <.tracking order={@order} item={item} class="md:absolute md:left-64 md:bottom-12" />
@@ -1012,11 +1084,14 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
         <%= for digital <- @order.digitals do %>
           <div class="flex items-center justify-between py-7 md:py-10 md:px-11">
             <div class="flex items-center">
-            <%= if digital.photo do %>
-              <img class="w-[120px] h-[80px] md:w-[194px] md:h-[130px] object-contain mr-4 md:mr-14" src={item_image_url(digital, proofing_client_view?: @is_proofing)} />
-            <% else %>
-              <.deleted_photo_preview/>
-            <% end %>
+              <%= if digital.photo do %>
+                <img
+                  class="w-[120px] h-[80px] md:w-[194px] md:h-[130px] object-contain mr-4 md:mr-14"
+                  src={item_image_url(digital, proofing_client_view?: @is_proofing)}
+                />
+              <% else %>
+                <.deleted_photo_preview />
+              <% end %>
               <span><%= product_name(digital, @is_proofing) %></span>
             </div>
 
@@ -1027,8 +1102,8 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
         <%= if @order.bundle_price && !@is_proofing do %>
           <div class="flex items-center justify-between py-7 md:py-10 md:px-11">
             <div class="flex items-center">
-              <div class="w-[120px] h-[80px] md:w-[194px] md:h-[130px] mr-4 md:mr-14" >
-              <.bundle_image url={item_image_url({:bundle, @gallery})} />
+              <div class="w-[120px] h-[80px] md:w-[194px] md:h-[130px] mr-4 md:mr-14">
+                <.bundle_image url={item_image_url({:bundle, @gallery})} />
               </div>
 
               <span>All digital downloads</span>
@@ -1044,14 +1119,14 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
 
   def deleted_photo_preview(assigns) do
     ~H"""
-      <div class="rounded-lg h-full p-4 items-center flex flex-col w-[200px] h-[130px] bg-base-200 mr-4 md:w-72 md:h-48 md:mr-7">
-          <div class="flex justify-center h-full items-center">
-            <.icon name="photos-2" class="inline-block w-16 h-16 text-base-250"/>
-          </div>
-          <div class="mt-1 text-base-250 text-center h-full">
-            <span>Photographer deleted photo, please contact them for more info</span>
-          </div>
+    <div class="rounded-lg h-full p-4 items-center flex flex-col w-[200px] h-[130px] bg-base-200 mr-4 md:w-72 md:h-48 md:mr-7">
+      <div class="flex justify-center h-full items-center">
+        <.icon name="photos-2" class="inline-block w-16 h-16 text-base-250" />
       </div>
+      <div class="mt-1 text-base-250 text-center h-full">
+        <span>Photographer deleted photo, please contact them for more info</span>
+      </div>
+    </div>
     """
   end
 
@@ -1148,7 +1223,7 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
   end
 
   defp orders_path(socket, method, client_link_hash) do
-      ~p"/gallery/#{client_link_hash}/orders"
+    ~p"/gallery/#{client_link_hash}/orders"
   end
 
   defp order_path(socket, method, client_link_hash, order_number) do
@@ -1181,19 +1256,27 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     assigns = Enum.into(assigns, %{target: nil, for: nil})
 
     ~H"""
-    <a {if step_number(@step, @steps) > 1, do: %{href: "#", phx_click: "back", phx_target: @target, title: "back"}, else: %{}} class="flex">
+    <a
+      {if step_number(@step, @steps) > 1, do: %{href: "#", phx_click: "back", phx_target: @target, title: "back"}, else: %{}}
+      class="flex"
+    >
       <%= unless @for == :sign_up do %>
-        <span {testid("step-number")} class="px-2 py-0.5 mr-2 text-xs font-semibold rounded bg-blue-planning-100 text-blue-planning-300">
+        <span
+          {testid("step-number")}
+          class="px-2 py-0.5 mr-2 text-xs font-semibold rounded bg-blue-planning-100 text-blue-planning-300"
+        >
           Step <%= step_number(@step, @steps) %>
         </span>
       <% end %>
 
       <ul class="flex items-center inline-block">
         <%= for step <- @steps do %>
-          <li class={classes(
-            "block w-5 h-5 sm:w-3 sm:h-3 rounded-full ml-3 sm:ml-2",
-            %{ "bg-blue-planning-300" => step == @step, "bg-gray-200" => step != @step }
-            )}>
+          <li class={
+            classes(
+              "block w-5 h-5 sm:w-3 sm:h-3 rounded-full ml-3 sm:ml-2",
+              %{"bg-blue-planning-300" => step == @step, "bg-gray-200" => step != @step}
+            )
+          }>
           </li>
         <% end %>
       </ul>
@@ -1339,8 +1422,17 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
     ~H"""
     <label class="inline-flex relative items-center cursor-pointer">
       <div class="relative">
-        <input type="checkbox" disabled={@disabled} class="sr-only peer disabled:opacity-75 disabled:cursor-default" phx-click={@click} phx-value-product_id={@product_id} checked={@checked} phx-target={@myself} >
-        <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-focus:ring-toggle-100 dark:peer-focus:ring-toggle-300 dark:bg-gray-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-toggle-100"></div>
+        <input
+          type="checkbox"
+          disabled={@disabled}
+          class="sr-only peer disabled:opacity-75 disabled:cursor-default"
+          phx-click={@click}
+          phx-value-product_id={@product_id}
+          checked={@checked}
+          phx-target={@myself}
+        />
+        <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-focus:ring-toggle-100 dark:peer-focus:ring-toggle-300 dark:bg-gray-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-toggle-100">
+        </div>
       </div>
       <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"><%= @text %></span>
     </label>
@@ -1354,7 +1446,11 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
         Viewing as <%= @client_email %>
       </div>
       <div class="text-base-250 flex flex-col">
-        <%= link("Logout", to: ~p"/users/log_out?#{%{client_link_hash: @gallery.client_link_hash}}", method: :delete, class: "inline-block") %>
+        <%= link("Logout",
+          to: ~p"/users/log_out?#{%{client_link_hash: @gallery.client_link_hash}}",
+          method: :delete,
+          class: "inline-block"
+        ) %>
         <div class="border-b border-base-250 -mt-1"></div>
       </div>
     </div>
@@ -1384,7 +1480,9 @@ defmodule TodoplaceWeb.GalleryLive.Shared do
 
   def tag_for_gallery_type(assigns) do
     ~H"""
-      <span class="lg:ml-[54px] sm:ml-0 inline-block mt-2 border rounded-md bg-base-200 px-2 pb-0.5 text-base-250 font-bold text-base"><%= Utils.capitalize_all_words(@type) %></span>
+    <span class="lg:ml-[54px] sm:ml-0 inline-block mt-2 border rounded-md bg-base-200 px-2 pb-0.5 text-base-250 font-bold text-base">
+      <%= Utils.capitalize_all_words(@type) %>
+    </span>
     """
   end
 

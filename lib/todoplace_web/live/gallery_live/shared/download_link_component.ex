@@ -33,7 +33,11 @@ defmodule TodoplaceWeb.GalleryLive.Shared.DownloadLinkComponent do
         <% :uploading -> %>
           <p class="p-2 text-base-225">Preparing Download</p>
         <% {:ready, url} -> %>
-          <button class="flex items-center justify-center w-full h-full p-2" phx-click="download-photo" phx-value-uri={url}>
+          <button
+            class="flex items-center justify-center w-full h-full p-2"
+            phx-click="download-photo"
+            phx-value-uri={url}
+          >
             <%= render_slot(@inner_block) %>
           </button>
       <% end %>
@@ -45,7 +49,9 @@ defmodule TodoplaceWeb.GalleryLive.Shared.DownloadLinkComponent do
     assigns = assign_new(assigns, :class, fn -> "" end)
 
     ~H"""
-    <.live_component class={@class} module={__MODULE__} id={@packable.id} packable={@packable}><%= render_slot(@inner_block) %></.live_component>
+    <.live_component class={@class} module={__MODULE__} id={@packable.id} packable={@packable}>
+      <%= render_slot(@inner_block) %>
+    </.live_component>
     """
   end
 

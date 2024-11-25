@@ -32,13 +32,16 @@ defmodule TodoplaceWeb.ContractFormComponent do
   def render(assigns) do
     ~H"""
     <div class="modal">
-      <h1 class="text-3xl font-bold mb-4">Edit contract </h1>
-      <h2 class="font-normal mb-4 text-base-250">Any change you make to the contract is just for this lead, job or booking event</h2>
+      <h1 class="text-3xl font-bold mb-4">Edit contract</h1>
+      <h2 class="font-normal mb-4 text-base-250">
+        Any change you make to the contract is just for this lead, job or booking event
+      </h2>
 
       <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself}>
-
         <div class="grid grid-flow-col auto-cols-fr gap-4 mt-4">
-          <%= labeled_select f, :contract_template_id, @options, label: "Select template to reset contract language" %>
+          <%= labeled_select(f, :contract_template_id, @options,
+            label: "Select template to reset contract language"
+          ) %>
         </div>
 
         <div class="flex justify-between items-end pb-2">
@@ -51,17 +54,38 @@ defmodule TodoplaceWeb.ContractFormComponent do
               <.badge color={:gray}>No edits made</.badge>
           <% end %>
         </div>
-        <.quill_input f={f} id="quill_contract_input" html_field={:content} enable_size={true} track_quill_source={true} placeholder="Paste contract text here" />
+        <.quill_input
+          f={f}
+          id="quill_contract_input"
+          html_field={:content}
+          enable_size={true}
+          track_quill_source={true}
+          placeholder="Paste contract text here"
+        />
         <TodoplaceWeb.LiveModal.footer>
-          <button class="btn-primary" title="save" type="submit" disabled={!@changeset.valid?} phx-disable-with="Save">
+          <button
+            class="btn-primary"
+            title="save"
+            type="submit"
+            disabled={!@changeset.valid?}
+            phx-disable-with="Save"
+          >
             Save
           </button>
 
-          <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Cancel
           </button>
           <%= if @content_edited && input_value(f, :contract_template_id) do %>
-            <p class="sm:pr-4 sm:my-auto text-center text-blue-planning-300 italic text-sm">This will be saved as a new template</p>
+            <p class="sm:pr-4 sm:my-auto text-center text-blue-planning-300 italic text-sm">
+              This will be saved as a new template
+            </p>
           <% end %>
         </TodoplaceWeb.LiveModal.footer>
       </.form>

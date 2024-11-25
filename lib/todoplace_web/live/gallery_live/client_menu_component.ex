@@ -58,9 +58,9 @@ defmodule TodoplaceWeb.GalleryLive.ClientMenuComponent do
   def cart_wrapper(assigns) do
     ~H"""
     <%= if @count > 0 do %>
-      <.link navigate={@route} title="cart" class="block"><%= render_slot @inner_block %></.link>
+      <.link navigate={@route} title="cart" class="block"><%= render_slot(@inner_block) %></.link>
     <% else %>
-      <div title="cart" ><%= render_slot @inner_block %></div>
+      <div title="cart"><%= render_slot(@inner_block) %></div>
     <% end %>
     """
   end

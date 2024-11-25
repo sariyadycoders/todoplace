@@ -174,8 +174,11 @@ defmodule TodoplaceWeb.GalleryLive.ClientOrder do
     <div class="flex flex-col justify-between md:flex-row md:items-center">
       <h3 class="mt-8 text-lg font-extrabold md:text-3xl"><%= message_heading(@is_proofing) %></h3>
 
-      <div class={"#{@is_proofing && 'hidden'} mt-8 text-lg"}>Order number: <span class="font-medium">
-        <%= Orders.number(@order) %></span>
+      <div class={"#{@is_proofing && 'hidden'} mt-8 text-lg"}>
+        Order number:
+        <span class="font-medium">
+          <%= Orders.number(@order) %>
+        </span>
       </div>
     </div>
     <.message_description {assigns} />

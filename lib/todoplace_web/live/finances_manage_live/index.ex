@@ -243,94 +243,182 @@ defmodule TodoplaceWeb.Live.FinancesManage.Index do
   @impl true
   def render(assigns) do
     ~H"""
-      <div class="pt-6 px-6 center-container flex flex-col" id="download-trigger" phx-hook="TriggerDownload">
-        <div class="flex items-center">
-          <h1 class="text-4xl font-bold">Finances</h1>
-        </div>
-        <div class="w-48 text-center text-blue-planning-300 pt-2 mt-4 font-bold border-b-4 border-blue-planning-300">
-          Transactions Report
-        </div>
+    <div
+      class="pt-6 px-6 center-container flex flex-col"
+      id="download-trigger"
+      phx-hook="TriggerDownload"
+    >
+      <div class="flex items-center">
+        <h1 class="text-4xl font-bold">Finances</h1>
       </div>
-      <div class="bg-base-200 xl:py-7">
-        <div class="center-container p-5">
-          <div class="p-5 bg-white rounded-t-xl">
-            <div class="flex flex-col justify-between md:flex-row">
-              <div class="font-bold text-xl mb-7">
-                All Transactions
-              </div>
-              <div class="flex items-center lg:w-1/2 xl:w-2/5 gap-3">
-                <a phx-click="export-transactions" class="hidden btn-tertiary px-2 py-1 xl:flex items-center justify-center gap-2 text-blue-planning-300 xl:w-auto w-full h-11 text-center cursor-pointer">
-                  <div class="flex items-end pb-3 xl:pb-0 mt-3 xl:mt-0 flex gap-2 items-center justify-center">
-                    <.icon name="download" class="w-4 h-4 text-blue-planning-300 mt-0.5" />
-                    Export
-                  </div>
-                </a>
-                <div class="w-full">
-                  <div class="relative">
-                    <a {testid("close_search")} class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2">
-                      <%= if @search_phrase do %>
-                        <span phx-click="clear-search" class="cursor-pointer">
-                          <.icon name="close-x" class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300" />
-                        </span>
-                      <% else %>
-                        <.icon name="search" class="w-4 ml-1 fill-current" />
-                      <% end %>
-                    </a>
-                    <.form for={%{}} as={:search} phx-change="apply-filter-search" phx-submit="apply-filter-search">
-                      <input type="text" class="form-control w-full text-input indent-6 bg-base-200" id="search_phrase_input" name="search_phrase" value={@search_phrase} phx-debounce="500" spellcheck="false" placeholder="Search by client or transaction..." />
-                    </.form>
-                  </div>
-                </div>
-              </div>
+      <div class="w-48 text-center text-blue-planning-300 pt-2 mt-4 font-bold border-b-4 border-blue-planning-300">
+        Transactions Report
+      </div>
+    </div>
+    <div class="bg-base-200 xl:py-7">
+      <div class="center-container p-5">
+        <div class="p-5 bg-white rounded-t-xl">
+          <div class="flex flex-col justify-between md:flex-row">
+            <div class="font-bold text-xl mb-7">
+              All Transactions
             </div>
-              <div class="xl:flex justify-between mt-4">
-                <div class="grid grid-cols-2 sm:grid-cols-2 xl:flex gap-2">
-                  <.form class="col-span-2 lg:col-span-1 xl:w-4/12" :let={f} for={%{}} as={:dates} phx-change="apply-filter-date-range">
-                    <.date_range_picker_field class="relative flex flex-col col-span-3 sm:col-span-1 w-full mb-3 lg:mb-0" id="date_range" form={f} field={:date_range} default_date={@transaction_date_range} input_placeholder="mm/dd/yyyy to mm/dd/yyyy" input_label="Date Range" data_max_date="today" />
+            <div class="flex items-center lg:w-1/2 xl:w-2/5 gap-3">
+              <a
+                phx-click="export-transactions"
+                class="hidden btn-tertiary px-2 py-1 xl:flex items-center justify-center gap-2 text-blue-planning-300 xl:w-auto w-full h-11 text-center cursor-pointer"
+              >
+                <div class="flex items-end pb-3 xl:pb-0 mt-3 xl:mt-0 flex gap-2 items-center justify-center">
+                  <.icon name="download" class="w-4 h-4 text-blue-planning-300 mt-0.5" /> Export
+                </div>
+              </a>
+              <div class="w-full">
+                <div class="relative">
+                  <a
+                    {testid("close_search")}
+                    class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2"
+                  >
+                    <%= if @search_phrase do %>
+                      <span phx-click="clear-search" class="cursor-pointer">
+                        <.icon
+                          name="close-x"
+                          class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300"
+                        />
+                      </span>
+                    <% else %>
+                      <.icon name="search" class="w-4 ml-1 fill-current" />
+                    <% end %>
+                  </a>
+                  <.form
+                    for={%{}}
+                    as={:search}
+                    phx-change="apply-filter-search"
+                    phx-submit="apply-filter-search"
+                  >
+                    <input
+                      type="text"
+                      class="form-control w-full text-input indent-6 bg-base-200"
+                      id="search_phrase_input"
+                      name="search_phrase"
+                      value={@search_phrase}
+                      phx-debounce="500"
+                      spellcheck="false"
+                      placeholder="Search by client or transaction..."
+                    />
                   </.form>
-                  <.select_dropdown class="xl:w-44" title="Type" id="type" selected_option={@transaction_type} options_list={%{"all" => "All", "job-retainer" => "Job-Retainer", "job-payment" => "Job-Payment", "gallery-order" => "Gallery-Order"}}/>
-                  <.select_dropdown class="xl:w-44" title="Source" id="source" selected_option={@transaction_source} options_list={%{"all" => "All", "stripe" => "Stripe", "offline" => "Offline"}}/>
-                  <.select_dropdown class="xl:w-44" title="Status" id="status" selected_option={@transaction_status} options_list={%{"all" => "All", "overdue" => "Overdue", "paid" => "Paid", "pending" => "Pending"}}/>
-                  <.select_dropdown class="xl:w-44 col-span-1 sm:col-span-1" sort_direction={@sort_direction} title="Sort" id="sort_by" selected_option={@sort_by} options_list={%{"newest" => "Newest", "oldest" => "Oldest", "highest" => "Highest", "lowest" => "Lowest"}}/>
                 </div>
-
-                <a phx-click="export-transactions" class="btn-tertiary mt-3 xl:mt-7 px-2 py-1 flex xl:hidden items-center justify-center gap-2 text-blue-planning-300 xl:w-auto w-full h-10 text-center cursor-pointer">
-                  <div class="flex items-end pb-3 xl:pb-0 mt-3 xl:mt-0 flex gap-2 items-center justify-center">
-                    <.icon name="download" class="w-4 h-4 text-blue-planning-300 mt-0.5" />
-                    Export
-                  </div>
-                </a>
-              </div>
-            <div class="hidden xl:grid border-b-4 mt-5 grid grid-cols-7 border-blue-planning-300 pb-1.5 font-bold">
-              <div class="col-span-1">
-                Transaction Date
-              </div>
-              <div class="">
-                Total
-              </div>
-              <div class="">
-                Client
-              </div>
-              <div class="">
-                Type / Job
-              </div>
-              <div class="">
-                Source
-              </div>
-              <div class="col-span-2">
-                Status
               </div>
             </div>
-
-            <%= for transaction <- @finances do %>
-              <div id={"item-" <> transaction.type <> "-" <> Integer.to_string(transaction.id)}>
-                <%= render_row(assigns, transaction) %>
-              </div>
-            <% end %>
           </div>
-          <.pagination_component wrapper_class="bg-white rounded-b-xl" pagination_changeset={@pagination_changeset} limit_options={[12, 24, 36, 48]} />
+          <div class="xl:flex justify-between mt-4">
+            <div class="grid grid-cols-2 sm:grid-cols-2 xl:flex gap-2">
+              <.form
+                :let={f}
+                class="col-span-2 lg:col-span-1 xl:w-4/12"
+                for={%{}}
+                as={:dates}
+                phx-change="apply-filter-date-range"
+              >
+                <.date_range_picker_field
+                  class="relative flex flex-col col-span-3 sm:col-span-1 w-full mb-3 lg:mb-0"
+                  id="date_range"
+                  form={f}
+                  field={:date_range}
+                  default_date={@transaction_date_range}
+                  input_placeholder="mm/dd/yyyy to mm/dd/yyyy"
+                  input_label="Date Range"
+                  data_max_date="today"
+                />
+              </.form>
+              <.select_dropdown
+                class="xl:w-44"
+                title="Type"
+                id="type"
+                selected_option={@transaction_type}
+                options_list={
+                  %{
+                    "all" => "All",
+                    "job-retainer" => "Job-Retainer",
+                    "job-payment" => "Job-Payment",
+                    "gallery-order" => "Gallery-Order"
+                  }
+                }
+              />
+              <.select_dropdown
+                class="xl:w-44"
+                title="Source"
+                id="source"
+                selected_option={@transaction_source}
+                options_list={%{"all" => "All", "stripe" => "Stripe", "offline" => "Offline"}}
+              />
+              <.select_dropdown
+                class="xl:w-44"
+                title="Status"
+                id="status"
+                selected_option={@transaction_status}
+                options_list={
+                  %{"all" => "All", "overdue" => "Overdue", "paid" => "Paid", "pending" => "Pending"}
+                }
+              />
+              <.select_dropdown
+                class="xl:w-44 col-span-1 sm:col-span-1"
+                sort_direction={@sort_direction}
+                title="Sort"
+                id="sort_by"
+                selected_option={@sort_by}
+                options_list={
+                  %{
+                    "newest" => "Newest",
+                    "oldest" => "Oldest",
+                    "highest" => "Highest",
+                    "lowest" => "Lowest"
+                  }
+                }
+              />
+            </div>
+
+            <a
+              phx-click="export-transactions"
+              class="btn-tertiary mt-3 xl:mt-7 px-2 py-1 flex xl:hidden items-center justify-center gap-2 text-blue-planning-300 xl:w-auto w-full h-10 text-center cursor-pointer"
+            >
+              <div class="flex items-end pb-3 xl:pb-0 mt-3 xl:mt-0 flex gap-2 items-center justify-center">
+                <.icon name="download" class="w-4 h-4 text-blue-planning-300 mt-0.5" /> Export
+              </div>
+            </a>
+          </div>
+          <div class="hidden xl:grid border-b-4 mt-5 grid grid-cols-7 border-blue-planning-300 pb-1.5 font-bold">
+            <div class="col-span-1">
+              Transaction Date
+            </div>
+            <div class="">
+              Total
+            </div>
+            <div class="">
+              Client
+            </div>
+            <div class="">
+              Type / Job
+            </div>
+            <div class="">
+              Source
+            </div>
+            <div class="col-span-2">
+              Status
+            </div>
+          </div>
+
+          <%= for transaction <- @finances do %>
+            <div id={"item-" <> transaction.type <> "-" <> Integer.to_string(transaction.id)}>
+              <%= render_row(assigns, transaction) %>
+            </div>
+          <% end %>
         </div>
+        <.pagination_component
+          wrapper_class="bg-white rounded-b-xl"
+          pagination_changeset={@pagination_changeset}
+          limit_options={[12, 24, 36, 48]}
+        />
       </div>
+    </div>
     """
   end
 
@@ -340,40 +428,69 @@ defmodule TodoplaceWeb.Live.FinancesManage.Index do
       |> Enum.into(%{class: ""})
 
     ~H"""
-      <div class={"flex flex-col w-full mb-3 lg:mb-0 #{@class}"}>
-        <h1 class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></h1>
-        <div class="flex h-11 w-full">
-          <div id={@id} class={classes("relative w-full border-grey border p-2 cursor-pointer", %{"rounded-l-lg" => @id == "sort_by", "rounded-lg" => @id != "sort_by"})} data-offset-y="5" phx-hook="Select">
-            <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
-                <%= @options_list[@selected_option] %>
-                <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
-                <.icon name="up" class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon" />
-            </div>
-            <ul class={"absolute z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 w-full"}>
-              <%= for {key, label} <- @options_list do %>
-                <li id={key} target-class="toggle-it" parent-class="toggle" toggle-type="selected-active" phx-hook="ToggleSiblings"
-                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md" phx-click={"apply-filter-#{@id}"} phx-value-option={key}>
-                  <button id={"btn-#{key}"} class={"pl-2"}><%= label %></button>
-                  <%= if key == @selected_option do %>
-                    <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
+    <div class={"flex flex-col w-full mb-3 lg:mb-0 #{@class}"}>
+      <h1 class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></h1>
+      <div class="flex h-11 w-full">
+        <div
+          id={@id}
+          class={
+            classes("relative w-full border-grey border p-2 cursor-pointer", %{
+              "rounded-l-lg" => @id == "sort_by",
+              "rounded-lg" => @id != "sort_by"
+            })
+          }
+          data-offset-y="5"
+          phx-hook="Select"
+        >
+          <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
+            <%= @options_list[@selected_option] %>
+            <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
+            <.icon
+              name="up"
+              class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon"
+            />
           </div>
-          <%= if @title == "Sort" do%>
-            <div class="items-center flex border rounded-r-lg border-grey p-2">
-              <button phx-click="sort_direction">
-                <%= if @sort_direction == "asc" do %>
-                  <.icon name="sort-vector-2" {testid("edit-link-button")} class="blue-planning-300 w-5 h-5" />
-                <% else %>
-                  <.icon name="sort-vector" {testid("edit-link-button")} class="blue-planning-300 w-5 h-5" />
+          <ul class="absolute z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 w-full">
+            <%= for {key, label} <- @options_list do %>
+              <li
+                id={key}
+                target-class="toggle-it"
+                parent-class="toggle"
+                toggle-type="selected-active"
+                phx-hook="ToggleSiblings"
+                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md"
+                phx-click={"apply-filter-#{@id}"}
+                phx-value-option={key}
+              >
+                <button id={"btn-#{key}"} class="pl-2"><%= label %></button>
+                <%= if key == @selected_option do %>
+                  <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
                 <% end %>
-              </button>
-            </div>
-          <% end %>
+              </li>
+            <% end %>
+          </ul>
         </div>
+        <%= if @title == "Sort" do %>
+          <div class="items-center flex border rounded-r-lg border-grey p-2">
+            <button phx-click="sort_direction">
+              <%= if @sort_direction == "asc" do %>
+                <.icon
+                  name="sort-vector-2"
+                  {testid("edit-link-button")}
+                  class="blue-planning-300 w-5 h-5"
+                />
+              <% else %>
+                <.icon
+                  name="sort-vector"
+                  {testid("edit-link-button")}
+                  class="blue-planning-300 w-5 h-5"
+                />
+              <% end %>
+            </button>
+          </div>
+        <% end %>
       </div>
+    </div>
     """
   end
 
@@ -397,11 +514,20 @@ defmodule TodoplaceWeb.Live.FinancesManage.Index do
     ~H"""
     <div class="mt-3 xl:grid grid-cols-7 pb-1.5">
       <div class="sm:pr-1 col-span-1">
-        <div class="font-bold"><b class="sm:hidden mr-2">Transaction Date:</b><%= Calendar.strftime(@transaction.updated_at, "%m/%d/%y") %></div>
+        <div class="font-bold">
+          <b class="sm:hidden mr-2">Transaction Date:</b><%= Calendar.strftime(
+            @transaction.updated_at,
+            "%m/%d/%y"
+          ) %>
+        </div>
       </div>
       <div class="flex sm:pr-1">
-        <div class="text-base-250 mr-1"><b class="sm:hidden mr-2 text-black">Total:</b><%= @transaction.price %></div>
-        <a phx-click="online-payment-view" phx-value-payment_id={@transaction.id}><.icon name="eye" class="w-4 h-4 mt-1 text-blue-planning-300 cursor-pointer"/></a>
+        <div class="text-base-250 mr-1">
+          <b class="sm:hidden mr-2 text-black">Total:</b><%= @transaction.price %>
+        </div>
+        <a phx-click="online-payment-view" phx-value-payment_id={@transaction.id}>
+          <.icon name="eye" class="w-4 h-4 mt-1 text-blue-planning-300 cursor-pointer" />
+        </a>
       </div>
       <div class="text-blue-planning-300 sm:pr-1 hover:cursor-pointer capitalize break-words">
         <b class="sm:hidden mr-1 text-black">Client:</b>
@@ -427,42 +553,81 @@ defmodule TodoplaceWeb.Live.FinancesManage.Index do
       </div>
       <div class="lg:flex justify-between sm:pr-1 col-span-2">
         <div class="">
-            <.badge color={get_badge_color(@transaction.status)}><%= @transaction.status %></.badge>
+          <.badge color={get_badge_color(@transaction.status)}><%= @transaction.status %></.badge>
         </div>
         <div class="mt-2 lg:mt-0">
-          <div data-offset="0" phx-hook="Select" data-placement="bottom-end" id={"transaction-actions-#{@transaction.id}"}>
-            <button {testid("actions")} title="Manage" class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full">
+          <div
+            data-offset="0"
+            phx-hook="Select"
+            data-placement="bottom-end"
+            id={"transaction-actions-#{@transaction.id}"}
+          >
+            <button
+              {testid("actions")}
+              title="Manage"
+              class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full"
+            >
               Actions
-              <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-              <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+              <.icon
+                name="down"
+                class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+              />
+              <.icon
+                name="up"
+                class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+              />
             </button>
-            <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content" style="z-index: 2147483001;">
-              <a href={~p"/jobs/#{@transaction.job_id}"} target="_blank" class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                <.icon name="gallery-camera" class="inline-block w-4 h-4 mt-1 mr-2 text-blue-planning-300" />
-                View job
+            <div
+              class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content"
+              style="z-index: 2147483001;"
+            >
+              <a
+                href={~p"/jobs/#{@transaction.job_id}"}
+                target="_blank"
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+              >
+                <.icon
+                  name="gallery-camera"
+                  class="inline-block w-4 h-4 mt-1 mr-2 text-blue-planning-300"
+                /> View job
               </a>
-              <a href={~p"/clients/#{@transaction.job.client_id}"} target="_blank" class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                <.icon name="client-icon" class="inline-block w-4 h-4 mt-1 mr-2 fill-current text-blue-planning-300" />
-                View client
+              <a
+                href={~p"/clients/#{@transaction.job.client_id}"}
+                target="_blank"
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+              >
+                <.icon
+                  name="client-icon"
+                  class="inline-block w-4 h-4 mt-1 mr-2 fill-current text-blue-planning-300"
+                /> View client
               </a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <hr class="mr-4 my-3 col-span-6">
+    <hr class="mr-4 my-3 col-span-6" />
     """
   end
 
   defp gallery_order_row(assigns) do
     ~H"""
-     <div class="mt-3 xl:grid grid-cols-7 pb-1.5">
+    <div class="mt-3 xl:grid grid-cols-7 pb-1.5">
       <div class="sm:pr-1">
-        <div class="font-bold"><b class="sm:hidden mr-2">Transaction Date:</b><%= Calendar.strftime(@transaction.updated_at, "%m/%d/%y") %></div>
+        <div class="font-bold">
+          <b class="sm:hidden mr-2">Transaction Date:</b><%= Calendar.strftime(
+            @transaction.updated_at,
+            "%m/%d/%y"
+          ) %>
+        </div>
       </div>
       <div class="flex sm:pr-1">
-        <div class="text-base-250 mr-1"><b class="sm:hidden mr-2 text-black">Total:</b><%= @transaction.price %></div>
-        <a phx-click="online-payment-view" phx-value-order_id={@transaction.id}><.icon name="eye" class="w-4 h-4 mt-1 text-blue-planning-300 cursor-pointer"/></a>
+        <div class="text-base-250 mr-1">
+          <b class="sm:hidden mr-2 text-black">Total:</b><%= @transaction.price %>
+        </div>
+        <a phx-click="online-payment-view" phx-value-order_id={@transaction.id}>
+          <.icon name="eye" class="w-4 h-4 mt-1 text-blue-planning-300 cursor-pointer" />
+        </a>
       </div>
       <div class="text-blue-planning-300 sm:pr-1 hover:cursor-pointer capitalize break-words">
         <b class="sm:hidden mr-1 text-black">Client:</b>
@@ -472,46 +637,85 @@ defmodule TodoplaceWeb.Live.FinancesManage.Index do
       </div>
       <div class="text-blue-planning-300 cursor-pointer sm:pr-1 break-words">
         <b class="sm:hidden mr-1 text-black">Type / Job:</b>
-        <a class="underline" href={~p"/galleries/#{@transaction.gallery.id}/transactions/#{@transaction.number}"} target="_blank">
+        <a
+          class="underline"
+          href={~p"/galleries/#{@transaction.gallery.id}/transactions/#{@transaction.number}"}
+          target="_blank"
+        >
           <%= @transaction.type %>
         </a>
         <div class="text-base-250"><%= Todoplace.Job.name(@transaction.gallery.job) %></div>
       </div>
       <div class="text-base-250 sm:pr-1">
-        <b class="sm:hidden mr-2 text-black">Source:</b><%= if(@transaction.source == "stripe", do: "Stripe", else: "Offline") %>
+        <b class="sm:hidden mr-2 text-black">Source:</b><%= if(@transaction.source == "stripe",
+          do: "Stripe",
+          else: "Offline"
+        ) %>
       </div>
       <div class="lg:flex justify-between sm:pr-1 col-span-2">
         <div class="">
-            <.badge color={:green}>Paid</.badge>
+          <.badge color={:green}>Paid</.badge>
         </div>
         <div class="mt-2 lg:mt-0">
-          <div data-offset="0" data-placement="bottom-end" phx-hook="Select" id={"transaction-actions-#{@transaction.id}"}>
-            <button {testid("actions")} title="Manage" class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full">
+          <div
+            data-offset="0"
+            data-placement="bottom-end"
+            phx-hook="Select"
+            id={"transaction-actions-#{@transaction.id}"}
+          >
+            <button
+              {testid("actions")}
+              title="Manage"
+              class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full"
+            >
               Actions
-              <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-              <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+              <.icon
+                name="down"
+                class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+              />
+              <.icon
+                name="up"
+                class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+              />
             </button>
-            <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content" style="z-index: 2147483001;">
+            <div
+              class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content"
+              style="z-index: 2147483001;"
+            >
               <%= if @transaction.number do %>
-                <a href={~p"/galleries/#{@transaction.gallery.id}/transactions/#{@transaction.number}"} target="_blank" class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
+                <a
+                  href={~p"/galleries/#{@transaction.gallery.id}/transactions/#{@transaction.number}"}
+                  target="_blank"
+                  class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+                >
                   <.icon name="cart" class="inline-block w-4 h-4 mt-1 mr-2 text-blue-planning-300" />
                   View order details
                 </a>
               <% end %>
-              <a href={~p"/galleries/#{@transaction.gallery.id}"} target="_blank" class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
+              <a
+                href={~p"/galleries/#{@transaction.gallery.id}"}
+                target="_blank"
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+              >
                 <.icon name="photos-2" class="inline-block w-4 h-4 mt-1 mr-2 text-blue-planning-300" />
                 View gallery
               </a>
-              <a href={~p"/clients/#{@transaction.client.id}"} target="_blank" class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                <.icon name="client-icon" class="inline-block w-4 h-4 mt-1 mr-2 fill-current text-blue-planning-300" />
-                View client
+              <a
+                href={~p"/clients/#{@transaction.client.id}"}
+                target="_blank"
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+              >
+                <.icon
+                  name="client-icon"
+                  class="inline-block w-4 h-4 mt-1 mr-2 fill-current text-blue-planning-300"
+                /> View client
               </a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <hr class="mr-4 my-3 col-span-6">
+    <hr class="mr-4 my-3 col-span-6" />
     """
   end
 

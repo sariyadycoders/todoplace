@@ -12,7 +12,12 @@ defmodule TodoplaceWeb.Live.RestartTourComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <button phx-click="restart_tour" phx-target={@myself} id="start-tour" class="flex items-center px-2 py-2 bg-white text-base-250 w-full">
+    <button
+      phx-click="restart_tour"
+      phx-target={@myself}
+      id="start-tour"
+      class="flex items-center px-2 py-2 bg-white text-base-250 w-full"
+    >
       <.icon name="refresh-icon" class="w-4 h-4 mr-1" />
       <div class="text-base-250 text-sm ml-2">Restart Product Tours</div>
     </button>

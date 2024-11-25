@@ -1,17 +1,36 @@
 <div class="relative mx-auto max-w-screen-xl">
   <div class="fixed top-0 sm:px-8 w-full z-40 bg-white max-w-screen-xl">
-    <.live_component module={TodoplaceWeb.GalleryLive.ClientMenuComponent} id={@gallery.id} live_action={@live_action} cart_count={@cart_count} gallery={@gallery} album={@album} is_proofing={@is_proofing || @album.is_finals} client_email={@client_email} credits_available={@credits_available} />
+    <.live_component
+      module={TodoplaceWeb.GalleryLive.ClientMenuComponent}
+      id={@gallery.id}
+      live_action={@live_action}
+      cart_count={@cart_count}
+      gallery={@gallery}
+      album={@album}
+      is_proofing={@is_proofing || @album.is_finals}
+      client_email={@client_email}
+      credits_available={@credits_available}
+    />
   </div>
 
-  <.credits_available_mobile_header organization={@organization} open_profile_logout?={@open_profile_logout?} credits_available={@credits_available} client_email={@client_email} gallery={@gallery} socket={@socket} />
+  <.credits_available_mobile_header
+    organization={@organization}
+    open_profile_logout?={@open_profile_logout?}
+    credits_available={@credits_available}
+    client_email={@client_email}
+    gallery={@gallery}
+    socket={@socket}
+  />
 
-  <hr/>
+  <hr />
 
   <%= unless @is_proofing do %>
     <div class="px-6 pt-5 pb-10 mx-auto lg:pt-9 lg:px-14 md:mt-16">
-
       <%= unless @album.is_finals do %>
-        <.link navigate={~p"/gallery/#{@gallery.client_link_hash}"} class="flex text-base-250 items-center mb-7">
+        <.link
+          navigate={~p"/gallery/#{@gallery.client_link_hash}"}
+          class="flex text-base-250 items-center mb-7"
+        >
           <.icon name="back" class="h-3.5 w-1.5 stroke-2 mr-2" />
           <p class="mt-1">Back to gallery</p>
         </.link>
@@ -21,23 +40,41 @@
 
     <%= unless Enum.empty?(@products) || disabled?(@gallery) do %>
       <div class="my-0 py-0 mx-auto center-container gallery__container h-full px-7 sm:px-16">
-        <ul class="pt-2 pb-5 mx-auto grid gap-6 sm:gap-8 grid-cols-2 xl:grid-cols-4 lg:pb-4 lg:pt-6 productPreview__client" id="products_gallery" phx-hook="DisableRightClick">
+        <ul
+          class="pt-2 pb-5 mx-auto grid gap-6 sm:gap-8 grid-cols-2 xl:grid-cols-4 lg:pb-4 lg:pt-6 productPreview__client"
+          id="products_gallery"
+          phx-hook="DisableRightClick"
+        >
           <%= for product <- @products do %>
             <%= if product.product_preview_enabled do %>
-              <.live_component module={TodoplaceWeb.GalleryLive.ProductPreviewComponent} id={product.id} photo={product.preview_photo} category={product.category} click_params={product.id} organization={@organization} gallery={@gallery} />
+              <.live_component
+                module={TodoplaceWeb.GalleryLive.ProductPreviewComponent}
+                id={product.id}
+                photo={product.preview_photo}
+                category={product.category}
+                click_params={product.id}
+                organization={@organization}
+                gallery={@gallery}
+              />
             <% end %>
           <% end %>
         </ul>
       </div>
     <% end %>
-    <div class={classes("center-container gallery__container", %{"hidden" => disabled?(@gallery)})}>
+    <div class={
+      classes("center-container gallery__container", %{"hidden" => disabled?(@gallery)})
+    }>
       <hr class="mt-8 border-base-225" />
     </div>
   <% end %>
   <div class={"my-0 py-0 mx-auto center-container gallery__container h-full px-7 sm:px-16 #{@is_proofing && 'mb-56'}"}>
-    <div class={classes("pt-0", %{"pt-5 lg:pt-16" => !disabled?(@gallery)})} id="gallery" phx-hook="DisableRightClick">
+    <div
+      class={classes("pt-0", %{"pt-5 lg:pt-16" => !disabled?(@gallery)})}
+      id="gallery"
+      phx-hook="DisableRightClick"
+    >
       <.top_section {assigns} />
-      
+
       <%= if Enum.empty?(@streams) && @favorites_filter do %>
         <.toggle_empty_state {assigns} />
       <% else %>
@@ -72,16 +109,18 @@
         </div>
       <% end %>
       <div class="hidden">
-        <div
-          id="photo-update-listener"
-          phx-hook="PhotoUpdate"
-          data-photo-updates={@photo_updates}
-        ></div>
+        <div id="photo-update-listener" phx-hook="PhotoUpdate" data-photo-updates={@photo_updates}>
+        </div>
       </div>
-
     </div>
   </div>
   <%= if @is_proofing do %>
-    <.credits_footer for={:proofing_album} total_count={@gallery.gallery_digital_pricing.download_count} cart_count={@cart_count} credits={@credits} is_fixed={true} />
+    <.credits_footer
+      for={:proofing_album}
+      total_count={@gallery.gallery_digital_pricing.download_count}
+      cart_count={@cart_count}
+      credits={@credits}
+      is_fixed={true}
+    />
   <% end %>
 </div>

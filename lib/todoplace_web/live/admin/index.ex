@@ -24,25 +24,47 @@ defmodule TodoplaceWeb.Live.Admin.Index do
       <ul class="mt-4 font-bold grid gap-10 grid-cols-1 sm:grid-cols-4 text-blue-planning-300">
         <li><.link navigate={~p"/admin/dashboard"} class={@class}>Performance Dashboard</.link></li>
 
-        <li><.link navigate={~p"/admin/categories"} class={@class}>Product Category Configuration</.link></li>
+        <li>
+          <.link navigate={~p"/admin/categories"} class={@class}>
+            Product Category Configuration
+          </.link>
+        </li>
 
         <li><.link navigate={~p"/admin/workers"} class={@class}>Run Jobs</.link></li>
 
-        <li><.link navigate={~p"/admin/pricing_calculator"} class={@class}>Smart Profit Calculator™ Configuration</.link></li>
+        <li>
+          <.link navigate={~p"/admin/pricing_calculator"} class={@class}>
+            Smart Profit Calculator™ Configuration
+          </.link>
+        </li>
 
         <li><.link navigate={~p"/admin/next_up_cards"} class={@class}>Next Up Cards Admin</.link></li>
 
         <li><.link navigate={~p"/admin/user"} class={@class}>Manage Users</.link></li>
 
-        <li><.link navigate={~p"/admin/user/subscription_report"} class={@class}>User Subscription Reconciliation Report</.link></li>
+        <li>
+          <.link navigate={~p"/admin/user/subscription_report"} class={@class}>
+            User Subscription Reconciliation Report
+          </.link>
+        </li>
 
-        <li><.link navigate={~p"/admin/subscription_pricing"} class={@class}>Subscription Pricing</.link></li>
+        <li>
+          <.link navigate={~p"/admin/subscription_pricing"} class={@class}>
+            Subscription Pricing
+          </.link>
+        </li>
 
-        <li><.link navigate={~p"/admin/product_pricing"} class={@class}>Product Pricing Report</.link></li>
+        <li>
+          <.link navigate={~p"/admin/product_pricing"} class={@class}>Product Pricing Report</.link>
+        </li>
 
-        <li><.link navigate={~p"/admin/shipment_details"} class={@class}>Manage Shipment Details</.link></li>
+        <li>
+          <.link navigate={~p"/admin/shipment_details"} class={@class}>Manage Shipment Details</.link>
+        </li>
 
-        <li><.link navigate={~p"/admin/automations"} class={@class}>Automations Report Index</.link></li>
+        <li>
+          <.link navigate={~p"/admin/automations"} class={@class}>Automations Report Index</.link>
+        </li>
 
         <li>
           <div class="grid border flex items-center justify-center rounded-lg py-4 px-8">
@@ -53,13 +75,21 @@ defmodule TodoplaceWeb.Live.Admin.Index do
           </div>
         </li>
 
-        <li><.link navigate={~p"/admin/global_settings"} class={@class}>Manage Admin Global Settings</.link></li>
+        <li>
+          <.link navigate={~p"/admin/global_settings"} class={@class}>
+            Manage Admin Global Settings
+          </.link>
+        </li>
 
-        <li><.link navigate={~p"/admin/whcc_orders_report"} class={@class}>WHCC Orders report</.link></li>
+        <li>
+          <.link navigate={~p"/admin/whcc_orders_report"} class={@class}>WHCC Orders report</.link>
+        </li>
 
         <li><.link navigate={~p"/feature-flags"} class={@class}>Feature Flags</.link></li>
 
-        <li><.link navigate={~p"/admin/automated-emails"} class={@class}>Manage Automated Emails</.link></li>
+        <li>
+          <.link navigate={~p"/admin/automated-emails"} class={@class}>Manage Automated Emails</.link>
+        </li>
       </ul>
     </nav>
     """

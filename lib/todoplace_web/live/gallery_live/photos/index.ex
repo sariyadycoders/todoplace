@@ -1233,40 +1233,85 @@ defmodule TodoplaceWeb.GalleryLive.Photos.Index do
       |> Enum.into(%{class: ""})
 
     ~H"""
-      <div class="flex flex-col w-full lg:w-auto mr-2">
-        <div class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></div>
-        <div class="flex">
-          <div id={@id} class={classes("relative w-32 border-grey border p-2 cursor-pointer", %{"lg:w-64" => @id == "status" and @type == "lead", "rounded-l-lg" => @id == "sort_by", "rounded-lg" => @title == "Filter" or @id != "sort_by"})} data-offset-y="" phx-hook="Select">
-            <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
-                <%= capitalize_per_word(String.replace(@selected_option, "_", " ")) %>
-                <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
-                <.icon name="up" class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon" />
-            </div>
-            <ul class={"absolute w-32 z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 #{@class}"}>
-              <%= for option <- @options_list do %>
-                <li id={option.id} target-class="toggle-it" parent-class="toggle" toggle-type="selected-active" phx-hook="ToggleSiblings"
-                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md" phx-click={"apply_filter_#{@id}"} phx-value-option={option.id}>
-                  <button id={"btn-#{option.id}"} class={classes("album-select", %{"w-64" => @id == "status", "w-40" => @id != "status"})}><%= option.title %></button>
-                  <%= if option.id == @selected_option do %>
-                    <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
+    <div class="flex flex-col w-full lg:w-auto mr-2">
+      <div class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></div>
+      <div class="flex">
+        <div
+          id={@id}
+          class={
+            classes("relative w-32 border-grey border p-2 cursor-pointer", %{
+              "lg:w-64" => @id == "status" and @type == "lead",
+              "rounded-l-lg" => @id == "sort_by",
+              "rounded-lg" => @title == "Filter" or @id != "sort_by"
+            })
+          }
+          data-offset-y=""
+          phx-hook="Select"
+        >
+          <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
+            <%= capitalize_per_word(String.replace(@selected_option, "_", " ")) %>
+            <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
+            <.icon
+              name="up"
+              class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon"
+            />
           </div>
-          <%= if @title == "Sort by" do%>
-            <div class="items-center flex border rounded-r-lg border-grey p-2">
-              <button phx-click="toggle_sort_direction" disabled={@selected_option not in ["filename"]}>
-                <%= if @sort_direction == "asc" do %>
-                  <.icon name="sort-vector-2" {testid("edit-link-button")} class={classes("blue-planning-300 w-5 h-5", %{"pointer-events-none opacity-40" => @selected_option not in ["filename"]})} />
-                <% else %>
-                  <.icon name="sort-vector" {testid("edit-link-button")} class={classes("blue-planning-300 w-5 h-5", %{"pointer-events-none opacity-40" => @selected_option not in ["filename"]})} />
+          <ul class={"absolute w-32 z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 #{@class}"}>
+            <%= for option <- @options_list do %>
+              <li
+                id={option.id}
+                target-class="toggle-it"
+                parent-class="toggle"
+                toggle-type="selected-active"
+                phx-hook="ToggleSiblings"
+                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md"
+                phx-click={"apply_filter_#{@id}"}
+                phx-value-option={option.id}
+              >
+                <button
+                  id={"btn-#{option.id}"}
+                  class={
+                    classes("album-select", %{"w-64" => @id == "status", "w-40" => @id != "status"})
+                  }
+                >
+                  <%= option.title %>
+                </button>
+                <%= if option.id == @selected_option do %>
+                  <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
                 <% end %>
-              </button>
-            </div>
-          <% end %>
+              </li>
+            <% end %>
+          </ul>
         </div>
+        <%= if @title == "Sort by" do %>
+          <div class="items-center flex border rounded-r-lg border-grey p-2">
+            <button phx-click="toggle_sort_direction" disabled={@selected_option not in ["filename"]}>
+              <%= if @sort_direction == "asc" do %>
+                <.icon
+                  name="sort-vector-2"
+                  {testid("edit-link-button")}
+                  class={
+                    classes("blue-planning-300 w-5 h-5", %{
+                      "pointer-events-none opacity-40" => @selected_option not in ["filename"]
+                    })
+                  }
+                />
+              <% else %>
+                <.icon
+                  name="sort-vector"
+                  {testid("edit-link-button")}
+                  class={
+                    classes("blue-planning-300 w-5 h-5", %{
+                      "pointer-events-none opacity-40" => @selected_option not in ["filename"]
+                    })
+                  }
+                />
+              <% end %>
+            </button>
+          </div>
+        <% end %>
       </div>
+    </div>
     """
   end
 
@@ -1338,7 +1383,9 @@ defmodule TodoplaceWeb.GalleryLive.Photos.Index do
     <%= for album <- @albums do %>
       <%= if @exclude_album_id != album.id && @exclude_album_id != "client_liked" do %>
         <li class={"relative py-1 hover:bg-blue-planning-100 hover:rounded-md #{get_class(album.name)}"}>
-          <button class="album-actions" phx-click="move_to_album_popup" phx-value-album_id={album.id}>Move to <%= truncate(album.name) %></button>
+          <button class="album-actions" phx-click="move_to_album_popup" phx-value-album_id={album.id}>
+            Move to <%= truncate(album.name) %>
+          </button>
           <div class="cursor-default tooltiptext">Move to <%= album.name %></div>
         </li>
       <% end %>

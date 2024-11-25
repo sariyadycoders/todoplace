@@ -3,7 +3,16 @@ defmodule TodoplaceWeb.LiveAuth1 do
   @moduledoc false
   import Phoenix.LiveView
   import Phoenix.Component
-  alias Todoplace.{Accounts, Accounts.User, Subscriptions, UserCurrencies, Repo, Galleries, Albums}
+
+  alias Todoplace.{
+    Accounts,
+    Accounts.User,
+    Subscriptions,
+    UserCurrencies,
+    Repo,
+    Galleries,
+    Albums
+  }
 
   def on_mount(:default, params, session, socket) do
     socket |> allow_sandbox() |> mount(params, session)
@@ -124,10 +133,7 @@ defmodule TodoplaceWeb.LiveAuth1 do
 
     if Galleries.expired?(gallery) || subscription_expired || job_expiry do
       socket
-      |> push_redirect(
-        to:
-          ~p"/gallery-expired/#{gallery.client_link_hash}"
-      )
+      |> push_redirect(to: ~p"/gallery-expired/#{gallery.client_link_hash}")
       |> halt()
     else
       socket

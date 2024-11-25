@@ -9,7 +9,8 @@ defmodule TodoplaceWeb.ActionSheetComponent do
     <div class="dialog">
       <h2 class="text-xs font-semibold tracking-widest text-gray-400 uppercase"><%= @title %></h2>
       <%= for %{title: title, action_event: event} <- @actions do %>
-        <button class="mt-4 btn-row"
+        <button
+          class="mt-4 btn-row"
           title={title}
           type="button"
           phx-click={event}
@@ -20,7 +21,12 @@ defmodule TodoplaceWeb.ActionSheetComponent do
         </button>
       <% end %>
 
-      <button class="w-full mt-8 btn-secondary" type="button" phx-click="modal" phx-value-action="close">
+      <button
+        class="w-full mt-8 btn-secondary"
+        type="button"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         Close
       </button>
     </div>

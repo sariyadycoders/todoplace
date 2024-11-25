@@ -4,7 +4,8 @@ defmodule Todoplace.Repo.Migrations.CreateUserPreferences do
   def change do
     create table(:user_preferences) do
       add :user_id, references(:users, on_delete: :delete_all), null: false
-      add :settings, :map, default: %{}  # Using a JSON field for flexible settings storage
+      # Using a JSON field for flexible settings storage
+      add :settings, :map, default: %{}
 
       timestamps()
     end

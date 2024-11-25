@@ -99,18 +99,20 @@ defmodule TodoplaceWeb.Live.Admin.SystemSettings do
 
       <div>
         <div class="flex flex-col py-6 bg-white gap-2 sm:flex-row-reverse">
-          <button
-            class="px-8 btn-primary"
-            title="Save"
-          >
+          <button class="px-8 btn-primary" title="Save">
             Save
           </button>
-         <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Cancel
           </button>
         </div>
       </div>
-
     </div>
     """
   end
@@ -257,7 +259,6 @@ defmodule TodoplaceWeb.Live.Admin.SystemSettings do
     </form>
     """
   end
-
 
   @impl true
   def handle_event("change_tab", %{"tab" => tab}, socket) do

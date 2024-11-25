@@ -1,144 +1,236 @@
 <div class="px-4 w-full">
-    <div class="lg:mt-0 mt-28 w-full sticky top-10">
-      <div class="hidden lg:flex">
-        <span class="flex-col circleBtn">
-          <ul>
-            <li>
-              <.link navigate={~p"/jobs/#{@gallery.job_id}"}>
-                <.icon name="back" class="stroke-current w-14 h-14 text-blue-planning-300" />
-                <span>Back to job</span>
-              </.link>
-            </li>
-          </ul>
-        </span>
-      </div>
-      <.link navigate={~p"/jobs/#{@gallery.job_id}"}>
-        <div class="flex lg:hidden px-4 py-3 w-fit mb-2 items-center rounded-full shadow-lg bg-base-100">
-          <.icon name="back" class="stroke-current w-2 h-3 stroke-3 text-blue-planning-300"/>
-          <span class="flex ml-2 items-center font-bold text-lg">Back to job</span>
-        </div>
-      </.link>
-      <div class="mt-2 gallery-name-edit hidden lg:block">
-        <.edit_name_input
-          data={@gallery}
-          edit_name={@edit_name}
-          changeset={@changeset}
-          input_label="Gallery name"
-          main_class="flex-col"
-          back_path={~p"/jobs/#{@gallery.job_id}"}
-        />
-      </div>
-      <div class="grid grid-cols-1 p-5 mt-6 bg-base-200 rounded-xl grid-container w-full gap-y-1 mb-32 md:mb-16">
-        <div class="font-bold bg-base-250/10 rounded-lg cursor-pointer grid-item">
-          <.bar class="block" route={~p"/galleries/#{@gallery.id}?#{%{is_mobile: false}}"} gallery={@gallery} title="Overview" icon="globe-icon.png" arrow_show={@arrow_show == "overview"}>
-            <%= if expire_soon(@gallery) do %>
-              <.icon name="warning-orange-dark" class="inline-block w-4 h-4"/>
-            <% end %>
-          </.bar>
-          <%= if @arrow_show == "overview" do %>
-            <span class="arrow show lg:block hidden">
-              <.icon name="arrow-filled" class="text-base-200 float-right w-8 h-8 -mt-10 -mr-10" />
-            </span>
-          <% end %>
-        </div>
-        <div class="font-bold bg-base-250/10 rounded-lg cursor-pointer grid-item">
-          <div class="flex items-center lg:h-11 pr-4 lg:pl-2 lg:py-4 pl-3 py-3 overflow-hidden text-sm transition duration-300 ease-in-out rounded-lg text-ellipsis hover:text-blue-planning-300">
-            <.link class="flex w-full" navigate={get_select_photo_route(@socket, @albums, @gallery, if(@is_mobile, do: [is_mobile: false], else: []))}>
-              <div class="flex items-center justify-start flex-grow">
-                <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full bg-blue-planning-300">
-                  <.icon name="photos-2" class="w-4 h-4 text-white fill-current"/>
-                </div>
-                <div class="flex items-center justify-start ml-3 flex-grow">
-                  <span class={@arrow_show in ["photos", "albums"] && "text-blue-planning-300"}>Photos</span>
-                  <%= if @total_count do %>
-                    <.photo_count photos_count={@total_count} />
-                  <% end %>
-                </div>
-              </div>
-              <div class="flex px-2 items-center ml-auto">
-                <div class={if @photos_error_count > 0 && (@total_progress == 0 || @total_progress == 100), do: "flex", else: "hidden"}>
-                  <.icon name="warning-orange" class="w-4 h-4 stroke-2" />
-                </div>
-                <%= if @total_progress > 0 && @total_progress < 100 do %>
-                  <div class="flex sk-circle mr-2">
-                    <div class="sk-circle1 sk-child"></div>
-                    <div class="sk-circle2 sk-child"></div>
-                    <div class="sk-circle3 sk-child"></div>
-                    <div class="sk-circle4 sk-child"></div>
-                    <div class="sk-circle5 sk-child"></div>
-                    <div class="sk-circle6 sk-child"></div>
-                    <div class="sk-circle7 sk-child"></div>
-                    <div class="sk-circle8 sk-child"></div>
-                    <div class="sk-circle9 sk-child"></div>
-                    <div class="sk-circle10 sk-child"></div>
-                    <div class="sk-circle11 sk-child"></div>
-                    <div class="sk-circle12 sk-child"></div>
-                  </div>
-                  <div class="flex items-center font-normal text-gray-400">
-                      <%= @total_progress %>%
-                  </div>
-                <% end %>
-              </div>
+  <div class="lg:mt-0 mt-28 w-full sticky top-10">
+    <div class="hidden lg:flex">
+      <span class="flex-col circleBtn">
+        <ul>
+          <li>
+            <.link navigate={~p"/jobs/#{@gallery.job_id}"}>
+              <.icon name="back" class="stroke-current w-14 h-14 text-blue-planning-300" />
+              <span>Back to job</span>
             </.link>
-            <%= if length(@albums) >= 1 do %>
-              <div phx-click="select_albums_dropdown" phx-target={@myself} class="w-4 h-4 text-blue-planning-300 ml-auto">
-                <%= if @album_dropdown_show do %>
-                  <.icon name="up" class={classes("w-4 h-4 mr-2 stroke-current stroke-2 close-icon hover:text-blue-planning-300 text-blue-planning-300", %{"text-black" => @arrow_show not in ["photos", "albums"]})} />
-                <% else %>
-                  <.icon name="down" class={classes("w-4 h-4 mr-2 stroke-current stroke-2 open-icon hover:text-blue-planning-300 text-blue-planning-300", %{"text-black" => @arrow_show not in ["photos", "albums"]})} />
+          </li>
+        </ul>
+      </span>
+    </div>
+    <.link navigate={~p"/jobs/#{@gallery.job_id}"}>
+      <div class="flex lg:hidden px-4 py-3 w-fit mb-2 items-center rounded-full shadow-lg bg-base-100">
+        <.icon name="back" class="stroke-current w-2 h-3 stroke-3 text-blue-planning-300" />
+        <span class="flex ml-2 items-center font-bold text-lg">Back to job</span>
+      </div>
+    </.link>
+    <div class="mt-2 gallery-name-edit hidden lg:block">
+      <.edit_name_input
+        data={@gallery}
+        edit_name={@edit_name}
+        changeset={@changeset}
+        input_label="Gallery name"
+        main_class="flex-col"
+        back_path={~p"/jobs/#{@gallery.job_id}"}
+      />
+    </div>
+    <div class="grid grid-cols-1 p-5 mt-6 bg-base-200 rounded-xl grid-container w-full gap-y-1 mb-32 md:mb-16">
+      <div class="font-bold bg-base-250/10 rounded-lg cursor-pointer grid-item">
+        <.bar
+          class="block"
+          route={~p"/galleries/#{@gallery.id}?#{%{is_mobile: false}}"}
+          gallery={@gallery}
+          title="Overview"
+          icon="globe-icon.png"
+          arrow_show={@arrow_show == "overview"}
+        >
+          <%= if expire_soon(@gallery) do %>
+            <.icon name="warning-orange-dark" class="inline-block w-4 h-4" />
+          <% end %>
+        </.bar>
+        <%= if @arrow_show == "overview" do %>
+          <span class="arrow show lg:block hidden">
+            <.icon name="arrow-filled" class="text-base-200 float-right w-8 h-8 -mt-10 -mr-10" />
+          </span>
+        <% end %>
+      </div>
+      <div class="font-bold bg-base-250/10 rounded-lg cursor-pointer grid-item">
+        <div class="flex items-center lg:h-11 pr-4 lg:pl-2 lg:py-4 pl-3 py-3 overflow-hidden text-sm transition duration-300 ease-in-out rounded-lg text-ellipsis hover:text-blue-planning-300">
+          <.link
+            class="flex w-full"
+            navigate={
+              get_select_photo_route(
+                @socket,
+                @albums,
+                @gallery,
+                if(@is_mobile, do: [is_mobile: false], else: [])
+              )
+            }
+          >
+            <div class="flex items-center justify-start flex-grow">
+              <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full bg-blue-planning-300">
+                <.icon name="photos-2" class="w-4 h-4 text-white fill-current" />
+              </div>
+              <div class="flex items-center justify-start ml-3 flex-grow">
+                <span class={@arrow_show in ["photos", "albums"] && "text-blue-planning-300"}>
+                  Photos
+                </span>
+                <%= if @total_count do %>
+                  <.photo_count photos_count={@total_count} />
                 <% end %>
               </div>
-            <% end %>
-          </div>
-            <%= if @arrow_show in ["photos", "albums"] do %>
-              <span class="arrow show lg:block hidden">
-                <.icon name="arrow-filled" class="text-base-200 float-right w-8 h-8 -mt-10 -mr-10" />
-              </span>
-            <% end %>
-            <div class="bg-base-200 border-2 border-gray-200 rounded-b-lg">
-              <%= if @album_dropdown_show do %>
-                <%= if length(@albums) > 0 do %>
-                  <%= if standard?(@gallery) do %>
-                    <ul>
-                      <.li photos_count={if List.last(@albums).is_client_liked && length(@albums) == 1, do: nil, else: @unsorted_count} title={if List.last(@albums).is_client_liked && length(@albums) == 1, do: "All photos", else: "Unsorted photos"} name="unsorted" class="block" button_class={if @arrow_show == "photos" && @selected_album == nil , do: " text-blue-planning-300", else: "text-gray-700"} route={~p"/galleries/#{@gallery}/photos"}/>
-                    </ul>
-                  <% end %>
-                <% end %>
-                <%= for album <- @albums do %>
-                  <ul>
-                    <.li photos_count={Map.get(album, :photos_count)} title={album.name} is_finals={album.is_finals} is_proofing={album.is_proofing} class="block" name={icon_name(album)} button_class={if is_selected_album(album, @selected_album), do: " text-blue-planning-300", else: "text-gray-700"} route={~p"/galleries/#{@gallery.id}/albums/#{album.id}"}/>
-                  </ul>
-                <% end %>
+            </div>
+            <div class="flex px-2 items-center ml-auto">
+              <div class={
+                if @photos_error_count > 0 && (@total_progress == 0 || @total_progress == 100),
+                  do: "flex",
+                  else: "hidden"
+              }>
+                <.icon name="warning-orange" class="w-4 h-4 stroke-2" />
+              </div>
+              <%= if @total_progress > 0 && @total_progress < 100 do %>
+                <div class="flex sk-circle mr-2">
+                  <div class="sk-circle1 sk-child"></div>
+                  <div class="sk-circle2 sk-child"></div>
+                  <div class="sk-circle3 sk-child"></div>
+                  <div class="sk-circle4 sk-child"></div>
+                  <div class="sk-circle5 sk-child"></div>
+                  <div class="sk-circle6 sk-child"></div>
+                  <div class="sk-circle7 sk-child"></div>
+                  <div class="sk-circle8 sk-child"></div>
+                  <div class="sk-circle9 sk-child"></div>
+                  <div class="sk-circle10 sk-child"></div>
+                  <div class="sk-circle11 sk-child"></div>
+                  <div class="sk-circle12 sk-child"></div>
+                </div>
+                <div class="flex items-center font-normal text-gray-400">
+                  <%= @total_progress %>%
+                </div>
               <% end %>
             </div>
-        </div>
-        <%= if @currency in products_currency() do %>
-          <div class="font-bold bg-base-250/10 rounded-lg cursor-pointer grid-item">
-            <.bar class="block" route={~p"/galleries/#{@gallery}/product-previews"} gallery={@gallery} title="Product previews" icon="shop-icon.png" arrow_show={@arrow_show == "product_previews"}>
-              <%= if !Todoplace.Subscriptions.subscription_payment_method?(@gallery.photographer) do %>
-                <.icon name="warning-orange-dark" class="text-base-200 w-4 h-4" />
+          </.link>
+          <%= if length(@albums) >= 1 do %>
+            <div
+              phx-click="select_albums_dropdown"
+              phx-target={@myself}
+              class="w-4 h-4 text-blue-planning-300 ml-auto"
+            >
+              <%= if @album_dropdown_show do %>
+                <.icon
+                  name="up"
+                  class={
+                    classes(
+                      "w-4 h-4 mr-2 stroke-current stroke-2 close-icon hover:text-blue-planning-300 text-blue-planning-300",
+                      %{"text-black" => @arrow_show not in ["photos", "albums"]}
+                    )
+                  }
+                />
+              <% else %>
+                <.icon
+                  name="down"
+                  class={
+                    classes(
+                      "w-4 h-4 mr-2 stroke-current stroke-2 open-icon hover:text-blue-planning-300 text-blue-planning-300",
+                      %{"text-black" => @arrow_show not in ["photos", "albums"]}
+                    )
+                  }
+                />
               <% end %>
-            </.bar>
-            <%= if @arrow_show == "product_previews" do %>
-              <span class="arrow show lg:block hidden">
-                <.icon name="arrow-filled" class="text-base-200 float-right w-8 h-8 -mt-10 -mr-10" />
-              </span>
-            <% end %>
-          </div>
+            </div>
+          <% end %>
+        </div>
+        <%= if @arrow_show in ["photos", "albums"] do %>
+          <span class="arrow show lg:block hidden">
+            <.icon name="arrow-filled" class="text-base-200 float-right w-8 h-8 -mt-10 -mr-10" />
+          </span>
         <% end %>
+        <div class="bg-base-200 border-2 border-gray-200 rounded-b-lg">
+          <%= if @album_dropdown_show do %>
+            <%= if length(@albums) > 0 do %>
+              <%= if standard?(@gallery) do %>
+                <ul>
+                  <.li
+                    photos_count={
+                      if List.last(@albums).is_client_liked && length(@albums) == 1,
+                        do: nil,
+                        else: @unsorted_count
+                    }
+                    title={
+                      if List.last(@albums).is_client_liked && length(@albums) == 1,
+                        do: "All photos",
+                        else: "Unsorted photos"
+                    }
+                    name="unsorted"
+                    class="block"
+                    button_class={
+                      if @arrow_show == "photos" && @selected_album == nil,
+                        do: " text-blue-planning-300",
+                        else: "text-gray-700"
+                    }
+                    route={~p"/galleries/#{@gallery}/photos"}
+                  />
+                </ul>
+              <% end %>
+            <% end %>
+            <%= for album <- @albums do %>
+              <ul>
+                <.li
+                  photos_count={Map.get(album, :photos_count)}
+                  title={album.name}
+                  is_finals={album.is_finals}
+                  is_proofing={album.is_proofing}
+                  class="block"
+                  name={icon_name(album)}
+                  button_class={
+                    if is_selected_album(album, @selected_album),
+                      do: " text-blue-planning-300",
+                      else: "text-gray-700"
+                  }
+                  route={~p"/galleries/#{@gallery.id}/albums/#{album.id}"}
+                />
+              </ul>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <%= if @currency in products_currency() do %>
         <div class="font-bold bg-base-250/10 rounded-lg cursor-pointer grid-item">
-          <% title = if @currency in products_currency(), do: "Pricing & Print Credits", else: "Digital Pricing & Credits"%>
-          <.bar class="block" route={~p"/galleries/#{@gallery}/pricing"} gallery={@gallery} title={title} icon="money-bag.png" arrow_show={@arrow_show == "pricing"}>
-            <%= if expire_soon(@gallery) do %>
-              <.icon name="warning-orange-dark" class="inline-block w-4 h-4"/>
+          <.bar
+            class="block"
+            route={~p"/galleries/#{@gallery}/product-previews"}
+            gallery={@gallery}
+            title="Product previews"
+            icon="shop-icon.png"
+            arrow_show={@arrow_show == "product_previews"}
+          >
+            <%= if !Todoplace.Subscriptions.subscription_payment_method?(@gallery.photographer) do %>
+              <.icon name="warning-orange-dark" class="text-base-200 w-4 h-4" />
             <% end %>
           </.bar>
-          <%= if @arrow_show == "pricing" do %>
+          <%= if @arrow_show == "product_previews" do %>
             <span class="arrow show lg:block hidden">
               <.icon name="arrow-filled" class="text-base-200 float-right w-8 h-8 -mt-10 -mr-10" />
             </span>
           <% end %>
         </div>
+      <% end %>
+      <div class="font-bold bg-base-250/10 rounded-lg cursor-pointer grid-item">
+        <% title =
+          if @currency in products_currency(),
+            do: "Pricing & Print Credits",
+            else: "Digital Pricing & Credits" %>
+        <.bar
+          class="block"
+          route={~p"/galleries/#{@gallery}/pricing"}
+          gallery={@gallery}
+          title={title}
+          icon="money-bag.png"
+          arrow_show={@arrow_show == "pricing"}
+        >
+          <%= if expire_soon(@gallery) do %>
+            <.icon name="warning-orange-dark" class="inline-block w-4 h-4" />
+          <% end %>
+        </.bar>
+        <%= if @arrow_show == "pricing" do %>
+          <span class="arrow show lg:block hidden">
+            <.icon name="arrow-filled" class="text-base-200 float-right w-8 h-8 -mt-10 -mr-10" />
+          </span>
+        <% end %>
       </div>
-     </div>
+    </div>
   </div>
+</div>

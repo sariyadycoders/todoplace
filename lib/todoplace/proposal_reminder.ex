@@ -135,5 +135,8 @@ defmodule Todoplace.ProposalReminder do
 
   defp automated_emails_enabled?,
     do:
-      Enum.member?(Application.get_env(:todoplace, :feature_flags, []), :automated_proposal_emails)
+      Enum.member?(
+        Application.get_env(:todoplace, :feature_flags, []),
+        :automated_proposal_emails
+      )
 end

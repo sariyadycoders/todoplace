@@ -26,11 +26,13 @@ defmodule TodoplaceWeb.Live.Calendar.EditMarketingEvent do
     <div class="modal">
       <.close_x />
       <h1 class="mt-2 mb-4 text-xl"><strong class="font-bold">Edit marketing details</strong></h1>
-      <.form for={@changeset} :let={f} phx-change="validate" phx-submit="submit" phx-target={@myself}>
+      <.form :let={f} for={@changeset} phx-change="validate" phx-submit="submit" phx-target={@myself}>
         <div class="flex flex-col mt-4">
           <div class="grid sm:grid-cols-2 gap-7 mt-2">
             <div class="flex flex-col">
-              <label for={input_name(f, :thumbnail_url)} class="input-label font-bold">Thumbnail</label>
+              <label for={input_name(f, :thumbnail_url)} class="input-label font-bold">
+                Thumbnail
+              </label>
               <.image_upload_input
                 current_user={@current_user}
                 upload_folder="booking_event_image"
@@ -39,14 +41,29 @@ defmodule TodoplaceWeb.Live.Calendar.EditMarketingEvent do
                 class="aspect-[3/2] mt-2"
               >
                 <:image_slot>
-                  <.blurred_thumbnail class="h-full w-full rounded-lg" url={input_value(f, :thumbnail_url)} />
+                  <.blurred_thumbnail
+                    class="h-full w-full rounded-lg"
+                    url={input_value(f, :thumbnail_url)}
+                  />
                 </:image_slot>
               </.image_upload_input>
-              <.toggle_visibility title="Show event on my Public Profile?" event="toggle_visibility" myself={@myself} show_on_public_profile?={@show_on_public_profile?}/>
+              <.toggle_visibility
+                title="Show event on my Public Profile?"
+                event="toggle_visibility"
+                myself={@myself}
+                show_on_public_profile?={@show_on_public_profile?}
+              />
             </div>
             <div class="flex flex-col">
-              <%= labeled_input f, :name, label: "Name", placeholder: "Fall Mini-sessions", wrapper_class: "sm:col-span-2", label_class: "font-bold" %>
-              <label for={input_name(f, :description)} class="input-label mt-6 font-bold">Description</label>
+              <%= labeled_input(f, :name,
+                label: "Name",
+                placeholder: "Fall Mini-sessions",
+                wrapper_class: "sm:col-span-2",
+                label_class: "font-bold"
+              ) %>
+              <label for={input_name(f, :description)} class="input-label mt-6 font-bold">
+                Description
+              </label>
               <.quill_input
                 f={f}
                 html_field={:description}
@@ -61,10 +78,22 @@ defmodule TodoplaceWeb.Live.Calendar.EditMarketingEvent do
           </div>
         </div>
         <.footer>
-          <button class="btn-primary" title="Save" type="submit" disabled={!@changeset.valid?} phx-disable-with="Save">
+          <button
+            class="btn-primary"
+            title="Save"
+            type="submit"
+            disabled={!@changeset.valid?}
+            phx-disable-with="Save"
+          >
             Save
           </button>
-          <button class="btn-secondary" title="Close" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            class="btn-secondary"
+            title="Close"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Close
           </button>
         </.footer>
@@ -148,16 +177,17 @@ defmodule TodoplaceWeb.Live.Calendar.EditMarketingEvent do
     assigns = assign(assigns, class_1: class_1, class_2: class_2)
 
     ~H"""
-      <div class="flex mt-4 lg:mt-8">
-        <div class="flex items-center">
-          <div class="text-sm font-bold lg:text-normal text-black"><%= @title %></div>
-          <label class="relative ml-4 cursor-pointer">
-            <input type="checkbox" class="sr-only" phx-click={@event} phx-target={@myself}>
-            <div class={"block border rounded-full h-6 w-10 border-blue-planning-300 #{@class_1}"}></div>
-            <div class={"absolute w-4 h-4 rounded-full dot top-1 transition #{@class_2}"}></div>
-          </label>
-        </div>
+    <div class="flex mt-4 lg:mt-8">
+      <div class="flex items-center">
+        <div class="text-sm font-bold lg:text-normal text-black"><%= @title %></div>
+        <label class="relative ml-4 cursor-pointer">
+          <input type="checkbox" class="sr-only" phx-click={@event} phx-target={@myself} />
+          <div class={"block border rounded-full h-6 w-10 border-blue-planning-300 #{@class_1}"}>
+          </div>
+          <div class={"absolute w-4 h-4 rounded-full dot top-1 transition #{@class_2}"}></div>
+        </label>
       </div>
+    </div>
     """
   end
 end

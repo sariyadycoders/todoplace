@@ -119,7 +119,7 @@ defmodule Card do
   use Ecto.Schema
 
   schema "cards" do
-    field :concise_name, :string
+    field(:concise_name, :string)
   end
 
   def organization_card(card, organization_id, now, data \\ %{}) do

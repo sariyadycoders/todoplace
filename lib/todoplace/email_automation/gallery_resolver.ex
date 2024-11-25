@@ -88,7 +88,8 @@ defmodule Todoplace.EmailPresets.GalleryResolver do
           """
         ),
       "photography_company_s_name" => &organization(&1).name,
-      "photographer_first_name" => &(&1 |> photographer() |> Todoplace.Accounts.User.first_name()),
+      "photographer_first_name" =>
+        &(&1 |> photographer() |> Todoplace.Accounts.User.first_name()),
       "gallery_name" => &(&1 |> gallery() |> Map.get(:name)),
       "download_photos" =>
         &with(

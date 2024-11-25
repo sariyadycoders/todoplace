@@ -1,5 +1,6 @@
 defmodule TodoplaceWeb.UserController do
-  use TodoplaceWeb, :controller  # This imports Phoenix.Controller functions, including json/3
+  # This imports Phoenix.Controller functions, including json/3
+  use TodoplaceWeb, :controller
 
   alias Todoplace.Accounts
   alias Todoplace.Repo
@@ -12,7 +13,9 @@ defmodule TodoplaceWeb.UserController do
       {:ok, _user} ->
         conn
         |> put_status(:ok)
-        |> json(%{message: "FCM token updated successfully"})  # Returning JSON response with conn
+        # Returning JSON response with conn
+        |> json(%{message: "FCM token updated successfully"})
+
       {:error, _changeset} ->
         conn
         |> put_status(:bad_request)

@@ -402,9 +402,7 @@ defmodule TodoplaceWeb.Live.ClientLive.Index do
 
   def handle_info({:success_event, "view-gallery", %{gallery_id: gallery_id}}, socket) do
     socket
-    |> push_redirect(
-      to: ~p"/galleries/#{gallery_id}?#{%{is_mobile: false}}"
-    )
+    |> push_redirect(to: ~p"/galleries/#{gallery_id}?#{%{is_mobile: false}}")
     |> noreply()
   end
 
@@ -481,17 +479,33 @@ defmodule TodoplaceWeb.Live.ClientLive.Index do
 
   def select_dropdown(assigns) do
     ~H"""
-    <div id={@id} class={"relative w-full mt-3 md:mt-0"} data-offset-y="10" phx-hook="Select">
+    <div id={@id} class="relative w-full mt-3 md:mt-0" data-offset-y="10" phx-hook="Select">
       <h4 class="font-extrabold text-sm mb-1"><%= @title %></h4>
       <div class="flex flex-row items-center border rounded-lg p-3">
-          <span class="flex-shrink-0"><%= String.capitalize(String.replace(@selected_option, "_", " ")) %></span>
-          <.icon name="down" class="flex-shrink-0 w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
-          <.icon name="up" class="flex-shrink-0 hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon" />
+        <span class="flex-shrink-0">
+          <%= String.capitalize(String.replace(@selected_option, "_", " ")) %>
+        </span>
+        <.icon
+          name="down"
+          class="flex-shrink-0 w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon"
+        />
+        <.icon
+          name="up"
+          class="flex-shrink-0 hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon"
+        />
       </div>
       <ul class="absolute z-30 hidden w-full md:w-44 mt-2 bg-white toggle rounded-md popover-content border shadow-lg">
         <%= for option <- @options_list do %>
-          <li id={option.id} target-class="toggle-it" parent-class="toggle" toggle-type="selected-active" phx-hook="ToggleSiblings"
-          class="flex items-center justify-between py-1.5 hover:bg-blue-planning-100 hover:rounded-md" phx-click={"apply-filter-#{@id}"} phx-value-option={option.id}>
+          <li
+            id={option.id}
+            target-class="toggle-it"
+            parent-class="toggle"
+            toggle-type="selected-active"
+            phx-hook="ToggleSiblings"
+            class="flex items-center justify-between py-1.5 hover:bg-blue-planning-100 hover:rounded-md"
+            phx-click={"apply-filter-#{@id}"}
+            phx-value-option={option.id}
+          >
             <button id={option.id} class="album-select"><%= option.title %></button>
             <%= if option.id == @selected_option do %>
               <.icon name="tick" class="w-6 h-5 mr-1 toggle-it text-blue-planning-300" />
@@ -505,59 +519,128 @@ defmodule TodoplaceWeb.Live.ClientLive.Index do
 
   def tags(assigns) do
     ~H"""
-      <div class="flex-wrap items-center sm:col-span-2 sm:flex gap-2 sm:gap-0">
-        <%= if Enum.empty?(Clients.client_tags(@client)) do%>
-            <p><%= "" %></p>
-        <% else %>
-          <%= for tag <- Clients.client_tags(@client) do%>
-            <span class="mb-2 inline-block mt-1 pb-1 text-s bg-gray-200 text-gray-800 px-2 mr-1 rounded" phx-value-client_id={@client.id} phx-value={tag}>
-              <%= String.capitalize(tag) %>
-              <%= if tag not in @job_types do %>
-                <a class="text-gray-800 hover:text-gray-600" phx-click="delete-tag" phx-value-client_id={@client.id} phx-value-tag={tag}>&times</a>
-              <% end %>
-            </span>
-            <% end %>
-        <% end %>
-        <%= if is_nil(@client.archived_at) do %>
-          <span class="cursor-pointer">
-            <%= if Changeset.get_field(@tags_changeset, :client_id) == @client.id do%>
-              <div class="relative flex">
-                <input type="text" autofocus class="border-gray-600 border pl-2 rounded w-24" id={"save-tags-client-#{@client.id}"} name="client_tag_values" phx-debounce="500" spellcheck="false" placeholder="Add tag..." phx-window-keydown="save-tags" phx-value-client_id={@client.id} />
-                <a class="absolute top-0 bottom-0 flex flex-row items-center text-xs text-gray-400 mr-1 right-0">
-                  <span phx-click="close-tags" phx-value-client-id={@client.id} class="cursor-pointer">
-                    <.icon name="close-x" class="w-3 fill-current stroke-current stroke-2 close-icon text-gray-600" />
-                  </span>
-                </a>
-              </div>
-            <% else %>
-              <.icon_button icon="plus" color="gray-400" class="border-gray-600 hover:border-gray-600 bg-white rounded" icon_class="w-2 h-3" phx-click="add-tags" phx-value-client_id={"#{@client.id}"} />
+    <div class="flex-wrap items-center sm:col-span-2 sm:flex gap-2 sm:gap-0">
+      <%= if Enum.empty?(Clients.client_tags(@client)) do %>
+        <p><%= "" %></p>
+      <% else %>
+        <%= for tag <- Clients.client_tags(@client) do %>
+          <span
+            class="mb-2 inline-block mt-1 pb-1 text-s bg-gray-200 text-gray-800 px-2 mr-1 rounded"
+            phx-value-client_id={@client.id}
+            phx-value={tag}
+          >
+            <%= String.capitalize(tag) %>
+            <%= if tag not in @job_types do %>
+              <a
+                class="text-gray-800 hover:text-gray-600"
+                phx-click="delete-tag"
+                phx-value-client_id={@client.id}
+                phx-value-tag={tag}
+              >
+                &times
+              </a>
             <% end %>
           </span>
         <% end %>
-      </div>
+      <% end %>
+      <%= if is_nil(@client.archived_at) do %>
+        <span class="cursor-pointer">
+          <%= if Changeset.get_field(@tags_changeset, :client_id) == @client.id do %>
+            <div class="relative flex">
+              <input
+                type="text"
+                autofocus
+                class="border-gray-600 border pl-2 rounded w-24"
+                id={"save-tags-client-#{@client.id}"}
+                name="client_tag_values"
+                phx-debounce="500"
+                spellcheck="false"
+                placeholder="Add tag..."
+                phx-window-keydown="save-tags"
+                phx-value-client_id={@client.id}
+              />
+              <a class="absolute top-0 bottom-0 flex flex-row items-center text-xs text-gray-400 mr-1 right-0">
+                <span phx-click="close-tags" phx-value-client-id={@client.id} class="cursor-pointer">
+                  <.icon
+                    name="close-x"
+                    class="w-3 fill-current stroke-current stroke-2 close-icon text-gray-600"
+                  />
+                </span>
+              </a>
+            </div>
+          <% else %>
+            <.icon_button
+              icon="plus"
+              color="gray-400"
+              class="border-gray-600 hover:border-gray-600 bg-white rounded"
+              icon_class="w-2 h-3"
+              phx-click="add-tags"
+              phx-value-client_id={"#{@client.id}"}
+            />
+          <% end %>
+        </span>
+      <% end %>
+    </div>
     """
   end
 
   def actions(assigns) do
     ~H"""
-    <div class="flex items-center md:ml-auto w-full md:w-auto left-3 sm:left-8" data-offset-x="-21" phx-update="ignore" data-placement="bottom-end" phx-hook="Select" id={"manage-client-#{@client.id}"}>
-      <button {testid("actions")} title="Manage" class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full">
+    <div
+      class="flex items-center md:ml-auto w-full md:w-auto left-3 sm:left-8"
+      data-offset-x="-21"
+      phx-update="ignore"
+      data-placement="bottom-end"
+      phx-hook="Select"
+      id={"manage-client-#{@client.id}"}
+    >
+      <button
+        {testid("actions")}
+        title="Manage"
+        class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full"
+      >
         Actions
-        <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-        <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+        <.icon
+          name="down"
+          class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+        />
+        <.icon
+          name="up"
+          class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+        />
       </button>
 
       <div class="z-10 flex flex-col hidden w-44 bg-white border rounded-lg shadow-lg popover-content">
         <%= if is_nil(@client.archived_at) do %>
           <%= for %{title: title, action: action, icon: icon} <- actions() do %>
-            <button title={title} type="button" phx-click={action} phx-value-id={@client.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-              <.icon name={icon} class={classes("inline-block w-4 h-4 mr-3 fill-current", %{"text-red-sales-300" => icon == "trash", "text-blue-planning-300" => icon != "trash"})} />
+            <button
+              title={title}
+              type="button"
+              phx-click={action}
+              phx-value-id={@client.id}
+              class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+            >
+              <.icon
+                name={icon}
+                class={
+                  classes("inline-block w-4 h-4 mr-3 fill-current", %{
+                    "text-red-sales-300" => icon == "trash",
+                    "text-blue-planning-300" => icon != "trash"
+                  })
+                }
+              />
               <%= title %>
             </button>
           <% end %>
         <% else %>
-          <button title="Unarchive" type="button" phx-click="confirm-unarchive" phx-value-id={@client.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-            <.icon name="plus" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300"/>
+          <button
+            title="Unarchive"
+            type="button"
+            phx-click="confirm-unarchive"
+            phx-value-id={@client.id}
+            class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+          >
+            <.icon name="plus" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300" />
             Unarchive
           </button>
         <% end %>

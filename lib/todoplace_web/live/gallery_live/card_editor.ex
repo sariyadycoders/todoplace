@@ -94,12 +94,29 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
     ~H"""
     <div class="relative mx-auto max-w-screen-xl">
       <div class="fixed top-0 md:px-6 px-2 max-w-screen-xl w-full z-40 bg-white">
-        <.live_component module={TodoplaceWeb.GalleryLive.ClientMenuComponent} id={@gallery.id} cart_count={@cart_count} live_action={@live_action} gallery={@gallery} album={@album} is_finals={@album && @album.is_finals} client_email={@client_email} credits_available={@credits_available} />
+        <.live_component
+          module={TodoplaceWeb.GalleryLive.ClientMenuComponent}
+          id={@gallery.id}
+          cart_count={@cart_count}
+          live_action={@live_action}
+          gallery={@gallery}
+          album={@album}
+          is_finals={@album && @album.is_finals}
+          client_email={@client_email}
+          credits_available={@credits_available}
+        />
       </div>
 
-      <.credits_available_mobile_header organization={@organization} open_profile_logout?={@open_profile_logout?} credits_available={@credits_available} client_email={@client_email} gallery={@gallery} socket={@socket} />
+      <.credits_available_mobile_header
+        organization={@organization}
+        open_profile_logout?={@open_profile_logout?}
+        credits_available={@credits_available}
+        client_email={@client_email}
+        gallery={@gallery}
+        socket={@socket}
+      />
 
-      <hr>
+      <hr />
       <.step {assigns} />
     </div>
     """
@@ -111,27 +128,27 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
     ~H"""
     <div class="px-6 pt-5 mx-auto lg:pt-10 max-w-screen-xl">
       <div class="sticky top-10 lg:top-20 pt-8 lg:pt-4 pb-4 z-10 bg-white max-w-screen-xl w-full">
-      <nav class="pb-7 text-base-250">
-        <ol class="flex items-center list-reset">
-          <li>
-            <.link navigate={@checkout_routes.home_page}>
-            <%= if @album && @album.is_finals, do: "Album Home", else: "Gallery Home" %>
-            </.link>
-          </li>
+        <nav class="pb-7 text-base-250">
+          <ol class="flex items-center list-reset">
+            <li>
+              <.link navigate={@checkout_routes.home_page}>
+                <%= if @album && @album.is_finals, do: "Album Home", else: "Gallery Home" %>
+              </.link>
+            </li>
 
-          <li><.icon name="forth" class="w-2 h-2 mx-1 stroke-2"/></li>
+            <li><.icon name="forth" class="w-2 h-2 mx-1 stroke-2" /></li>
 
-          <li>
-            <.link navigate={self_path(@socket, @gallery, @album)} class="font-bold">
-              Choose occasion
-            </.link>
-          </li>
-        </ol>
-      </nav>
+            <li>
+              <.link navigate={self_path(@socket, @gallery, @album)} class="font-bold">
+                Choose occasion
+              </.link>
+            </li>
+          </ol>
+        </nav>
 
-      <h1 class="text-2xl sm:text-4xl">
-        Choose occasion
-      </h1>
+        <h1 class="text-2xl sm:text-4xl">
+          Choose occasion
+        </h1>
       </div>
 
       <ul class="pt-6 pb-16 grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -151,29 +168,41 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
 
   defp step(%{show_filter_form: true} = assigns) do
     ~H"""
-      <div class="px-6 pt-5 mx-auto lg:pt-10 max-w-screen-xl">
-        <div id="filters" class="absolute top-0 left-0 z-50 w-screen min-h-screen p-8 bg-base-100">
-          <button phx-click="toggle-filter-form" class="block mt-6 mb-10">
-            <.icon name="close-x" class="w-5 h-5 stroke-current"/>
+    <div class="px-6 pt-5 mx-auto lg:pt-10 max-w-screen-xl">
+      <div id="filters" class="absolute top-0 left-0 z-50 w-screen min-h-screen p-8 bg-base-100">
+        <button phx-click="toggle-filter-form" class="block mt-6 mb-10">
+          <.icon name="close-x" class="w-5 h-5 stroke-current" />
+        </button>
+
+        <.form
+          :let={_f}
+          for={%{}}
+          as={:filter}
+          method="get"
+          phx-change="apply-filters"
+          id="filter-form"
+        >
+          <.ul
+            filter={@filter}
+            nested_list_class="mb-8 border shadow-lg border-base-200"
+            button_class="flex items-center w-full py-2 text-2xl font-semibold"
+            options_icon_class="mt-3 right-10 peer-checked:text-base-300"
+            ,
+            is_mobile={true}
+          />
+
+          <.filter_option_pills filter={@filter} />
+
+          <button
+            type="button"
+            phx-click="toggle-filter-form"
+            class="flex py-2.5 mt-20 text-xl border border-base-300 justify-center items-center font-medium w-full"
+          >
+            Show results
           </button>
-
-          <.form :let={_f} for={%{}} as={:filter} method="get" phx-change="apply-filters" id="filter-form">
-            <.ul
-              filter={@filter}
-              nested_list_class="mb-8 border shadow-lg border-base-200"
-              button_class="flex items-center w-full py-2 text-2xl font-semibold"
-              options_icon_class="mt-3 right-10 peer-checked:text-base-300",
-              is_mobile={true}
-            />
-
-            <.filter_option_pills filter={@filter} />
-
-            <button type="button" phx-click="toggle-filter-form" class="flex py-2.5 mt-20 text-xl border border-base-300 justify-center items-center font-medium w-full">
-              Show results
-            </button>
-          </.form>
-        </div>
+        </.form>
       </div>
+    </div>
     """
   end
 
@@ -185,12 +214,12 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
         <nav class="mb-9 text-base-250">
           <ol class="flex items-center list-reset">
             <li>
-            <.link navigate={@checkout_routes.home_page}>
-              <%= if @album && @album.is_finals, do: "Album Home", else: "Gallery Home" %>
-            </.link>
+              <.link navigate={@checkout_routes.home_page}>
+                <%= if @album && @album.is_finals, do: "Album Home", else: "Gallery Home" %>
+              </.link>
             </li>
 
-            <li><.icon name="forth" class="w-2 h-2 mx-1 stroke-2"/></li>
+            <li><.icon name="forth" class="w-2 h-2 mx-1 stroke-2" /></li>
 
             <li>
               <.link navigate={self_path(@socket, @gallery, @album)}>
@@ -198,10 +227,13 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
               </.link>
             </li>
 
-            <li><.icon name="forth" class="w-2 h-2 mx-1 stroke-2"/></li>
+            <li><.icon name="forth" class="w-2 h-2 mx-1 stroke-2" /></li>
 
             <li>
-              <.link navigate={self_path(@socket, @gallery, @album, %{"occasion_id" => @occasion.id})} class="font-bold capitalize">
+              <.link
+                navigate={self_path(@socket, @gallery, @album, %{"occasion_id" => @occasion.id})}
+                class="font-bold capitalize"
+              >
                 <%= @occasion.name %>
               </.link>
             </li>
@@ -213,43 +245,61 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
         </h1>
 
         <div class="flex items-end justify-between mb-7 lg:mb-2">
-          <button class="flex py-2.5 px-4 text-xl border border-base-300 items-center font-medium lg:hidden" phx-click="toggle-filter-form">
-            Filters
-
-            <.icon name="funnel" class="w-4 h-4 ml-3" />
+          <button
+            class="flex py-2.5 px-4 text-xl border border-base-300 items-center font-medium lg:hidden"
+            phx-click="toggle-filter-form"
+          >
+            Filters <.icon name="funnel" class="w-4 h-4 ml-3" />
           </button>
 
           <.filter_navbar {assigns} />
-          <p class="font-medium text-base-250">Showing <%= @filtered_count %> of <%= @total_count %> designs</p>
+          <p class="font-medium text-base-250">
+            Showing <%= @filtered_count %> of <%= @total_count %> designs
+          </p>
         </div>
 
-        <hr class="border-base-225">
+        <hr class="border-base-225" />
 
-        <.form :let={_f} for={%{}} as={:pills} method="get" phx-change="apply-filters" class="pb-6 relative">
+        <.form
+          :let={_f}
+          for={%{}}
+          as={:pills}
+          method="get"
+          phx-change="apply-filters"
+          class="pb-6 relative"
+        >
           <%= for %{id: filter_id, options: options} <- @filter, %{id: option_id, checked: true} <- options do %>
-            <input type="hidden" name={"filter[#{filter_id}][]"} value={option_id}/>
+            <input type="hidden" name={"filter[#{filter_id}][]"} value={option_id} />
           <% end %>
 
           <.filter_option_pills filter={@filter} />
         </.form>
       </div>
 
-        <ul class={"relative pt-6 grid grid-cols-2 lg:grid-cols-4 gap-6 #{top(@filter_applied?)}"} id="design-grid" phx-update={@update} phx-hook="InfiniteScroll" data-page={@page} data-threshold="75">
-          <%= for {design, design_index} <- @designs |> Enum.with_index() do %>
-            <li id={"design-#{design.id}"}>
-                <.img_box
-                  src={design.preview_url}
-                  card_design={true}
-                  value={design.id}
-                  img_index={design_index}
-                  hide_next={if @toggle_arrows? == design_index, do: true, else: false}
-                  hide_prev={if @toggle_arrows? == design_index, do: false, else: true}/>
+      <ul
+        class={"relative pt-6 grid grid-cols-2 lg:grid-cols-4 gap-6 #{top(@filter_applied?)}"}
+        id="design-grid"
+        phx-update={@update}
+        phx-hook="InfiniteScroll"
+        data-page={@page}
+        data-threshold="75"
+      >
+        <%= for {design, design_index} <- @designs |> Enum.with_index() do %>
+          <li id={"design-#{design.id}"}>
+            <.img_box
+              src={design.preview_url}
+              card_design={true}
+              value={design.id}
+              img_index={design_index}
+              hide_next={if @toggle_arrows? == design_index, do: true, else: false}
+              hide_prev={if @toggle_arrows? == design_index, do: false, else: true}
+            />
 
-                <h3 class="pt-2 text-lg"><%= design.name %></h3>
-                <p class="mt-1 text-sm text-base-250"><%= photo_range_summary(design) %></p>
-            </li>
-          <% end %>
-        </ul>
+            <h3 class="pt-2 text-lg"><%= design.name %></h3>
+            <p class="mt-1 text-sm text-base-250"><%= photo_range_summary(design) %></p>
+          </li>
+        <% end %>
+      </ul>
     </div>
     """
   end
@@ -387,7 +437,15 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
   # for desktop view
   defp filter_navbar(assigns) do
     ~H"""
-    <.form :let={_f} for={%{}} as={:filter} method="get" phx-change="apply-filters" id="filter-form" class="hidden lg:block">
+    <.form
+      :let={_f}
+      for={%{}}
+      as={:filter}
+      method="get"
+      phx-change="apply-filters"
+      id="filter-form"
+      class="hidden lg:block"
+    >
       <nav class="bg-white">
         <div class="container flex flex-wrap justify-between items-center mx-auto">
           <div phx-click-away="close-filter-dropdown" class="w-auto">
@@ -412,16 +470,25 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
     <ul class={@main_list_class}>
       <%= for %{id: filter_id, name: name, options: options, open: open} <- @filter do %>
         <li>
-          <button type="button" class={@button_class} value={filter_id} phx-value-is_unique={true} phx-click="toggle-open-filter">
+          <button
+            type="button"
+            class={@button_class}
+            value={filter_id}
+            phx-value-is_unique={true}
+            phx-click="toggle-open-filter"
+          >
             <%= name %>
-            <.icon name={if open, do: "up", else: "down"} class="w-2 h-2 ml-2.5 stroke-current stroke-2"/>
+            <.icon
+              name={if open, do: "up", else: "down"}
+              class="w-2 h-2 ml-2.5 stroke-current stroke-2"
+            />
           </button>
-            <ul class={classes(@nested_list_class, %{"hidden" => not(open)})}>
-              <.filter_options options={options} filter_id={filter_id} icon_class={@options_icon_class} />
-            </ul>
-            <%= if @is_mobile && !open do %>
-              <hr class="mb-8">
-            <% end %>
+          <ul class={classes(@nested_list_class, %{"hidden" => not open})}>
+            <.filter_options options={options} filter_id={filter_id} icon_class={@options_icon_class} />
+          </ul>
+          <%= if @is_mobile && !open do %>
+            <hr class="mb-8" />
+          <% end %>
         </li>
       <% end %>
     </ul>
@@ -434,8 +501,18 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
     ~H"""
     <%= for %{id: option_id, checked: checked} = option <- @options, dom_id = Enum.join([@filter_id, option_id], "-") do %>
       <li>
-        <input type="checkbox" id={dom_id} name={"filter[#{@filter_id}][]"} value={option_id} checked={checked} class="hidden peer cursor-pointer"/>
-        <.icon name="checkmark" class={"absolute w-8 h-4 stroke-current #{!checked && 'hidden'} #{@icon_class}"} />
+        <input
+          type="checkbox"
+          id={dom_id}
+          name={"filter[#{@filter_id}][]"}
+          value={option_id}
+          checked={checked}
+          class="hidden peer cursor-pointer"
+        />
+        <.icon
+          name="checkmark"
+          class={"absolute w-8 h-4 stroke-current #{!checked && 'hidden'} #{@icon_class}"}
+        />
 
         <label for={dom_id} class="block px-5 py-3 hover:bg-base-200 peer-checked:bg-base-200">
           <.filter_option_label option={option} />
@@ -450,10 +527,10 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
     <div class="flex items-center leading-snug capitalize cursor-pointer">
       <%= case @option do %>
         <% %{name: name, swatch: {r,g,b}} -> %>
-            <div style={"background-color:rgb(#{r},#{g},#{b})"} class="w-4 h-4 mr-2"></div>
-            <%= name %>
-
-          <% %{name: name} -> %> <%= name %>
+          <div style={"background-color:rgb(#{r},#{g},#{b})"} class="w-4 h-4 mr-2"></div>
+          <%= name %>
+        <% %{name: name} -> %>
+          <%= name %>
       <% end %>
     </div>
     """
@@ -461,20 +538,24 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
 
   defp filter_option_pills(assigns) do
     ~H"""
-      <ul class="flex flex-wrap w-full" {testid("pills")}>
-        <%= for %{id: filter_id, options: options} <- @filter, %{checked: true, id: option_id} = option <- options do %>
-          <.filter_li class="border border-base-250 text-base-250">
-            <input type="checkbox" class="hidden" value={option_id} name={"filter[remove][#{filter_id}][]"}/>
-            <.filter_option_label option={option} />
-          </.filter_li>
-        <% end %>
-        <%= if Enum.any?(@filter, fn %{options: options} -> Enum.any?(options, & &1.checked) end) do %>
-          <.filter_li class="text-base-300 cursor-pointer">
-            <input type="checkbox" class="hidden" value="clear all" name={"clear all"}/>
-            Clear all
-          </.filter_li>
-        <% end %>
-      </ul>
+    <ul class="flex flex-wrap w-full" {testid("pills")}>
+      <%= for %{id: filter_id, options: options} <- @filter, %{checked: true, id: option_id} = option <- options do %>
+        <.filter_li class="border border-base-250 text-base-250">
+          <input
+            type="checkbox"
+            class="hidden"
+            value={option_id}
+            name={"filter[remove][#{filter_id}][]"}
+          />
+          <.filter_option_label option={option} />
+        </.filter_li>
+      <% end %>
+      <%= if Enum.any?(@filter, fn %{options: options} -> Enum.any?(options, & &1.checked) end) do %>
+        <.filter_li class="text-base-300 cursor-pointer">
+          <input type="checkbox" class="hidden" value="clear all" name="clear all" /> Clear all
+        </.filter_li>
+      <% end %>
+    </ul>
     """
   end
 
@@ -532,34 +613,48 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
     assigns = assign(assigns, value: value)
 
     ~H"""
-      <div class="aspect-h-1 aspect-w-1">
-        <div class="relative bg-gradient-to-bl from-[#f5f6f7] to-[#ededed] flex flex-col justify-center group">
-          <%= if !@hide_prev do %>
-          <div phx-click="prev" phx-value-value={@value} phx-value-img_index={@img_index} class="z-30 left-0 absolute top-1/2 -translate-y-1/2 hidden group-hover:block">
+    <div class="aspect-h-1 aspect-w-1">
+      <div class="relative bg-gradient-to-bl from-[#f5f6f7] to-[#ededed] flex flex-col justify-center group">
+        <%= if !@hide_prev do %>
+          <div
+            phx-click="prev"
+            phx-value-value={@value}
+            phx-value-img_index={@img_index}
+            class="z-30 left-0 absolute top-1/2 -translate-y-1/2 hidden group-hover:block"
+          >
             <.icon name="back" class="w-6 h-6 cursor-pointer text-base-250" />
           </div>
-          <% end %>
-          <%= if !@hide_next do %>
-          <div phx-click="next" phx-value-value={@value} phx-value-img_index={@img_index} class="z-30 right-0 absolute top-1/2 -translate-y-1/2 hidden group-hover:block">
+        <% end %>
+        <%= if !@hide_next do %>
+          <div
+            phx-click="next"
+            phx-value-value={@value}
+            phx-value-img_index={@img_index}
+            class="z-30 right-0 absolute top-1/2 -translate-y-1/2 hidden group-hover:block"
+          >
             <.icon name="forth" class="w-6 h-6 cursor-pointer text-base-250" />
           </div>
-          <% end %>
-          <img class="object-scale-down min-h-0 p-6 drop-shadow-md" src={@src}/>
-          <div class="absolute right-0 left-0 mx-auto bottom-2 w-[90%] btn-primary hidden group-hover:block text-center hover:cursor-pointer" phx-click="open-editor" phx-value-value={@value}>
-            Continue with this design
-          </div>
+        <% end %>
+        <img class="object-scale-down min-h-0 p-6 drop-shadow-md" src={@src} />
+        <div
+          class="absolute right-0 left-0 mx-auto bottom-2 w-[90%] btn-primary hidden group-hover:block text-center hover:cursor-pointer"
+          phx-click="open-editor"
+          phx-value-value={@value}
+        >
+          Continue with this design
         </div>
       </div>
+    </div>
     """
   end
 
   defp img_box(assigns) do
     ~H"""
-      <div class="aspect-h-1 aspect-w-1">
-        <div class="bg-gradient-to-bl from-[#f5f6f7] to-[#ededed] flex flex-col justify-center">
-          <img class="object-scale-down min-h-0 p-6 drop-shadow-md" src={@src}/>
-        </div>
+    <div class="aspect-h-1 aspect-w-1">
+      <div class="bg-gradient-to-bl from-[#f5f6f7] to-[#ededed] flex flex-col justify-center">
+        <img class="object-scale-down min-h-0 p-6 drop-shadow-md" src={@src} />
       </div>
+    </div>
     """
   end
 
@@ -567,24 +662,22 @@ defmodule TodoplaceWeb.GalleryLive.CardEditor do
     assigns = Enum.into(assigns, %{class: ""})
 
     ~H"""
-      <li>
-        <label class={"mx-4 mt-7 first:ml-0 py-2.5 px-4 text-xl items-center justify-center font-medium flex #{@class}"}>
-          <%= render_slot(@inner_block) %>
-          <.icon name="close-x" class="w-3 h-3 ml-3 stroke-current stroke-[5px] cursor-pointer" />
-        </label>
-      </li>
+    <li>
+      <label class={"mx-4 mt-7 first:ml-0 py-2.5 px-4 text-xl items-center justify-center font-medium flex #{@class}"}>
+        <%= render_slot(@inner_block) %>
+        <.icon name="close-x" class="w-3 h-3 ml-3 stroke-current stroke-[5px] cursor-pointer" />
+      </label>
+    </li>
     """
   end
 
   defp self_path(socket, gallery, album, params \\ %{})
 
   defp self_path(socket, _gallery, %{is_finals: true} = album, params),
-    do:
-      ~p"/album/#{album.client_link_hash}/cards?#{params}"
+    do: ~p"/album/#{album.client_link_hash}/cards?#{params}"
 
   defp self_path(socket, gallery, _album, params),
-    do:
-      ~p"/album/#{gallery.client_link_hash}/cards?#{params}"
+    do: ~p"/album/#{gallery.client_link_hash}/cards?#{params}"
 
   def fetch(%{assigns: %{page: page, occasion: occasion, filter: filter}} = socket) do
     occasion_designs = occasion_designs_query(occasion)

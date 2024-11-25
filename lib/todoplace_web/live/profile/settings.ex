@@ -19,8 +19,17 @@ defmodule TodoplaceWeb.Live.Profile.Settings do
   @impl true
   def render(assigns) do
     ~H"""
-    <.settings_nav socket={@socket} live_action={@live_action} current_user={@current_user} intro_id="intro_settings_public_profile">
-      <div class="flex flex-col justify-between flex-1 mt-5 flex-grow-0 sm:flex-row" id="intercom" phx-hook="IntercomPush">
+    <.settings_nav
+      socket={@socket}
+      live_action={@live_action}
+      current_user={@current_user}
+      intro_id="intro_settings_public_profile"
+    >
+      <div
+        class="flex flex-col justify-between flex-1 mt-5 flex-grow-0 sm:flex-row"
+        id="intercom"
+        phx-hook="IntercomPush"
+      >
         <div>
           <h1 class="text-2xl font-bold" {testid("settings-heading")}>Public Profile</h1>
 
@@ -30,10 +39,21 @@ defmodule TodoplaceWeb.Live.Profile.Settings do
         </div>
         <div class="text-center md:flex items-center gap-0 content-start">
           <div class="flex flex-shrink-0">
-            <a href={~p"/package_templates?#{%{edit_photography_types: true}}"} class="text-right text-blue-planning-300 underline font-normal text-lg pt-0">Edit photography types</a>
+            <a
+              href={~p"/package_templates?#{%{edit_photography_types: true}}"}
+              class="text-right text-blue-planning-300 underline font-normal text-lg pt-0"
+            >
+              Edit photography types
+            </a>
           </div>
           <div class="fixed top-12 left-0 right-0 z-20 flex flex-shrink-0 w-full p-6 mt-1 bg-white sm:mt-0 sm:bottom-auto sm:static sm:items-start sm:w-auto">
-            <button type="button" phx-click="edit-profile" class="w-full px-8 text-center btn-primary ">Customize Profile</button>
+            <button
+              type="button"
+              phx-click="edit-profile"
+              class="w-full px-8 text-center btn-primary "
+            >
+              Customize Profile
+            </button>
           </div>
         </div>
       </div>
@@ -46,19 +66,35 @@ defmodule TodoplaceWeb.Live.Profile.Settings do
             <div class={"font-bold rounded-lg border border-base-200 py-2 #{if Profiles.enabled?(@organization), do: "select-all", else: "select-none"}"}>
               <%= @profile_url %>
             </div>
-            <button disabled={!Profiles.enabled?(@organization)} type="button" class={"self-auto w-auto py-3 mt-4 text-lg font-semibold border disabled:border-base-200 rounded-lg sm:self-end border-base-300 sm:w-36"} id="copy-public-profile-link" data-clipboard-text={@profile_url} phx-hook="Clipboard" data-intercom-event="Shared Public Profile">
-                <div class="hidden p-1 mt-1 text-sm rounded shadow bg-base-100" role="tooltip">Copied!</div>
-
-                Copy Link
+            <button
+              disabled={!Profiles.enabled?(@organization)}
+              type="button"
+              class="self-auto w-auto py-3 mt-4 text-lg font-semibold border disabled:border-base-200 rounded-lg sm:self-end border-base-300 sm:w-36"
+              id="copy-public-profile-link"
+              data-clipboard-text={@profile_url}
+              phx-hook="Clipboard"
+              data-intercom-event="Shared Public Profile"
+            >
+              <div class="hidden p-1 mt-1 text-sm rounded shadow bg-base-100" role="tooltip">
+                Copied!
+              </div>
+              Copy Link
             </button>
           </div>
         </.card>
 
         <.card title="Embed your lead form" class="intro-lead-form">
-          <p class="mt-4 text-base-250">Have your own website? No worries, we have a form for you to embed on your site. </p>
-            <button button type="button" class="self-auto w-auto py-3 mt-4 text-lg font-semibold border disabled:border-base-200 rounded-lg sm:self-end border-base-300 sm:w-36" phx-click="open-embed">
-              Preview form
-            </button>
+          <p class="mt-4 text-base-250">
+            Have your own website? No worries, we have a form for you to embed on your site.
+          </p>
+          <button
+            button
+            type="button"
+            class="self-auto w-auto py-3 mt-4 text-lg font-semibold border disabled:border-base-200 rounded-lg sm:self-end border-base-300 sm:w-36"
+            phx-click="open-embed"
+          >
+            Preview form
+          </button>
         </.card>
 
         <.card title="Enable/disable your public profile">

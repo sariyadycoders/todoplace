@@ -70,8 +70,8 @@ defmodule TodoplaceWeb.ProjectSchemaController do
     |> send_resp(200, project_file_structure)
   end
 
-    def get_project_context(conn, _params) do
-    project_context =  Todoplace.Shared.get_app_params() |> Jason.encode!()
+  def get_project_context(conn, _params) do
+    project_context = Todoplace.Shared.get_app_params() |> Jason.encode!()
 
     conn
     |> middleware(project_context)

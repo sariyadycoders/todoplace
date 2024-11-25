@@ -56,10 +56,7 @@ defmodule TodoplaceWeb.GalleryLive.Photos.PhotographerPhoto do
             0%
           </progress>
         </div>
-        <div
-          class="object-contain aspect-[6/4] max-h-full min-h-[100px] w-full"
-          alt=""
-        />
+        <div class="object-contain aspect-[6/4] max-h-full min-h-[100px] w-full" alt="" />
       <% else %>
         <div class="PhotoLoader grid place-items-center text-white absolute z-10 top-0 left-0 h-full w-full bg-gray-600/30 backdrop-blur-[1px]">
           <div class="flex gap-2 justify-center p-1 bg-white rounded-full">
@@ -94,9 +91,7 @@ defmodule TodoplaceWeb.GalleryLive.Photos.PhotographerPhoto do
           class="hover-drop-down"
           phx-click="download-photo"
           phx-target={@myself}
-          phx-value-uri={
-            ~p"/gallery/#{@client_link_hash}/photos/#{@photo.id}/download"
-          }
+          phx-value-uri={~p"/gallery/#{@client_link_hash}/photos/#{@photo.id}/download"}
         >
           Download photo
         </button>

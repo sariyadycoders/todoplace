@@ -7,23 +7,43 @@
         </h1>
       </div>
       <div class="gap-2 fixed top-12 left-0 right-0 z-20 md:bg-none bg-white flex flex-shrink-0 w-full sm:p-0 p-6 pb-2 mt-1 sm:mt-0 sm:bottom-auto sm:static sm:items-start sm:w-auto cursor-pointer">
-        <a id="gallery-settings" class="w-full md:w-auto btn-tertiary text-center lg:flex items-center bg-blue-planning-300 text-white hover:bg-blue-planning-300/75" href={~p"/galleries/settings"} title="Settings">
-          <.icon name="gear" class="inline-block w-4 h-4 mr-2"/>
-          Settings
+        <a
+          id="gallery-settings"
+          class="w-full md:w-auto btn-tertiary text-center lg:flex items-center bg-blue-planning-300 text-white hover:bg-blue-planning-300/75"
+          href={~p"/galleries/settings"}
+          title="Settings"
+        >
+          <.icon name="gear" class="inline-block w-4 h-4 mr-2" /> Settings
         </a>
-        <a {testid("create-a-gallery")} title="Create a gallery" class="w-full md:w-auto btn-primary text-center flex items-center" phx-click="create_gallery">
-          <.icon name="gallery" class="inline-block w-4 h-4 mr-2"/>
-          Create a gallery
+        <a
+          {testid("create-a-gallery")}
+          title="Create a gallery"
+          class="w-full md:w-auto btn-primary text-center flex items-center"
+          phx-click="create_gallery"
+        >
+          <.icon name="gallery" class="inline-block w-4 h-4 mr-2" /> Create a gallery
         </a>
       </div>
     </div>
-    <hr class="border-base-200 my-6"/>
+    <hr class="border-base-200 my-6" />
   </div>
 </header>
 <%= if Enum.empty? @galleries do %>
   <div class="px-6 py-2 center-container">
-    <.empty_state_base tour_embed="https://demo.arcade.software/FVJxmDikFo0OyhhV8raN?embed" headline="Meet Galleries" eyebrow_text="Galleries Product Tour" body="If you simply want to upload a gallery and get started selling products and digitals, this is the place for you!" third_party_padding="calc(66.66666666666666% + 41px)" show_dismiss={false}>
-      <a {testid("create-a-gallery")} title="Create a gallery" class="flex justify-center mt-5 text-lg px-7 btn-tertiary intro-galleries" phx-click="create_gallery">
+    <.empty_state_base
+      tour_embed="https://demo.arcade.software/FVJxmDikFo0OyhhV8raN?embed"
+      headline="Meet Galleries"
+      eyebrow_text="Galleries Product Tour"
+      body="If you simply want to upload a gallery and get started selling products and digitals, this is the place for you!"
+      third_party_padding="calc(66.66666666666666% + 41px)"
+      show_dismiss={false}
+    >
+      <a
+        {testid("create-a-gallery")}
+        title="Create a gallery"
+        class="flex justify-center mt-5 text-lg px-7 btn-tertiary intro-galleries"
+        phx-click="create_gallery"
+      >
         Create a gallery
       </a>
     </.empty_state_base>
@@ -37,76 +57,202 @@
     <hr class="md:block border-blue-planning-300 border-2 mt-4 mb-1 hidden" />
 
     <%= for {gallery, gallery_index} <- @galleries |> Enum.with_index() do %>
-      <div {testid("galleries-#{gallery.id}")} class="md:py-0 md:mt-2 md:mb-0 mb-8 md:pt-2 border border-base-200 rounded-lg md:border-none">
+      <div
+        {testid("galleries-#{gallery.id}")}
+        class="md:py-0 md:mt-2 md:mb-0 mb-8 md:pt-2 border border-base-200 rounded-lg md:border-none"
+      >
         <div class="relative md:grid md:grid-cols-2 flex flex-wrap my-4 md:mx-0 mx-4">
           <div class="flex flex-row align-top">
-            <.image_item socket={@socket} gallery={gallery} index={@index} gallery_index={gallery_index}/>
+            <.image_item
+              socket={@socket}
+              gallery={gallery}
+              index={@index}
+              gallery_index={gallery_index}
+            />
             <%= if disabled?(gallery) do %>
               <div class="flex items-center">
-                <span class="font-bold text-xs text-base-250 bg-slate-200 mb-8 ml-2 rounded px-1">Disabled</span>
+                <span class="font-bold text-xs text-base-250 bg-slate-200 mb-8 ml-2 rounded px-1">
+                  Disabled
+                </span>
               </div>
             <% end %>
           </div>
-          <hr class="block md:hidden base-250 w-full my-4"/>
+          <hr class="block md:hidden base-250 w-full my-4" />
 
           <div class="flex flex-wrap gap-3 items-center md:text-sm lg:text-base md:ml-auto md:w-auto w-full">
-            <a href={~p"/galleries/#{gallery.id}"} class={classes("flex flex-shrink-0 grow items-center justify-center text-center px-2 py-1 font-sans border rounded-lg text-white bg-blue-planning-300 hover:bg-blue-planning-300/75", %{"pointer-events-none bg-blue-planning-200 text-gray-200 border-gray-200" => disabled?(gallery)})}>
-              <.icon name="gallery" class={classes("w-4 h-4 fill-current text-white inline mr-2", %{"opacity-50" => disabled?(gallery)})} />
-              Go to gallery
+            <a
+              href={~p"/galleries/#{gallery.id}"}
+              class={
+                classes(
+                  "flex flex-shrink-0 grow items-center justify-center text-center px-2 py-1 font-sans border rounded-lg text-white bg-blue-planning-300 hover:bg-blue-planning-300/75",
+                  %{
+                    "pointer-events-none bg-blue-planning-200 text-gray-200 border-gray-200" =>
+                      disabled?(gallery)
+                  }
+                )
+              }
+            >
+              <.icon
+                name="gallery"
+                class={
+                  classes("w-4 h-4 fill-current text-white inline mr-2", %{
+                    "opacity-50" => disabled?(gallery)
+                  })
+                }
+              /> Go to gallery
             </a>
-            <button {testid("copy-link")} id="copy-link" class={classes("flex flex-shrink-0 grow items-center justify-center text-center px-2 py-1 font-sans border rounded-lg btn-tertiary text-blue-planning-300", %{"pointer-events-none text-gray-200 border-gray-200" => disabled?(gallery)})} data-clipboard-text={clip_board(@socket, gallery)} phx-hook="Clipboard">
-              <.icon name="anchor" class={classes("w-4 h-4 fill-current text-blue-planning-300 inline mr-2", %{"text-gray-200" => disabled?(gallery)})} />
-              Copy link
+            <button
+              {testid("copy-link")}
+              id="copy-link"
+              class={
+                classes(
+                  "flex flex-shrink-0 grow items-center justify-center text-center px-2 py-1 font-sans border rounded-lg btn-tertiary text-blue-planning-300",
+                  %{"pointer-events-none text-gray-200 border-gray-200" => disabled?(gallery)}
+                )
+              }
+              data-clipboard-text={clip_board(@socket, gallery)}
+              phx-hook="Clipboard"
+            >
+              <.icon
+                name="anchor"
+                class={
+                  classes("w-4 h-4 fill-current text-blue-planning-300 inline mr-2", %{
+                    "text-gray-200" => disabled?(gallery)
+                  })
+                }
+              /> Copy link
               <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
                 Copied!
               </div>
             </button>
-            <div id={"manage-#{gallery.id}"} phx-hook="Select" class="md:w-auto w-full" phx-update="ignore">
-              <button class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 md:w-auto w-full" id={"menu-button-#{gallery.id}"} phx-click="show_dropdown" phx-value-show_index={gallery_index}>
+            <div
+              id={"manage-#{gallery.id}"}
+              phx-hook="Select"
+              class="md:w-auto w-full"
+              phx-update="ignore"
+            >
+              <button
+                class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 md:w-auto w-full"
+                id={"menu-button-#{gallery.id}"}
+                phx-click="show_dropdown"
+                phx-value-show_index={gallery_index}
+              >
                 Actions
-                <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-                <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+                <.icon
+                  name="down"
+                  class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+                />
+                <.icon
+                  name="up"
+                  class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+                />
               </button>
               <div class="flex-col bg-white border rounded-lg shadow-lg popover-content z-20 hidden">
-                <.dropdown_item {assigns} id="edit_link" icon="pencil" title="Edit" action={"view_gallery"} value={gallery.id} disable={disabled?(gallery)} />
-                <.dropdown_item {assigns} id="go_to_job_link" icon="camera-check" title="Go to Job" action={"view_job"} value={gallery.job.id} disable={disabled?(gallery)} />
-                <.dropdown_item {assigns} id="send_email_link" icon="envelope" title="Send Email" action={"open_compose"} disable={disabled?(gallery)} />
+                <.dropdown_item
+                  {assigns}
+                  id="edit_link"
+                  icon="pencil"
+                  title="Edit"
+                  action="view_gallery"
+                  value={gallery.id}
+                  disable={disabled?(gallery)}
+                />
+                <.dropdown_item
+                  {assigns}
+                  id="go_to_job_link"
+                  icon="camera-check"
+                  title="Go to Job"
+                  action="view_job"
+                  value={gallery.job.id}
+                  disable={disabled?(gallery)}
+                />
+                <.dropdown_item
+                  {assigns}
+                  id="send_email_link"
+                  icon="envelope"
+                  title="Send Email"
+                  action="open_compose"
+                  disable={disabled?(gallery)}
+                />
                 <%= if Enum.any?(gallery.orders) do %>
                   <%= case disabled?(gallery) do %>
                     <% true -> %>
-                      <.dropdown_item {assigns} class="enable-link hover:cursor-pointer" icon="eye" title="Enable" action={"enable_gallery_popup"} value={gallery.id} />
+                      <.dropdown_item
+                        {assigns}
+                        class="enable-link hover:cursor-pointer"
+                        icon="eye"
+                        title="Enable"
+                        action="enable_gallery_popup"
+                        value={gallery.id}
+                      />
                     <% _ -> %>
-                      <.dropdown_item {assigns} class="disable-link hover:cursor-pointer" icon="closed-eye" title="Disable" action={"disable_gallery_popup"} value={gallery.id} />
+                      <.dropdown_item
+                        {assigns}
+                        class="disable-link hover:cursor-pointer"
+                        icon="closed-eye"
+                        title="Disable"
+                        action="disable_gallery_popup"
+                        value={gallery.id}
+                      />
                   <% end %>
                 <% else %>
-                  <.dropdown_item {assigns} class={classes("delete-link hover:cursor-pointer", %{"hidden" => disabled?(gallery)})} icon="trash" title="Delete" action={"delete_gallery_popup"} value={gallery.id} />
+                  <.dropdown_item
+                    {assigns}
+                    class={
+                      classes("delete-link hover:cursor-pointer", %{
+                        "hidden" => disabled?(gallery)
+                      })
+                    }
+                    icon="trash"
+                    title="Delete"
+                    action="delete_gallery_popup"
+                    value={gallery.id}
+                  />
                 <% end %>
               </div>
             </div>
           </div>
         </div>
-        <hr class="border-base-200 mt-5 col-span-5 md:block hidden"/>
+        <hr class="border-base-200 mt-5 col-span-5 md:block hidden" />
       </div>
     <% end %>
   </div>
 
   <div class="flex items-center px-6 pb-6 center-container mb-8">
-    <.form :let={f} for={%{}} as={:pagination} phx-change="page" class="flex items-center text-gray-500 rounded p-1 border cursor-pointer border-blue-planning-300">
-      <%= select f, :limit, [12, 24, 36, 48], value: @pagination.limit, class: "cursor-pointer"%>
+    <.form
+      :let={f}
+      for={%{}}
+      as={:pagination}
+      phx-change="page"
+      class="flex items-center text-gray-500 rounded p-1 border cursor-pointer border-blue-planning-300"
+    >
+      <%= select(f, :limit, [12, 24, 36, 48], value: @pagination.limit, class: "cursor-pointer") %>
     </.form>
 
     <div class="flex ml-2 text-xs font-bold text-gray-500">
-        Results: <%= @pagination.first_index %> – <%= @pagination.last_index %> of <%= @pagination.total_count %>
+      Results: <%= @pagination.first_index %> – <%= @pagination.last_index %> of <%= @pagination.total_count %>
     </div>
 
     <div class="flex items-center ml-auto">
-      <button class="flex items-center p-4 text-xs font-bold rounded disabled:text-gray-300 hover:bg-gray-100" title="Previous page" phx-click="page" phx-value-direction="back" disabled={is_nil(@pagination.before)} phx-value-cursor={@pagination.before}>
-        <.icon name="back" class="w-3 h-3 mr-1 stroke-current stroke-2" />
-        Prev
+      <button
+        class="flex items-center p-4 text-xs font-bold rounded disabled:text-gray-300 hover:bg-gray-100"
+        title="Previous page"
+        phx-click="page"
+        phx-value-direction="back"
+        disabled={is_nil(@pagination.before)}
+        phx-value-cursor={@pagination.before}
+      >
+        <.icon name="back" class="w-3 h-3 mr-1 stroke-current stroke-2" /> Prev
       </button>
-      <button class="flex items-center p-4 text-xs font-bold rounded disabled:text-gray-300 hover:bg-gray-100" title="Next page" phx-click="page" phx-value-direction="forth"  disabled={is_nil(@pagination.after)} phx-value-cursor={@pagination.after}>
-        Next
-        <.icon name="forth" class="w-3 h-3 ml-1 stroke-current stroke-2" />
+      <button
+        class="flex items-center p-4 text-xs font-bold rounded disabled:text-gray-300 hover:bg-gray-100"
+        title="Next page"
+        phx-click="page"
+        phx-value-direction="forth"
+        disabled={is_nil(@pagination.after)}
+        phx-value-cursor={@pagination.after}
+      >
+        Next <.icon name="forth" class="w-3 h-3 ml-1 stroke-current stroke-2" />
       </button>
     </div>
   </div>

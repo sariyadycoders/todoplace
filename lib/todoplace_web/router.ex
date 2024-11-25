@@ -19,7 +19,6 @@ defmodule TodoplaceWeb.Router do
 
     plug(:put_secure_browser_headers)
     plug(:fetch_current_user)
-
   end
 
   pipeline :browser_iframe do
@@ -150,7 +149,6 @@ defmodule TodoplaceWeb.Router do
     live("/automated-emails", Live.Admin.AutomatedEmails, :index)
 
     post("/users/log_in", UserAdminSessionController, :create)
-
   end
 
   ## Authentication routes
@@ -263,7 +261,6 @@ defmodule TodoplaceWeb.Router do
         :index,
         as: :home
       )
-
 
       live "/main", MainLive
 

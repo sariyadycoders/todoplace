@@ -37,7 +37,12 @@ defmodule TodoplaceWeb.Shared.PopupComponent do
 
       <.section {assigns} />
 
-      <button class="w-full mt-4 px-6 py-3 font-medium text-base-300 bg-white border border-base-300 rounded-lg hover:bg-base-300/10 focus:outline-none focus:ring-2 focus:ring-base-300/70 focus:ring-opacity-75" type="button" phx-click="modal" phx-value-action="close">
+      <button
+        class="w-full mt-4 px-6 py-3 font-medium text-base-300 bg-white border border-base-300 rounded-lg hover:bg-base-300/10 focus:outline-none focus:ring-2 focus:ring-base-300/70 focus:ring-opacity-75"
+        type="button"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         <%= @close_label %>
       </button>
     </div>

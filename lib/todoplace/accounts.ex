@@ -23,11 +23,9 @@ defmodule Todoplace.Accounts do
 
   ## Database getters
 
-
   def get_organization(organization_id) do
     Repo.get(Organization, organization_id)
   end
-
 
   def toggle_organization_status(organization, is_active) do
     organization_users = get_users_of_organization(organization.id)
@@ -45,7 +43,8 @@ defmodule Todoplace.Accounts do
         Todoplace.Cache.refresh_organization_cache(organization.id)
         {:ok, "inactive"}
 
-      _ -> {:error, "something happend wrong"}
+      _ ->
+        {:error, "something happend wrong"}
     end
   end
 
@@ -64,7 +63,6 @@ defmodule Todoplace.Accounts do
     |> Repo.get!(id)
     |> Repo.preload(organization_users: [user: [:user_organizations]])
   end
-
 
   @spec get_user_by_email(String.t()) :: User.t() | nil
   @doc """
@@ -108,7 +106,6 @@ defmodule Todoplace.Accounts do
     )
     |> Repo.all()
   end
-
 
   def create_user_organization(params) do
     %UserOrganization{}
@@ -211,15 +208,20 @@ defmodule Todoplace.Accounts do
     end)
     |> Multi.insert(:user_organization, fn %{user: user} ->
       %UserOrganization{}
-      |> UserOrganization.changeset(%{user_id: user.id, organization_id: user.organization_id, role: "admin", status: "Joined"})
+      |> UserOrganization.changeset(%{
+        user_id: user.id,
+        organization_id: user.organization_id,
+        role: "admin",
+        status: "Joined"
+      })
     end)
     |> Multi.run(:organization, fn _repo, %{user: user} ->
       if token do
         Todoplace.InviteToken.mark_as_used(token)
       else
         {:ok, nil}
-        end
-      end)
+      end
+    end)
     |> Repo.transaction()
     |> case do
       {:ok, %{user: user}} ->
@@ -227,7 +229,7 @@ defmodule Todoplace.Accounts do
 
       {:error, changeset} ->
         {:error, changeset}
-      end
+    end
   end
 
   @doc """
@@ -547,26 +549,29 @@ defmodule Todoplace.Accounts do
     |> Repo.transaction()
     |> case do
       {:ok, %{user: user}} ->
-
         Repo.get_by(UsersAuthMethod, user_id: user.id, auth_method_name: "email")
         |> case do
           nil ->
             {:ok, _} =
-            %UsersAuthMethod{}
-            |> UsersAuthMethod.changeset(%{user_id: user.id, auth_method_name: "email"})
-            |> Repo.insert()
+              %UsersAuthMethod{}
+              |> UsersAuthMethod.changeset(%{user_id: user.id, auth_method_name: "email"})
+              |> Repo.insert()
+
             {:ok, user}
 
-            _ -> {:ok, user}
+          _ ->
+            {:ok, user}
         end
 
-         case user_token do
-           nil -> :skip
-          %UserToken{token: token} ->  Todoplace.Cache.delete_user_data(token)
-         end
+        case user_token do
+          nil -> :skip
+          %UserToken{token: token} -> Todoplace.Cache.delete_user_data(token)
+        end
 
         {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
+
+      {:error, :user, changeset, _} ->
+        {:error, changeset}
     end
   end
 
@@ -574,7 +579,7 @@ defmodule Todoplace.Accounts do
         %Ueberauth.Auth{provider: provider, info: %Ueberauth.Auth.Info{name: name, email: email}} =
           auth,
         time_zone,
-         url,
+        url,
         onboarding_flow_source \\ []
       ) do
     case Repo.get_by(User, email: email) do
@@ -582,16 +587,20 @@ defmodule Todoplace.Accounts do
         Multi.new()
         |> Multi.insert(
           :user,
-          User.registration_changeset(%User{}, %{
-            email: email,
-            name: name,
-            time_zone: time_zone,
-            onboarding_flow_source: onboarding_flow_source,
-            organization: %{
-              organization_cards: OrganizationCard.for_new_changeset(),
-              gs_gallery_products: GlobalSettings.gallery_products_params()
-            }
-          }, password: false)
+          User.registration_changeset(
+            %User{},
+            %{
+              email: email,
+              name: name,
+              time_zone: time_zone,
+              onboarding_flow_source: onboarding_flow_source,
+              organization: %{
+                organization_cards: OrganizationCard.for_new_changeset(),
+                gs_gallery_products: GlobalSettings.gallery_products_params()
+              }
+            },
+            password: false
+          )
           |> Ecto.Changeset.put_change(:sign_up_auth_provider, provider)
         )
         |> Multi.insert(:user_organization, fn %{user: user} ->
@@ -621,7 +630,9 @@ defmodule Todoplace.Accounts do
             deliver_user_reset_password_instructions(user, url)
             add_auth_user_to_sendgrid(user)
             {:ok, user}
-          {:error, :user, changeset, _} -> {:error, changeset}
+
+          {:error, :user, changeset, _} ->
+            {:error, changeset}
         end
 
       user ->
@@ -633,13 +644,15 @@ defmodule Todoplace.Accounts do
               provider_user_id: auth.uid,
               auth_method_name: Atom.to_string(provider)
             }
+
             %UsersAuthMethod{}
             |> UsersAuthMethod.changeset(params)
             |> Repo.insert()
 
             {:ok, user}
 
-            _ -> {:ok, user}
+          _ ->
+            {:ok, user}
         end
     end
   end
@@ -834,7 +847,6 @@ defmodule Todoplace.Accounts do
         true
     end
   end
-
 
   defp token_expired?(invitation) do
     expiry_time = Timex.shift(invitation.inserted_at, days: 3)

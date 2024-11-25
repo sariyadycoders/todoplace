@@ -13,7 +13,10 @@ defmodule TodoplaceWeb.Live.Pricing.Category do
     <div>
       <div class="px-6 py-8 center-container">
         <div class="flex items-center">
-          <.live_link to={~p"/pricing"} class="flex items-center justify-center mr-4 rounded-full w-9 h-9 bg-blue-planning-300">
+          <.live_link
+            to={~p"/pricing"}
+            class="flex items-center justify-center mr-4 rounded-full w-9 h-9 bg-blue-planning-300"
+          >
             <.icon name="back" class="w-2 h-4 stroke-current stroke-2 text-base-100" />
           </.live_link>
 
@@ -25,8 +28,15 @@ defmodule TodoplaceWeb.Live.Pricing.Category do
         </div>
 
         <div class="flex items-end justify-between mt-4">
-          <h1 class="text-4xl font-bold">Adjust Pricing: <span class="font-medium"><%= @category.name %></span></h1>
-          <button title="Expand All" type="button" class="items-center hidden p-3 border rounded-lg sm:flex border-base-300" phx-click="toggle-expand-all">
+          <h1 class="text-4xl font-bold">
+            Adjust Pricing: <span class="font-medium"><%= @category.name %></span>
+          </h1>
+          <button
+            title="Expand All"
+            type="button"
+            class="items-center hidden p-3 border rounded-lg sm:flex border-base-300"
+            phx-click="toggle-expand-all"
+          >
             <%= if all_expanded?(@category.products, @expanded) do %>
               <.icon name="up" class="w-4 h-2 mr-2 stroke-current stroke-2" /> Collapse All
             <% else %>
@@ -39,11 +49,20 @@ defmodule TodoplaceWeb.Live.Pricing.Category do
 
     <div class="px-6 pt-8 center-container">
       <%= for product <- @category.products do %>
-        <.product product={product} user={@current_user} expanded={MapSet.member?(@expanded, product.id)} />
+        <.product
+          product={product}
+          user={@current_user}
+          expanded={MapSet.member?(@expanded, product.id)}
+        />
       <% end %>
     </div>
 
-    <button title="Expand All" type="button" class="flex items-center justify-center p-3 mx-6 mt-12 font-semibold border rounded-lg sm:hidden border-base-300" phx-click="toggle-expand-all">
+    <button
+      title="Expand All"
+      type="button"
+      class="flex items-center justify-center p-3 mx-6 mt-12 font-semibold border rounded-lg sm:hidden border-base-300"
+      phx-click="toggle-expand-all"
+    >
       <%= if all_expanded?(@category.products, @expanded) do %>
         <.icon name="up" class="w-4 h-2 mr-2 stroke-current stroke-2" /> Collapse All
       <% else %>
@@ -94,7 +113,13 @@ defmodule TodoplaceWeb.Live.Pricing.Category do
 
   defp product(assigns) do
     ~H"""
-    <.live_component module={__MODULE__.Product} product={@product} id={@product.id} expanded={@expanded} user={@user} />
+    <.live_component
+      module={__MODULE__.Product}
+      product={@product}
+      id={@product.id}
+      expanded={@expanded}
+      user={@user}
+    />
     """
   end
 

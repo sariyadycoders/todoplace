@@ -335,28 +335,29 @@ defmodule TodoplaceWeb.CoreComponents do
   def input(%{type: "currency"} = assigns) do
     assigns =
       Enum.into(assigns, %{currency_symbol: "$", currency: "USD"})
+
     ~H"""
-      <div phx-feedback-for={@name}>
-        <.local_label for={@id}><%= @label %></.local_label>
-        <input
-          type={"text"}
-          name={@name}
-          id={@id}
-          phx-hook="PriceMask"
-          data-currency={@currency_symbol}
-          placeholder={"#{@currency_symbol}0.00"}
-          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
-          class={[
-            "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-            "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 h-12",
-            @errors == [] && "border-zinc-300 focus:border-zinc-400",
-            @errors != [] && "border-rose-400 focus:border-rose-400"
-          ]}
-          {@rest}
-        />
-        <div class="text-gray-500 italic mt-0.5"><%= @currency %></div>
-        <.error :for={msg <- @errors}><%= msg %></.error>
-      </div>
+    <div phx-feedback-for={@name}>
+      <.local_label for={@id}><%= @label %></.local_label>
+      <input
+        type="text"
+        name={@name}
+        id={@id}
+        phx-hook="PriceMask"
+        data-currency={@currency_symbol}
+        placeholder={"#{@currency_symbol}0.00"}
+        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+        class={[
+          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
+          "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 h-12",
+          @errors == [] && "border-zinc-300 focus:border-zinc-400",
+          @errors != [] && "border-rose-400 focus:border-rose-400"
+        ]}
+        {@rest}
+      />
+      <div class="text-gray-500 italic mt-0.5"><%= @currency %></div>
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
     """
   end
 
@@ -431,6 +432,7 @@ defmodule TodoplaceWeb.CoreComponents do
     assigns =
       assigns
       |> Enum.into(%{options: country_options()})
+
     ~H"""
     <div phx-feedback-for={@name}>
       <.local_label for={@id}><%= @label %></.local_label>
@@ -474,7 +476,7 @@ defmodule TodoplaceWeb.CoreComponents do
     <div phx-feedback-for={@name}>
       <.local_label for={@id}><%= @label %></.local_label>
       <input
-        type={"text"}
+        type="text"
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
@@ -497,7 +499,7 @@ defmodule TodoplaceWeb.CoreComponents do
     <div phx-feedback-for={@name}>
       <.local_label for={@id}><%= @label %></.local_label>
       <input
-        type={"text"}
+        type="text"
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
@@ -545,7 +547,14 @@ defmodule TodoplaceWeb.CoreComponents do
     ~H"""
     <div>
       <.local_label id="phone"><%= @label %></.local_label>
-      <.live_component module={LivePhone} id="phone" form={assigns.field.form} field={assigns.field.field} tabindex={0} preferred={["US", "CA"]} />
+      <.live_component
+        module={LivePhone}
+        id="phone"
+        form={assigns.field.form}
+        field={assigns.field.field}
+        tabindex={0}
+        preferred={["US", "CA"]}
+      />
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
@@ -554,10 +563,10 @@ defmodule TodoplaceWeb.CoreComponents do
   # Required attributes: 1) unit_field (atom) 2) value_field (atom) 3) unit_label (string) 4) value_label (string) 5) f (a form)
   def measurement_input(assigns) do
     ~H"""
-      <div class="flex items-center gap-5">
-        <.input field={@f[@unit_field]} type="select" options={unit_options()} label={@unit_label} />
-        <.input field={@f[@value_field]} type="number" step="0.1" label={@value_label} />
-      </div>
+    <div class="flex items-center gap-5">
+      <.input field={@f[@unit_field]} type="select" options={unit_options()} label={@unit_label} />
+      <.input field={@f[@value_field]} type="number" step="0.1" label={@value_label} />
+    </div>
     """
   end
 

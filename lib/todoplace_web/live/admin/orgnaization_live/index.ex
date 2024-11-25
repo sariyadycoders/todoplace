@@ -3,8 +3,9 @@ defmodule TodoplaceWeb.OrganizationLive.Index do
   use TodoplaceWeb, :live_view
   alias Todoplace.Organization
 
-  def mount(_params, _session, %{assigns: %{current_user_data: user_data}} =socket) do
+  def mount(_params, _session, %{assigns: %{current_user_data: user_data}} = socket) do
     Organization.list_organizations(user_data.current_user.id)
+
     # if connected?(socket), do: Phoenix.PubSub.subscribe(Todoplace.PubSub, "organization:#{user_data.current_user.id}")
 
     organizations =
@@ -23,7 +24,6 @@ defmodule TodoplaceWeb.OrganizationLive.Index do
 
   @impl true
   def handle_event("add-user", %{"organization_id" => organization_id}, socket) do
-
     socket
     |> open_modal(TodoplaceWeb.InviteLive.AddMemberForm, %{
       organization_id: organization_id
@@ -33,7 +33,6 @@ defmodule TodoplaceWeb.OrganizationLive.Index do
 
   @impl true
   def handle_event("view-users", %{"organization_id" => organization_id}, socket) do
-
     socket
     |> push_redirect(to: ~p"/organizations/#{organization_id}")
     |> noreply()
@@ -65,16 +64,15 @@ defmodule TodoplaceWeb.OrganizationLive.Index do
           user_data.user_all_organizations_ids
           |> Todoplace.Cache.get_organizations()
 
-
-          if Enum.any?(organizations, &(&1.is_active)) do
-            socket
-            |> assign(organizations: organizations)
-            |> put_flash(:success, "Organization is updated")
-          else
-            socket
-            |> put_flash(:success, "All Organization is deactivated")
-            |> push_redirect(to: ~p"/create_organization")
-          end
+        if Enum.any?(organizations, & &1.is_active) do
+          socket
+          |> assign(organizations: organizations)
+          |> put_flash(:success, "Organization is updated")
+        else
+          socket
+          |> put_flash(:success, "All Organization is deactivated")
+          |> push_redirect(to: ~p"/create_organization")
+        end
 
       _ ->
         socket

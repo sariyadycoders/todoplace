@@ -15,7 +15,7 @@ defmodule TodoplaceWeb.BookingProposalLive.InvoiceComponent do
   def render(assigns) do
     ~H"""
     <div class="modal">
-      <form action="#" phx-submit="submit" phx-target={ @myself }>
+      <form action="#" phx-submit="submit" phx-target={@myself}>
         <.close_x />
 
         <div class="mb-4 md:mb-8">
@@ -28,20 +28,24 @@ defmodule TodoplaceWeb.BookingProposalLive.InvoiceComponent do
           <hr class="my-4" />
 
           <%= if @package.collected_price do %>
-            <dl class={"flex justify-between"}>
+            <dl class="flex justify-between">
               <dt>Previously collected</dt>
-              <dd><%= Money.to_string(@package.collected_price, symbol: false, code: true)%></dd>
+              <dd><%= Money.to_string(@package.collected_price, symbol: false, code: true) %></dd>
             </dl>
           <% end %>
           <%= unless PaymentSchedules.free?(@job) do %>
             <div class="bg-base-200 py-3 px-4">
               <div class="text-xl flex justify-between">
                 <h4>Paid</h4>
-                <p><%= Money.to_string(PaymentSchedules.paid_price(@job), symbol: false, code: true) %></p>
+                <p>
+                  <%= Money.to_string(PaymentSchedules.paid_price(@job), symbol: false, code: true) %>
+                </p>
               </div>
               <div class="text-xl flex justify-between mt-3">
                 <h4>Owed</h4>
-                <p><%=  Money.to_string(PaymentSchedules.owed_price(@job), symbol: false, code: true) %></p>
+                <p>
+                  <%= Money.to_string(PaymentSchedules.owed_price(@job), symbol: false, code: true) %>
+                </p>
               </div>
             </div>
           <% end %>
@@ -55,7 +59,14 @@ defmodule TodoplaceWeb.BookingProposalLive.InvoiceComponent do
                 Finish booking
               </button>
             <% !PaymentSchedules.free?(@job) -> %>
-              <button {testid("pay-online")} type="button" phx-click="submit" phx-target={@myself} class="btn-tertiary flex gap-10 text-left" phx-disabled-with="Pay with card">
+              <button
+                {testid("pay-online")}
+                type="button"
+                phx-click="submit"
+                phx-target={@myself}
+                class="btn-tertiary flex gap-10 text-left"
+                phx-disabled-with="Pay with card"
+              >
                 <span class="flex flex-col">
                   <strong>Pay online</strong> Fast, easy and secure
                 </span>
@@ -64,7 +75,12 @@ defmodule TodoplaceWeb.BookingProposalLive.InvoiceComponent do
                 </span>
               </button>
               <%= if(@organization.payment_options.allow_cash) do %>
-                <button class="btn-secondary flex gap-10 text-left" phx-click="pay_offline" phx-target={@myself} type="button">
+                <button
+                  class="btn-secondary flex gap-10 text-left"
+                  phx-click="pay_offline"
+                  phx-target={@myself}
+                  type="button"
+                >
                   <span class="flex flex-col">
                     <strong>Pay with cash/check</strong> We'll send an invoice
                   </span>

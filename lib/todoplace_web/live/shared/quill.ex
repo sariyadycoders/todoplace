@@ -29,23 +29,29 @@ defmodule TodoplaceWeb.Shared.Quill do
       end
 
     ~H"""
-    <div id={"#{@id}-wrapper"} class={@class} phx-hook="Quill" phx-update="ignore" class="mt-2"
+    <div
+      id={"#{@id}-wrapper"}
+      class={@class}
+      phx-hook="Quill"
+      phx-update="ignore"
+      class="mt-2"
       data-placeholder={@placeholder}
       data-html-field-name={input_name(@f, @html_field)}
       data-text-field-name={input_name(@f, @text_field)}
       data-enable-size={@enable_size}
       data-enable-image={@enable_image}
       data-editable={@editable}
-      data-target={@myself}>
+      data-target={@myself}
+    >
       <%= if @enable_image do %>
         <input type="file" class="hidden" {testid("quill-image-input")} />
       <% end %>
       <%= if @track_quill_source do %>
-        <%= hidden_input @f, :quill_source %>
+        <%= hidden_input(@f, :quill_source) %>
       <% end %>
       <div class={"#{@editor_class} editor"}></div>
-      <%= if @html_field, do: (hidden_input @f, @html_field, phx_debounce: @debounce) %>
-      <%= if @text_field, do: (hidden_input @f, @text_field, phx_debounce: @debounce) %>
+      <%= if @html_field, do: hidden_input(@f, @html_field, phx_debounce: @debounce) %>
+      <%= if @text_field, do: hidden_input(@f, @text_field, phx_debounce: @debounce) %>
     </div>
     """
   end

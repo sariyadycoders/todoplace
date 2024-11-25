@@ -59,12 +59,39 @@ defmodule TodoplaceWeb.GalleryLive.Settings.UpdateNameComponent do
   def render(assigns) do
     ~H"""
     <div class="h-full">
-      <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself} id="updateGalleryNameForm" class="flex flex-col items-start h-full">
+      <.form
+        :let={f}
+        for={@changeset}
+        phx-change="validate"
+        phx-submit="save"
+        phx-target={@myself}
+        id="updateGalleryNameForm"
+        class="flex flex-col items-start h-full"
+      >
         <h3 class="font-sans">Gallery name</h3>
-        <%= text_input f, :name, disabled: disabled?(@gallery), class: "galleryName gallerySettingsInput mt-auto" %>
-        <button type="button" phx-click="reset" phx-target={@myself} class={classes("mt-2 font-bold cursor-pointer text-blue-planning-300 lg:pt-0", %{"pointer-events-none text-gray-200" => disabled?(@gallery)})}>Reset</button>
+        <%= text_input(f, :name,
+          disabled: disabled?(@gallery),
+          class: "galleryName gallerySettingsInput mt-auto"
+        ) %>
+        <button
+          type="button"
+          phx-click="reset"
+          phx-target={@myself}
+          class={
+            classes("mt-2 font-bold cursor-pointer text-blue-planning-300 lg:pt-0", %{
+              "pointer-events-none text-gray-200" => disabled?(@gallery)
+            })
+          }
+        >
+          Reset
+        </button>
         <div class="flex justify-end mt-auto w-full">
-          <%= submit "Save", id: "saveGalleryName", class: "btn-settings font-sans w-32 px-11 cursor-pointer", disabled: !@changeset.valid? || disabled?(@gallery), phx_disable_with: "Saving..." %>
+          <%= submit("Save",
+            id: "saveGalleryName",
+            class: "btn-settings font-sans w-32 px-11 cursor-pointer",
+            disabled: !@changeset.valid? || disabled?(@gallery),
+            phx_disable_with: "Saving..."
+          ) %>
         </div>
       </.form>
     </div>

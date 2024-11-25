@@ -1,5 +1,4 @@
 defmodule TodoplaceWeb.Live.Shared do
-
   use TodoplaceWeb, :html
 
   import Phoenix.LiveView
@@ -306,22 +305,58 @@ defmodule TodoplaceWeb.Live.Shared do
       |> Enum.into(%{currency: nil, is_package_tab_clicked?: false, package_details_show?: false})
 
     ~H"""
-    <.form for={@package_changeset} :let={f} phx-change="validate" phx-target={@myself} id={"form-#{@step}"}>
+    <.form
+      :let={f}
+      for={@package_changeset}
+      phx-change="validate"
+      phx-target={@myself}
+      id={"form-#{@step}"}
+    >
       <h2 class="text-xl font-bold">Package Details</h2>
       <.package_basic_fields form={f} job_type={@job_type} show_no_of_shoots?={false} />
 
       <div class="flex items-center gap-6 pb-2 border-b-4 border-blue-planning-300 pl-3 mt-6 font-bold">
-        <div phx-click="package_or_shoot_details_show" phx-target={@myself} phx-value-shoot_details_show={"shoot_details_show"} class={classes("cursor-pointer flex items-center text-blue-planning-300", %{"text-black py-1 px-2 bg-blue-planning-100" => !@package_details_show?})}>
+        <div
+          phx-click="package_or_shoot_details_show"
+          phx-target={@myself}
+          phx-value-shoot_details_show="shoot_details_show"
+          class={
+            classes("cursor-pointer flex items-center text-blue-planning-300", %{
+              "text-black py-1 px-2 bg-blue-planning-100" => !@package_details_show?
+            })
+          }
+        >
           Shoot Details
           <%= if length(@shoots_changeset) == 0 do %>
-            <span class={classes("text-red-sales-300 bg-base-100 ml-2 rounded-lg px-2 text-sm", %{"bg-red-sales-100" => @package_details_show?})}>Todo</span>
+            <span class={
+              classes("text-red-sales-300 bg-base-100 ml-2 rounded-lg px-2 text-sm", %{
+                "bg-red-sales-100" => @package_details_show?
+              })
+            }>
+              Todo
+            </span>
           <% end %>
         </div>
 
-        <div phx-click="package_or_shoot_details_show" phx-target={@myself} phx-value-package_details_show={"package_details_show"} class={classes("cursor-pointer flex items-center text-blue-planning-300", %{"text-black py-1 px-2 bg-blue-planning-100" => @package_details_show?})}>
+        <div
+          phx-click="package_or_shoot_details_show"
+          phx-target={@myself}
+          phx-value-package_details_show="package_details_show"
+          class={
+            classes("cursor-pointer flex items-center text-blue-planning-300", %{
+              "text-black py-1 px-2 bg-blue-planning-100" => @package_details_show?
+            })
+          }
+        >
           Package & Pricing Details
           <%= if @is_package_tab_clicked? == false do %>
-          <span class={classes("text-red-sales-300 bg-base-100 ml-2 rounded-lg px-2 text-sm", %{"bg-red-sales-100" => !@package_details_show?})}>Todo</span>
+            <span class={
+              classes("text-red-sales-300 bg-base-100 ml-2 rounded-lg px-2 text-sm", %{
+                "bg-red-sales-100" => !@package_details_show?
+              })
+            }>
+              Todo
+            </span>
           <% end %>
         </div>
       </div>
@@ -330,43 +365,75 @@ defmodule TodoplaceWeb.Live.Shared do
         <h2 class="mt-4 mb-2 text-xl font-bold">Package Price</h2>
         <div class="flex flex-col mt-6 items-start justify-between w-full sm:items-center sm:flex-row sm:w-auto">
           <label class="font-bold" for={input_id(f, :base_price)}>
-            The amount you’ve charged for your job <p class="text-base-250 font-normal">(including download credits)</p>
+            The amount you’ve charged for your job
+            <p class="text-base-250 font-normal">(including download credits)</p>
           </label>
           <div class="flex items-center justify-end w-full mt-6 sm:mt-0 sm:w-auto">
             <span class="mx-3 text-2xl font-bold text-black pb-2.5">+</span>
-            <%= input f, :base_price, placeholder: "#{@currency_symbol}0.00", class: "sm:w-32 w-full px-4 text-lg text-center", phx_hook: "PriceMask", data_currency: @currency_symbol %>
+            <%= input(f, :base_price,
+              placeholder: "#{@currency_symbol}0.00",
+              class: "sm:w-32 w-full px-4 text-lg text-center",
+              phx_hook: "PriceMask",
+              data_currency: @currency_symbol
+            ) %>
           </div>
         </div>
-        <hr class="mt-6">
+        <hr class="mt-6" />
         <div class="flex flex-col mt-6 items-start justify-between w-full sm:items-center sm:flex-row sm:w-auto">
           <label class="font-bold" for={input_id(f, :print_credits)}>
             How much of the creative session fee is for print credits?
           </label>
           <div class="flex items-center justify-end w-full mt-6 sm:mt-0 sm:w-auto">
             <span class="mx-4 text-2xl font-bold text-base-250">&nbsp;</span>
-            <%= input f, :print_credits, disabled: @base_price_zero?, placeholder: "#{@currency_symbol}0.00", class: "sm:w-32 w-full px-4 text-lg text-center", phx_hook: "PriceMask", data_currency: @currency_symbol %>
+            <%= input(f, :print_credits,
+              disabled: @base_price_zero?,
+              placeholder: "#{@currency_symbol}0.00",
+              class: "sm:w-32 w-full px-4 text-lg text-center",
+              phx_hook: "PriceMask",
+              data_currency: @currency_symbol
+            ) %>
           </div>
         </div>
-        <hr class="mt-6">
+        <hr class="mt-6" />
         <div class="flex flex-col mt-6 items-start justify-between w-full sm:items-center sm:flex-row sm:w-auto ">
           <label class="font-bold" for={input_id(f, :collected_price)}>
             The amount you’ve already collected
           </label>
           <div class="flex items-center justify-end w-full mt-6 sm:mt-0 sm:w-auto">
             <span class="mx-3 text-2xl font-bold text-black pb-2.5">-</span>
-            <%= input f, :collected_price, disabled: @base_price_zero?, placeholder: "#{@currency_symbol}0.00", class: "sm:w-32 w-full px-4 text-lg text-center", phx_hook: "PriceMask", data_currency: @currency_symbol %>
+            <%= input(f, :collected_price,
+              disabled: @base_price_zero?,
+              placeholder: "#{@currency_symbol}0.00",
+              class: "sm:w-32 w-full px-4 text-lg text-center",
+              phx_hook: "PriceMask",
+              data_currency: @currency_symbol
+            ) %>
           </div>
         </div>
-        <hr class="mt-6">
-        <dl class="flex flex-col mt-6 justify-between text-lg font-bold sm:flex-row" {testid("remaining-balance")}>
+        <hr class="mt-6" />
+        <dl
+          class="flex flex-col mt-6 justify-between text-lg font-bold sm:flex-row"
+          {testid("remaining-balance")}
+        >
           <dt>Remaining balance to collect with Todoplace</dt>
-          <dd class="w-full p-6 py-2 mt-2 text-center rounded-lg sm:w-32 text-green-finances-300 bg-green-finances-100/30 sm:mt-0"><%= total_remaining_amount(@package_changeset) %></dd>
+          <dd class="w-full p-6 py-2 mt-2 text-center rounded-lg sm:w-32 text-green-finances-300 bg-green-finances-100/30 sm:mt-0">
+            <%= total_remaining_amount(@package_changeset) %>
+          </dd>
         </dl>
 
-        <hr class="mt-4 border-gray-100">
+        <hr class="mt-4 border-gray-100" />
 
         <%= if @package_details_show? do %>
-          <.digital_download_fields for={:import_job} package_form={f} currency={@currency} currency_symbol={@currency_symbol} download_changeset={@download_changeset} package_pricing={@package_pricing_changeset} target={@myself} show_digitals={@show_digitals} />
+          <.digital_download_fields
+            for={:import_job}
+            package_form={f}
+            currency={@currency}
+            currency_symbol={@currency_symbol}
+            download_changeset={@download_changeset}
+            package_pricing={@package_pricing_changeset}
+            target={@myself}
+            show_digitals={@show_digitals}
+          />
         <% end %>
       </div>
 
@@ -381,18 +448,49 @@ defmodule TodoplaceWeb.Live.Shared do
             </div>
           </div>
         <% end %>
-        <.package_shoot_block shoots_changeset={@shoots_changeset} myself={@myself} current_user={@current_user} step={@step} />
-        <.icon_button phx-click="add-shoot" phx-target={@myself} class="mt-4 text-black" title="" color="blue-planning-300" icon="plus">
+        <.package_shoot_block
+          shoots_changeset={@shoots_changeset}
+          myself={@myself}
+          current_user={@current_user}
+          step={@step}
+        />
+        <.icon_button
+          phx-click="add-shoot"
+          phx-target={@myself}
+          class="mt-4 text-black"
+          title=""
+          color="blue-planning-300"
+          icon="plus"
+        >
           Add Shoot
         </.icon_button>
       </div>
 
       <.footer>
-        <% disabled_condition = Enum.any?([@download_changeset, @package_pricing_changeset, @package_changeset], &(!&1.valid?)) or @is_any_shoot_invalid?%>
-        <button class="px-8 btn-primary" phx-click="submit-payment-step" phx-target={@myself} title="Next" disabled={disabled_condition} phx-disable-with="Next">
+        <% disabled_condition =
+          Enum.any?(
+            [@download_changeset, @package_pricing_changeset, @package_changeset],
+            &(!&1.valid?)
+          ) or @is_any_shoot_invalid? %>
+        <button
+          class="px-8 btn-primary"
+          phx-click="submit-payment-step"
+          phx-target={@myself}
+          title="Next"
+          disabled={disabled_condition}
+          phx-disable-with="Next"
+        >
           Next
         </button>
-        <button class="btn-secondary" title="cancel" type="button" phx-click="back" phx-target={@myself}>Go back</button>
+        <button
+          class="btn-secondary"
+          title="cancel"
+          type="button"
+          phx-click="back"
+          phx-target={@myself}
+        >
+          Go back
+        </button>
       </.footer>
     </.form>
     """
@@ -402,13 +500,30 @@ defmodule TodoplaceWeb.Live.Shared do
     assigns = assign(assigns, remaining_amount_zero?: remaining_amount_zero?(package_changeset))
 
     ~H"""
-    <.form for={@payments_changeset} :let={f} phx-change="validate" phx-submit="submit" phx-target={@myself} id={"form-#{@step}"}>
+    <.form
+      :let={f}
+      for={@payments_changeset}
+      phx-change="validate"
+      phx-submit="submit"
+      phx-target={@myself}
+      id={"form-#{@step}"}
+    >
       <h3 class="font-bold">Balance to collect: <%= total_remaining_amount(@package_changeset) %></h3>
 
-      <div class={classes("flex items-center bg-blue-planning-100 rounded-lg my-4 py-4", %{"hidden" => !@remaining_amount_zero?})}}>
-        <.tooltip class="ml-4" content={"#"} id="currency" />
+      <div
+        class={
+          classes("flex items-center bg-blue-planning-100 rounded-lg my-4 py-4", %{
+            "hidden" => !@remaining_amount_zero?
+          })
+        }
+        }
+      >
+        <.tooltip class="ml-4" content="#" id="currency" />
         <div class="pl-2">
-          <b>Since your remaining balance is <%=@currency_symbol%>0.00, we'll mark your job as paid for.</b> Make sure to follow up with any emails as needed to your client.
+          <b>
+            Since your remaining balance is <%= @currency_symbol %>0.00, we'll mark your job as paid for.
+          </b>
+          Make sure to follow up with any emails as needed to your client.
         </div>
       </div>
 
@@ -419,7 +534,14 @@ defmodule TodoplaceWeb.Live.Shared do
               <div class="mb-2 text-xl font-bold">Payment <%= p.index + 1 %></div>
 
               <%= if p.index > 0 do %>
-                <.icon_button class="ml-8" title="remove" phx-click="remove-payment" phx-target={@myself} color="red-sales-300" icon="trash">
+                <.icon_button
+                  class="ml-8"
+                  title="remove"
+                  phx-click="remove-payment"
+                  phx-target={@myself}
+                  color="red-sales-300"
+                  icon="trash"
+                >
                   Remove
                 </.icon_button>
               <% end %>
@@ -427,17 +549,36 @@ defmodule TodoplaceWeb.Live.Shared do
 
             <div class="flex flex-wrap w-full mb-8">
               <div class="w-full sm:w-auto">
-                <.date_picker_field class="sm:w-64 w-full text-lg" id={"payment-#{p.index}"} form={p} field={:due_date} input_placeholder="mm/dd/yyyy" input_label="Due" />
+                <.date_picker_field
+                  class="sm:w-64 w-full text-lg"
+                  id={"payment-#{p.index}"}
+                  form={p}
+                  field={:due_date}
+                  input_placeholder="mm/dd/yyyy"
+                  input_label="Due"
+                />
               </div>
               <div class="w-full sm:ml-16 sm:w-auto">
-                <%= labeled_input p, :price, label: "Payment amount", placeholder: "#{@currency_symbol}0.00", class: "sm:w-36 w-full px-4 text-lg text-center", phx_hook: "PriceMask", data_currency: @currency_symbol %>
+                <%= labeled_input(p, :price,
+                  label: "Payment amount",
+                  placeholder: "#{@currency_symbol}0.00",
+                  class: "sm:w-36 w-full px-4 text-lg text-center",
+                  phx_hook: "PriceMask",
+                  data_currency: @currency_symbol
+                ) %>
               </div>
             </div>
           </div>
         <% end %>
 
         <%= if f |> current() |> Map.get(:payment_schedules) |> Enum.count == 1 do %>
-          <button type="button" title="add" phx-click="add-payment" phx-target={@myself} class="px-2 py-1 mb-8 btn-secondary">
+          <button
+            type="button"
+            title="add"
+            phx-click="add-payment"
+            phx-target={@myself}
+            class="px-2 py-1 mb-8 btn-secondary"
+          >
             Add new payment
           </button>
         <% end %>
@@ -446,20 +587,34 @@ defmodule TodoplaceWeb.Live.Shared do
           Remaining to collect:
           <%= case remaining_to_collect(@payments_changeset) do %>
             <% value -> %>
-            <%= if Money.zero?(value) do %>
-              <span class="text-green-finances-300"><%= value %></span>
-            <% else %>
-              <span class="text-red-sales-300"><%= value %></span>
-            <% end %>
+              <%= if Money.zero?(value) do %>
+                <span class="text-green-finances-300"><%= value %></span>
+              <% else %>
+                <span class="text-red-sales-300"><%= value %></span>
+              <% end %>
           <% end %>
         </div>
         <p class="mb-2 text-sm italic font-light">limit two payments</p>
       </div>
       <.footer>
-        <button class="px-8 btn-primary" title="Next" type="submit" disabled={if @remaining_amount_zero?, do: false, else: !@payments_changeset.valid?} phx-disable-with="Next">
+        <button
+          class="px-8 btn-primary"
+          title="Next"
+          type="submit"
+          disabled={if @remaining_amount_zero?, do: false, else: !@payments_changeset.valid?}
+          phx-disable-with="Next"
+        >
           Next
         </button>
-        <button class="btn-secondary" title="cancel" type="button" phx-click="back" phx-target={@myself}>Go back</button>
+        <button
+          class="btn-secondary"
+          title="cancel"
+          type="button"
+          phx-click="back"
+          phx-target={@myself}
+        >
+          Go back
+        </button>
       </.footer>
     </.form>
     """
@@ -469,13 +624,21 @@ defmodule TodoplaceWeb.Live.Shared do
     ~H"""
     <form phx-change="validate" phx-submit="submit" phx-target={@myself} id={"form-#{@step}"}>
       <.drag_drop upload_entity={@uploads.documents} supported_types=".PDF, .docx, .txt" />
-      <div class={classes("mt-8", %{"hidden" => Enum.empty?(@uploads.documents.entries ++ @ex_documents ++ @invalid_entries)})}>
-        <div class="grid grid-cols-5 pb-4 items-center text-lg font-bold" id="import_job_resume_upload" phx-hook="ResumeUpload">
+      <div class={
+        classes("mt-8", %{
+          "hidden" => Enum.empty?(@uploads.documents.entries ++ @ex_documents ++ @invalid_entries)
+        })
+      }>
+        <div
+          class="grid grid-cols-5 pb-4 items-center text-lg font-bold"
+          id="import_job_resume_upload"
+          phx-hook="ResumeUpload"
+        >
           <span class="col-span-2">Name</span>
           <span class="col-span-1 text-center">Status</span>
           <span class="ml-auto col-span-2">Actions</span>
         </div>
-        <hr class="md:block border-blue-planning-300 border-2 mb-2">
+        <hr class="md:block border-blue-planning-300 border-2 mb-2" />
         <%= Enum.map(@invalid_entries, fn entry -> %>
           <.files_to_upload myself={@myself} entry={entry} for={:job}>
             <.error_action error={@invalid_entries_errors[entry.ref]} entry={entry} target={@myself} />
@@ -483,20 +646,44 @@ defmodule TodoplaceWeb.Live.Shared do
         <% end) %>
         <%= Enum.map(@uploads.documents.entries ++ @ex_documents, fn entry -> %>
           <.files_to_upload myself={@myself} entry={entry} for={:job}>
-            <p class="btn items-center"><%= if entry.done?, do: "Uploaded", else: "Uploading..." %></p>
+            <p class="btn items-center">
+              <%= if entry.done?, do: "Uploaded", else: "Uploading..." %>
+            </p>
           </.files_to_upload>
         <% end) %>
       </div>
 
       <div class="pt-40"></div>
 
-      <div {testid("modal-buttons")} class="sticky px-4 -m-4 bg-white -bottom-6 sm:px-8 sm:-m-8 sm:-bottom-8">
+      <div
+        {testid("modal-buttons")}
+        class="sticky px-4 -m-4 bg-white -bottom-6 sm:px-8 sm:-m-8 sm:-bottom-8"
+      >
         <div class="flex flex-col py-6 bg-white gap-2 sm:flex-row-reverse">
-          <button class="px-8 btn-primary" title="Save" type="submit" disabled={Enum.any?(@invalid_entries)} phx-disable-with="Finish">
+          <button
+            class="px-8 btn-primary"
+            title="Save"
+            type="submit"
+            disabled={Enum.any?(@invalid_entries)}
+            phx-disable-with="Finish"
+          >
             Save
           </button>
-          <button class="btn-secondary" title="cancel" type="button" phx-click="back" phx-target={@myself}>Go back</button>
-          <a {testid("import-another-job-link")} class="z-100 flex items-center underline mr-5 cursor-pointer text-blue-planning-300 justify-center" phx-click="start_another_job" phx-target={@myself}>
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="back"
+            phx-target={@myself}
+          >
+            Go back
+          </button>
+          <a
+            {testid("import-another-job-link")}
+            class="z-100 flex items-center underline mr-5 cursor-pointer text-blue-planning-300 justify-center"
+            phx-click="start_another_job"
+            phx-target={@myself}
+          >
             <.icon name="refresh-icon" class="h-4 w-4 mr-2 text-blue-planning-300"></.icon>
             <%= "Start another job import for #{cond do
               @searched_client -> @searched_client.name
@@ -513,52 +700,101 @@ defmodule TodoplaceWeb.Live.Shared do
 
   defp package_shoot_block(assigns) do
     ~H"""
-      <%= Enum.with_index(@shoots_changeset, fn shoot_changeset, index -> %>
-        <div class="rounded-lg my-6 border border-base-200">
-          <div class="rounded-t-lg bg-base-200 flex items-center justify-between p-3">
-            <div class="text-lg font-bold">
-              <%= "Shoot #{index + 1}" %>
-            </div>
-            <.icon_button phx-click="remove-shoot" phx-value-shoot_index={index + 1} phx-target={@myself} class="bg-white text-red-sales-300" title="" color="red-sales-300" icon="trash">
-              Remove
-            </.icon_button>
+    <%= Enum.with_index(@shoots_changeset, fn shoot_changeset, index -> %>
+      <div class="rounded-lg my-6 border border-base-200">
+        <div class="rounded-t-lg bg-base-200 flex items-center justify-between p-3">
+          <div class="text-lg font-bold">
+            <%= "Shoot #{index + 1}" %>
           </div>
-          <.form :let={f} for={shoot_changeset} phx-change="validate" phx-value-shoot_index={index} phx-submit="" phx-target={@myself} id={"form-#{@step}-#{index}"}>
-            <div class="p-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              <div>
-                <%= labeled_input f, :name, label: "Shoot Title", placeholder: "e.g.", wrapper_class: "" %>
-              </div>
-              <div class="flex items-end">
-                <.date_picker_field class="flex flex-col w-full" id={"shoot-time-#{index}"} placeholder="Select shoot time…" form={f} field={:starts_at} input_placeholder="mm/dd/yyyy" input_label="Shoot Date" data_custom_date_format="Y-m-d\\TH:i" data_time_picker="true" data_time_zone={@current_user.time_zone} />
-              </div>
-              <div>
-                <%= labeled_select f, :duration_minutes, duration_options(),
-                      label: "Shoot Duration",
-                      prompt: "Select below"
-                %>
-              </div>
-
-              <div class="flex flex-col">
-                <div class="flex items-center justify-between">
-                  <%= label_for f, :location, label: "Shoot Location" %>
-                </div>
-
-                <%= select_field f, :location, for(location <- Shoot.locations(), do: {location |> Atom.to_string() |> dyn_gettext(), location }), prompt: "Select below",  disabled: false  %>
-              </div>
-
-              <div class="flex flex-col">
-                <div class="flex items-center justify-between">
-                  <%= label_for f, :address, label: "Shoot Address" %>
-                </div>
-
-                <%= input f, :address, phx_hook: "PlacesAutocomplete", autocomplete: "off", placeholder: "Enter a location",  disabled: false %>
-                <div class="relative autocomplete-wrapper" id={"auto-complete-#{index}"} phx-update="ignore"></div>
-              </div>
-
-            </div>
-          </.form>
+          <.icon_button
+            phx-click="remove-shoot"
+            phx-value-shoot_index={index + 1}
+            phx-target={@myself}
+            class="bg-white text-red-sales-300"
+            title=""
+            color="red-sales-300"
+            icon="trash"
+          >
+            Remove
+          </.icon_button>
         </div>
-      <% end) %>
+        <.form
+          :let={f}
+          for={shoot_changeset}
+          phx-change="validate"
+          phx-value-shoot_index={index}
+          phx-submit=""
+          phx-target={@myself}
+          id={"form-#{@step}-#{index}"}
+        >
+          <div class="p-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div>
+              <%= labeled_input(f, :name,
+                label: "Shoot Title",
+                placeholder: "e.g.",
+                wrapper_class: ""
+              ) %>
+            </div>
+            <div class="flex items-end">
+              <.date_picker_field
+                class="flex flex-col w-full"
+                id={"shoot-time-#{index}"}
+                placeholder="Select shoot time…"
+                form={f}
+                field={:starts_at}
+                input_placeholder="mm/dd/yyyy"
+                input_label="Shoot Date"
+                data_custom_date_format="Y-m-d\\TH:i"
+                data_time_picker="true"
+                data_time_zone={@current_user.time_zone}
+              />
+            </div>
+            <div>
+              <%= labeled_select(f, :duration_minutes, duration_options(),
+                label: "Shoot Duration",
+                prompt: "Select below"
+              ) %>
+            </div>
+
+            <div class="flex flex-col">
+              <div class="flex items-center justify-between">
+                <%= label_for(f, :location, label: "Shoot Location") %>
+              </div>
+
+              <%= select_field(
+                f,
+                :location,
+                for(
+                  location <- Shoot.locations(),
+                  do: {location |> Atom.to_string() |> dyn_gettext(), location}
+                ),
+                prompt: "Select below",
+                disabled: false
+              ) %>
+            </div>
+
+            <div class="flex flex-col">
+              <div class="flex items-center justify-between">
+                <%= label_for(f, :address, label: "Shoot Address") %>
+              </div>
+
+              <%= input(f, :address,
+                phx_hook: "PlacesAutocomplete",
+                autocomplete: "off",
+                placeholder: "Enter a location",
+                disabled: false
+              ) %>
+              <div
+                class="relative autocomplete-wrapper"
+                id={"auto-complete-#{index}"}
+                phx-update="ignore"
+              >
+              </div>
+            </div>
+          </div>
+        </.form>
+      </div>
+    <% end) %>
     """
   end
 
@@ -566,22 +802,23 @@ defmodule TodoplaceWeb.Live.Shared do
     assigns = assigns |> Enum.into(%{changeset: nil})
 
     ~H"""
-      <div class="flex items-center hover:cursor-auto gap-2">
-        <div class="ml-2 text-base-200 hidden md:block">|</div>
-        <div class="w-7 h-7 flex items-center justify-center bg-blue-planning-300 rounded-full">
-          <.icon name="client-icon" class="w-4 h-4 text-white"></.icon>
-        </div>
-        <p class="font-bold">
-          Client: <span class="font-normal"><%=
-            cond do
-              @changeset -> Changeset.get_field(@changeset, :name)
-              @searched_client -> @searched_client.name
-              @selected_client -> @selected_client.name
-              true -> Changeset.get_field(@assigns.job_changeset.changes.client, :name)
-            end
-          %></span>
-        </p>
+    <div class="flex items-center hover:cursor-auto gap-2">
+      <div class="ml-2 text-base-200 hidden md:block">|</div>
+      <div class="w-7 h-7 flex items-center justify-center bg-blue-planning-300 rounded-full">
+        <.icon name="client-icon" class="w-4 h-4 text-white"></.icon>
       </div>
+      <p class="font-bold">
+        Client:
+        <span class="font-normal">
+          <%= cond do
+            @changeset -> Changeset.get_field(@changeset, :name)
+            @searched_client -> @searched_client.name
+            @selected_client -> @selected_client.name
+            true -> Changeset.get_field(@assigns.job_changeset.changes.client, :name)
+          end %>
+        </span>
+      </p>
+    </div>
     """
   end
 

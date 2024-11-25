@@ -136,9 +136,9 @@ defmodule TodoplaceWeb.GalleryLive.ChooseProduct do
   def go_to_cart_wrapper(assigns) do
     ~H"""
     <%= if @count > 0 do %>
-      <.link navigate={@route} title="cart" class="block"><%= render_slot @inner_block %></.link>
+      <.link navigate={@route} title="cart" class="block"><%= render_slot(@inner_block) %></.link>
     <% else %>
-      <div title="cart" ><%= render_slot @inner_block %></div>
+      <div title="cart"><%= render_slot(@inner_block) %></div>
     <% end %>
     """
   end
@@ -235,7 +235,7 @@ defmodule TodoplaceWeb.GalleryLive.ChooseProduct do
     assigns = assign(assigns, opts: opts, digital_status: digital_status)
 
     ~H"""
-      <%= case @digital_status do %>
+    <%= case @digital_status do %>
       <% :in_cart -> %>
         <.option {@opts}>
           <:button disabled>In cart</:button>
@@ -250,7 +250,7 @@ defmodule TodoplaceWeb.GalleryLive.ChooseProduct do
             phx-value-uri={~p"/gallery/#{@gallery.client_link_hash}/photos/#{@photo.id}/download"}
             phx-value-current_user={@current_user}
             class="my-4 py-1.5"
-            >
+          >
             Download
           </:button>
         </.option>
@@ -260,7 +260,7 @@ defmodule TodoplaceWeb.GalleryLive.ChooseProduct do
             Add to cart
           </:button>
         </.option>
-      <% end %>
+    <% end %>
     """
   end
 
@@ -284,7 +284,7 @@ defmodule TodoplaceWeb.GalleryLive.ChooseProduct do
       assign(assigns, opts: opts, button_label: button_label, digital_status: digital_status)
 
     ~H"""
-      <%= case @digital_status do %>
+    <%= case @digital_status do %>
       <% :available -> %>
         <.option {@opts} min_price={if @digital_credit <= 0, do: @download_each_price}>
           <:button {testid("select")} phx-target={@myself} phx-click="digital_add_to_cart">
@@ -293,15 +293,19 @@ defmodule TodoplaceWeb.GalleryLive.ChooseProduct do
         </.option>
       <% :in_cart -> %>
         <.option {@opts}>
-          <:button phx-target={@myself} phx-click="remove_digital_from_cart" phx-value-photo-id={@photo.id}>
+          <:button
+            phx-target={@myself}
+            phx-click="remove_digital_from_cart"
+            phx-value-photo-id={@photo.id}
+          >
             <%= @button_label %>
           </:button>
         </.option>
-        <% _ -> %>
+      <% _ -> %>
         <.option {@opts} selected={true}>
           <:button disabled>Unselect</:button>
         </.option>
-      <% end %>
+    <% end %>
     """
   end
 

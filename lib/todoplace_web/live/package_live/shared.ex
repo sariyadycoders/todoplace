@@ -120,11 +120,20 @@ defmodule TodoplaceWeb.PackageLive.Shared do
     <div class={"flex flex-col p-4 border rounded cursor-pointer hover:bg-blue-planning-100 hover:border-blue-planning-300 group #{@class}"}>
       <h1 class="text-2xl font-bold line-clamp-2"><%= @package.name %></h1>
 
-      <div class="mb-4 relative" phx-hook="PackageDescription" id={"package-description-#{@package.id}"} data-event="mouseover">
+      <div
+        class="mb-4 relative"
+        phx-hook="PackageDescription"
+        id={"package-description-#{@package.id}"}
+        data-event="mouseover"
+      >
         <div class="line-clamp-2 raw_html raw_html_inline">
-          <%= raw @package.description %>
+          <%= raw(@package.description) %>
         </div>
-        <div class="hidden p-4 text-sm rounded bg-white font-sans shadow my-4 w-full absolute top-2 z-[15]" data-offset="0" role="tooltip">
+        <div
+          class="hidden p-4 text-sm rounded bg-white font-sans shadow my-4 w-full absolute top-2 z-[15]"
+          data-offset="0"
+          role="tooltip"
+        >
           <div class="line-clamp-6 raw_html"></div>
           <button class="inline-block text-blue-planning-300">View all</button>
         </div>
@@ -134,13 +143,17 @@ defmodule TodoplaceWeb.PackageLive.Shared do
       </div>
 
       <dl class="flex flex-row-reverse items-center justify-end mt-auto">
-        <.digital_detail id="package_detail" download_each_price={@package.download_each_price} download_count={@package.download_count} />
+        <.digital_detail
+          id="package_detail"
+          download_each_price={@package.download_each_price}
+          download_count={@package.download_count}
+        />
       </dl>
 
       <hr class="my-4" />
 
       <div class="flex items-center justify-between">
-        <div class="text-gray-500"><%= dyn_gettext @package.job_type %></div>
+        <div class="text-gray-500"><%= dyn_gettext(@package.job_type) %></div>
 
         <div class="text-lg font-bold">
           <%= @package |> Package.price() |> Money.to_string(fractional_unit: false) %>
@@ -151,10 +164,13 @@ defmodule TodoplaceWeb.PackageLive.Shared do
         <div class="text-gray-500">Download Price</div>
 
         <div class="text-lg font-bold">
-          <%= if Money.zero?(@package.download_each_price) do %>--<% else %><%= @package.download_each_price %>/each<% end %>
+          <%= if Money.zero?(@package.download_each_price) do %>
+            --
+          <% else %>
+            <%= @package.download_each_price %>/each
+          <% end %>
         </div>
       </div>
-
     </div>
     """
   end
@@ -177,35 +193,75 @@ defmodule TodoplaceWeb.PackageLive.Shared do
             <h1 title={@package.name} class="text-xl font-bold line-clamp-2 text-blue-planning-300">
               <%= truncate_package_name(@package.name) %>
             </h1>
-            <% else %>
-            <h1 title={@package.name} phx-click="edit-package" phx-value-package-id={@package.id} class="text-xl font-bold line-clamp-2 text-blue-planning-300 link hover:cursor-pointer">
+          <% else %>
+            <h1
+              title={@package.name}
+              phx-click="edit-package"
+              phx-value-package-id={@package.id}
+              class="text-xl font-bold line-clamp-2 text-blue-planning-300 link hover:cursor-pointer"
+            >
               <%= truncate_package_name(@package.name) %>
             </h1>
-            <div class="flex items-center custom-tooltip" phx-click="edit-visibility-confirmation" phx-value-package-id={@package.id}>
-              <.icon name={if @package.show_on_public_profile, do: "eye", else: "closed-eye"} class={classes("w-5 h-5 mx-2 hover:cursor-pointer", %{"text-gray-400" => !@package.show_on_public_profile, "text-blue-planning-300" => @package.show_on_public_profile})}/>
+            <div
+              class="flex items-center custom-tooltip"
+              phx-click="edit-visibility-confirmation"
+              phx-value-package-id={@package.id}
+            >
+              <.icon
+                name={if @package.show_on_public_profile, do: "eye", else: "closed-eye"}
+                class={
+                  classes("w-5 h-5 mx-2 hover:cursor-pointer", %{
+                    "text-gray-400" => !@package.show_on_public_profile,
+                    "text-blue-planning-300" => @package.show_on_public_profile
+                  })
+                }
+              />
               <span class="shadow-lg rounded-lg py-1 px-2 text-xs">
-                <%= if @package.show_on_public_profile, do: 'Shown on your Public Profile', else: 'Hidden on your Public Profile' %>
+                <%= if @package.show_on_public_profile,
+                  do: ~c"Shown on your Public Profile",
+                  else: ~c"Hidden on your Public Profile" %>
               </span>
             </div>
           <% end %>
         </div>
         <div class="grid grid-cols-1 grid-cols-1 md:grid-cols-6 gap-4">
           <div class={"flex flex-col md:col-span-2 group #{@class}"}>
-            <div class="md:mb-4 relative" phx-hook="PackageDescription" id={"package-description-#{@package.id}"} data-event="mouseover">
+            <div
+              class="md:mb-4 relative"
+              phx-hook="PackageDescription"
+              id={"package-description-#{@package.id}"}
+              data-event="mouseover"
+            >
               <div class="line-clamp-2 raw_html raw_html_inline text-base-250">
-                <%= raw @package.description %>
+                <%= raw(@package.description) %>
               </div>
               <%= if package_description_length_long?(@package.description) do %>
                 <button class="inline-block text-blue-planning-300 view_more">View more</button>
               <% end %>
               <dl class="flex flex-row-reverse items-center justify-end mt-auto md:my-2">
-                <.digital_detail id="package_detail" download_each_price={@package.download_each_price} download_count={@package.download_count} />
+                <.digital_detail
+                  id="package_detail"
+                  download_each_price={@package.download_each_price}
+                  download_count={@package.download_count}
+                />
               </dl>
-              <span class="hidden md:inline justify-start text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded"><%= String.capitalize(@package.job_type) %></span>
-              <div class="hidden p-4 text-sm rounded bg-white font-sans shadow my-4 w-full absolute top-2 z-[15]" data-offset="0" role="tooltip">
+              <span class="hidden md:inline justify-start text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded">
+                <%= String.capitalize(@package.job_type) %>
+              </span>
+              <div
+                class="hidden p-4 text-sm rounded bg-white font-sans shadow my-4 w-full absolute top-2 z-[15]"
+                data-offset="0"
+                role="tooltip"
+              >
                 <div class="line-clamp-6 raw_html"></div>
                 <%= if !@package.archived_at do %>
-                  <button class="inline-block text-blue-planning-300" phx-click="edit-package" phx-value-package-id={@package.id}>View all</button>
+                  <button
+                    class="inline-block text-blue-planning-300"
+                    phx-click="edit-package"
+                    phx-value-package-id={@package.id}
+                  >
+                    View all
+                  </button>
                 <% end %>
               </div>
             </div>
@@ -221,17 +277,27 @@ defmodule TodoplaceWeb.PackageLive.Shared do
             <div class="flex items-center text-base-250">
               <div class="">Digital image price:&nbsp;</div>
               <div class="">
-                <%= if Money.zero?(@package.download_each_price) do %>--<% else %><%= @package.download_each_price %>/each<% end %>
+                <%= if Money.zero?(@package.download_each_price) do %>
+                  --
+                <% else %>
+                  <%= @package.download_each_price %>/each
+                <% end %>
               </div>
             </div>
           </div>
 
           <dl class="md:hidden flex flex-row-reverse items-center justify-end mt-auto md:my-2">
-            <.digital_detail id="package_detail" download_each_price={@package.download_each_price} download_count={@package.download_count} />
+            <.digital_detail
+              id="package_detail"
+              download_each_price={@package.download_each_price}
+              download_count={@package.download_count}
+            />
           </dl>
 
           <div class="inline md:hidden justify-start">
-            <span class="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded"><%= String.capitalize(@package.job_type) %></span>
+            <span class="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded">
+              <%= String.capitalize(@package.job_type) %>
+            </span>
           </div>
 
           <div class="md:col-span-2 md:ml-auto">
@@ -239,43 +305,116 @@ defmodule TodoplaceWeb.PackageLive.Shared do
               <hr class="my-4 block md:hidden" />
             <% end %>
             <div class="flex items-center flex-wrap gap-4">
-                <%= if !@package.archived_at do %>
-                  <.icon_button {testid("edit-package-#{@package.id}")} class="btn-tertiary text-white bg-blue-planning-300 hover:bg-blue-planning-300/75 hover:opacity-75 transition-colors text-white flex-shrink-0 grow md:grow-0 text-center justify-center" title="edit link" phx-click="edit-package" phx-value-package-id={@package.id} color="white" icon="pencil">
-                    Edit package
-                  </.icon_button>
-                <% end %>
-                <div class="grow md:grow-0 md:ml-2" phx-update={@update_mode} id={"menu-#{@package.id}"} data-offset="0" phx-hook="Select">
-                    <button {testid("menu-btn-#{@package.id}")} title="Manage" type="button" class="btn-tertiary px-2 py-1 flex items-center flex-shrink-0 gap-1 mr-2 text-blue-planning-300 w-full">
-                      Actions
-                      <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-                      <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+              <%= if !@package.archived_at do %>
+                <.icon_button
+                  {testid("edit-package-#{@package.id}")}
+                  class="btn-tertiary text-white bg-blue-planning-300 hover:bg-blue-planning-300/75 hover:opacity-75 transition-colors text-white flex-shrink-0 grow md:grow-0 text-center justify-center"
+                  title="edit link"
+                  phx-click="edit-package"
+                  phx-value-package-id={@package.id}
+                  color="white"
+                  icon="pencil"
+                >
+                  Edit package
+                </.icon_button>
+              <% end %>
+              <div
+                class="grow md:grow-0 md:ml-2"
+                phx-update={@update_mode}
+                id={"menu-#{@package.id}"}
+                data-offset="0"
+                phx-hook="Select"
+              >
+                <button
+                  {testid("menu-btn-#{@package.id}")}
+                  title="Manage"
+                  type="button"
+                  class="btn-tertiary px-2 py-1 flex items-center flex-shrink-0 gap-1 mr-2 text-blue-planning-300 w-full"
+                >
+                  Actions
+                  <.icon
+                    name="down"
+                    class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+                  />
+                  <.icon
+                    name="up"
+                    class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+                  />
+                </button>
+
+                <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content z-10">
+                  <%= if !@package.archived_at do %>
+                    <button
+                      title="Edit"
+                      type="button"
+                      phx-click="edit-package"
+                      phx-value-package-id={@package.id}
+                      class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100"
+                    >
+                      <.icon
+                        name="pencil"
+                        class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300"
+                      /> Edit
                     </button>
 
-                    <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content z-10">
-                      <%= if !@package.archived_at do %>
-                        <button title="Edit" type="button" phx-click="edit-package" phx-value-package-id={@package.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100">
-                          <.icon name="pencil" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300" />
-                          Edit
-                        </button>
+                    <button
+                      title="Duplicate"
+                      type="button"
+                      phx-click="duplicate-package"
+                      phx-value-package-id={@package.id}
+                      class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100"
+                    >
+                      <.icon
+                        name="duplicate"
+                        class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300"
+                      /> Duplicate
+                    </button>
 
-                        <button title="Duplicate" type="button" phx-click="duplicate-package" phx-value-package-id={@package.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100">
-                          <.icon name="duplicate" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300" />
-                          Duplicate
-                        </button>
+                    <button
+                      title="Visibility"
+                      type="button"
+                      phx-click="edit-visibility-confirmation"
+                      phx-value-package-id={@package.id}
+                      class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100"
+                    >
+                      <.icon
+                        name={if @package.show_on_public_profile, do: "closed-eye", else: "eye"}
+                        class={
+                          classes("inline-block w-4 h-4 mr-3 fill-current", %{
+                            "text-blue-planning-300" => !@package.show_on_public_profile,
+                            "text-red-sales-300" => @package.show_on_public_profile
+                          })
+                        }
+                      />
+                      <%= if @package.show_on_public_profile,
+                        do: "Hide on public profile",
+                        else: "Show on public profile" %>
+                    </button>
+                  <% end %>
 
-                        <button title="Visibility" type="button" phx-click="edit-visibility-confirmation" phx-value-package-id={@package.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100">
-                          <.icon name={if @package.show_on_public_profile, do: "closed-eye", else: "eye"} class={classes("inline-block w-4 h-4 mr-3 fill-current", %{"text-blue-planning-300" => !@package.show_on_public_profile, "text-red-sales-300" => @package.show_on_public_profile})} />
-                          <%= if @package.show_on_public_profile, do: "Hide on public profile", else: "Show on public profile" %>
-                        </button>
-                      <% end %>
-
-                      <button {testid("archive-unarchive-btn-#{@package.id}")} title="Archive" type="button" phx-click="toggle-archive" phx-value-package-id={@package.id} phx-value-type={if @package.archived_at, do: "unarchive", else: "archive"} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100">
-                        <.icon name={if @package.archived_at, do: "plus", else: "trash"} class={classes("inline-block w-4 h-4 mr-3 fill-current", %{"text-blue-planning-300" => @package.archived_at, "text-red-sales-300" => !@package.archived_at})} />
-                        <%= if @package.archived_at, do: "Unarchive", else: "Archive" %>
-                      </button>
-                    </div>
-                  </div>
+                  <button
+                    {testid("archive-unarchive-btn-#{@package.id}")}
+                    title="Archive"
+                    type="button"
+                    phx-click="toggle-archive"
+                    phx-value-package-id={@package.id}
+                    phx-value-type={if @package.archived_at, do: "unarchive", else: "archive"}
+                    class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100"
+                  >
+                    <.icon
+                      name={if @package.archived_at, do: "plus", else: "trash"}
+                      class={
+                        classes("inline-block w-4 h-4 mr-3 fill-current", %{
+                          "text-blue-planning-300" => @package.archived_at,
+                          "text-red-sales-300" => !@package.archived_at
+                        })
+                      }
+                    />
+                    <%= if @package.archived_at, do: "Unarchive", else: "Archive" %>
+                  </button>
+                </div>
               </div>
+            </div>
           </div>
         </div>
       </div>
@@ -297,17 +436,44 @@ defmodule TodoplaceWeb.PackageLive.Shared do
     assigns = assign_new(assigns, :can_edit?, fn -> true end)
 
     ~H"""
-    <div class={classes("border p-3 sm:py-4 sm:border-b sm:border-t-0 sm:border-x-0 rounded-lg sm:rounded-none border-gray-100", %{"bg-gray-100" => @checked, "bg-base-200" => !@can_edit?})} {testid("template-card")}>
-      <label class={classes("flex items-center justify-between cursor-pointer", %{"pointer-events-none cursor-nor-allowed" => !@can_edit?})}>
+    <div
+      class={
+        classes(
+          "border p-3 sm:py-4 sm:border-b sm:border-t-0 sm:border-x-0 rounded-lg sm:rounded-none border-gray-100",
+          %{"bg-gray-100" => @checked, "bg-base-200" => !@can_edit?}
+        )
+      }
+      {testid("template-card")}
+    >
+      <label class={
+        classes("flex items-center justify-between cursor-pointer", %{
+          "pointer-events-none cursor-nor-allowed" => !@can_edit?
+        })
+      }>
         <div class="w-1/3">
-          <h3 class="font-xl font-bold mb-1"><%= @package.name %>—<%= dyn_gettext @package.job_type %></h3>
+          <h3 class="font-xl font-bold mb-1">
+            <%= @package.name %>—<%= dyn_gettext(@package.job_type) %>
+          </h3>
           <div class="flex flex-row-reverse items-center justify-end mt-auto">
-            <.digital_detail id="package_detail" download_each_price={@package.download_each_price} download_count={@package.download_count} />
+            <.digital_detail
+              id="package_detail"
+              download_each_price={@package.download_each_price}
+              download_count={@package.download_count}
+            />
           </div>
         </div>
         <div class="w-1/3 text-base-250">
-          <p>Package price: <%= @package |> Package.price() |> Money.to_string(fractional_unit: false) %></p>
-          <p>Digital image price: <%= if Money.zero?(@package.download_each_price) do %>--<% else %><%= @package.download_each_price %>/each<% end %></p>
+          <p>
+            Package price: <%= @package |> Package.price() |> Money.to_string(fractional_unit: false) %>
+          </p>
+          <p>
+            Digital image price:
+            <%= if Money.zero?(@package.download_each_price) do %>
+              --
+            <% else %>
+              <%= @package.download_each_price %>/each
+            <% end %>
+          </p>
         </div>
         <div class="w-1/3 text-center">
           <%= if @inner_block do %>
@@ -326,24 +492,44 @@ defmodule TodoplaceWeb.PackageLive.Shared do
 
     ~H"""
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-7">
-      <%= labeled_input @form, :name, label: "Title", placeholder: "e.g. #{dyn_gettext @job_type} Deluxe", phx_debounce: "500", wrapper_class: "mt-4" %>
+      <%= labeled_input(@form, :name,
+        label: "Title",
+        placeholder: "e.g. #{dyn_gettext(@job_type)} Deluxe",
+        phx_debounce: "500",
+        wrapper_class: "mt-4"
+      ) %>
       <div class="grid gap-2 grid-cols-2 sm:contents">
         <%= if @show_no_of_shoots? do %>
-          <%= labeled_select @form, :shoot_count, Enum.to_list(1..10), label: "# of Shoots", wrapper_class: "mt-4", class: "py-3", phx_update: "ignore" %>
+          <%= labeled_select(@form, :shoot_count, Enum.to_list(1..10),
+            label: "# of Shoots",
+            wrapper_class: "mt-4",
+            class: "py-3",
+            phx_update: "ignore"
+          ) %>
         <% end %>
         <div class="mt-4 flex flex-col">
           <div class="flex gap-1">
             <div class="input-label">Image Turnaround Time</div>
-            <div><.icon name="tooltip" class="inline-block w-3.5 h-3.5 mx-1 fill-current text-blue-planning-300" /></div>
+            <div>
+              <.icon
+                name="tooltip"
+                class="inline-block w-3.5 h-3.5 mx-1 fill-current text-blue-planning-300"
+              />
+            </div>
           </div>
           <div>
-            <%= input @form, :turnaround_weeks, type: :number_input, phx_debounce: "500", class: "w-24 text-center pl-4 mr-4", min: 1, max: 52 %>
+            <%= input(@form, :turnaround_weeks,
+              type: :number_input,
+              phx_debounce: "500",
+              class: "w-24 text-center pl-4 mr-4",
+              min: 1,
+              max: 52
+            ) %>
 
             <% turnaround_count =
-                @form.source
-                |> Changeset.get_field(:turnaround_weeks)
-                |> get_turnaround_week_count()
-            %>
+              @form.source
+              |> Changeset.get_field(:turnaround_weeks)
+              |> get_turnaround_week_count() %>
             <%= ngettext("week", "weeks", turnaround_count) %>
           </div>
         </div>
@@ -369,27 +555,39 @@ defmodule TodoplaceWeb.PackageLive.Shared do
       <div class="mt-4 font-normal text-base leading-6">
         <div class="mt-2">
           <label class="flex items-center font-bold">
-            <%= radio_button(p, :is_enabled, true, class: "w-5 h-5 mr-2.5 radio") %>
-            Gallery includes Print Credits
+            <%= radio_button(p, :is_enabled, true, class: "w-5 h-5 mr-2.5 radio") %> Gallery includes Print Credits
           </label>
           <div class="flex items-center gap-4 ml-7">
             <%= if p |> current() |> Map.get(:is_enabled) do %>
               <div class="flex flex-col">
                 <div class="flex flex-row items-center w-auto border border-blue-planning-300 rounded-lg relative">
-                  <%= input(@f, :print_credits, placeholder: "#{@currency_symbol}0.00", class: "w-full sm:w-32 text-lg text-center font-normal bg-white px-1 border-none", phx_hook: "PriceMask", data_currency: @currency_symbol) %>
+                  <%= input(@f, :print_credits,
+                    placeholder: "#{@currency_symbol}0.00",
+                    class: "w-full sm:w-32 text-lg text-center font-normal bg-white px-1 border-none",
+                    phx_hook: "PriceMask",
+                    data_currency: @currency_symbol
+                  ) %>
                 </div>
-                <%= text_input @f, :currency, value: @currency, class: "form-control w-32 text-base-250 border-none", phx_debounce: "500", maxlength: 3, autocomplete: "off" %>
+                <%= text_input(@f, :currency,
+                  value: @currency,
+                  class: "form-control w-32 text-base-250 border-none",
+                  phx_debounce: "500",
+                  maxlength: 3,
+                  autocomplete: "off"
+                ) %>
               </div>
               <div class="flex items-center text-base-250">
-                <%= label_for @f, :print_credits, label: "as a portion of Package Price", class: "font-normal" %>
+                <%= label_for(@f, :print_credits,
+                  label: "as a portion of Package Price",
+                  class: "font-normal"
+                ) %>
               </div>
             <% end %>
           </div>
         </div>
 
         <label class="flex mt-3 font-bold">
-          <%= radio_button(p, :is_enabled, false, class: "w-5 h-5 mr-2.5 radio mt-0.5") %>
-          Gallery does not include Print Credits
+          <%= radio_button(p, :is_enabled, false, class: "w-5 h-5 mr-2.5 radio mt-0.5") %> Gallery does not include Print Credits
         </label>
       </div>
     </div>
@@ -406,11 +604,22 @@ defmodule TodoplaceWeb.PackageLive.Shared do
       <% print_credits = current(p) %>
       <div class="flex flex-col w-4/5">
         <.print_fields_heading />
-        <button class={classes("underline text-blue-planning-300 mt-auto inline-block w-max", %{"hidden" => @show_print_credits})} type="button" phx-target={@target} phx-click="edit-print-credits">Edit settings</button>
+        <button
+          class={
+            classes("underline text-blue-planning-300 mt-auto inline-block w-max", %{
+              "hidden" => @show_print_credits
+            })
+          }
+          type="button"
+          phx-target={@target}
+          phx-click="edit-print-credits"
+        >
+          Edit settings
+        </button>
       </div>
       <div class="flex w-1/5 flex-col">
         <b class="mt-9">
-          <%= if get_total_print_credits(@f, @package_pricing) == nil do%>
+          <%= if get_total_print_credits(@f, @package_pricing) == nil do %>
             -
           <% else %>
             <%= get_total_print_credits(@f, @package_pricing) %>
@@ -422,33 +631,54 @@ defmodule TodoplaceWeb.PackageLive.Shared do
       </div>
     </div>
 
-    <div class= {classes("border border-solid mt-6 rounded-lg md:w-1/2", %{"hidden" => !@show_print_credits})}>
+    <div class={
+      classes("border border-solid mt-6 rounded-lg md:w-1/2", %{"hidden" => !@show_print_credits})
+    }>
       <div class="p-2 font-bold bg-base-200 flex flex-row">
         Print Credit Settings
-        <a {testid("close-settings")} phx-target={@target} phx-click="edit-print-credits" class="flex items-center cursor-pointer ml-auto"><.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 text-black"/></a>
+        <a
+          {testid("close-settings")}
+          phx-target={@target}
+          phx-click="edit-print-credits"
+          class="flex items-center cursor-pointer ml-auto"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 text-black" />
+        </a>
       </div>
 
       <div class="mt-4 font-normal text-base leading-6 pb-6 px-6">
         <div class="mt-2">
           <label class="flex items-center font-bold">
-            <%= radio_button(p, :is_enabled, true, class: "w-5 h-5 mr-2.5 radio") %>
-            Gallery includes Print Credits
+            <%= radio_button(p, :is_enabled, true, class: "w-5 h-5 mr-2.5 radio") %> Gallery includes Print Credits
           </label>
           <div class="flex flex-col gap-4 ml-7">
             <%= if Map.get(print_credits, :is_enabled) do %>
-              <%= input(@f, :print_credits, placeholder: "#{@currency_symbol}0.00", class: "mt-2 w-full sm:w-32 text-lg text-center font-normal", phx_hook: "PriceMask", data_currency: @currency_symbol) %>
-              <%= text_input @f, :currency, value: @currency, class: "form-control text-base-250 border-none", phx_debounce: "500", maxlength: 3, autocomplete: "off" %>
+              <%= input(@f, :print_credits,
+                placeholder: "#{@currency_symbol}0.00",
+                class: "mt-2 w-full sm:w-32 text-lg text-center font-normal",
+                phx_hook: "PriceMask",
+                data_currency: @currency_symbol
+              ) %>
+              <%= text_input(@f, :currency,
+                value: @currency,
+                class: "form-control text-base-250 border-none",
+                phx_debounce: "500",
+                maxlength: 3,
+                autocomplete: "off"
+              ) %>
               <div class="flex items-center text-base-250">
                 <%= checkbox(p, :print_credits_include_in_total, class: "w-5 h-5 mr-2.5 checkbox") %>
-                <%= label_for p, :print_credits_include_in_total, label: "Include in package total calculation", class: "font-normal" %>
+                <%= label_for(p, :print_credits_include_in_total,
+                  label: "Include in package total calculation",
+                  class: "font-normal"
+                ) %>
               </div>
             <% end %>
           </div>
         </div>
 
         <label class="flex mt-3 font-bold">
-          <%= radio_button(p, :is_enabled, false, class: "w-5 h-5 mr-2.5 radio mt-0.5") %>
-          Gallery does not include Print Credits
+          <%= radio_button(p, :is_enabled, false, class: "w-5 h-5 mr-2.5 radio mt-0.5") %> Gallery does not include Print Credits
         </label>
       </div>
     </div>
@@ -468,74 +698,156 @@ defmodule TodoplaceWeb.PackageLive.Shared do
       })
 
     ~H"""
-      <div class="flex mt-6">
-        <% d = to_form(@download_changeset) %>
-        <div class="flex-col gap-3 w-4/5">
-          <div class="flex flex-col w-4/5">
-            <h2 class="mb-1 text-xl font-bold">Digital Collection</h2>
-            <span class="text-base-250">High-Resolution Digital Images available via download.</span>
-          </div>
-          <div class="flex flex-row md:gap-8 gap-4 my-2">
-            <div>
-              <span class="flex flex-row items-center mb-2"><.icon name="tick" class="w-6 h-5 mr-1 text-green-finances-300" /><%= make_digital_text(@download_changeset) %> included</span>
-              <button {testid("edit-digital-collection")} class={classes("underline text-blue-planning-300 mt-auto inline-block w-max", %{"hidden" => @show_digitals in ["digitals", "image_price", "buy_all"]})} type="button" phx-target={@target} phx-value-type="digitals" phx-click="edit-digitals">Edit settings</button>
-            </div>
-            <div>
-              <span class="flex flex-row items-center mb-2"><.icon name="tick" class="w-6 h-5 mr-1 text-green-finances-300" /><%= current(@download_changeset) |> Map.get(:each_price) %> an image</span>
-              <%= if (@download_changeset |> current |> Map.get(:status)) !=  :unlimited do %>
-                <button class={classes("underline text-blue-planning-300 mt-auto inline-block w-max", %{"hidden" => @show_digitals in ["digitals", "image_price", "buy_all"]})} type="button" phx-target={@target} phx-value-type="image_price" phx-click="edit-digitals">Edit image price</button>
-              <% end %>
-            </div>
-            <div>
-              <%= if (@download_changeset |> current |> Map.get(:status)) !=  :unlimited do %>
-                <span class="flex flex-row items-center mb-2">
-                  <%= if check?(@download_changeset, :is_buy_all) do %>
-                    <.icon name="tick" class="w-6 h-5 mr-1 text-green-finances-300" />
-                    <%= get_buy_all(@download_changeset) %> buy all
-                  <% else %>
-                    <.icon name="close" class="w-6 h-6 mr-1 fill-red-sales-300" />
-                    Buy all not set
-                  <% end %>
-                </span>
-                <button class={classes("underline text-blue-planning-300 mt-auto inline-block w-max", %{"hidden" => @show_digitals in ["digitals", "image_price", "buy_all"]})} type="button" phx-target={@target} phx-value-type="buy_all" phx-click="edit-digitals">Edit upsell options</button>
-              <% end %>
-            </div>
-          </div>
+    <div class="flex mt-6">
+      <% d = to_form(@download_changeset) %>
+      <div class="flex-col gap-3 w-4/5">
+        <div class="flex flex-col w-4/5">
+          <h2 class="mb-1 text-xl font-bold">Digital Collection</h2>
+          <span class="text-base-250">High-Resolution Digital Images available via download.</span>
         </div>
-        <%= if @for not in [:create_gallery, :import_job] do %>
-          <b class="flex w-1/5">
-            <%= if digitals_total(@download_changeset) == nil do %>
-              -
-            <% else %>
-              <%= digitals_total(@download_changeset) %>
+        <div class="flex flex-row md:gap-8 gap-4 my-2">
+          <div>
+            <span class="flex flex-row items-center mb-2">
+              <.icon name="tick" class="w-6 h-5 mr-1 text-green-finances-300" /><%= make_digital_text(
+                @download_changeset
+              ) %> included
+            </span>
+            <button
+              {testid("edit-digital-collection")}
+              class={
+                classes("underline text-blue-planning-300 mt-auto inline-block w-max", %{
+                  "hidden" => @show_digitals in ["digitals", "image_price", "buy_all"]
+                })
+              }
+              type="button"
+              phx-target={@target}
+              phx-value-type="digitals"
+              phx-click="edit-digitals"
+            >
+              Edit settings
+            </button>
+          </div>
+          <div>
+            <span class="flex flex-row items-center mb-2">
+              <.icon name="tick" class="w-6 h-5 mr-1 text-green-finances-300" /><%= current(
+                @download_changeset
+              )
+              |> Map.get(:each_price) %> an image
+            </span>
+            <%= if (@download_changeset |> current |> Map.get(:status)) !=  :unlimited do %>
+              <button
+                class={
+                  classes("underline text-blue-planning-300 mt-auto inline-block w-max", %{
+                    "hidden" => @show_digitals in ["digitals", "image_price", "buy_all"]
+                  })
+                }
+                type="button"
+                phx-target={@target}
+                phx-value-type="image_price"
+                phx-click="edit-digitals"
+              >
+                Edit image price
+              </button>
             <% end %>
-          </b>
-        <% end %>
-      </div>
-
-      <div class={classes("border border-solid mt-6 rounded-lg md:w-1/2", %{"hidden" => @show_digitals !== "digitals"})}>
-        <div class="items-center cursor-pointer p-2 font-bold bg-base-200 flex justify-between">
-          Digital Collection Settings
-          <a {testid("close-settings")} phx-target={@target} phx-value-type="close" phx-click="edit-digitals"><.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 text-black"/></a>
+          </div>
+          <div>
+            <%= if (@download_changeset |> current |> Map.get(:status)) !=  :unlimited do %>
+              <span class="flex flex-row items-center mb-2">
+                <%= if check?(@download_changeset, :is_buy_all) do %>
+                  <.icon name="tick" class="w-6 h-5 mr-1 text-green-finances-300" />
+                  <%= get_buy_all(@download_changeset) %> buy all
+                <% else %>
+                  <.icon name="close" class="w-6 h-6 mr-1 fill-red-sales-300" /> Buy all not set
+                <% end %>
+              </span>
+              <button
+                class={
+                  classes("underline text-blue-planning-300 mt-auto inline-block w-max", %{
+                    "hidden" => @show_digitals in ["digitals", "image_price", "buy_all"]
+                  })
+                }
+                type="button"
+                phx-target={@target}
+                phx-value-type="buy_all"
+                phx-click="edit-digitals"
+              >
+                Edit upsell options
+              </button>
+            <% end %>
+          </div>
         </div>
-        <.build_download_fields download_changeset={d} {assigns} />
       </div>
+      <%= if @for not in [:create_gallery, :import_job] do %>
+        <b class="flex w-1/5">
+          <%= if digitals_total(@download_changeset) == nil do %>
+            -
+          <% else %>
+            <%= digitals_total(@download_changeset) %>
+          <% end %>
+        </b>
+      <% end %>
+    </div>
 
-      <div class={classes("border border-solid mt-6 rounded-lg md:w-1/2", %{"hidden" => @show_digitals !== "image_price"})}>
-        <div class="items-center cursor-pointer p-2 font-bold bg-base-200 flex justify-between">
-          Digital Image Price
-          <a {testid("close-settings")} phx-target={@target} phx-value-type="close" phx-click="edit-digitals"><.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 text-black"/></a>
-        </div>
-        <.include_download_price download_changeset={d} currency={@currency} currency_symbol={@currency_symbol} />
+    <div class={
+      classes("border border-solid mt-6 rounded-lg md:w-1/2", %{
+        "hidden" => @show_digitals !== "digitals"
+      })
+    }>
+      <div class="items-center cursor-pointer p-2 font-bold bg-base-200 flex justify-between">
+        Digital Collection Settings
+        <a
+          {testid("close-settings")}
+          phx-target={@target}
+          phx-value-type="close"
+          phx-click="edit-digitals"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 text-black" />
+        </a>
       </div>
+      <.build_download_fields download_changeset={d} {assigns} />
+    </div>
 
-      <div class={classes("border border-solid mt-6 rounded-lg md:w-1/2", %{"hidden" => @show_digitals !== "buy_all"})}>
-        <div class="items-center cursor-pointer p-2 font-bold bg-base-200 flex justify-between">
-          Upsell Options
-          <a {testid("close-settings")} phx-target={@target} phx-value-type="close" phx-click="edit-digitals"><.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 text-black"/></a>
-        </div>
-        <.is_buy_all download_changeset={d} currency={@currency} currency_symbol={@currency_symbol} />
+    <div class={
+      classes("border border-solid mt-6 rounded-lg md:w-1/2", %{
+        "hidden" => @show_digitals !== "image_price"
+      })
+    }>
+      <div class="items-center cursor-pointer p-2 font-bold bg-base-200 flex justify-between">
+        Digital Image Price
+        <a
+          {testid("close-settings")}
+          phx-target={@target}
+          phx-value-type="close"
+          phx-click="edit-digitals"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 text-black" />
+        </a>
       </div>
+      <.include_download_price
+        download_changeset={d}
+        currency={@currency}
+        currency_symbol={@currency_symbol}
+      />
+    </div>
+
+    <div class={
+      classes("border border-solid mt-6 rounded-lg md:w-1/2", %{
+        "hidden" => @show_digitals !== "buy_all"
+      })
+    }>
+      <div class="items-center cursor-pointer p-2 font-bold bg-base-200 flex justify-between">
+        Upsell Options
+        <a
+          {testid("close-settings")}
+          phx-target={@target}
+          phx-value-type="close"
+          phx-click="edit-digitals"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 text-black" />
+        </a>
+      </div>
+      <.is_buy_all download_changeset={d} currency={@currency} currency_symbol={@currency_symbol} />
+    </div>
     """
   end
 
@@ -553,27 +865,40 @@ defmodule TodoplaceWeb.PackageLive.Shared do
           <div class="flex flex-col mt-1">
             <div class="flex flex-row items-center">
               <%= input(
-                @download_changeset, :count, type: :number_input, phx_debounce: 200, step: 1,
-                min: 0, placeholder: "0", class: "mt-3 w-full sm:w-32 text-lg text-center md:ml-7"
+                @download_changeset,
+                :count,
+                type: :number_input,
+                phx_debounce: 200,
+                step: 1,
+                min: 0,
+                placeholder: "0",
+                class: "mt-3 w-full sm:w-32 text-lg text-center md:ml-7"
               ) %>
               <span class="ml-2 text-base-250">included in the package</span>
             </div>
           </div>
           <%= if @for not in [:create_gallery, :import_job] do %>
             <div class="flex items-center text-base-250 ml-7 mt-2">
-              <%= checkbox(@download_changeset, :digitals_include_in_total, class: "w-5 h-5 mr-2.5 checkbox") %>
-              <%= label_for @download_changeset, :digitals_include_in_total, label: "Include in package total calculation", class: "font-normal" %>
+              <%= checkbox(@download_changeset, :digitals_include_in_total,
+                class: "w-5 h-5 mr-2.5 checkbox"
+              ) %>
+              <%= label_for(@download_changeset, :digitals_include_in_total,
+                label: "Include in package total calculation",
+                class: "font-normal"
+              ) %>
             </div>
           <% end %>
         <% end %>
 
         <label class="flex mt-3 font-bold">
-            <%= radio_button(@download_changeset, :status, :none, class: "w-5 h-5 mr-2 radio mt-0.5") %>
-            <p>Clients have to pay for all Digital images</p>
+          <%= radio_button(@download_changeset, :status, :none, class: "w-5 h-5 mr-2 radio mt-0.5") %>
+          <p>Clients have to pay for all Digital images</p>
         </label>
         <i class="font-normal ml-7 text-base-250">(Charge for all Digital Images)</i>
         <label class="flex mt-3 font-bold">
-          <%= radio_button(@download_changeset, :status, :unlimited, class: "w-5 h-5 mr-2 radio mt-0.5") %>
+          <%= radio_button(@download_changeset, :status, :unlimited,
+            class: "w-5 h-5 mr-2 radio mt-0.5"
+          ) %>
           <p>Clients have Unlimited Digital Images</p>
         </label>
         <i class="font-normal ml-7 text-base-250">(Do not charge for any Digital Image)</i>
@@ -588,7 +913,9 @@ defmodule TodoplaceWeb.PackageLive.Shared do
 
     ~H"""
     <div class="mt-4 px-6 pb-6 flex flex-col justify-between">
-      <div class="text-base-250">This is optional, but if you’d like to provide your client with the opportunity to buy all images in the gallery, set that here</div>
+      <div class="text-base-250">
+        This is optional, but if you’d like to provide your client with the opportunity to buy all images in the gallery, set that here
+      </div>
       <label class="flex items-center mt-3 font-bold">
         <%= checkbox(@download_changeset, :is_buy_all, class: "w-5 h-5 mr-2.5 checkbox") %>
         <span>Set a <i>Buy Them All</i> price</span>
@@ -596,13 +923,24 @@ defmodule TodoplaceWeb.PackageLive.Shared do
 
       <%= if check?(@download_changeset, :is_buy_all) do %>
         <div class="flex flex-row items-center mt-3 lg:ml-7">
-            <div class="flex flex-row items-center w-auto border border-blue-planning-300 rounded-lg relative">
-              <%= input(@download_changeset, :buy_all, placeholder: "#{@currency_symbol}750.00", class: "w-full sm:w-32 text-lg text-center font-normal bg-white px-1 border-none", phx_hook: "PriceMask", data_currency: @currency_symbol) %>
-            </div>
-            <%= error_tag @download_changeset, :buy_all, class: "text-red-sales-300 text-sm ml-2" %>
-            <span class="ml-3 text-base-250"> for all images </span>
+          <div class="flex flex-row items-center w-auto border border-blue-planning-300 rounded-lg relative">
+            <%= input(@download_changeset, :buy_all,
+              placeholder: "#{@currency_symbol}750.00",
+              class: "w-full sm:w-32 text-lg text-center font-normal bg-white px-1 border-none",
+              phx_hook: "PriceMask",
+              data_currency: @currency_symbol
+            ) %>
+          </div>
+          <%= error_tag(@download_changeset, :buy_all, class: "text-red-sales-300 text-sm ml-2") %>
+          <span class="ml-3 text-base-250"> for all images </span>
         </div>
-        <%= text_input @download_changeset, :currency, value: @currency, class: "form-control lg:ml-7 text-base-250 border-none", phx_debounce: "500", maxlength: 3, autocomplete: "off" %>
+        <%= text_input(@download_changeset, :currency,
+          value: @currency,
+          class: "form-control lg:ml-7 text-base-250 border-none",
+          phx_debounce: "500",
+          maxlength: 3,
+          autocomplete: "off"
+        ) %>
       <% end %>
     </div>
     """
@@ -615,15 +953,28 @@ defmodule TodoplaceWeb.PackageLive.Shared do
     ~H"""
     <div class="flex flex-col justify-between mt-4 sm:flex-row px-6 pb-6">
       <div class="w-full sm:w-auto">
-        <span class="text-base-250">We default to the price you set in global gallery settings, you can override here for this package</span>
+        <span class="text-base-250">
+          We default to the price you set in global gallery settings, you can override here for this package
+        </span>
         <div class="flex flex-row items-center mt-3 lg:ml-7">
           <div class="flex flex-row items-center w-auto border border-blue-planning-300 rounded-lg relative">
-            <%= input(@download_changeset, :each_price, placeholder: "#{@currency_symbol}50.00", class: "w-full sm:w-32 text-lg text-center font-normal bg-white px-1 border-none", phx_hook: "PriceMask", data_currency: @currency_symbol) %>
+            <%= input(@download_changeset, :each_price,
+              placeholder: "#{@currency_symbol}50.00",
+              class: "w-full sm:w-32 text-lg text-center font-normal bg-white px-1 border-none",
+              phx_hook: "PriceMask",
+              data_currency: @currency_symbol
+            ) %>
           </div>
-          <%= error_tag @download_changeset, :each_price, class: "text-red-sales-300 text-sm ml-2" %>
+          <%= error_tag(@download_changeset, :each_price, class: "text-red-sales-300 text-sm ml-2") %>
           <span class="ml-3 text-base-250"> per image </span>
         </div>
-        <%= text_input @download_changeset, :currency, value: @currency, class: "lg:ml-7 form-control border-none text-base-250", phx_debounce: "500", maxlength: 3, autocomplete: "off" %>
+        <%= text_input(@download_changeset, :currency,
+          value: @currency,
+          class: "lg:ml-7 form-control border-none text-base-250",
+          phx_debounce: "500",
+          maxlength: 3,
+          autocomplete: "off"
+        ) %>
       </div>
     </div>
     """
@@ -631,25 +982,29 @@ defmodule TodoplaceWeb.PackageLive.Shared do
 
   defp digital_detail(assigns) do
     ~H"""
-      <%= cond do %>
-        <% Money.zero?(@download_each_price) and @download_count == 0 -> %>
-          <dt class="text-gray-500">All digital images included</dt>
-        <% @download_count == 0 -> %>
-          <dt class="text-gray-500">No digital images included</dt>
-        <% true -> %>
+    <%= cond do %>
+      <% Money.zero?(@download_each_price) and @download_count == 0 -> %>
+        <dt class="text-gray-500">All digital images included</dt>
+      <% @download_count == 0 -> %>
+        <dt class="text-gray-500">No digital images included</dt>
+      <% true -> %>
         <dt class="text-gray-500">Digital images included</dt>
-          <dd class="flex items-center justify-center w-8 h-8 mr-2 text-xs font-bold bg-gray-200 rounded-full group-hover:bg-white">
-            <%= @download_count %>
+        <dd class="flex items-center justify-center w-8 h-8 mr-2 text-xs font-bold bg-gray-200 rounded-full group-hover:bg-white">
+          <%= @download_count %>
         </dd>
-      <% end %>
+    <% end %>
     """
   end
 
   defp print_fields_heading(assigns) do
     ~H"""
     <div class="mt-9 md:mt-1 mb-2 pr-2" {testid("print")}>
-      <h2 class="mb-2 text-xl font-bold justify-self-start sm:mr-4 whitespace-nowrap">Professional Print Credit</h2>
-      <p class="text-base-250">Print Credits allow your clients to order professional prints and products from your gallery based on the amount you set.</p>
+      <h2 class="mb-2 text-xl font-bold justify-self-start sm:mr-4 whitespace-nowrap">
+        Professional Print Credit
+      </h2>
+      <p class="text-base-250">
+        Print Credits allow your clients to order professional prints and products from your gallery based on the amount you set.
+      </p>
     </div>
     """
   end

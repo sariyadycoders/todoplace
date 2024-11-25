@@ -20,7 +20,16 @@ defmodule TodoplaceWeb.GalleryLive.Photos.Photo.Shared do
 
   def photo(assigns) do
     ~H"""
-    <img id={"photo_sub-#{@photo_id}"} phx-click="click" phx-target={@target} phx-value-preview={@preview} phx-value-preview_photo_id={@photo_id} src={@url} class="relative" loading="lazy" />
+    <img
+      id={"photo_sub-#{@photo_id}"}
+      phx-click="click"
+      phx-target={@target}
+      phx-value-preview={@preview}
+      phx-value-preview_photo_id={@photo_id}
+      src={@url}
+      class="relative"
+      loading="lazy"
+    />
     """
   end
 end

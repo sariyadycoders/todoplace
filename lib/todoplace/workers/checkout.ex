@@ -13,6 +13,7 @@ defmodule Todoplace.Workers.Checkout do
     {helpers_module, opts} = Map.pop(opts, "helpers")
 
     Logger.info("created ObAN JOB:\n#{inspect(order_id)}")
+
     case Checkouts.check_out(order_id, opts) do
       {:ok, %{cart: cart, session: %{url: url}}} ->
         Orders.broadcast(cart, {:checkout, :due, url})

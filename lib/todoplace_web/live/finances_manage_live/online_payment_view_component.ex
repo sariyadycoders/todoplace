@@ -29,8 +29,14 @@ defmodule TodoplaceWeb.Live.FinancesManage.OnlinePaymentViewComponent do
           <%= @title %>
         </h1>
 
-        <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
         </button>
       </div>
       <div class="font-bold text-xl mt-3">
@@ -66,7 +72,7 @@ defmodule TodoplaceWeb.Live.FinancesManage.OnlinePaymentViewComponent do
             <%= @product_total_price %>
           </div>
         </div>
-        <hr class="my-3"/>
+        <hr class="my-3" />
         <div class="flex justify-between font-bold">
           <div class="">
             Total
@@ -84,7 +90,7 @@ defmodule TodoplaceWeb.Live.FinancesManage.OnlinePaymentViewComponent do
             <%= @payment_price %>
           </div>
         </div>
-        <hr class="my-3"/>
+        <hr class="my-3" />
         <div class="flex justify-between font-bold">
           <div class="">
             Total
@@ -96,7 +102,7 @@ defmodule TodoplaceWeb.Live.FinancesManage.OnlinePaymentViewComponent do
       <% end %>
 
       <%= if !@is_offline_payment? do %>
-        <hr class="my-3"/>
+        <hr class="my-3" />
         <div class="text-xl font-bold">
           Stripe Taxes and Fees
         </div>
@@ -113,17 +119,30 @@ defmodule TodoplaceWeb.Live.FinancesManage.OnlinePaymentViewComponent do
             Fees
           </div>
           <div class="font-bold">
-          <%= @fees %>
+            <%= @fees %>
           </div>
         </div>
-        <hr class="my-3"/>
+        <hr class="my-3" />
         <%= if @stripe_payment_intent_id do %>
           <div class="text-base-250">
-            Paste this into your <a href={"https://dashboard.stripe.com/#{@current_user.organization.stripe_account_id}/customers/#{@stripe_payment_intent_id}"} target="_blank" class="text-blue-planning-300 underline">Stripe</a> search bar for more details or provide to Todoplace Support
+            Paste this into your
+            <a
+              href={"https://dashboard.stripe.com/#{@current_user.organization.stripe_account_id}/customers/#{@stripe_payment_intent_id}"}
+              target="_blank"
+              class="text-blue-planning-300 underline"
+            >
+              Stripe
+            </a>
+            search bar for more details or provide to Todoplace Support
           </div>
           <div class="p-2 border-2 rounded-lg flex items-center justify-between mt-3">
             <div><%= @stripe_payment_intent_id || "-" %></div>
-            <button id={"copy-intent-#{@stripe_payment_intent_id}"} class="px-2 py-1 rounded-lg bg-base-200 text-blue-planning-300" data-clipboard-text={@stripe_payment_intent_id} phx-hook="Clipboard">
+            <button
+              id={"copy-intent-#{@stripe_payment_intent_id}"}
+              class="px-2 py-1 rounded-lg bg-base-200 text-blue-planning-300"
+              data-clipboard-text={@stripe_payment_intent_id}
+              phx-hook="Clipboard"
+            >
               Copy
               <div class="z-30 bg-white hidden p-1 text-sm rounded shadow" role="tooltip">
                 Copied!
@@ -132,7 +151,15 @@ defmodule TodoplaceWeb.Live.FinancesManage.OnlinePaymentViewComponent do
           </div>
         <% end %>
       <% end %>
-      <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="btn-tertiary mt-3">Close</button>
+      <button
+        phx-click="modal"
+        phx-value-action="close"
+        title="close modal"
+        type="button"
+        class="btn-tertiary mt-3"
+      >
+        Close
+      </button>
     </div>
     """
   end

@@ -166,16 +166,17 @@ defmodule TodoplaceWeb.GalleryLive.ProductPreview.EditProduct do
         streams={@streams}
         selected={@selected}
         myself={@myself}
-        title={@title}>
-          <%= if @title do %>
-            <div class="flex items-start justify-center row-span-2 previewImg">
-              <.framed_preview category={@category} photo={@photo} id="framed-edit-preview" />
-            </div>
-          <% else %>
-            <div class="flex items-start justify-center row-span-2 previewImg">
-              <.framed_preview  photo={@photo} id="framed-edit-preview" />
-            </div>
-          <% end %>
+        title={@title}
+      >
+        <%= if @title do %>
+          <div class="flex items-start justify-center row-span-2 previewImg">
+            <.framed_preview category={@category} photo={@photo} id="framed-edit-preview" />
+          </div>
+        <% else %>
+          <div class="flex items-start justify-center row-span-2 previewImg">
+            <.framed_preview photo={@photo} id="framed-edit-preview" />
+          </div>
+        <% end %>
       </.preview>
     </div>
     """

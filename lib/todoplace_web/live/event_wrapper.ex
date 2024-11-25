@@ -13,7 +13,7 @@ defmodule TodoplaceWeb.Live.EventWrapper do
         end
       end
 
-      defoverridable [handle_event: 3]
+      defoverridable handle_event: 3
 
       defp handle_event_error(event, error, socket) do
         Todoplace.Cache.refresh_current_user_cache(socket.assigns.current_user_data.session_token)

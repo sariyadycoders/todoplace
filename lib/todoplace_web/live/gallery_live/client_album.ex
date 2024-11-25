@@ -75,9 +75,7 @@ defmodule TodoplaceWeb.GalleryLive.ClientAlbum do
       ) do
     socket
     |> place_product_in_cart(whcc_editor_id)
-    |> push_redirect(
-      to: ~p"/album/#{album.client_link_hash}/cart"
-    )
+    |> push_redirect(to: ~p"/album/#{album.client_link_hash}/cart")
     |> noreply()
   end
 
@@ -288,37 +286,43 @@ defmodule TodoplaceWeb.GalleryLive.ClientAlbum do
     <div class="flex flex-col lg:flex-row justify-between lg:items-center my-4 w-full">
       <div class="flex items-center mt-4">
         <%= if Enum.any?(@album_order_photos) || @album.is_finals do %>
-          <.download_link packable={@album} class="mr-4 px-8 font-medium text-base-300 bg-base-100 border border-base-300 min-w-[12rem] hover:text-base-100 hover:bg-base-300">
+          <.download_link
+            packable={@album}
+            class="mr-4 px-8 font-medium text-base-300 bg-base-100 border border-base-300 min-w-[12rem] hover:text-base-100 hover:bg-base-300"
+          >
             Download purchased album photos
             <.icon name="download" class="w-4 h-4 ml-2 fill-current" />
           </.download_link>
         <% end %>
-
       </div>
-      <.toggle_filter title="Show favorites only" event="toggle_favorites" applied?={@favorites_filter} album_favorites_count={@album_favorites_count}/>
+      <.toggle_filter
+        title="Show favorites only"
+        event="toggle_favorites"
+        applied?={@favorites_filter}
+        album_favorites_count={@album_favorites_count}
+      />
     </div>
     """
   end
 
   defp top_section(%{is_proofing: true} = assigns) do
     ~H"""
-      <h3 {testid("album-title")} class="text-lg lg:text-3xl"><%= @album.name %></h3>
-      <p class="mt-2 text-lg font-normal">Select your favorite photos below
-        and then send those selections to your photographer for retouching.
-      </p>
+    <h3 {testid("album-title")} class="text-lg lg:text-3xl"><%= @album.name %></h3>
+    <p class="mt-2 text-lg font-normal">Select your favorite photos below
+      and then send those selections to your photographer for retouching.</p>
     <.photos_count {assigns} />
     """
   end
 
   defp toggle_empty_state(assigns) do
     ~H"""
-      <div class="relative justify-between mb-12 text-2xl font-bold text-center text-base-250">
-        <%= if !@is_proofing do %>
-          Oops, you have no liked photos!
-        <% else %>
-          Oops, you have no selected photos!
-        <% end %>
-      </div>
+    <div class="relative justify-between mb-12 text-2xl font-bold text-center text-base-250">
+      <%= if !@is_proofing do %>
+        Oops, you have no liked photos!
+      <% else %>
+        Oops, you have no selected photos!
+      <% end %>
+    </div>
     """
   end
 
@@ -336,7 +340,12 @@ defmodule TodoplaceWeb.GalleryLive.ClientAlbum do
         </.link>
         <.photos_count photos_count={@photos_count} class="ml-4" />
       </div>
-      <.toggle_filter title="Show selected only" event="toggle_selected" applied?={@selected_filter} album_favorites_count={@album_favorites_count}/>
+      <.toggle_filter
+        title="Show selected only"
+        event="toggle_selected"
+        applied?={@selected_filter}
+        album_favorites_count={@album_favorites_count}
+      />
     </div>
     """
   end
@@ -345,7 +354,7 @@ defmodule TodoplaceWeb.GalleryLive.ClientAlbum do
     count = (count && "#{count} #{ngettext("photo", "photos", count)}") || "photo"
     assigns = assign(assigns, count: count)
 
-    ~H[<div class={"text-sm lg:text-xl text-base-250 #{@class}"}> <%= @count %></div>]
+    ~H[<div class={"text-sm lg:text-xl text-base-250 #{@class}"}><%= @count %></div>]
   end
 
   defp photos_count(nil), do: "photo"
@@ -363,10 +372,12 @@ defmodule TodoplaceWeb.GalleryLive.ClientAlbum do
           <div class="text-sm lg:text-xl text-base-250"><%= @title %></div>
 
           <div class="relative ml-3">
-            <input type="checkbox" class="sr-only" phx-click={@event}>
+            <input type="checkbox" class="sr-only" phx-click={@event} />
 
-            <div class={"block h-8 border rounded-full w-14 border-blue-planning-300 #{@class_1}"}></div>
-            <div class={"absolute w-6 h-6 rounded-full dot top-1 bg-blue-planning-300 transition #{@class_2}"}></div>
+            <div class={"block h-8 border rounded-full w-14 border-blue-planning-300 #{@class_1}"}>
+            </div>
+            <div class={"absolute w-6 h-6 rounded-full dot top-1 bg-blue-planning-300 transition #{@class_2}"}>
+            </div>
           </div>
         </label>
       </div>

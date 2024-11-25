@@ -106,7 +106,8 @@ defmodule TodoplaceWeb.GalleryLive.Photos.UploadError do
   end
 
   defp error_broadcast(gallery_id),
-    do: PubSub.broadcast(Todoplace.PubSub, "clear_photos_error:#{gallery_id}", :clear_photos_error)
+    do:
+      PubSub.broadcast(Todoplace.PubSub, "clear_photos_error:#{gallery_id}", :clear_photos_error)
 
   defp delete_broadcast(gallery_id, index, delete_from) do
     PubSub.broadcast(
@@ -120,23 +121,17 @@ defmodule TodoplaceWeb.GalleryLive.Photos.UploadError do
     ~H"""
     <div class="pl-4">
       <%= cond do %>
-      <% @invalid_count > 0 && @pending_count == 0 -> %>
-        It looks like some of your photos failed because they’re duplicate photos, invalid file type or over our photo size limit. We accept photos up to
-        <span class="font-bold">100MB </span>
-        in size. Please reduce the file size or change the file name of these photos and reupload.
-
-      <% @invalid_count == 0 && @pending_count > 0 -> %>
-        We can only upload
-        <span class="font-bold">1,500 photos at a time</span>
-        , so some of your photos are still in the upload queue. You can retry uploading these photos below.
-
-      <% true -> %>
-        It looks like some of your photos failed because they’re duplicate photos, invalid file type or over our photo size limit. We accept photos up to
-        <span class="font-bold">100MB </span>in size. Please reduce the file size or change the file name of these photos and reupload.<br>
-        <br>
-        We can only upload
-        <span class="font-bold">1,500 photos at a time</span>
-        , so some of your photos are still in the upload queue. You can retry uploading these photos below.
+        <% @invalid_count > 0 && @pending_count == 0 -> %>
+          It looks like some of your photos failed because they’re duplicate photos, invalid file type or over our photo size limit. We accept photos up to
+          <span class="font-bold">100MB </span>
+          in size. Please reduce the file size or change the file name of these photos and reupload.
+        <% @invalid_count == 0 && @pending_count > 0 -> %>
+          We can only upload <span class="font-bold">1,500 photos at a time</span>
+          , so some of your photos are still in the upload queue. You can retry uploading these photos below.
+        <% true -> %>
+          It looks like some of your photos failed because they’re duplicate photos, invalid file type or over our photo size limit. We accept photos up to <span class="font-bold">100MB </span>in size. Please reduce the file size or change the file name of these photos and reupload.<br />
+          <br /> We can only upload <span class="font-bold">1,500 photos at a time</span>
+          , so some of your photos are still in the upload queue. You can retry uploading these photos below.
       <% end %>
     </div>
     """

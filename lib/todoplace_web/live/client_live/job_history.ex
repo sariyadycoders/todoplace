@@ -75,9 +75,7 @@ defmodule TodoplaceWeb.Live.ClientLive.JobHistory do
       end
 
     socket
-    |> push_redirect(
-      to: ~p"/galleries/#{gallery.id}?#{%{is_mobile: false}}"
-    )
+    |> push_redirect(to: ~p"/galleries/#{gallery.id}?#{%{is_mobile: false}}")
     |> noreply()
   end
 
@@ -217,23 +215,29 @@ defmodule TodoplaceWeb.Live.ClientLive.JobHistory do
     assigns = assigns |> Enum.into(%{is_lead: assigns.job.job_status.is_lead})
 
     ~H"""
-      <div class="py-0 md:py-2">
-        <div class="font-bold">
-          <%= Calendar.strftime(@job.inserted_at, "%m/%d/%y") %>
-        </div>
-        <div class={"font-bold w-full"}>
-          <a href={fetch_redirection_link(@is_lead, @job)}>
-            <span class={classes("w-full text-blue-planning-300 underline", %{"truncate" => String.length(Job.name(@job)) > 29})}><%= Job.name(@job) %></span>
-          </a>
-        </div>
-        <%= if @job.package do %>
-          <div class="text-base-250 font-normal"><%= @job.package.name %></div>
-        <% end %>
-        <div class="text-base-250 font-normal mb-2">
-          <%= Jobs.get_job_shooting_minutes(@job) %> minutes
-        </div>
-        <.status_badge job={@job}/>
+    <div class="py-0 md:py-2">
+      <div class="font-bold">
+        <%= Calendar.strftime(@job.inserted_at, "%m/%d/%y") %>
       </div>
+      <div class="font-bold w-full">
+        <a href={fetch_redirection_link(@is_lead, @job)}>
+          <span class={
+            classes("w-full text-blue-planning-300 underline", %{
+              "truncate" => String.length(Job.name(@job)) > 29
+            })
+          }>
+            <%= Job.name(@job) %>
+          </span>
+        </a>
+      </div>
+      <%= if @job.package do %>
+        <div class="text-base-250 font-normal"><%= @job.package.name %></div>
+      <% end %>
+      <div class="text-base-250 font-normal mb-2">
+        <%= Jobs.get_job_shooting_minutes(@job) %> minutes
+      </div>
+      <.status_badge job={@job} />
+    </div>
     """
   end
 
@@ -249,7 +253,12 @@ defmodule TodoplaceWeb.Live.ClientLive.JobHistory do
     assigns = assign(assigns, icon_text_class: icon_text_class)
 
     ~H"""
-    <a {@link} class={"text-gray-700 block px-4 py-2 text-sm hover:bg-blue-planning-100 cursor-pointer #{@class} #{@icon}"} role="menuitem" tabindex="-1">
+    <a
+      {@link}
+      class={"text-gray-700 block px-4 py-2 text-sm hover:bg-blue-planning-100 cursor-pointer #{@class} #{@icon}"}
+      role="menuitem"
+      tabindex="-1"
+    >
       <.icon name={@icon} class={"w-4 h-4 fill-current #{@icon_text_class} inline mr-1"} />
       <%= @title %>
     </a>

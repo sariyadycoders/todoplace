@@ -117,37 +117,37 @@ defmodule TodoplaceWeb.HomeLive.Index do
     |> noreply()
   end
 
-    @impl true
+  @impl true
   def handle_params(_params, _uri, socket), do: socket |> noreply()
 
-    @impl true
-      def handle_event("system-settings", _, %{assigns: %{current_user_data: user_data}} = socket) do
-         socket
-        |> open_modal(TodoplaceWeb.Live.Admin.SystemSettings, %{
-          user_data: user_data,
-        })
-        |> noreply()
-      end
+  @impl true
+  def handle_event("system-settings", _, %{assigns: %{current_user_data: user_data}} = socket) do
+    socket
+    |> open_modal(TodoplaceWeb.Live.Admin.SystemSettings, %{
+      user_data: user_data
+    })
+    |> noreply()
+  end
 
-      @impl true
-      def handle_event("add-organization", _, %{assigns: %{current_user_data: user_data}} = socket) do
-         socket
-        |> open_modal(TodoplaceWeb.OrganizationLive.AddOrganizationComponent, %{
-          user_data: user_data,
-        })
-        |> noreply()
-      end
+  @impl true
+  def handle_event("add-organization", _, %{assigns: %{current_user_data: user_data}} = socket) do
+    socket
+    |> open_modal(TodoplaceWeb.OrganizationLive.AddOrganizationComponent, %{
+      user_data: user_data
+    })
+    |> noreply()
+  end
 
-      @impl true
-      def handle_event("create-organization", _, %{assigns: %{current_user_data: user_data}} = socket) do
-         socket
-        |> open_modal(TodoplaceWeb.OrganizationLive.CreateOrganizationComponent, %{
-          user_data: user_data,
-          current_path: "/home",
-          organization_page: false
-        })
-        |> noreply()
-      end
+  @impl true
+  def handle_event("create-organization", _, %{assigns: %{current_user_data: user_data}} = socket) do
+    socket
+    |> open_modal(TodoplaceWeb.OrganizationLive.CreateOrganizationComponent, %{
+      user_data: user_data,
+      current_path: "/home",
+      organization_page: false
+    })
+    |> noreply()
+  end
 
   @impl true
   def handle_event(
@@ -289,7 +289,6 @@ defmodule TodoplaceWeb.HomeLive.Index do
     |> assign(:promotion_code_open, !promotion_code_open)
     |> noreply()
   end
-
 
   @impl true
   def handle_event(
@@ -746,8 +745,20 @@ defmodule TodoplaceWeb.HomeLive.Index do
     ~H"""
     <ul class="flex overflow-auto gap-6 mb-6 py-6 md:py-0">
       <%= for {true, %{name: name, action: action, concise_name: concise_name, redirect_route: redirect_route}} <- @tabs do %>
-        <li class={classes("text-blue-planning-300 font-bold text-lg border-b-4 transition-all shrink-0", %{"opacity-100 border-b-blue-planning-300" => @tab_active === concise_name, "opacity-40 border-b-transparent hover:opacity-100" => @tab_active !== concise_name})}>
-          <button type="button" phx-click={action} phx-value-tab={concise_name} phx-value-to={redirect_route}><%= name %></button>
+        <li class={
+          classes("text-blue-planning-300 font-bold text-lg border-b-4 transition-all shrink-0", %{
+            "opacity-100 border-b-blue-planning-300" => @tab_active === concise_name,
+            "opacity-40 border-b-transparent hover:opacity-100" => @tab_active !== concise_name
+          })
+        }>
+          <button
+            type="button"
+            phx-click={action}
+            phx-value-tab={concise_name}
+            phx-value-to={redirect_route}
+          >
+            <%= name %>
+          </button>
         </li>
       <% end %>
     </ul>
@@ -759,233 +770,433 @@ defmodule TodoplaceWeb.HomeLive.Index do
     <div>
       <%= case @tab_active do %>
         <% "clients" -> %>
-          <.recents_card add_event="add-client" view_event="view-clients" hidden={Enum.empty?(@clients)} button_title="Create a client" title="Recent Clients" class="h-auto" color="blue-planning-300">
-          <hr class="mb-4 mt-4" />
+          <.recents_card
+            add_event="add-client"
+            view_event="view-clients"
+            hidden={Enum.empty?(@clients)}
+            button_title="Create a client"
+            title="Recent Clients"
+            class="h-auto"
+            color="blue-planning-300"
+          >
+            <hr class="mb-4 mt-4" />
             <%= case @clients do %>
               <% [] -> %>
-              <div class="flex flex-col mt-4 lg:flex-none">
-                <.empty_state_base tour_embed="https://demo.arcade.software/y2cGEpUW0B2FoO2BAa1b?embed" cta_class="mt-0" body="Let's start by adding your clients - whether they are new or if existing, feel free to contact Todoplace for help with bulk uploading." third_party_padding="calc(59.916666666666664% + 41px)" show_dismiss={false}>
-                  <button type="button" phx-click="add-client" class="link md:w-auto text-center text-xl flex-shrink-0 whitespace-nowrap">Add client</button>
-                </.empty_state_base>
+                <div class="flex flex-col mt-4 lg:flex-none">
+                  <.empty_state_base
+                    tour_embed="https://demo.arcade.software/y2cGEpUW0B2FoO2BAa1b?embed"
+                    cta_class="mt-0"
+                    body="Let's start by adding your clients - whether they are new or if existing, feel free to contact Todoplace for help with bulk uploading."
+                    third_party_padding="calc(59.916666666666664% + 41px)"
+                    show_dismiss={false}
+                  >
+                    <button
+                      type="button"
+                      phx-click="add-client"
+                      class="link md:w-auto text-center text-xl flex-shrink-0 whitespace-nowrap"
+                    >
+                      Add client
+                    </button>
+                  </.empty_state_base>
                 </div>
               <% clients -> %>
-              <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-                <%= for client <- clients do %>
-                  <.link navigate={~p"/clients/#{client.id}"}>
-                    <p class="text-blue-planning-300 text-18px font-bold underline hover:cursor-pointer capitalize">
-                      <%= if client.name do
-                        if String.length(client.name) <= 40 do
-                          client.name
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                  <%= for client <- clients do %>
+                    <.link navigate={~p"/clients/#{client.id}"}>
+                      <p class="text-blue-planning-300 text-18px font-bold underline hover:cursor-pointer capitalize">
+                        <%= if client.name do
+                          if String.length(client.name) <= 40 do
+                            client.name
+                          else
+                            "#{client.name |> String.slice(0..40)} ..."
+                          end
                         else
-                          "#{client.name |> String.slice(0..40)} ..."
-                        end
-                      else
-                        "-"
-                      end %>
-                    </p>
-                    <p class="text-gray-400 font-normal text-sm">
-                      <%= client.email %>
-                    </p>
-                  </.link>
-                <% end %>
-              </div>
+                          "-"
+                        end %>
+                      </p>
+                      <p class="text-gray-400 font-normal text-sm">
+                        <%= client.email %>
+                      </p>
+                    </.link>
+                  <% end %>
+                </div>
             <% end %>
           </.recents_card>
-
         <% "leads" -> %>
-        <.recents_card add_event="create-lead" view_event="view-leads" hidden={Enum.empty?(@leads)} button_title="Create a lead" title="Recent Leads" class="h-auto" color="blue-planning-300">
-          <hr class="mb-4 mt-4" />
-          <%= case @leads do %>
-            <% [] -> %>
-              <div class="flex md:flex-row flex-col items-center p-4 gap-6">
-                <iframe src="https://www.youtube.com/embed/V90oycrU45g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="aspect-video"></iframe>
-                <p class="md:max-w-md text-base-250 text-normal mb-8">Generating leads is the pipeline to booked clients. <span class="font-normal text-normal text-blue-planning-300"><a class="underline" target="_blank" rel="noopener noreferrer" href={"#{base_url(:support)}article/40-create-a-lead"}>Learn more</a></span> and create some now.</p>
-              </div>
-            <% leads -> %>
-            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-              <%= for lead <- leads do %>
-                <.link navigate={~p"/leads/#{lead.id}"}>
-                  <div class="flex flex-row">
-                    <p class="text-blue-planning-300 text-18px font-bold underline hover:cursor-pointer capitalize">
-                      <%= if String.length(Job.name(lead)) <= 40 do
-                          Job.name(lead) || "-"
-                        else
-                          "#{Job.name(lead) |> String.slice(0..40)} ..."
-                        end %>
-                    </p>
-                    <.status_badge class="ml-4 w-fit" job={lead}/>
-                  </div>
-                  <p class="text-gray-400 font-normal text-sm">
-                    Created <%= lead.inserted_at |> format_date_via_type("MM/DD/YY") |> String.trim("0") %>
+          <.recents_card
+            add_event="create-lead"
+            view_event="view-leads"
+            hidden={Enum.empty?(@leads)}
+            button_title="Create a lead"
+            title="Recent Leads"
+            class="h-auto"
+            color="blue-planning-300"
+          >
+            <hr class="mb-4 mt-4" />
+            <%= case @leads do %>
+              <% [] -> %>
+                <div class="flex md:flex-row flex-col items-center p-4 gap-6">
+                  <iframe
+                    src="https://www.youtube.com/embed/V90oycrU45g"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="aspect-video"
+                  >
+                  </iframe>
+                  <p class="md:max-w-md text-base-250 text-normal mb-8">
+                    Generating leads is the pipeline to booked clients.
+                    <span class="font-normal text-normal text-blue-planning-300">
+                      <a
+                        class="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={"#{base_url(:support)}article/40-create-a-lead"}
+                      >
+                        Learn more
+                      </a>
+                    </span>
+                    and create some now.
                   </p>
-                </.link>
-              <% end %>
-            </div>
-          <% end %>
-        </.recents_card>
-
-        <% "jobs" -> %>
-        <.recents_card add_event="import-job" view_event="view-jobs" hidden={Enum.empty?(@jobs)} button_title="Import a job" title="Upcoming Jobs" class="h-auto">
-          <hr class="mt-4 mb-4" />
-          <%= case @jobs do %>
-            <% [] -> %>
-              <div class="flex md:flex-row flex-col items-center p-4 gap-6">
-                <iframe src="https://www.youtube.com/embed/XWZH_65evuM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="aspect-video"></iframe>
-                <p class="md:max-w-md text-base-250 text-normal mb-8">Booking jobs will get you on your way to making a profit. If you are migrating existing jobs from another platform, use our import a job button above.</p>
-              </div>
-            <% jobs -> %>
-            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-              <%= for job <- jobs do %>
-                <.link navigate={~p"/jobs/#{job.id}"}>
-                  <p class="text-blue-planning-300 text-18px font-bold underline hover:cursor-pointer capitalize">
-                    <%= if String.length(Job.name(job)) <= 40 do
-                        Job.name(job) || "-"
-                      else
-                        "#{Job.name(job) |> String.slice(0..40)} ..."
-                      end %>
-                  </p>
-                  <%= if Shoots.get_next_shoot(job) do %>
-                    <p class="text-gray-400 font-normal text-sm">
-                      Next Shoot <%= job |> Shoots.get_next_shoot() |> Map.get(:starts_at) |> format_date_via_type("MM/DD/YY") |> String.trim("0") %>
-                    </p>
+                </div>
+              <% leads -> %>
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                  <%= for lead <- leads do %>
+                    <.link navigate={~p"/leads/#{lead.id}"}>
+                      <div class="flex flex-row">
+                        <p class="text-blue-planning-300 text-18px font-bold underline hover:cursor-pointer capitalize">
+                          <%= if String.length(Job.name(lead)) <= 40 do
+                            Job.name(lead) || "-"
+                          else
+                            "#{Job.name(lead) |> String.slice(0..40)} ..."
+                          end %>
+                        </p>
+                        <.status_badge class="ml-4 w-fit" job={lead} />
+                      </div>
+                      <p class="text-gray-400 font-normal text-sm">
+                        Created <%= lead.inserted_at
+                        |> format_date_via_type("MM/DD/YY")
+                        |> String.trim("0") %>
+                      </p>
+                    </.link>
                   <% end %>
-                </.link>
-              <% end %>
-            </div>
-          <% end %>
-        </.recents_card>
-
+                </div>
+            <% end %>
+          </.recents_card>
+        <% "jobs" -> %>
+          <.recents_card
+            add_event="import-job"
+            view_event="view-jobs"
+            hidden={Enum.empty?(@jobs)}
+            button_title="Import a job"
+            title="Upcoming Jobs"
+            class="h-auto"
+          >
+            <hr class="mt-4 mb-4" />
+            <%= case @jobs do %>
+              <% [] -> %>
+                <div class="flex md:flex-row flex-col items-center p-4 gap-6">
+                  <iframe
+                    src="https://www.youtube.com/embed/XWZH_65evuM"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="aspect-video"
+                  >
+                  </iframe>
+                  <p class="md:max-w-md text-base-250 text-normal mb-8">
+                    Booking jobs will get you on your way to making a profit. If you are migrating existing jobs from another platform, use our import a job button above.
+                  </p>
+                </div>
+              <% jobs -> %>
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                  <%= for job <- jobs do %>
+                    <.link navigate={~p"/jobs/#{job.id}"}>
+                      <p class="text-blue-planning-300 text-18px font-bold underline hover:cursor-pointer capitalize">
+                        <%= if String.length(Job.name(job)) <= 40 do
+                          Job.name(job) || "-"
+                        else
+                          "#{Job.name(job) |> String.slice(0..40)} ..."
+                        end %>
+                      </p>
+                      <%= if Shoots.get_next_shoot(job) do %>
+                        <p class="text-gray-400 font-normal text-sm">
+                          Next Shoot <%= job
+                          |> Shoots.get_next_shoot()
+                          |> Map.get(:starts_at)
+                          |> format_date_via_type("MM/DD/YY")
+                          |> String.trim("0") %>
+                        </p>
+                      <% end %>
+                    </.link>
+                  <% end %>
+                </div>
+            <% end %>
+          </.recents_card>
         <% "galleries" -> %>
-          <.recents_card add_event="create-gallery" view_event="view-galleries" hidden={Enum.empty?(@galleries)} button_title="Create a gallery" title="Recent Galleries" class="h-auto" color="blue-planning-300">
+          <.recents_card
+            add_event="create-gallery"
+            view_event="view-galleries"
+            hidden={Enum.empty?(@galleries)}
+            button_title="Create a gallery"
+            title="Recent Galleries"
+            class="h-auto"
+            color="blue-planning-300"
+          >
             <hr class="mt-4 mb-4" />
             <%= case @galleries do %>
               <% [] -> %>
                 <div class="flex md:flex-row flex-col items-center p-4 gap-6">
-                  <iframe src="https://www.youtube.com/embed/uEY3eS9cDIk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="aspect-video"></iframe>
-                  <p class="md:max-w-md text-base-250 text-normal mb-8">With unlimited gallery storage, don't think twice about migrating existing galleries from other platforms and creating new ones.</p>
+                  <iframe
+                    src="https://www.youtube.com/embed/uEY3eS9cDIk"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="aspect-video"
+                  >
+                  </iframe>
+                  <p class="md:max-w-md text-base-250 text-normal mb-8">
+                    With unlimited gallery storage, don't think twice about migrating existing galleries from other platforms and creating new ones.
+                  </p>
                 </div>
               <% galleries -> %>
-              <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 md:gap-4 gap-6">
-                <%= for {gallery, gallery_index} <- galleries |> Enum.with_index() do %>
-                  <.recent_data socket={@socket} data={gallery} index={@index} data_index={gallery_index} />
-                <% end %>
-              </div>
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 md:gap-4 gap-6">
+                  <%= for {gallery, gallery_index} <- galleries |> Enum.with_index() do %>
+                    <.recent_data
+                      socket={@socket}
+                      data={gallery}
+                      index={@index}
+                      data_index={gallery_index}
+                    />
+                  <% end %>
+                </div>
             <% end %>
           </.recents_card>
-
         <% "booking-events" -> %>
-          <.recents_card add_event="new-event" view_event="view-booking-events" hidden={Enum.empty?(@booking_events)} button_title="Create a booking event" title="Recent Booking Events" class="h-auto" color="blue-planning-300">
+          <.recents_card
+            add_event="new-event"
+            view_event="view-booking-events"
+            hidden={Enum.empty?(@booking_events)}
+            button_title="Create a booking event"
+            title="Recent Booking Events"
+            class="h-auto"
+            color="blue-planning-300"
+          >
             <hr class="mt-4 mb-4" />
             <%= case @booking_events |> Enum.take(6) do %>
               <% [] -> %>
-                  <div class="flex md:flex-row flex-col items-center p-4 md:gap-4 gap-6">
-                    <iframe src="https://www.youtube.com/embed/aVnPMupMK8Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="aspect-video"></iframe>
-                    <p class="md:max-w-md text-base-250 text-normal mb-8">Booking events are an easy way to get jobs booked, paid and prepped efficiently - for both you and your clients.</p>
-                  </div>
+                <div class="flex md:flex-row flex-col items-center p-4 md:gap-4 gap-6">
+                  <iframe
+                    src="https://www.youtube.com/embed/aVnPMupMK8Q"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="aspect-video"
+                  >
+                  </iframe>
+                  <p class="md:max-w-md text-base-250 text-normal mb-8">
+                    Booking events are an easy way to get jobs booked, paid and prepped efficiently - for both you and your clients.
+                  </p>
+                </div>
               <% booking_events -> %>
-              <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-                <%= for {booking_event, booking_index} <- booking_events |> Enum.with_index() do %>
-                  <.recent_data socket={@socket} data={booking_event} index={@index} data_index={booking_index} />
-                <% end %>
-              </div>
+                <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                  <%= for {booking_event, booking_index} <- booking_events |> Enum.with_index() do %>
+                    <.recent_data
+                      socket={@socket}
+                      data={booking_event}
+                      index={@index}
+                      data_index={booking_index}
+                    />
+                  <% end %>
+                </div>
             <% end %>
           </.recents_card>
-
         <% "packages" -> %>
-          <.recents_card add_event="add-package" view_event="view-packages" hidden={Enum.empty?(@packages)} button_title="Create a package" title="Recent Packages" class="h-auto" color="blue-planning-300">
+          <.recents_card
+            add_event="add-package"
+            view_event="view-packages"
+            hidden={Enum.empty?(@packages)}
+            button_title="Create a package"
+            title="Recent Packages"
+            class="h-auto"
+            color="blue-planning-300"
+          >
             <hr class="mt-4 mb-4" />
             <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
               <%= for package <- @packages do %>
                 <.link navigate={~p"/package_templates/#{package.id}/edit"}>
                   <p class="text-blue-planning-300 text-18px font-bold underline hover:cursor-pointer capitalize">
                     <%= if String.length(package.name) <= 40 do
-                        package.name || "-"
-                      else
-                        "#{package.name |> String.slice(0..40)} ..."
-                      end %>
+                      package.name || "-"
+                    else
+                      "#{package.name |> String.slice(0..40)} ..."
+                    end %>
                   </p>
                   <div class="flex flex-col sm:grid sm:grid-cols-2 justify-between text-gray-400 font-normal text-sm break-all gap-1 sm:gap-2">
                     <span>Package price: <%= package |> Package.price() %></span>
-                    <span>Digital price: <%= if Money.zero?(package.download_each_price) do %>--<% else %><%= package.download_each_price %> <% end %></span>
+                    <span>
+                      Digital price:
+                      <%= if Money.zero?(package.download_each_price) do %>
+                        --
+                      <% else %>
+                        <%= package.download_each_price %>
+                      <% end %>
+                    </span>
                   </div>
                 </.link>
               <% end %>
             </div>
           </.recents_card>
-
         <% "finish-setup" -> %>
           <div class="grid grid-rows-2 gap-5">
             <div class="grid md:grid-cols-2 grid-cols-1 gap-5">
               <%= if @stripe_status != :charges_enabled do %>
-                <div {testid("card-finish-setup")} class={"flex border border-base-200 rounded-lg h-auto"}>
-                  <div class={"w-3 flex-shrink-0 border-r rounded-l-lg bg-blue-planning-300"} />
+                <div
+                  {testid("card-finish-setup")}
+                  class="flex border border-base-200 rounded-lg h-auto"
+                >
+                  <div class="w-3 flex-shrink-0 border-r rounded-l-lg bg-blue-planning-300" />
                   <div class="flex md:flex-row flex-col mt-4 p-4 gap-6">
-                    <iframe src="https://www.youtube.com/embed/8OQSazeLgv8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="aspect-video mb-24"></iframe>
+                    <iframe
+                      src="https://www.youtube.com/embed/8OQSazeLgv8"
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                      class="aspect-video mb-24"
+                    >
+                    </iframe>
                     <div class="flex flex-col">
                       <h1 class="text-xl font-bold mb-4">Seamless payment thru Stripe</h1>
-                      <p class="text-base-250 text-normal mb-8">Stripe is the platform we use to enable swift and automatic client payments processing for you and your business.</p>
-                      <.card_buttons {assigns} class="btn-primary" current_user={@current_user} socket={@socket} concise_name={@org_stripe_card.card.concise_name} org_card_id={@org_stripe_card.id} buttons={@org_stripe_card.card.buttons} />
+                      <p class="text-base-250 text-normal mb-8">
+                        Stripe is the platform we use to enable swift and automatic client payments processing for you and your business.
+                      </p>
+                      <.card_buttons
+                        {assigns}
+                        class="btn-primary"
+                        current_user={@current_user}
+                        socket={@socket}
+                        concise_name={@org_stripe_card.card.concise_name}
+                        org_card_id={@org_stripe_card.id}
+                        buttons={@org_stripe_card.card.buttons}
+                      />
                     </div>
                   </div>
                 </div>
               <% end %>
 
-              <div {testid("card-get-started")} class={"flex border border-base-200 rounded-lg h-auto"}>
-                <div class={"w-3 flex-shrink-0 border-r rounded-l-lg bg-blue-planning-300"} />
+              <div {testid("card-get-started")} class="flex border border-base-200 rounded-lg h-auto">
+                <div class="w-3 flex-shrink-0 border-r rounded-l-lg bg-blue-planning-300" />
                 <div class="flex md:flex-row flex-col mt-4 p-4 gap-6">
-                  <iframe src="https://www.youtube.com/embed/8OQSazeLgv8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="aspect-video mb-24"></iframe>
+                  <iframe
+                    src="https://www.youtube.com/embed/8OQSazeLgv8"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="aspect-video mb-24"
+                  >
+                  </iframe>
                   <div class="flex flex-col">
                     <h1 class="text-xl font-bold mb-4">Get your packages setup</h1>
-                    <p class="text-base-250 text-normal mb-8">Packages are to your business and success! Start with our Smart Profit Calculator™ to calculate pricing and be sure to get your packages set up now.</p>
-                    <button type="button" phx-click="view-packages" class="w-full md:w-auto btn-primary flex-shrink-0 text-center">Get Started</button>
+                    <p class="text-base-250 text-normal mb-8">
+                      Packages are to your business and success! Start with our Smart Profit Calculator™ to calculate pricing and be sure to get your packages set up now.
+                    </p>
+                    <button
+                      type="button"
+                      phx-click="view-packages"
+                      class="w-full md:w-auto btn-primary flex-shrink-0 text-center"
+                    >
+                      Get Started
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div {testid("card-finish-setup")} class={"flex border border-base-200 rounded-lg h-auto"}>
-              <div class={"w-3 flex-shrink-0 border-r rounded-l-lg bg-blue-planning-300"} />
-                <div class="flex flex-col p-4">
-                  <div class="flex row">
-                    <h1 class="text-xl font-bold mb-4">Todoplace Account Set-up</h1>
-                    <.icon name="confetti-welcome" class="inline-block w-7 h-7 text-blue-planning-300" />
-                  </div>
-                  <p class="text-base-250 text-normal">The classic “Chicken or the Egg” problem. We know it is overwhelming getting started with any software. Here’s what we suggest to do to get familiar and setup:</p>
+            <div {testid("card-finish-setup")} class="flex border border-base-200 rounded-lg h-auto">
+              <div class="w-3 flex-shrink-0 border-r rounded-l-lg bg-blue-planning-300" />
+              <div class="flex flex-col p-4">
+                <div class="flex row">
+                  <h1 class="text-xl font-bold mb-4">Todoplace Account Set-up</h1>
+                  <.icon name="confetti-welcome" class="inline-block w-7 h-7 text-blue-planning-300" />
                 </div>
+                <p class="text-base-250 text-normal">
+                  The classic “Chicken or the Egg” problem. We know it is overwhelming getting started with any software. Here’s what we suggest to do to get familiar and setup:
+                </p>
+              </div>
             </div>
           </div>
-
         <% _ -> %>
           <%= case @attention_items do %>
             <% [] -> %>
-              <h6 class="flex items-center font-bold text-blue-planning-300"><.icon name="confetti-welcome" class="inline-block w-8 h-8 text-blue-planning-300" /> You're all caught up!</h6>
+              <h6 class="flex items-center font-bold text-blue-planning-300">
+                <.icon name="confetti-welcome" class="inline-block w-8 h-8 text-blue-planning-300" />
+                You're all caught up!
+              </h6>
             <% items -> %>
-              <ul class={classes("flex overflow-auto intro-next-up", %{"xl:overflow-none" => !@should_attention_items_overflow })}>
+              <ul class={
+                classes("flex overflow-auto intro-next-up", %{
+                  "xl:overflow-none" => !@should_attention_items_overflow
+                })
+              }>
                 <%= for {true, %{card: %{title: title, body: body, icon: icon, buttons: buttons, concise_name: concise_name, color: color, class: class}} = org_card} <- items do %>
-                  <li {testid("attention-item")} class={classes("attention-item flex-shrink-0 flex flex-col justify-between relative max-w-sm w-3/4 p-5 cursor-pointer mr-4 border rounded-lg #{class} bg-white border-gray-250", %{"xl:flex-1" => !@should_attention_items_overflow})}>
+                  <li
+                    {testid("attention-item")}
+                    class={
+                      classes(
+                        "attention-item flex-shrink-0 flex flex-col justify-between relative max-w-sm w-3/4 p-5 cursor-pointer mr-4 border rounded-lg #{class} bg-white border-gray-250",
+                        %{"xl:flex-1" => !@should_attention_items_overflow}
+                      )
+                    }
+                  >
                     <%= if org_card.status == :viewed and concise_name != "black-friday" do %>
                       <div class="flex justify-between absolute w-full">
                         <span></span>
-                        <span class="sm:pr-[30px] pr-[25px]" phx-click="card_status" phx-value-org_card_id={org_card.id} phx-value-status="inactive">
-                          <.icon name="close-x" class="mt-[-7px] w-3 h-3 stroke-current stroke-2 base-250" />
+                        <span
+                          class="sm:pr-[30px] pr-[25px]"
+                          phx-click="card_status"
+                          phx-value-org_card_id={org_card.id}
+                          phx-value-status="inactive"
+                        >
+                          <.icon
+                            name="close-x"
+                            class="mt-[-7px] w-3 h-3 stroke-current stroke-2 base-250"
+                          />
                         </span>
                       </div>
                     <% end %>
 
                     <div>
                       <div class="flex">
-                        <.icon name={icon} width="23" height="20" class={"block mr-2 mt-1 rounded-sm fill-current text-#{color}"} />
+                        <.icon
+                          name={icon}
+                          width="23"
+                          height="20"
+                          class={"block mr-2 mt-1 rounded-sm fill-current text-#{color}"}
+                        />
                         <h1 class="text-lg font-bold"><%= title %></h1>
                       </div>
 
                       <p class="my-2 text-sm"><%= body %></p>
                     </div>
 
-                    <.card_buttons {assigns} current_user={@current_user} socket={@socket} concise_name={concise_name} org_card_id={org_card.id} buttons={buttons} />
+                    <.card_buttons
+                      {assigns}
+                      current_user={@current_user}
+                      socket={@socket}
+                      concise_name={concise_name}
+                      org_card_id={org_card.id}
+                      buttons={buttons}
+                    />
                   </li>
                 <% end %>
               </ul>
-            <% end %>
+          <% end %>
       <% end %>
     </div>
     """
@@ -1000,7 +1211,12 @@ defmodule TodoplaceWeb.HomeLive.Index do
       })
 
     ~H"""
-    <button title={@button_text} type="button" phx-click={@button_action} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
+    <button
+      title={@button_text}
+      type="button"
+      phx-click={@button_action}
+      class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+    >
       <.icon name={@button_icon} class="inline-block w-4 h-4 mr-3 text-blue-planning-300" />
       <%= @button_text %>
     </button>
@@ -1035,10 +1251,24 @@ defmodule TodoplaceWeb.HomeLive.Index do
       </div>
       <div class="flex items-center gap-4 mt-auto">
         <%= if @button_action && @button_text do %>
-          <button class="btn-tertiary border border-base-300/25 py-2 px-4 md:mt-0 flex-wrap whitespace-nowrap flex-shrink-0 text-sm" type="button" phx-click={@button_action}><%= @button_text %></button>
+          <button
+            class="btn-tertiary border border-base-300/25 py-2 px-4 md:mt-0 flex-wrap whitespace-nowrap flex-shrink-0 text-sm"
+            type="button"
+            phx-click={@button_action}
+          >
+            <%= @button_text %>
+          </button>
         <% end %>
         <%= if @link_action && @link_text do %>
-          <button class="underline text-blue-planning-300 inline-block text-sm" type="button" phx-click={@link_action} phx-value-tab={@link_value} phx-value-to={@redirect_route}><%= @link_text %></button>
+          <button
+            class="underline text-blue-planning-300 inline-block text-sm"
+            type="button"
+            phx-click={@link_action}
+            phx-value-tab={@link_value}
+            phx-value-to={@redirect_route}
+          >
+            <%= @link_text %>
+          </button>
         <% end %>
       </div>
     </div>
@@ -1054,29 +1284,50 @@ defmodule TodoplaceWeb.HomeLive.Index do
 
     ~H"""
     <%= if @notification_count && @notification_count !== 0 do %>
-      <span {testid("badge")} class={"text-xs bg-red-sales-300 text-white leading-none rounded-full flex items-center justify-center px-2 pt-0.5 pb-1 #{@classes}"}><%= @notification_count %></span>
+      <span
+        {testid("badge")}
+        class={"text-xs bg-red-sales-300 text-white leading-none rounded-full flex items-center justify-center px-2 pt-0.5 pb-1 #{@classes}"}
+      >
+        <%= @notification_count %>
+      </span>
     <% end %>
     """
   end
 
   def thread_card(assigns) do
     ~H"""
-    <div {testid("thread-card")} phx-click="open-thread" phx-value-id={@id} phx-value-type={@type} class="flex justify-between border-b cursor-pointer first:pt-0 py-3">
+    <div
+      {testid("thread-card")}
+      phx-click="open-thread"
+      phx-value-id={@id}
+      phx-value-type={@type}
+      class="flex justify-between border-b cursor-pointer first:pt-0 py-3"
+    >
       <div class="">
         <div class="flex items-center">
           <div class="text-xl line-clamp-1 font-bold"><%= @title %></div>
           <%= if @unread do %>
-            <span {testid("new-badge")} class="mx-4 px-2 py-0.5 text-xs rounded bg-blue-planning-300 text-white">New</span>
+            <span
+              {testid("new-badge")}
+              class="mx-4 px-2 py-0.5 text-xs rounded bg-blue-planning-300 text-white"
+            >
+              New
+            </span>
           <% end %>
         </div>
         <div class="line-clamp-1 font-semibold py-0.5 text-base-250"><%= @subtitle %></div>
         <%= if @message do %>
-          <div class="line-clamp-1 text-base-250"><%= @message |> String.replace(["<p>", "</p>"], "") %></div>
+          <div class="line-clamp-1 text-base-250">
+            <%= @message |> String.replace(["<p>", "</p>"], "") %>
+          </div>
         <% end %>
       </div>
       <div class="relative flex flex-shrink-0">
         <%= @date %>
-        <.icon name="forth" class="sm:hidden absolute top-1.5 -right-6 w-4 h-4 stroke-current text-base-300 stroke-2" />
+        <.icon
+          name="forth"
+          class="sm:hidden absolute top-1.5 -right-6 w-4 h-4 stroke-current text-base-300 stroke-2"
+        />
       </div>
     </div>
     """
@@ -1324,59 +1575,104 @@ defmodule TodoplaceWeb.HomeLive.Index do
     assigns = assign(assigns, count: count)
 
     ~H"""
-      <div class="flex flex-wrap w-full md:w-auto">
-        <div class="flex flex-col p-2 gap-2 md:gap-4 w-full md:flex-row grow">
-          <%= if Map.has_key?(@data, :thumbnail_url) do %>
-            <.link navigate={~p"/booking-events/#{@data.id}"}>
-              <.blurred_thumbnail class="rounded-lg h-full items-center flex flex-col w-[100px] h-[65px] bg-base-200" url={@data.thumbnail_url} />
+    <div class="flex flex-wrap w-full md:w-auto">
+      <div class="flex flex-col p-2 gap-2 md:gap-4 w-full md:flex-row grow">
+        <%= if Map.has_key?(@data, :thumbnail_url) do %>
+          <.link navigate={~p"/booking-events/#{@data.id}"}>
+            <.blurred_thumbnail
+              class="rounded-lg h-full items-center flex flex-col w-[100px] h-[65px] bg-base-200"
+              url={@data.thumbnail_url}
+            />
+          </.link>
+        <% else %>
+          <%= if @data.cover_photo do %>
+            <.link navigate={
+              if Map.has_key?(assigns.data, :client_link_hash),
+                do: ~p"/galleries/#{@data.id}?#{%{is_mobile: false}}",
+                else: ~p"/booking-events/#{@data.id}"
+            }>
+              <div
+                class="rounded-lg float-left w-[100px] min-h-[65px]"
+                style={"background-image: url('#{if Map.has_key?(@data, :client_link_hash), do: cover_photo_url(@data), else: @data.thumbnail_url}'); background-repeat: no-repeat; background-size: cover; background-position: center;"}
+              >
+              </div>
             </.link>
           <% else %>
-              <%= if @data.cover_photo do %>
-              <.link navigate={(if Map.has_key?(assigns.data, :client_link_hash), do: ~p"/galleries/#{@data.id}?#{%{is_mobile: false}}", else: ~p"/booking-events/#{@data.id}")}>
-                <div class="rounded-lg float-left w-[100px] min-h-[65px]" style={"background-image: url('#{if Map.has_key?(@data, :client_link_hash), do: cover_photo_url(@data), else: @data.thumbnail_url}'); background-repeat: no-repeat; background-size: cover; background-position: center;"}></div>
-              </.link>
-            <% else %>
-              <div class="rounded-lg h-full p-2 items-center flex flex-col w-[100px] h-[65px] bg-base-200">
-                <div class="flex justify-center h-full items-center">
-                  <.icon name="photos-2" class="inline-block w-3 h-3 text-base-250"/>
-                </div>
-                <div class="mt-1 text-[8px] text-base-250 text-center h-full">
-                  <span>Edit your gallery to upload a cover photo</span>
-                </div>
+            <div class="rounded-lg h-full p-2 items-center flex flex-col w-[100px] h-[65px] bg-base-200">
+              <div class="flex justify-center h-full items-center">
+                <.icon name="photos-2" class="inline-block w-3 h-3 text-base-250" />
               </div>
-            <% end %>
+              <div class="mt-1 text-[8px] text-base-250 text-center h-full">
+                <span>Edit your gallery to upload a cover photo</span>
+              </div>
+            </div>
           <% end %>
+        <% end %>
 
-          <div class="flex flex-col w-2/3 text-sm">
-            <div class={"font-bold w-full"}>
-              <.link navigate={(if Map.has_key?(assigns.data, :client_link_hash), do: ~p"/galleries/#{@data.id}?#{%{is_mobile: false}}", else: ~p"/booking-events/#{@data.id}")}>
-                <span class="w-full text-blue-planning-300 underline">
-                  <%= if String.length(@data.name) < 30 do
-                    @data.name
-                  else
-                    "#{@data.name |> String.slice(0..18)} ..."
-                  end %>
-                </span>
-              </.link>
-            </div>
-            <div class="text-base-250 font-normal mb-2">
-              <%= unless Map.has_key?(assigns.data, :client_link_hash) do %>
-                <%= @data.dates |> hd() |> Map.get("date") |> BEShared.convert_date_string_to_date() |> convert_date_format() %>
-                <%= if !Map.has_key?(assigns.data, :client_link_hash) do %> - <%= @count %> <%= if @count == 1, do: "booking", else: "bookings" %> so far<% end %>
+        <div class="flex flex-col w-2/3 text-sm">
+          <div class="font-bold w-full">
+            <.link navigate={
+              if Map.has_key?(assigns.data, :client_link_hash),
+                do: ~p"/galleries/#{@data.id}?#{%{is_mobile: false}}",
+                else: ~p"/booking-events/#{@data.id}"
+            }>
+              <span class="w-full text-blue-planning-300 underline">
+                <%= if String.length(@data.name) < 30 do
+                  @data.name
+                else
+                  "#{@data.name |> String.slice(0..18)} ..."
+                end %>
+              </span>
+            </.link>
+          </div>
+          <div class="text-base-250 font-normal mb-2">
+            <%= unless Map.has_key?(assigns.data, :client_link_hash) do %>
+              <%= @data.dates
+              |> hd()
+              |> Map.get("date")
+              |> BEShared.convert_date_string_to_date()
+              |> convert_date_format() %>
+              <%= if !Map.has_key?(assigns.data, :client_link_hash) do %>
+                - <%= @count %> <%= if @count == 1, do: "booking", else: "bookings" %> so far
               <% end %>
-            </div>
-            <div class="flex md:gap-2 gap-3">
-              <button {testid("copy-link")} id={"copy-link-#{@data.id}"} class={classes("flex  w-full md:w-auto items-center justify-center text-center px-1 py-0.5 font-sans border rounded-lg btn-tertiary text-blue-planning-300 flex-shrink-0", %{"pointer-events-none text-gray-300 border-gray-200" => @data.status in [:archive, :disabled]})} data-clipboard-text={if Map.has_key?(@data, :client_link_hash), do: clip_board(@socket, @data), else: @data.url} phx-hook="Clipboard">
-                <.icon name="anchor" class={classes("w-2 h-2 fill-current text-blue-planning-300 inline mr-2", %{"text-gray-300" => @data.status in [:archive, :disabled]})} />
-                Copy link
-                <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
-                  Copied!
-                </div>
-              </button>
-            </div>
+            <% end %>
+          </div>
+          <div class="flex md:gap-2 gap-3">
+            <button
+              {testid("copy-link")}
+              id={"copy-link-#{@data.id}"}
+              class={
+                classes(
+                  "flex  w-full md:w-auto items-center justify-center text-center px-1 py-0.5 font-sans border rounded-lg btn-tertiary text-blue-planning-300 flex-shrink-0",
+                  %{
+                    "pointer-events-none text-gray-300 border-gray-200" =>
+                      @data.status in [:archive, :disabled]
+                  }
+                )
+              }
+              data-clipboard-text={
+                if Map.has_key?(@data, :client_link_hash),
+                  do: clip_board(@socket, @data),
+                  else: @data.url
+              }
+              phx-hook="Clipboard"
+            >
+              <.icon
+                name="anchor"
+                class={
+                  classes("w-2 h-2 fill-current text-blue-planning-300 inline mr-2", %{
+                    "text-gray-300" => @data.status in [:archive, :disabled]
+                  })
+                }
+              /> Copy link
+              <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
+                Copied!
+              </div>
+            </button>
           </div>
         </div>
       </div>
+    </div>
     """
   end
 
@@ -1445,17 +1741,25 @@ defmodule TodoplaceWeb.HomeLive.Index do
     ~H"""
     <%= case @concise_name do %>
       <% "set-up-stripe" -> %>
-        <.live_component module={TodoplaceWeb.StripeOnboardingComponent} id={:stripe_onboarding}
+        <.live_component
+          module={TodoplaceWeb.StripeOnboardingComponent}
+          id={:stripe_onboarding}
           error_class="text-center"
           class={"#{List.first(@buttons).class} text-sm w-full py-2 mt-2"}
           current_user={@current_user}
           return_url={url(~p"/home")}
           org_card_id={@org_card_id}
-          stripe_status={@stripe_status} />
+          stripe_status={@stripe_status}
+        />
       <% _ -> %>
-      <span class="flex-shrink-0 flex flex-col justify-between" data-status="viewed" id={"#{@org_card_id}"} phx-hook="CardStatus">
-        <.card_button buttons={@buttons} />
-      </span>
+        <span
+          class="flex-shrink-0 flex flex-col justify-between"
+          data-status="viewed"
+          id={"#{@org_card_id}"}
+          phx-hook="CardStatus"
+        >
+          <.card_button buttons={@buttons} />
+        </span>
     <% end %>
     """
   end
@@ -1466,11 +1770,12 @@ defmodule TodoplaceWeb.HomeLive.Index do
 
     ~H"""
     <.custom_link
-    link={@external_link}
-    class={@button.class}
-    label={@button.label}
-    target="_blank"
-    rel="noopener noreferrer" />
+      link={@external_link}
+      class={@button.class}
+      label={@button.label}
+      target="_blank"
+      rel="noopener noreferrer"
+    />
     """
   end
 
@@ -1486,7 +1791,12 @@ defmodule TodoplaceWeb.HomeLive.Index do
     assigns = assign(assigns, action: action, button: button)
 
     ~H"""
-    <button type="button" phx-click={@action} phx-click="sss" class={"#{@button.class} text-sm w-full py-2 mt-2"}>
+    <button
+      type="button"
+      phx-click={@action}
+      phx-click="sss"
+      class={"#{@button.class} text-sm w-full py-2 mt-2"}
+    >
       <%= @button.label %>
     </button>
     """
@@ -1497,8 +1807,8 @@ defmodule TodoplaceWeb.HomeLive.Index do
 
     ~H"""
     <div class="flex gap-4">
-     <.card_button buttons={[@button_1]} />
-     <.card_button buttons={[@button_2]} />
+      <.card_button buttons={[@button_1]} />
+      <.card_button buttons={[@button_2]} />
     </div>
     """
   end
@@ -1507,9 +1817,14 @@ defmodule TodoplaceWeb.HomeLive.Index do
     assigns = Enum.into(assigns, %{target: "", rel: ""})
 
     ~H"""
-     <a href={@link} class={"#{@class} text-center text-sm w-full py-2 mt-2"} target={@target} rel={@rel}>
-        <%= @label %>
-      </a>
+    <a
+      href={@link}
+      class={"#{@class} text-center text-sm w-full py-2 mt-2"}
+      target={@target}
+      rel={@rel}
+    >
+      <%= @label %>
+    </a>
     """
   end
 
@@ -1522,15 +1837,31 @@ defmodule TodoplaceWeb.HomeLive.Index do
     ~H"""
     <li class={"relative #{Map.get(assigns, :class)}"} {@attrs}>
       <%= if @badge do %>
-          <div {testid "badge"} class={classes("absolute -top-2.5 right-5 leading-none w-5 h-5 rounded-full pb-0.5 flex items-center justify-center text-xs", %{"bg-base-300 text-white" => @badge > 0, "bg-gray-300" => @badge == 0})}>
+        <div
+          {testid "badge"}
+          class={
+            classes(
+              "absolute -top-2.5 right-5 leading-none w-5 h-5 rounded-full pb-0.5 flex items-center justify-center text-xs",
+              %{"bg-base-300 text-white" => @badge > 0, "bg-gray-300" => @badge == 0}
+            )
+          }
+        >
           <%= if @badge > 0, do: @badge %>
         </div>
       <% end %>
       <div class={"border hover:border-#{@color} h-full rounded-lg bg-#{@color} overflow-hidden"}>
         <div class="h-full p-5 ml-3 bg-white">
-            <h1 class="text-lg font-bold">
-            <.icon name={@icon} width="23" height="20" class={"inline-block mr-2 rounded-sm fill-current text-#{@color}"} />
-            <%= @title %> <%= if @hint_content do %><.tooltip id="tooltip-#{@title}" content={@hint_content} /><% end %>
+          <h1 class="text-lg font-bold">
+            <.icon
+              name={@icon}
+              width="23"
+              height="20"
+              class={"inline-block mr-2 rounded-sm fill-current text-#{@color}"}
+            />
+            <%= @title %>
+            <%= if @hint_content do %>
+              <.tooltip id="tooltip-#{@title}" content={@hint_content} />
+            <% end %>
           </h1>
           <%= render_slot(@inner_block) %>
         </div>
@@ -1547,16 +1878,28 @@ defmodule TodoplaceWeb.HomeLive.Index do
       })
 
     ~H"""
-    <div {testid("card-#{@title}")} class={"flex overflow-hidden border border-base-200 rounded-lg #{@class}"}>
+    <div
+      {testid("card-#{@title}")}
+      class={"flex overflow-hidden border border-base-200 rounded-lg #{@class}"}
+    >
       <div class={"w-3 flex-shrink-0 border-r rounded-l-lg bg-#{@color}"} />
       <div class="flex flex-col w-full p-4">
         <div class="flex flex-wrap justify-between items-center mb-2 w-full gap-0 md:gap-10">
-          <h3 class={"mb-2 mr-4 text-xl font-bold text-black"}><%= @title %></h3>
+          <h3 class="mb-2 mr-4 text-xl font-bold text-black"><%= @title %></h3>
           <div class="flex flex-row items-center justify-between">
-            <button type="button" class="md:order-1 order-2 link px-4 mb-2 md:mb-0" phx-click={@view_event} hidden={@hidden}>
+            <button
+              type="button"
+              class="md:order-1 order-2 link px-4 mb-2 md:mb-0"
+              phx-click={@view_event}
+              hidden={@hidden}
+            >
               View all
             </button>
-            <button type="button" class="md:order-2 order-1 font-bold btn-tertiary py-2" phx-click={@add_event}>
+            <button
+              type="button"
+              class="md:order-2 order-1 font-bold btn-tertiary py-2"
+              phx-click={@add_event}
+            >
               <%= @button_title %>
             </button>
           </div>
@@ -1574,7 +1917,9 @@ defmodule TodoplaceWeb.HomeLive.Index do
         <div class="p-6 sm:p-8">
           <div class="sm:max-w-3xl mb-2 sm:mb-8">
             <h1 class="text-xl sm:text-4xl font-semibold">Your subscription has expired</h1>
-            <p class="pt-2 sm:pt-4 text-base-250 sm:text-lg">We’ve missed you and are very excited to welcome you back to take advantage of all the new features we’ve been working on. Select your plan below:</p>
+            <p class="pt-2 sm:pt-4 text-base-250 sm:text-lg">
+              We’ve missed you and are very excited to welcome you back to take advantage of all the new features we’ve been working on. Select your plan below:
+            </p>
           </div>
           <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-8">
             <%= for subscription_plan <- Subscriptions.subscription_plans() |> Enum.reverse() do %>
@@ -1595,7 +1940,7 @@ defmodule TodoplaceWeb.HomeLive.Index do
                     subscription_plan={subscription_plan}
                     headline="Yearly"
                     price={"#{subscription_plan.price |> Money.to_string(fractional_unit: false)} yearly"}
-                    price_secondary={"Best value!"}
+                    price_secondary="Best value!"
                     interval={subscription_plan.recurring_interval}
                     body="You get everything in the monthly plan PLUS exclusive access to Todoplace’s Business Mastermind with classes and so much more"
                   />
@@ -1604,16 +1949,42 @@ defmodule TodoplaceWeb.HomeLive.Index do
             <% end %>
           </div>
           <div class="flex justify-end mt-6">
-            <.form :let={f} for={@promotion_code_changeset} phx-change="validate-promo-code" id="modal-form" phx-submit="save-promo-code">
-              <%= hidden_inputs_for f %>
+            <.form
+              :let={f}
+              for={@promotion_code_changeset}
+              phx-change="validate-promo-code"
+              id="modal-form"
+              phx-submit="save-promo-code"
+            >
+              <%= hidden_inputs_for(f) %>
               <.inputs_for :let={onboarding} field={f[:onboarding]}>
                 <details class="group" open={@promotion_code_open} {testid("promo-code")}>
-                  <summary class={classes("cursor-pointer underline flex items-center", %{"text-blue-planning-300" => Enum.empty?(onboarding.errors), "text-red-sales-300" => onboarding.errors })} phx-click="handle-promotion-code-toggle">
-                  <%= if Enum.empty?(onboarding.errors), do: "Add a promo code", else: "Fix promo code" %>
-                    <.icon name="down" class="w-4 h-4 stroke-current stroke-2 ml-2 group-open:rotate-180" />
+                  <summary
+                    class={
+                      classes("cursor-pointer underline flex items-center", %{
+                        "text-blue-planning-300" => Enum.empty?(onboarding.errors),
+                        "text-red-sales-300" => onboarding.errors
+                      })
+                    }
+                    phx-click="handle-promotion-code-toggle"
+                  >
+                    <%= if Enum.empty?(onboarding.errors),
+                      do: "Add a promo code",
+                      else: "Fix promo code" %>
+                    <.icon
+                      name="down"
+                      class="w-4 h-4 stroke-current stroke-2 ml-2 group-open:rotate-180"
+                    />
                   </summary>
-                  <%= hidden_inputs_for onboarding %>
-                  <%= labeled_input onboarding, :promotion_code, label: "Applies to monthly or yearly", type: :text_input, phx_debounce: 500, min: 0, placeholder: "enter promo code…", class: "mb-3" %>
+                  <%= hidden_inputs_for(onboarding) %>
+                  <%= labeled_input(onboarding, :promotion_code,
+                    label: "Applies to monthly or yearly",
+                    type: :text_input,
+                    phx_debounce: 500,
+                    min: 0,
+                    placeholder: "enter promo code…",
+                    class: "mb-3"
+                  ) %>
                 </details>
               </.inputs_for>
             </.form>
@@ -1622,15 +1993,26 @@ defmodule TodoplaceWeb.HomeLive.Index do
         <div class="bg-gray-100 p-6 sm:p-8">
           <div class="grid grid-cols-1 sm:grid-cols-2 items-center gap-2 sm:gap-8">
             <div>
-              <img src="/images/subscription-modal.png" alt="An image of the Todoplace application" loading="lazy" />
-              <%= link("Logout", to: ~p"/users/log_out", method: :delete, class: "underline text-base-250 inline-block mt-2") %>
+              <img
+                src="/images/subscription-modal.png"
+                alt="An image of the Todoplace application"
+                loading="lazy"
+              />
+              <%= link("Logout",
+                to: ~p"/users/log_out",
+                method: :delete,
+                class: "underline text-base-250 inline-block mt-2"
+              ) %>
             </div>
             <div>
               <h5 class="font-bold mb-1">Everything included:</h5>
               <ul class="text-base-250 space-y-1 text-sm">
                 <%= for feature <- subscription_modal_feature_list() do %>
                   <li>
-                    <.icon name="checkcircle" class="inline-block w-4 h-4 mr-2 fill-current text-blue-planning-300" />
+                    <.icon
+                      name="checkcircle"
+                      class="inline-block w-4 h-4 mr-2 fill-current text-blue-planning-300"
+                    />
                     <%= feature %>
                   </li>
                 <% end %>
@@ -1669,7 +2051,12 @@ defmodule TodoplaceWeb.HomeLive.Index do
           <p class="font-bold"><%= @price %></p>
           <p class="opacity-60"><%= @price_secondary %></p>
         </div>
-        <button class={@button_class} type="button" phx-click="subscription-checkout" phx-value-interval={@interval}>
+        <button
+          class={@button_class}
+          type="button"
+          phx-click="subscription-checkout"
+          phx-value-interval={@interval}
+        >
           Select plan
         </button>
       </div>

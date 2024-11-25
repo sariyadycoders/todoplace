@@ -75,24 +75,36 @@ defmodule TodoplaceWeb.JobLive.ImportWizard do
       <.close_x />
 
       <div class="flex flex-col md:flex-row">
-        <a {if step_number(@step, @steps) > 1, do: %{href: "#", phx_click: "back", phx_target: @myself, title: "back"}, else: %{}} class="flex w-full md:w-auto">
-          <span {testid("step-number")} class="px-2 py-0.5 mr-2 text-xs font-semibold rounded bg-blue-planning-100 text-blue-planning-300 mt-1">
+        <a
+          {if step_number(@step, @steps) > 1, do: %{href: "#", phx_click: "back", phx_target: @myself, title: "back"}, else: %{}}
+          class="flex w-full md:w-auto"
+        >
+          <span
+            {testid("step-number")}
+            class="px-2 py-0.5 mr-2 text-xs font-semibold rounded bg-blue-planning-100 text-blue-planning-300 mt-1"
+          >
             Step <%= step_number(@step, @steps) %>
           </span>
 
           <ul class="flex items-center inline-block">
             <%= for step <- @steps do %>
-              <li class={classes(
-                "block w-5 h-5 sm:w-3 sm:h-3 rounded-full ml-3 sm:ml-2",
-                %{ "bg-blue-planning-300" => step == @step, "bg-gray-200" => step != @step }
-                )}>
+              <li class={
+                classes(
+                  "block w-5 h-5 sm:w-3 sm:h-3 rounded-full ml-3 sm:ml-2",
+                  %{"bg-blue-planning-300" => step == @step, "bg-gray-200" => step != @step}
+                )
+              }>
               </li>
             <% end %>
           </ul>
         </a>
 
-        <%= if step_number(@step, @steps) > 2 do%>
-          <.client_name_box searched_client={@searched_client} selected_client={@selected_client} assigns={assigns} />
+        <%= if step_number(@step, @steps) > 2 do %>
+          <.client_name_box
+            searched_client={@searched_client}
+            selected_client={@selected_client}
+            assigns={assigns}
+          />
         <% end %>
       </div>
 
@@ -107,7 +119,10 @@ defmodule TodoplaceWeb.JobLive.ImportWizard do
 
   def step(%{step: :get_started} = assigns) do
     ~H"""
-    <div {testid("import-job-card")} class="flex mt-8 overflow-hidden border rounded-lg border-base-200">
+    <div
+      {testid("import-job-card")}
+      class="flex mt-8 overflow-hidden border rounded-lg border-base-200"
+    >
       <div class="w-4 border-r border-base-200 bg-blue-planning-300" />
 
       <div class="flex flex-col items-start w-full p-6 sm:flex-row">
@@ -122,7 +137,14 @@ defmodule TodoplaceWeb.JobLive.ImportWizard do
             Use this option if you have shoot dates confirmed, have partial/scheduled payment, client client info, and a form of a contract or questionnaire.
           </p>
         </div>
-        <button type="button" class="self-center w-full px-8 mt-6 ml-auto btn-primary sm:w-auto sm:mt-0" phx-click="go-job-details" phx-target={@myself}>Next</button>
+        <button
+          type="button"
+          class="self-center w-full px-8 mt-6 ml-auto btn-primary sm:w-auto sm:mt-0"
+          phx-click="go-job-details"
+          phx-target={@myself}
+        >
+          Next
+        </button>
       </div>
     </div>
     <div class="flex mt-6 overflow-hidden border rounded-lg border-base-200">
@@ -140,7 +162,14 @@ defmodule TodoplaceWeb.JobLive.ImportWizard do
             Use this option if you have client contact info, are trying to book this person for a session/job but haven’t confirmed yet, and/or you aren’t ready to charge.
           </p>
         </div>
-        <button type="button" class="self-center w-full px-8 mt-6 ml-auto btn-secondary sm:w-auto sm:mt-0" phx-click="create-lead" phx-target={@myself}>Next</button>
+        <button
+          type="button"
+          class="self-center w-full px-8 mt-6 ml-auto btn-secondary sm:w-auto sm:mt-0"
+          phx-click="create-lead"
+          phx-target={@myself}
+        >
+          Next
+        </button>
       </div>
     </div>
     """
@@ -148,16 +177,49 @@ defmodule TodoplaceWeb.JobLive.ImportWizard do
 
   def step(%{step: :job_details} = assigns) do
     ~H"""
-    <.search_clients new_client={@new_client} search_results={@search_results} search_phrase={@search_phrase} selected_client={@selected_client} searched_client={@searched_client} current_focus={@current_focus} clients={@clients} myself={@myself}/>
+    <.search_clients
+      new_client={@new_client}
+      search_results={@search_results}
+      search_phrase={@search_phrase}
+      selected_client={@selected_client}
+      searched_client={@searched_client}
+      current_focus={@current_focus}
+      clients={@clients}
+      myself={@myself}
+    />
 
-    <.form for={@job_changeset} :let={f} phx-change="validate" phx-submit="submit" phx-target={@myself} id={"form-#{@step}"}>
-      <.job_form_fields myself={@myself} form={f} new_client={@new_client} job_types={Profiles.enabled_job_types(@current_user.organization.organization_job_types)} />
+    <.form
+      :let={f}
+      for={@job_changeset}
+      phx-change="validate"
+      phx-submit="submit"
+      phx-target={@myself}
+      id={"form-#{@step}"}
+    >
+      <.job_form_fields
+        myself={@myself}
+        form={f}
+        new_client={@new_client}
+        job_types={Profiles.enabled_job_types(@current_user.organization.organization_job_types)}
+      />
 
       <.footer>
-        <button class="px-8 btn-primary" title="Next" type="submit" disabled={!@job_changeset.valid?} phx-disable-with="Next">
+        <button
+          class="px-8 btn-primary"
+          title="Next"
+          type="submit"
+          disabled={!@job_changeset.valid?}
+          phx-disable-with="Next"
+        >
           Next
         </button>
-        <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
+        <button
+          class="btn-secondary"
+          title="cancel"
+          type="button"
+          phx-click="modal"
+          phx-value-action="close"
+        >
           Cancel
         </button>
       </.footer>

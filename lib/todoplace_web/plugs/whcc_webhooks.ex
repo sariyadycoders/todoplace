@@ -23,7 +23,7 @@ defmodule TodoplaceWeb.Plugs.WhccWebhook do
 
   def handle_request(conn, body) do
     with [signature] <- get_req_header(conn, "whcc-signature"),
-        %{"isValid" => true} <- Todoplace.WHCC.webhook_validate(body, signature) do
+         %{"isValid" => true} <- Todoplace.WHCC.webhook_validate(body, signature) do
       conn
       |> struct(%{body_params: Jason.decode!(body)})
     else

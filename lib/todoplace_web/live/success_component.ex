@@ -26,7 +26,6 @@ defmodule TodoplaceWeb.SuccessComponent do
 
     ~H"""
     <div class={@class <> " max-w-[642px]"}>
-
       <h1 class="font-bold text-3xl">
         <%= @title %>
       </h1>
@@ -45,12 +44,24 @@ defmodule TodoplaceWeb.SuccessComponent do
       </div>
 
       <%= if @success_event do %>
-        <button class={"w-full mt-6 " <> @success_class} title={@success_label} type="button" phx-click={@success_event} phx-disable-with="Saving&hellip;" phx-target={@myself}>
+        <button
+          class={"w-full mt-6 " <> @success_class}
+          title={@success_label}
+          type="button"
+          phx-click={@success_event}
+          phx-disable-with="Saving&hellip;"
+          phx-target={@myself}
+        >
           <%= @success_label %>
         </button>
       <% end %>
 
-      <button class={"w-full mt-6 border border-current p-3 rounded-lg font-semibold text-lg " <> @close_class} type="button" phx-click="modal" phx-value-action="close">
+      <button
+        class={"w-full mt-6 border border-current p-3 rounded-lg font-semibold text-lg " <> @close_class}
+        type="button"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         <%= @close_label %>
       </button>
     </div>
@@ -90,16 +101,17 @@ defmodule TodoplaceWeb.SuccessComponent do
 
   defp description(%{for: "proofing"} = assigns) do
     ~H"""
-      You can handle all the key steps of proofing your photos for your client right from this album, and
-      create additional proofing albums within this gallery if you need more.
+    You can handle all the key steps of proofing your photos for your client right from this album, and
+    create additional proofing albums within this gallery if you need more.
     """
   end
 
   defp description(assigns) do
     ~H"""
-      <span class="font-bold">We've created a client and a job under the hood for you.</span> A job is the hub for your gallery,
-      transaction history, and communication with your client. Don't forget you can
-      use Todoplace to handle everything!
+    <span class="font-bold">We've created a client and a job under the hood for you.</span>
+    A job is the hub for your gallery,
+    transaction history, and communication with your client. Don't forget you can
+    use Todoplace to handle everything!
     """
   end
 
@@ -113,17 +125,17 @@ defmodule TodoplaceWeb.SuccessComponent do
 
   defp inner_section(assigns) do
     ~H"""
-      <div class="flex justify-center items-center">
-        <.icon name="rupees" class="w-8 h-8"/>
-      </div>
+    <div class="flex justify-center items-center">
+      <.icon name="rupees" class="w-8 h-8" />
+    </div>
 
-      <div class="col-span-2 row-span-2">
-        <.image socket={@socket} path="/images/gallery_created.png" />
-      </div>
+    <div class="col-span-2 row-span-2">
+      <.image socket={@socket} path="/images/gallery_created.png" />
+    </div>
 
-      <%= for {name, class} <- [{"phone", ""}, {"cart", "pb-6"}, {"envelope", "pb-6"}] do %>
-        <.inner_section_icon name={name} class={class} />
-      <% end %>
+    <%= for {name, class} <- [{"phone", ""}, {"cart", "pb-6"}, {"envelope", "pb-6"}] do %>
+      <.inner_section_icon name={name} class={class} />
+    <% end %>
     """
   end
 
@@ -132,7 +144,7 @@ defmodule TodoplaceWeb.SuccessComponent do
 
     ~H"""
     <div class={"flex justify-center items-center #{@class}"}>
-      <.icon name={@name} style="color: rgba(137, 137, 137, 0.2)" class="w-8 h-8"/>
+      <.icon name={@name} style="color: rgba(137, 137, 137, 0.2)" class="w-8 h-8" />
     </div>
     """
   end

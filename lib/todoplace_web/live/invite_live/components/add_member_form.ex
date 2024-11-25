@@ -43,7 +43,6 @@ defmodule TodoplaceWeb.InviteLive.AddMemberForm do
 
     case Todoplace.InviteToken.generate_invite_token(email, socket.assigns.organization_id) do
       {:ok, invite_token} ->
-
         Todoplace.Cache.refresh_organization_cache(organization.id)
         Accounts.update_user_cache_by_email(email)
 
@@ -67,7 +66,6 @@ defmodule TodoplaceWeb.InviteLive.AddMemberForm do
   end
 
   defp changeset(user_params, action \\ :validate) do
-
     %User{}
     |> Accounts.change_invite_user(user_params)
     |> Map.put(:action, action)

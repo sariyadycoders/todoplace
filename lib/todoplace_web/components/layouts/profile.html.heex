@@ -1,5 +1,10 @@
-<%= live_render @socket, TodoplaceWeb.LiveModal, id: "live_modal" %>
-<main role="main" class="inline-flex flex-col w-full min-h-screen" phx-hook="showAdminBanner" id="show-admin-banner">
+<%= live_render(@socket, TodoplaceWeb.LiveModal, id: "live_modal") %>
+<main
+  role="main"
+  class="inline-flex flex-col w-full min-h-screen"
+  phx-hook="showAdminBanner"
+  id="show-admin-banner"
+>
   <%= TodoplaceWeb.LayoutView.flash(@flash) %>
   <%= @inner_content %>
 </main>

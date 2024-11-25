@@ -1,4 +1,3 @@
-
 defmodule Todoplace.Repo.Migrations.CreateRoles do
   use Ecto.Migration
 

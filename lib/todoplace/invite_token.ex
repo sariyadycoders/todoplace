@@ -28,7 +28,8 @@ defmodule Todoplace.InviteToken do
   """
   def generate_invite_token(email, organization_id) do
     token = :crypto.strong_rand_bytes(16) |> Base.encode64()
-    expires_at = NaiveDateTime.add(NaiveDateTime.utc_now(), 3600, :second) # 1 hour expiration
+    # 1 hour expiration
+    expires_at = NaiveDateTime.add(NaiveDateTime.utc_now(), 3600, :second)
 
     %InviteToken{}
     |> changeset(%{
@@ -41,7 +42,8 @@ defmodule Todoplace.InviteToken do
   end
 
   def validate_invite_token(token) do
-    now = NaiveDateTime.utc_now() # Compute the current time outside the guard
+    # Compute the current time outside the guard
+    now = NaiveDateTime.utc_now()
 
     case Repo.get_by(InviteToken, token: token) |> Repo.preload(:organization) do
       %InviteToken{used: true} ->
@@ -78,12 +80,10 @@ defmodule Todoplace.InviteToken do
     end
   end
 
-
   def get_by_token(token) do
     case Repo.get_by(InviteToken, token: token, used: false) do
       nil -> :error
       invite_token -> {:ok, invite_token}
     end
   end
-
 end

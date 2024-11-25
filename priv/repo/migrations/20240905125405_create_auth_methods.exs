@@ -7,6 +7,7 @@ defmodule Todoplace.Repo.Migrations.CreateAuthMethods do
 
       timestamps()
     end
+
     execute("""
     INSERT INTO auth_methods (name, inserted_at, updated_at)
     VALUES

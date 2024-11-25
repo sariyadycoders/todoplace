@@ -1,22 +1,46 @@
 <div class="relative mx-auto max-w-screen-xl">
   <div class="fixed top-0 sm:px-16 w-full z-40 bg-white max-w-screen-xl">
-    <.live_component module={TodoplaceWeb.GalleryLive.ClientMenuComponent} id={@gallery.id} cart_count={@cart_count} live_action={@live_action} gallery={@gallery} album={assigns[:album]} is_proofing={@is_proofing} client_email={@client_email} credits_available={@credits_available} />
+    <.live_component
+      module={TodoplaceWeb.GalleryLive.ClientMenuComponent}
+      id={@gallery.id}
+      cart_count={@cart_count}
+      live_action={@live_action}
+      gallery={@gallery}
+      album={assigns[:album]}
+      is_proofing={@is_proofing}
+      client_email={@client_email}
+      credits_available={@credits_available}
+    />
   </div>
 
-  <.credits_available_mobile_header organization={@organization} open_profile_logout?={@open_profile_logout?} credits_available={@credits_available} client_email={@client_email} gallery={@gallery} socket={@socket} class="sm:px-7" />
+  <.credits_available_mobile_header
+    organization={@organization}
+    open_profile_logout?={@open_profile_logout?}
+    credits_available={@credits_available}
+    client_email={@client_email}
+    gallery={@gallery}
+    socket={@socket}
+    class="sm:px-7"
+  />
 
-  <hr>
+  <hr />
 
-   <div class={"#{@client_email && "pt-5 pb-10 mx-auto lg:pt-9 px-7 sm:px-16"} #{!@client_email && "pt-5 pb-10 mt-14 mx-auto lg:pt-9 px-7 sm:px-16"}"}>
+  <div class={"#{@client_email && "pt-5 pb-10 mx-auto lg:pt-9 px-7 sm:px-16"} #{!@client_email && "pt-5 pb-10 mt-14 mx-auto lg:pt-9 px-7 sm:px-16"}"}>
     <%= if @orders == [] do %>
       <.link navigate={@checkout_routes.home_page} class="flex text-base-250 items-center mb-7">
         <.icon name="back" class="h-3.5 w-1.5 stroke-2 mr-2" />
 
-        <p class="mt-1">Back to <%= if @is_proofing || @album && @album.is_finals, do: "album", else: "gallery" %></p>
+        <p class="mt-1">
+          Back to <%= if @is_proofing || (@album && @album.is_finals),
+            do: "album",
+            else: "gallery" %>
+        </p>
       </.link>
     <% end %>
 
-    <h3 class="text-lg lg:text-3xl">My <%= if @is_proofing, do: "Selections", else: "Orders" %></h3>
+    <h3 class="text-lg lg:text-3xl">
+      My <%= if @is_proofing, do: "Selections", else: "Orders" %>
+    </h3>
 
     <%= if @orders == [] do %>
       <p class="pb-64 mt-10 text-2xl">You haven’t ordered anything yet!</p>
@@ -42,11 +66,11 @@
                 <dd><%= total_cost(order) %></dd>
               </div>
 
-             <%= if is_list(products) && !Enum.empty?(products) do %>
-              <div class="flex lg:ml-6">
-                <dt class="mr-2 font-extrabold lg:font-bold">Shipping Included:</dt>
-                <dd><%=  total_shipping(order) %></dd>
-              </div>
+              <%= if is_list(products) && !Enum.empty?(products) do %>
+                <div class="flex lg:ml-6">
+                  <dt class="mr-2 font-extrabold lg:font-bold">Shipping Included:</dt>
+                  <dd><%= total_shipping(order) %></dd>
+                </div>
               <% end %>
             </dl>
           <% end %>
@@ -57,14 +81,17 @@
             <dd class="font-semibold lg:font-normal"><%= order.number %></dd>
           </dl>
 
-          <.link navigate={order_route(assigns, order)} class="text-xl justify-self-end text-base-250 font-extrabold col-start-2 lg:col-start-4 lg:row-span-1 row-span-3 jusify-self-end">
+          <.link
+            navigate={order_route(assigns, order)}
+            class="text-xl justify-self-end text-base-250 font-extrabold col-start-2 lg:col-start-4 lg:row-span-1 row-span-3 jusify-self-end"
+          >
             View details
           </.link>
         </div>
 
         <div class="px-6 py-4 border border-t-0 border-base-225 lg:px-16 divide-y lg:divide-y-0 divide-base-200">
           <%= for item <- order.products do %>
-            <.item_frame item={item} price={price_display(item)} is_proofing={@is_proofing} >
+            <.item_frame item={item} price={price_display(item)} is_proofing={@is_proofing}>
               <:quantity>
                 <span class="text-sm mt-1.5">Quantity: <%= quantity(item) %></span>
               </:quantity>
@@ -82,7 +109,11 @@
               <% end %>
 
               <%= if order.bundle_price do %>
-                <.item_frame item={{:bundle, order}} price={order.bundle_price} is_proofing={@is_proofing} />
+                <.item_frame
+                  item={{:bundle, order}}
+                  price={order.bundle_price}
+                  is_proofing={@is_proofing}
+                />
               <% end %>
               <%= unless @is_proofing do %>
                 <div class="pt-6 pb-6 lg:pt-16 lg:absolute lg:top-0 lg:right-0 lg:w-1/3">

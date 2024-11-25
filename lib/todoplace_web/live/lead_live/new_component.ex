@@ -33,22 +33,39 @@ defmodule TodoplaceWeb.JobLive.NewComponent do
   @impl true
   def render(assigns) do
     ~H"""
-      <div class="flex flex-col modal">
-        <div class="flex items-start justify-between flex-shrink-0">
-          <h1 class="mb-4 text-3xl font-bold">Create a lead</h1>
+    <div class="flex flex-col modal">
+      <div class="flex items-start justify-between flex-shrink-0">
+        <h1 class="mb-4 text-3xl font-bold">Create a lead</h1>
 
-          <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-            <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
-          </button>
-        </div>
-
-        <.search_clients new_client={@new_client} search_results={@search_results} search_phrase={@search_phrase} selected_client={@selected_client} searched_client={@searched_client} current_focus={@current_focus} clients={@clients} myself={@myself}/>
-
-        <.form for={@changeset} :let={f} phx-change="validate" phx-submit="save" phx-target={@myself}>
-        <.job_form_fields form={f} job_types={@job_types} new_client={@new_client} myself={@myself} />
-          <TodoplaceWeb.LiveModal.footer disabled={!@changeset.valid? || (is_nil(@selected_client) && is_nil(@searched_client) && !@new_client)} />
-        </.form>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
+        </button>
       </div>
+
+      <.search_clients
+        new_client={@new_client}
+        search_results={@search_results}
+        search_phrase={@search_phrase}
+        selected_client={@selected_client}
+        searched_client={@searched_client}
+        current_focus={@current_focus}
+        clients={@clients}
+        myself={@myself}
+      />
+
+      <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself}>
+        <.job_form_fields form={f} job_types={@job_types} new_client={@new_client} myself={@myself} />
+        <TodoplaceWeb.LiveModal.footer disabled={
+          !@changeset.valid? || (is_nil(@selected_client) && is_nil(@searched_client) && !@new_client)
+        } />
+      </.form>
+    </div>
     """
   end
 

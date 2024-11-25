@@ -79,63 +79,150 @@ defmodule TodoplaceWeb.ClientMessageComponent do
     <div class="modal">
       <.close_x />
       <h1 class="text-3xl mb-4"><%= @modal_title %></h1>
-        <%= if @show_client_email do %>
-          <div class="flex flex-col">
-            <label for="to_email" class="text-sm font-semibold mb-2">To: <span class="font-light text-sm ml-0.5 italic">(semicolon separated to add more emails)</span></label>
-            <div class="flex flex-col md:flex-row">
-              <input type="text" class="w-full md:w-2/3 text-input" id="to_email" value={"#{get_emails(@recipients, "to")}"} phx-keyup="validate_to_email" phx-target={@myself} phx-debounce="1000" spellcheck="false"/>
-              <.search_existing_clients search_results={@search_results} search_phrase={@search_phrase} current_focus={@current_focus} clients={@clients} myself={@myself}/>
-            </div>
-            <span class={classes("text-red-sales-300 text-sm", %{"hidden" => !@to_email_error})}><%= @to_email_error %></span>
+      <%= if @show_client_email do %>
+        <div class="flex flex-col">
+          <label for="to_email" class="text-sm font-semibold mb-2">
+            To:
+            <span class="font-light text-sm ml-0.5 italic">
+              (semicolon separated to add more emails)
+            </span>
+          </label>
+          <div class="flex flex-col md:flex-row">
+            <input
+              type="text"
+              class="w-full md:w-2/3 text-input"
+              id="to_email"
+              value={"#{get_emails(@recipients, "to")}"}
+              phx-keyup="validate_to_email"
+              phx-target={@myself}
+              phx-debounce="1000"
+              spellcheck="false"
+            />
+            <.search_existing_clients
+              search_results={@search_results}
+              search_phrase={@search_phrase}
+              current_focus={@current_focus}
+              clients={@clients}
+              myself={@myself}
+            />
           </div>
+          <span class={classes("text-red-sales-300 text-sm", %{"hidden" => !@to_email_error})}>
+            <%= @to_email_error %>
+          </span>
+        </div>
 
-          <%= if @show_cc do %>
-            <.show_optional_input email_type="cc" error={@cc_email_error} myself={@myself} recipients={@recipients} />
-          <% end %>
-          <%= if @show_bcc do %>
-            <.show_optional_input email_type="bcc" error={@bcc_email_error} myself={@myself} recipients={@recipients} />
-          <% end %>
-          <div class="flex flex-row mt-4">
+        <%= if @show_cc do %>
+          <.show_optional_input
+            email_type="cc"
+            error={@cc_email_error}
+            myself={@myself}
+            recipients={@recipients}
+          />
+        <% end %>
+        <%= if @show_bcc do %>
+          <.show_optional_input
+            email_type="bcc"
+            error={@bcc_email_error}
+            myself={@myself}
+            recipients={@recipients}
+          />
+        <% end %>
+        <div class="flex flex-row mt-4">
           <%= if !@show_cc do %>
-            <.icon_button class="w-full md:w-28 justify-center bg-white border-blue-planning-300 text-black" phx-click="show-cc" phx-target={@myself} color="blue-planning-300" icon="plus">
+            <.icon_button
+              class="w-full md:w-28 justify-center bg-white border-blue-planning-300 text-black"
+              phx-click="show-cc"
+              phx-target={@myself}
+              color="blue-planning-300"
+              icon="plus"
+            >
               Add Cc
             </.icon_button>
           <% end %>
           <%= if !@show_bcc do %>
-            <.icon_button class="ml-2 w-full md:w-32 justify-center bg-white border-blue-planning-300 text-black" phx-click="show-bcc" phx-target={@myself} color="blue-planning-300" icon="plus">
+            <.icon_button
+              class="ml-2 w-full md:w-32 justify-center bg-white border-blue-planning-300 text-black"
+              phx-click="show-bcc"
+              phx-target={@myself}
+              color="blue-planning-300"
+              icon="plus"
+            >
               Add Bcc
             </.icon_button>
           <% end %>
         </div>
-        <hr class="my-4"/>
+        <hr class="my-4" />
       <% end %>
 
       <%= if @manual_toggle do %>
-        <.manual_state_show email_schedule={@email_schedule} toggle_value={@toggle_value} myself={@myself}/>
+        <.manual_state_show
+          email_schedule={@email_schedule}
+          toggle_value={@toggle_value}
+          myself={@myself}
+        />
       <% end %>
       <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself}>
         <div class="grid grid-flow-row md:grid-flow-row md:auto-cols-fr md:gap-4 mt-2">
-          <%= if Enum.any?(@preset_options), do: (labeled_select f, :preset_id, @preset_options, label: "Select email preset", class: "h-12") %>
+          <%= if Enum.any?(@preset_options),
+            do:
+              labeled_select(f, :preset_id, @preset_options,
+                label: "Select email preset",
+                class: "h-12"
+              ) %>
           <%= if  @booking_event? do %>
-             <label class="block mt-4 input-label" >Subject line <span class="font-light text-sm ml-0.5 italic">(Use, edit or create your own)</span></label>
-             <%= input f, :subject, wrapper_class: classes(hidden: !@show_subject), class: "h-12", phx_debounce: "500" %>
+            <label class="block mt-4 input-label">
+              Subject line
+              <span class="font-light text-sm ml-0.5 italic">(Use, edit or create your own)</span>
+            </label>
+            <%= input(f, :subject,
+              wrapper_class: classes(hidden: !@show_subject),
+              class: "h-12",
+              phx_debounce: "500"
+            ) %>
           <% else %>
-             <%= labeled_input f, :subject, label: "Subject line", wrapper_class: classes(hidden: !@show_subject), class: "h-12", phx_debounce: "500" %>
+            <%= labeled_input(f, :subject,
+              label: "Subject line",
+              wrapper_class: classes(hidden: !@show_subject),
+              class: "h-12",
+              phx_debounce: "500"
+            ) %>
           <% end %>
         </div>
         <%= if  @booking_event? do %>
-          <label class="block mt-4 input-label" for="editor">Message <span class="font-light text-sm ml-0.5 italic">(Use, edit or create your own)</span></label>
+          <label class="block mt-4 input-label" for="editor">
+            Message
+            <span class="font-light text-sm ml-0.5 italic">(Use, edit or create your own)</span>
+          </label>
         <% else %>
           <label class="block mt-4 input-label" for="editor">Message </label>
         <% end %>
 
-        <.quill_input f={f} html_field={:body_html} text_field={:body_text} enable_size={@enable_size} enable_image={@enable_image} current_user={@current_user} />
+        <.quill_input
+          f={f}
+          html_field={:body_html}
+          text_field={:body_text}
+          enable_size={@enable_size}
+          enable_image={@enable_image}
+          current_user={@current_user}
+        />
         <.footer>
-          <button class="btn-primary px-11" title={@send_button} type="submit" disabled={!@changeset.valid? || @to_email_error || @cc_email_error || @bcc_email_error} phx-disable-with="Sending...">
+          <button
+            class="btn-primary px-11"
+            title={@send_button}
+            type="submit"
+            disabled={!@changeset.valid? || @to_email_error || @cc_email_error || @bcc_email_error}
+            phx-disable-with="Sending..."
+          >
             <%= @send_button %>
           </button>
 
-          <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Cancel
           </button>
         </.footer>
@@ -528,70 +615,131 @@ defmodule TodoplaceWeb.ClientMessageComponent do
 
   defp search_existing_clients(assigns) do
     ~H"""
-      <div class="w-full md:w-1/3 md:ml-6">
-        <%= form_tag("#", [phx_change: :search, phx_target: @myself]) do %>
-          <div class="relative flex flex-col w-full md:flex-row">
-            <a class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2">
-              <%= if (Enum.any?(@search_results) && @search_phrase) do %>
-                <span phx-click="clear-search" phx-target={@myself} class="cursor-pointer">
-                  <.icon name="close-x" class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300" />
-                </span>
-              <% else %>
-                <.icon name="search" class="w-4 ml-1 fill-current" />
-              <% end %>
-            </a>
-            <input type="text" class="form-control w-full text-input indent-6" id="search_phrase_input" name="search_phrase" value={"#{@search_phrase}"} phx-debounce="500" spellcheck="false" phx-target={@myself} placeholder="Search clients to add to email..." />
-            <%= if Enum.any?(@search_results) && @search_phrase do %>
-                <div id="search_results" class="absolute top-14 w-full z-50 left-0 right-0 rounded-lg border border-gray-100 shadow py-2 px-2 bg-white">
-                  <%= for search_result <- Enum.take(@search_results, 5) do %>
-                    <div {testid("search-row")} class={"flex items-center cursor-pointer p-3"}>
-                      <div class="w-full">
-                        <p class="font-bold"><%= search_result.name %></p>
-                        <p class="text-sm"><%= search_result.email %></p>
-                        <div class="flex justify-between mt-2">
-                        <%= for %{title: title, action_event: event} <- email_buttons() do %>
-                          <.add_icon_button title={title} click_event={event} myself={@myself} search_result={search_result}/>
-                        <% end %>
-                        </div>
-                      </div>
-                    </div>
-                  <% end %>
-              </div>
+    <div class="w-full md:w-1/3 md:ml-6">
+      <%= form_tag("#", [phx_change: :search, phx_target: @myself]) do %>
+        <div class="relative flex flex-col w-full md:flex-row">
+          <a class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2">
+            <%= if (Enum.any?(@search_results) && @search_phrase) do %>
+              <span phx-click="clear-search" phx-target={@myself} class="cursor-pointer">
+                <.icon
+                  name="close-x"
+                  class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300"
+                />
+              </span>
             <% else %>
-              <%= if @search_phrase && @search_phrase && Enum.empty?(@search_results) do %>
-                <div class="absolute top-14 w-full z-50">
-                  <div class="z-50 left-0 right-0 rounded-lg border border-gray-100 cursor-pointer shadow py-2 px-2 bg-white">
-                    <p class="font-bold">No clients found with that info</p>
+              <.icon name="search" class="w-4 ml-1 fill-current" />
+            <% end %>
+          </a>
+          <input
+            type="text"
+            class="form-control w-full text-input indent-6"
+            id="search_phrase_input"
+            name="search_phrase"
+            value={"#{@search_phrase}"}
+            phx-debounce="500"
+            spellcheck="false"
+            phx-target={@myself}
+            placeholder="Search clients to add to email..."
+          />
+          <%= if Enum.any?(@search_results) && @search_phrase do %>
+            <div
+              id="search_results"
+              class="absolute top-14 w-full z-50 left-0 right-0 rounded-lg border border-gray-100 shadow py-2 px-2 bg-white"
+            >
+              <%= for search_result <- Enum.take(@search_results, 5) do %>
+                <div {testid("search-row")} class="flex items-center cursor-pointer p-3">
+                  <div class="w-full">
+                    <p class="font-bold"><%= search_result.name %></p>
+                    <p class="text-sm"><%= search_result.email %></p>
+                    <div class="flex justify-between mt-2">
+                      <%= for %{title: title, action_event: event} <- email_buttons() do %>
+                        <.add_icon_button
+                          title={title}
+                          click_event={event}
+                          myself={@myself}
+                          search_result={search_result}
+                        />
+                      <% end %>
+                    </div>
                   </div>
                 </div>
               <% end %>
+            </div>
+          <% else %>
+            <%= if @search_phrase && @search_phrase && Enum.empty?(@search_results) do %>
+              <div class="absolute top-14 w-full z-50">
+                <div class="z-50 left-0 right-0 rounded-lg border border-gray-100 cursor-pointer shadow py-2 px-2 bg-white">
+                  <p class="font-bold">No clients found with that info</p>
+                </div>
+              </div>
             <% end %>
-          </div>
-        <% end %>
-      </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
     """
   end
 
   defp show_optional_input(assigns) do
     ~H"""
-      <div clas="flex flex-col">
-        <div class="flex flex-row mt-4 md:items-center mb-2">
-          <label for={"#{@email_type}_email"} class="text-sm font-semibold"><%= String.capitalize(@email_type) %>: <span class="font-light text-sm ml-0.5 italic">(semicolon separated to add more emails)</span></label>
-          <.icon_button_ class="ml-10 w-8 bg-white border-red-sales-300 py-1 px-2" title={"remove-#{@email_type}"} phx-click={"remove-#{@email_type}"} phx-target={@myself} color="red-sales-300" icon="trash" icon_class="w-4 h-4"/>
-        </div>
-        <div class="flex flex-col">
-          <input type="text" class="w-full md:w-2/3 text-input" id={"#{@email_type}_email"} value={(if Map.has_key?(@recipients, @email_type), do: "#{Enum.join(Map.get(@recipients, @email_type, []), "; ")}", else: "")} phx-keyup={"validate_#{@email_type}_email"} phx-target={@myself} phx-debounce="1000" spellcheck="false" placeholder="enter email(s)…"/>
-          <span {testid("#{@email_type}-error")} class={classes("text-red-sales-300 text-sm", %{"hidden" => !@error})}><%= @error %></span>
-        </div>
+    <div clas="flex flex-col">
+      <div class="flex flex-row mt-4 md:items-center mb-2">
+        <label for={"#{@email_type}_email"} class="text-sm font-semibold">
+          <%= String.capitalize(@email_type) %>:
+          <span class="font-light text-sm ml-0.5 italic">
+            (semicolon separated to add more emails)
+          </span>
+        </label>
+        <.icon_button_
+          class="ml-10 w-8 bg-white border-red-sales-300 py-1 px-2"
+          title={"remove-#{@email_type}"}
+          phx-click={"remove-#{@email_type}"}
+          phx-target={@myself}
+          color="red-sales-300"
+          icon="trash"
+          icon_class="w-4 h-4"
+        />
       </div>
+      <div class="flex flex-col">
+        <input
+          type="text"
+          class="w-full md:w-2/3 text-input"
+          id={"#{@email_type}_email"}
+          value={
+            if Map.has_key?(@recipients, @email_type),
+              do: "#{Enum.join(Map.get(@recipients, @email_type, []), "; ")}",
+              else: ""
+          }
+          phx-keyup={"validate_#{@email_type}_email"}
+          phx-target={@myself}
+          phx-debounce="1000"
+          spellcheck="false"
+          placeholder="enter email(s)…"
+        />
+        <span
+          {testid("#{@email_type}-error")}
+          class={classes("text-red-sales-300 text-sm", %{"hidden" => !@error})}
+        >
+          <%= @error %>
+        </span>
+      </div>
+    </div>
     """
   end
 
   defp add_icon_button(assigns) do
     ~H"""
-      <.icon_button_ class="w-auto sm:w-28 justify-center bg-gray-100 text-black text-sm" title={@title} phx-click={@click_event} phx-target={@myself} phx-value-client_email={"#{@search_result.email}"} color="blue-planning-300" icon="plus">
-        <%= @title %>
-      </.icon_button_>
+    <.icon_button_
+      class="w-auto sm:w-28 justify-center bg-gray-100 text-black text-sm"
+      title={@title}
+      phx-click={@click_event}
+      phx-target={@myself}
+      phx-value-client_email={"#{@search_result.email}"}
+      color="blue-planning-300"
+      icon="plus"
+    >
+      <%= @title %>
+    </.icon_button_>
     """
   end
 
@@ -605,8 +753,24 @@ defmodule TodoplaceWeb.ClientMessageComponent do
       |> Enum.into(%{class: "", disabled: false, inner_block: nil, icon_class: nil})
 
     ~H"""
-    <button type="button" class={classes("btn-tertiary flex items-center py-1 font-sans rounded-lg hover:opacity-75 transition-colors text-#{@color} #{@class}", %{"opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disabled})}} disabled={@disabled} {@rest}>
-      <.icon name={@icon} class={classes("w-3 h-3 fill-current text-#{@color} #{@icon_class}", %{"mr-1" => @inner_block})} />
+    <button
+      type="button"
+      class={
+        classes(
+          "btn-tertiary flex items-center py-1 font-sans rounded-lg hover:opacity-75 transition-colors text-#{@color} #{@class}",
+          %{"opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disabled}
+        )
+      }
+      }
+      disabled={@disabled}
+      {@rest}
+    >
+      <.icon
+        name={@icon}
+        class={
+          classes("w-3 h-3 fill-current text-#{@color} #{@icon_class}", %{"mr-1" => @inner_block})
+        }
+      />
       <%= if @inner_block do %>
         <%= render_slot(@inner_block) %>
       <% end %>
@@ -616,39 +780,55 @@ defmodule TodoplaceWeb.ClientMessageComponent do
 
   defp manual_state_show(assigns) do
     ~H"""
-      <div class="p-5 flex flex-col rounded-lg bg-gray-100 lg:w-1/2">
-        <div class="flex flex-row mb-5 items-center">
-          <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
-            <.icon name="play-icon" class="inline-block w-5 h-5 fill-current text-blue-planning-300" />
-          </div>
-          <div class="ml-3">
-            <p class="text-sm uppercase font-bold text-base-250">Email Sequences</p>
-            <p class="text-blue-planning-300 text-2xl font-bold"><%= @email_schedule.name %></p>
-          </div>
+    <div class="p-5 flex flex-col rounded-lg bg-gray-100 lg:w-1/2">
+      <div class="flex flex-row mb-5 items-center">
+        <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
+          <.icon name="play-icon" class="inline-block w-5 h-5 fill-current text-blue-planning-300" />
         </div>
-        <div class="flex flex-row ml-12">
-          <.form for={%{}} class="flex">
-            <label class="flex">
-              <input id="pipeline-toggle" phx-target={@myself} phx-click="toggle"  phx-value-active={@toggle_value |> to_string} type="checkbox" class="peer hidden" checked={@toggle_value}/>
-              <div class="hidden peer-checked:flex">
-                <div class="rounded-full bg-blue-planning-300 border border-base-100 w-16 h-8 p-1 flex items-center justify-end mr-4 hover:cursor-pointer">
-                  <div class="rounded-full h-5 w-5 bg-base-100"></div>
-                </div>
-              </div>
-              <div class="flex peer-checked:hidden">
-                <div class="rounded-full w-16 h-8 p-1 flex items-center mr-4 border border-blue-planning-300 hover:cursor-pointer">
-                  <div class="rounded-full h-5 w-5 bg-blue-planning-300"></div>
-                </div>
-              </div>
-            </label>
-            <div>
-              <p class="font-bold">Allow automation to send sequence</p>
-              <p>(Disable to send a one-off)</p>
-              <p class="text-blue-planning-300 underline hover:cursor-pointer" phx-target={@myself} phx-click="email-preview" phx-value-email-preview-id={@email_schedule.id} phx-value-is-preview="true" ><a>Preview email</a></p>
-            </div>
-          </.form>
+        <div class="ml-3">
+          <p class="text-sm uppercase font-bold text-base-250">Email Sequences</p>
+          <p class="text-blue-planning-300 text-2xl font-bold"><%= @email_schedule.name %></p>
         </div>
       </div>
+      <div class="flex flex-row ml-12">
+        <.form for={%{}} class="flex">
+          <label class="flex">
+            <input
+              id="pipeline-toggle"
+              phx-target={@myself}
+              phx-click="toggle"
+              phx-value-active={@toggle_value |> to_string}
+              type="checkbox"
+              class="peer hidden"
+              checked={@toggle_value}
+            />
+            <div class="hidden peer-checked:flex">
+              <div class="rounded-full bg-blue-planning-300 border border-base-100 w-16 h-8 p-1 flex items-center justify-end mr-4 hover:cursor-pointer">
+                <div class="rounded-full h-5 w-5 bg-base-100"></div>
+              </div>
+            </div>
+            <div class="flex peer-checked:hidden">
+              <div class="rounded-full w-16 h-8 p-1 flex items-center mr-4 border border-blue-planning-300 hover:cursor-pointer">
+                <div class="rounded-full h-5 w-5 bg-blue-planning-300"></div>
+              </div>
+            </div>
+          </label>
+          <div>
+            <p class="font-bold">Allow automation to send sequence</p>
+            <p>(Disable to send a one-off)</p>
+            <p
+              class="text-blue-planning-300 underline hover:cursor-pointer"
+              phx-target={@myself}
+              phx-click="email-preview"
+              phx-value-email-preview-id={@email_schedule.id}
+              phx-value-is-preview="true"
+            >
+              <a>Preview email</a>
+            </p>
+          </div>
+        </.form>
+      </div>
+    </div>
     """
   end
 

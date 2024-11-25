@@ -16,17 +16,42 @@ defmodule TodoplaceWeb.Live.User.Settings.PromoCodeModal do
   def render(assigns) do
     ~H"""
     <div class="dialog">
-      <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" id="modal-form" phx-target={@myself}>
-        <%= hidden_inputs_for f %>
+      <.form
+        :let={f}
+        for={@changeset}
+        phx-change="validate"
+        phx-submit="save"
+        id="modal-form"
+        phx-target={@myself}
+      >
+        <%= hidden_inputs_for(f) %>
         <%= for onboarding <- inputs_for(f, :onboarding) do %>
-          <%= hidden_inputs_for onboarding %>
-          <%= labeled_input onboarding, :promotion_code, label: "Add a subscription promo code", type: :text_input, phx_debounce: 500, min: 0, placeholder: "enter code…", class: "mb-3" %>
+          <%= hidden_inputs_for(onboarding) %>
+          <%= labeled_input(onboarding, :promotion_code,
+            label: "Add a subscription promo code",
+            type: :text_input,
+            phx_debounce: 500,
+            min: 0,
+            placeholder: "enter code…",
+            class: "mb-3"
+          ) %>
         <% end %>
-        <button class="w-full mt-6 btn-primary" title="test" type="submit" disabled={!@changeset.valid?} phx-disable-with="Saving&hellip;" >
+        <button
+          class="w-full mt-6 btn-primary"
+          title="test"
+          type="submit"
+          disabled={!@changeset.valid?}
+          phx-disable-with="Saving&hellip;"
+        >
           Save code
         </button>
       </.form>
-      <button class="w-full mt-6 btn-secondary" type="button" phx-click="modal" phx-value-action="close">
+      <button
+        class="w-full mt-6 btn-secondary"
+        type="button"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         Close
       </button>
     </div>

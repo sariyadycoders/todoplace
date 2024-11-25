@@ -87,7 +87,9 @@ defmodule TodoplaceWeb.FormHelpers do
     assigns = Enum.into(assigns, %{class: class})
 
     ~H"""
-    <label class={@class} phx-feedback-for={input_name(@form, @field)} for={input_id(@form, @field)}><%= render_slot @inner_block %></label>
+    <label class={@class} phx-feedback-for={input_name(@form, @field)} for={input_id(@form, @field)}>
+      <%= render_slot(@inner_block) %>
+    </label>
     """
   end
 
@@ -117,7 +119,7 @@ defmodule TodoplaceWeb.FormHelpers do
       ] ++
         Keyword.drop(opts, [:class])
 
-   select(form, field, options, select_opts)
+    select(form, field, options, select_opts)
   end
 
   def labeled_select(form, field, options, opts \\ []) do
@@ -154,25 +156,26 @@ defmodule TodoplaceWeb.FormHelpers do
   @doc """
   Translates an error message using gettext.
   """
- # TODO: handle me (function import conflict)
- # def translate_error({msg, opts}) do
-    # When using gettext, we typically pass the strings we want
-    # to translate as a static argument:
-    #
-    #     # Translate "is invalid" in the "errors" domain
-    #     dgettext("errors", "is invalid")
-    #
-    #     # Translate the number of files with plural rules
-    #     dngettext("errors", "1 file", "%{count} files", count)
-    #
-    # Because the error messages we show in our forms and APIs
-    # are defined inside Ecto, we need to translate them dynamically.
-    # This requires us to call the Gettext module passing our gettext
-    # backend as first argument.
-    #
-    # Note we use the "errors" domain, which means translations
-    # should be written to the errors.po file. The :count option is
-    # set by Ecto and indicates we should also apply plural rules.
+
+  # TODO: handle me (function import conflict)
+  # def translate_error({msg, opts}) do
+  # When using gettext, we typically pass the strings we want
+  # to translate as a static argument:
+  #
+  #     # Translate "is invalid" in the "errors" domain
+  #     dgettext("errors", "is invalid")
+  #
+  #     # Translate the number of files with plural rules
+  #     dngettext("errors", "1 file", "%{count} files", count)
+  #
+  # Because the error messages we show in our forms and APIs
+  # are defined inside Ecto, we need to translate them dynamically.
+  # This requires us to call the Gettext module passing our gettext
+  # backend as first argument.
+  #
+  # Note we use the "errors" domain, which means translations
+  # should be written to the errors.po file. The :count option is
+  # set by Ecto and indicates we should also apply plural rules.
   #  if count = opts[:count] do
   #    Gettext.dngettext(TodoplaceWeb.Gettext, "errors", msg, msg, count, opts)
   #  else
@@ -193,21 +196,24 @@ defmodule TodoplaceWeb.FormHelpers do
 
     ~H"""
     <label class={"flex flex-col #{@class}"}>
-        <p class="py-2 font-extrabold"><%= @label %> <i class="italic font-light">(No worries if you don’t have one)</i></p>
+      <p class="py-2 font-extrabold">
+        <%= @label %> <i class="italic font-light">(No worries if you don’t have one)</i>
+      </p>
 
-        <div class="relative flex flex-col">
-          <%= input @form, @name,
-              type: :url_input,
-              phx_debounce: "500",
-              disabled: input_value(@form, @name) == true,
-              placeholder: @placeholder,
-              autocomplete: "url",
-              novalidate: true,
-              phx_hook: "PrefixHttp",
-              class: "p-4" %>
-          <%= error_tag @form, @name, class: "text-red-sales-300 text-sm", prefix: "Website URL" %>
-        </div>
-      </label>
+      <div class="relative flex flex-col">
+        <%= input(@form, @name,
+          type: :url_input,
+          phx_debounce: "500",
+          disabled: input_value(@form, @name) == true,
+          placeholder: @placeholder,
+          autocomplete: "url",
+          novalidate: true,
+          phx_hook: "PrefixHttp",
+          class: "p-4"
+        ) %>
+        <%= error_tag(@form, @name, class: "text-red-sales-300 text-sm", prefix: "Website URL") %>
+      </div>
+    </label>
     """
   end
 
@@ -230,17 +236,33 @@ defmodule TodoplaceWeb.FormHelpers do
         data_time_zone: nil
       })
 
-     ~H"""
-     <div class={@class}>
-       <%= if @input_label do %>
-       <.input_label form={@form} class="input-label" field={@field}>
-         <%= @input_label %> <%= error_tag(@form, @field) %>
-       </.input_label>
-       <% end %>
-       <div class="flatpickr" phx-update="ignore" phx-hook="DatePicker" id={@id} data-min-date={@data_min_date} data-time-only={@data_time_only} data-time-picker={@data_time_picker} data-custom-display-format={@data_custom_display_format} data-custom-date-format={@data_custom_date_format} data-time-zone={@data_time_zone}>
-         <%= text_input @form, @field, class: @input_class, placeholder: @input_placeholder, data_input: true, disabled: @disabled %>
-       </div>
-     </div>
+    ~H"""
+    <div class={@class}>
+      <%= if @input_label do %>
+        <.input_label form={@form} class="input-label" field={@field}>
+          <%= @input_label %> <%= error_tag(@form, @field) %>
+        </.input_label>
+      <% end %>
+      <div
+        class="flatpickr"
+        phx-update="ignore"
+        phx-hook="DatePicker"
+        id={@id}
+        data-min-date={@data_min_date}
+        data-time-only={@data_time_only}
+        data-time-picker={@data_time_picker}
+        data-custom-display-format={@data_custom_display_format}
+        data-custom-date-format={@data_custom_date_format}
+        data-time-zone={@data_time_zone}
+      >
+        <%= text_input(@form, @field,
+          class: @input_class,
+          placeholder: @input_placeholder,
+          data_input: true,
+          disabled: @disabled
+        ) %>
+      </div>
+    </div>
     """
   end
 
@@ -267,21 +289,42 @@ defmodule TodoplaceWeb.FormHelpers do
         mode: "range"
       })
 
-     ~H"""
-     <div class={@class}>
-       <%= if @input_label do %>
-       <.input_label form={@form} class="input-label py-0 font-bold mb-1" field={@field}>
-         <%= @input_label %>
-       </.input_label>
-       <% end %>
-       <div class="flatpickr" phx-update="ignore" phx-hook="DatePicker" data-default-date={@default_date} data-mode={@mode} id={@id} data-inline={true} data-min-date={@data_min_date} data-max-date={@data_max_date} data-time-only={@data_time_only} data-time-picker={@data_time_picker} data-custom-display-format={@data_custom_display_format} data-custom-date-format={@data_custom_date_format} data-time-zone={@data_time_zone}>
-         <%!-- <%= hidden_input @form, @field, class: @input_class, placeholder: @input_placeholder, data_input: true %> --%>
-         <div class="absolute bottom-3 right-3 pointer-events-none">
-           <.icon name="calendar" class="text-blue-planning-300 w-5 h-5" />
-         </div>
-         <%= text_input @form, @field, "phx-change": @phx_change_event, class: @input_class, placeholder: @input_placeholder, data_input: true, disabled: @disabled %>
-       </div>
-     </div>
+    ~H"""
+    <div class={@class}>
+      <%= if @input_label do %>
+        <.input_label form={@form} class="input-label py-0 font-bold mb-1" field={@field}>
+          <%= @input_label %>
+        </.input_label>
+      <% end %>
+      <div
+        class="flatpickr"
+        phx-update="ignore"
+        phx-hook="DatePicker"
+        data-default-date={@default_date}
+        data-mode={@mode}
+        id={@id}
+        data-inline={true}
+        data-min-date={@data_min_date}
+        data-max-date={@data_max_date}
+        data-time-only={@data_time_only}
+        data-time-picker={@data_time_picker}
+        data-custom-display-format={@data_custom_display_format}
+        data-custom-date-format={@data_custom_date_format}
+        data-time-zone={@data_time_zone}
+      >
+        <%!-- <%= hidden_input @form, @field, class: @input_class, placeholder: @input_placeholder, data_input: true %> --%>
+        <div class="absolute bottom-3 right-3 pointer-events-none">
+          <.icon name="calendar" class="text-blue-planning-300 w-5 h-5" />
+        </div>
+        <%= text_input(@form, @field,
+          "phx-change": @phx_change_event,
+          class: @input_class,
+          placeholder: @input_placeholder,
+          data_input: true,
+          disabled: @disabled
+        ) %>
+      </div>
+    </div>
     """
   end
 end

@@ -75,9 +75,7 @@ defmodule TodoplaceWeb.GalleryLive.ClientIndex do
       ) do
     socket
     |> place_product_in_cart(whcc_editor_id)
-    |> push_redirect(
-      to: ~p"/gallery/#{gallery.client_link_hash}/cart"
-    )
+    |> push_redirect(to: ~p"/gallery/#{gallery.client_link_hash}/cart")
     |> noreply()
   end
 
@@ -201,9 +199,7 @@ defmodule TodoplaceWeb.GalleryLive.ClientIndex do
         } = socket
       ) do
     socket
-    |> push_redirect(
-      to: ~p"/gallery/#{client_link_hash}/album/#{album_id}"
-    )
+    |> push_redirect(to: ~p"/gallery/#{client_link_hash}/album/#{album_id}")
     |> noreply()
   end
 

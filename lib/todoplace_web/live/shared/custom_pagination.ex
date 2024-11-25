@@ -28,26 +28,50 @@ defmodule TodoplaceWeb.Shared.CustomPagination do
     assigns = Enum.into(assigns, %{wrapper_class: nil})
 
     ~H"""
-      <div id={"#{@id}-wrapper"} class={"flex items-center px-6 pb-6 center-container #{@wrapper_class}"}>
-        <%= if pagination_index(@pagination_changeset, :total_count) >= 0 do %>
-          <.form :let={f} for={@pagination_changeset} phx-change="page" class="flex items-center text-gray-500 rounded p-1 border cursor-pointer border-blue-planning-300">
-              <%= select f, :limit, @limit_options, class: "cursor-pointer"%>
-            </.form>
+    <div
+      id={"#{@id}-wrapper"}
+      class={"flex items-center px-6 pb-6 center-container #{@wrapper_class}"}
+    >
+      <%= if pagination_index(@pagination_changeset, :total_count) >= 0 do %>
+        <.form
+          :let={f}
+          for={@pagination_changeset}
+          phx-change="page"
+          class="flex items-center text-gray-500 rounded p-1 border cursor-pointer border-blue-planning-300"
+        >
+          <%= select(f, :limit, @limit_options, class: "cursor-pointer") %>
+        </.form>
 
-          <div class="flex ml-2 text-xs font-bold text-gray-500">
-            Results: <%= pagination_index(@pagination_changeset, :first_index) %> – <%= pagination_index(@pagination_changeset, :last_index) %> of <%= pagination_index(@pagination_changeset, :total_count) %>
-          </div>
+        <div class="flex ml-2 text-xs font-bold text-gray-500">
+          Results: <%= pagination_index(@pagination_changeset, :first_index) %> – <%= pagination_index(
+            @pagination_changeset,
+            :last_index
+          ) %> of <%= pagination_index(@pagination_changeset, :total_count) %>
+        </div>
 
-          <div class="flex items-center ml-auto">
-            <button class="flex items-center p-4 text-xs font-bold rounded disabled:text-gray-300 hover:bg-gray-100" title="Previous page" phx-click="page" phx-value-direction="back" disabled={pagination_index(@pagination_changeset, :first_index) == 1}>
-              <.icon name="back" class="w-3 h-3 mr-1 stroke-current stroke-2" />
-              Prev
-            </button>
-            <button class="flex items-center p-4 text-xs font-bold rounded disabled:text-gray-300 hover:bg-gray-100" title="Next page" phx-click="page" phx-value-direction="forth"  disabled={pagination_index(@pagination_changeset, :last_index) == pagination_index(@pagination_changeset, :total_count)}>
-              Next
-              <.icon name="forth" class="w-3 h-3 ml-1 stroke-current stroke-2" />
-            </button>
-          </div>
+        <div class="flex items-center ml-auto">
+          <button
+            class="flex items-center p-4 text-xs font-bold rounded disabled:text-gray-300 hover:bg-gray-100"
+            title="Previous page"
+            phx-click="page"
+            phx-value-direction="back"
+            disabled={pagination_index(@pagination_changeset, :first_index) == 1}
+          >
+            <.icon name="back" class="w-3 h-3 mr-1 stroke-current stroke-2" /> Prev
+          </button>
+          <button
+            class="flex items-center p-4 text-xs font-bold rounded disabled:text-gray-300 hover:bg-gray-100"
+            title="Next page"
+            phx-click="page"
+            phx-value-direction="forth"
+            disabled={
+              pagination_index(@pagination_changeset, :last_index) ==
+                pagination_index(@pagination_changeset, :total_count)
+            }
+          >
+            Next <.icon name="forth" class="w-3 h-3 ml-1 stroke-current stroke-2" />
+          </button>
+        </div>
       <% end %>
     </div>
     """

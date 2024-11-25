@@ -48,24 +48,57 @@ defmodule TodoplaceWeb.Live.Marketing.NewCampaignComponent do
       <div class="flex items-start justify-between flex-shrink-0">
         <h1 class="text-3xl font-bold"><%= if @review, do: "Review", else: "Edit" %> email</h1>
 
-        <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
         </button>
       </div>
 
       <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself}>
         <fieldset class={classes(%{"hidden" => @review})}>
-          <%= labeled_input f, :subject, label: "Subject", placeholder: "Type subject…", wrapper_class: "mt-4", phx_debounce: "500" %>
+          <%= labeled_input(f, :subject,
+            label: "Subject",
+            placeholder: "Type subject…",
+            wrapper_class: "mt-4",
+            phx_debounce: "500"
+          ) %>
 
-          <%= label_for f, :segment_type, label: "Client List", class: "block mt-4 pb-2" %>
+          <%= label_for(f, :segment_type, label: "Client List", class: "block mt-4 pb-2") %>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <.segment_type_option name={input_name(f, :segment_type)} icon="three-people" value="new" checked={input_value(f, :segment_type) == "new"} title={"Unassigned clients (#{@segments_count["new"]})"} subtitle="Clients who aren't assigned to a lead or a job" />
-            <.segment_type_option name={input_name(f, :segment_type)} icon="notebook" value="all" checked={input_value(f, :segment_type) == "all"} title={"All clients (#{@segments_count["all"]})"} subtitle="All clients in your list" />
+            <.segment_type_option
+              name={input_name(f, :segment_type)}
+              icon="three-people"
+              value="new"
+              checked={input_value(f, :segment_type) == "new"}
+              title={"Unassigned clients (#{@segments_count["new"]})"}
+              subtitle="Clients who aren't assigned to a lead or a job"
+            />
+            <.segment_type_option
+              name={input_name(f, :segment_type)}
+              icon="notebook"
+              value="all"
+              checked={input_value(f, :segment_type) == "all"}
+              title={"All clients (#{@segments_count["all"]})"}
+              subtitle="All clients in your list"
+            />
           </div>
 
           <label class="block mt-4 input-label" for="editor">Message</label>
 
-          <.quill_input f={f} html_field={:body_html} text_field={:body_text} placeholder="Start typing…" enable_size={true} enable_image={true} current_user={@current_user} />
+          <.quill_input
+            f={f}
+            html_field={:body_html}
+            text_field={:body_text}
+            placeholder="Start typing…"
+            enable_size={true}
+            enable_image={true}
+            current_user={@current_user}
+          />
         </fieldset>
 
         <%= if @review do %>
@@ -76,19 +109,28 @@ defmodule TodoplaceWeb.Live.Marketing.NewCampaignComponent do
             </dl>
             <dl>
               <dt class="inline text-blue-planning-300">Recipient list:</dt>
-              <dd class="inline"><%= ngettext "1 client", "%{count} clients", @current_segment_count %></dd>
+              <dd class="inline">
+                <%= ngettext("1 client", "%{count} clients", @current_segment_count) %>
+              </dd>
             </dl>
           </div>
           <%= case @template_preview do %>
             <% nil -> %>
             <% :loading -> %>
               <div class="flex items-center justify-center w-full mt-10 text-xs">
-                <div class="w-3 h-3 mr-2 rounded-full opacity-75 bg-blue-planning-300 animate-ping"></div>
+                <div class="w-3 h-3 mr-2 rounded-full opacity-75 bg-blue-planning-300 animate-ping">
+                </div>
                 Loading...
               </div>
             <% content -> %>
               <div class="flex justify-center p-2 mt-4 rounded-lg bg-base-200">
-                <iframe srcdoc={content} class="w-[30rem]" scrolling="no" phx-hook="IFrameAutoHeight" id="template-preview">
+                <iframe
+                  srcdoc={content}
+                  class="w-[30rem]"
+                  scrolling="no"
+                  phx-hook="IFrameAutoHeight"
+                  id="template-preview"
+                >
                 </iframe>
               </div>
           <% end %>
@@ -96,23 +138,52 @@ defmodule TodoplaceWeb.Live.Marketing.NewCampaignComponent do
 
         <TodoplaceWeb.LiveModal.footer>
           <%= if @review do %>
-            <button id="send" class="btn-primary" title="send" type="submit" disabled={!@changeset.valid? || @current_segment_count == 0} phx-disable-with="Send">
+            <button
+              id="send"
+              class="btn-primary"
+              title="send"
+              type="submit"
+              disabled={!@changeset.valid? || @current_segment_count == 0}
+              phx-disable-with="Send"
+            >
               Send
             </button>
-            <button id="back" class="btn-secondary" title="back" type="button" phx-click="toggle-review" phx-target={@myself} phx-disable-with="Back">
+            <button
+              id="back"
+              class="btn-secondary"
+              title="back"
+              type="button"
+              phx-click="toggle-review"
+              phx-target={@myself}
+              phx-disable-with="Back"
+            >
               Back
             </button>
           <% else %>
-            <button id="review" class="btn-primary" title="review" type="button" disabled={!@changeset.valid?} phx-click="toggle-review" phx-target={@myself} phx-disable-with="Review">
+            <button
+              id="review"
+              class="btn-primary"
+              title="review"
+              type="button"
+              disabled={!@changeset.valid?}
+              phx-click="toggle-review"
+              phx-target={@myself}
+              phx-disable-with="Review"
+            >
               Review
             </button>
           <% end %>
-          <button id="close" class="btn-secondary" title="close" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            id="close"
+            class="btn-secondary"
+            title="close"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Close
           </button>
-
         </TodoplaceWeb.LiveModal.footer>
-
       </.form>
     </div>
     """
@@ -120,28 +191,32 @@ defmodule TodoplaceWeb.Live.Marketing.NewCampaignComponent do
 
   defp segment_type_option(assigns) do
     ~H"""
-      <label class={classes(
+    <label class={
+      classes(
         "flex items-center p-2 border rounded-lg hover:bg-blue-planning-100/60 cursor-pointer leading-tight",
         %{"border-blue-planning-300 bg-blue-planning-100" => @checked}
-      )}>
-        <input class="hidden" type={:radio} name={@name} value={@value} checked={@checked} />
+      )
+    }>
+      <input class="hidden" type={:radio} name={@name} value={@value} checked={@checked} />
 
-        <div class={classes(
+      <div class={
+        classes(
           "flex items-center justify-center w-7 h-7 ml-1 mr-3 rounded-full flex-shrink-0",
           %{"bg-blue-planning-300 text-white" => @checked, "bg-base-200" => !@checked}
-        )}>
-          <.icon name={@icon} class="fill-current" width="14" height="14" />
-        </div>
+        )
+      }>
+        <.icon name={@icon} class="fill-current" width="14" height="14" />
+      </div>
 
-        <div class="flex flex-col">
-          <div class="text-sm font-semibold">
-            <%= @title %>
-          </div>
-          <div class="block text-sm opacity-70">
-            <%= @subtitle %>
-          </div>
+      <div class="flex flex-col">
+        <div class="text-sm font-semibold">
+          <%= @title %>
         </div>
-      </label>
+        <div class="block text-sm opacity-70">
+          <%= @subtitle %>
+        </div>
+      </div>
+    </label>
     """
   end
 

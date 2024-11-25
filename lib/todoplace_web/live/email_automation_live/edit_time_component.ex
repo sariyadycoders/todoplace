@@ -103,72 +103,92 @@ defmodule TodoplaceWeb.EmailAutomationLive.EditTimeComponent do
   @impl true
   def render(assigns) do
     ~H"""
-      <div class="modal">
-        <.close_x />
-        <h1 class="mt-2 mb-4 text-3xl">
-          <span class="font-bold">Edit Email Automation Settings</span>
-        </h1>
+    <div class="modal">
+      <.close_x />
+      <h1 class="mt-2 mb-4 text-3xl">
+        <span class="font-bold">Edit Email Automation Settings</span>
+      </h1>
 
-        <.form for={@changeset} phx-change="validate" phx-submit="submit" phx-target={@myself} id={"form-timing"}>
-          <input type="hidden" />
+      <.form
+        for={@changeset}
+        phx-change="validate"
+        phx-submit="submit"
+        phx-target={@myself}
+        id="form-timing"
+      >
+        <input type="hidden" />
 
-          <div class="rounded-lg border-base-200 border">
-            <div class="bg-base-200 p-4 flex flex-col lg:flex-row rounded-t-lg">
-              <div class="flex items-center">
-                <div>
-                  <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3">
-                    <.icon name="envelope" class="w-5 h-5 text-blue-planning-300" />
-                  </div>
+        <div class="rounded-lg border-base-200 border">
+          <div class="bg-base-200 p-4 flex flex-col lg:flex-row rounded-t-lg">
+            <div class="flex items-center">
+              <div>
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-3">
+                  <.icon name="envelope" class="w-5 h-5 text-blue-planning-300" />
                 </div>
-                <div class="text-blue-planning-300 text-lg"><b>Send email:</b> <%= Shared.get_email_name(@email, nil, 0, nil) %></div>
               </div>
-              <div class="flex lg:ml-auto items-center mt-2 lg:mt-0">
-                <div class="w-8 h-8 rounded-full bg-blue-planning-300 flex items-center justify-center mr-3">
-                  <.icon name="play-icon" class="w-4 h-4 fill-current text-white" />
-                </div>
-                <span class="font-semibold">Job Automation</span>
+              <div class="text-blue-planning-300 text-lg">
+                <b>Send email:</b> <%= Shared.get_email_name(@email, nil, 0, nil) %>
               </div>
             </div>
+            <div class="flex lg:ml-auto items-center mt-2 lg:mt-0">
+              <div class="w-8 h-8 rounded-full bg-blue-planning-300 flex items-center justify-center mr-3">
+                <.icon name="play-icon" class="w-4 h-4 fill-current text-white" />
+              </div>
+              <span class="font-semibold">Job Automation</span>
+            </div>
+          </div>
 
-            <% f = to_form(@changeset) %>
-            <%= hidden_input f, :email_automation_pipeline_id %>
-            <%= hidden_input f, :job_type %>
-            <%= hidden_input f, :organization_id %>
+          <% f = to_form(@changeset) %>
+          <%= hidden_input(f, :email_automation_pipeline_id) %>
+          <%= hidden_input(f, :job_type) %>
+          <%= hidden_input(f, :organization_id) %>
 
-            <div class="flex flex-col w-full md:px-14 px-6 py-6">
-
-              <div class="flex lg:flex-row flex-col w-full md:pr-6">
-                <div class="flex flex-col lg:w-1/2 lg:pr-6">
-                  <b>Email timing</b>
-                  <span class="text-base-250">Choose when you’d like your email to send</span>
-                  <label class="flex items-center cursor-pointer mt-4">
-                    <%= radio_button(f, :immediately, true, class: "w-5 h-5 mr-4 radio") %>
-                    <p class="font-semibold">Send immediately when event happens</p>
-                  </label>
-                  <label class="flex items-center cursor-pointer mt-4">
-                    <%= radio_button(f, :immediately, false, class: "w-5 h-5 mr-4 radio") %>
-                    <p class="font-semibold">Send at a certain time</p>
-                  </label>
-                  <%= unless current(@changeset) |> Map.get(:immediately) do %>
-                    <div class="flex flex-col ml-8 mt-3">
-                      <div class="flex w-full my-2">
-                        <div class="w-1/5 min-w-[40px]">
-                          <%= input f, :count, class: "border-base-200 hover:border-blue-planning-300 cursor-pointer w-full text-center" %>
-                        </div>
-                          <div class="ml-2 w-3/5">
-                          <%= select_field f, :calendar, ["Hour", "Day", "Month", "Year"], wrapper_class: "mt-4", class: "w-full py-3 border rounded-lg border-base-200", phx_update: "update" %>
-                        </div>
-                        <div class="ml-2 w-3/5">
-                          <%= select_field f, :sign, Shared.make_sign_options(@pipeline.state), wrapper_class: "mt-4", class: "w-full py-3 border rounded-lg border-base-200", phx_update: "update" %>
-                        </div>
+          <div class="flex flex-col w-full md:px-14 px-6 py-6">
+            <div class="flex lg:flex-row flex-col w-full md:pr-6">
+              <div class="flex flex-col lg:w-1/2 lg:pr-6">
+                <b>Email timing</b>
+                <span class="text-base-250">Choose when you’d like your email to send</span>
+                <label class="flex items-center cursor-pointer mt-4">
+                  <%= radio_button(f, :immediately, true, class: "w-5 h-5 mr-4 radio") %>
+                  <p class="font-semibold">Send immediately when event happens</p>
+                </label>
+                <label class="flex items-center cursor-pointer mt-4">
+                  <%= radio_button(f, :immediately, false, class: "w-5 h-5 mr-4 radio") %>
+                  <p class="font-semibold">Send at a certain time</p>
+                </label>
+                <%= unless current(@changeset) |> Map.get(:immediately) do %>
+                  <div class="flex flex-col ml-8 mt-3">
+                    <div class="flex w-full my-2">
+                      <div class="w-1/5 min-w-[40px]">
+                        <%= input(f, :count,
+                          class:
+                            "border-base-200 hover:border-blue-planning-300 cursor-pointer w-full text-center"
+                        ) %>
                       </div>
-                      <%= if message = @changeset.errors[:count] do %>
-                        <div class="flex py-1 w-full text-red-sales-300 text-sm"><%= translate_error(message) %></div>
-                      <% end %>
+                      <div class="ml-2 w-3/5">
+                        <%= select_field(f, :calendar, ["Hour", "Day", "Month", "Year"],
+                          wrapper_class: "mt-4",
+                          class: "w-full py-3 border rounded-lg border-base-200",
+                          phx_update: "update"
+                        ) %>
+                      </div>
+                      <div class="ml-2 w-3/5">
+                        <%= select_field(f, :sign, Shared.make_sign_options(@pipeline.state),
+                          wrapper_class: "mt-4",
+                          class: "w-full py-3 border rounded-lg border-base-200",
+                          phx_update: "update"
+                        ) %>
+                      </div>
                     </div>
-                  <% end %>
-                </div>
-                <%!-- <%= unless current(@changeset) |> Map.get(:immediately) do %>
+                    <%= if message = @changeset.errors[:count] do %>
+                      <div class="flex py-1 w-full text-red-sales-300 text-sm">
+                        <%= translate_error(message) %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+              <%!-- <%= unless current(@changeset) |> Map.get(:immediately) do %>
                   <div class="flex flex-col w-full lg:w-1/2 lg:pl-6 lg:border-l md:border-base-200">
                     <b>Email Automation sequence conditions</b>
                     <span class="text-base-250">Choose to run automatically or when conditions are met</span>
@@ -189,46 +209,67 @@ defmodule TodoplaceWeb.EmailAutomationLive.EditTimeComponent do
                     </div>
                   </div>
                 <% end %> --%>
-              </div>
-              <hr class="my-4 md:hidden flex" />
-
-              <%= if @show_enable_setting? do %>
-                <div class="mt-4">
-                  <b>Email Status</b>
-                  <span class="text-base-250">Choose whether or not this email should send</span>
-
-                  <div>
-                    <label class="flex pt-4">
-                      <%= checkbox f, :status, class: "peer hidden", checked: Changeset.get_field(@changeset, :status) == :active %>
-                      <div class="hidden peer-checked:flex cursor-pointer">
-                        <div testid="enable-toggle-in-edit-email-modal" class="rounded-full bg-blue-planning-300 border border-base-100 w-14 p-1 flex justify-end mr-4">
-                          <div class="rounded-full h-5 w-5 bg-base-100"></div>
-                        </div>
-                        Email enabled
-                      </div>
-                      <div class="flex peer-checked:hidden cursor-pointer">
-                        <div testid="disable-toggle-in-edit-email-modal" class="rounded-full w-14 p-1 flex mr-4 border border-blue-planning-300">
-                          <div class="rounded-full h-5 w-5 bg-blue-planning-300"></div>
-                        </div>
-                        Email disabled
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              <% end %>
             </div>
-          </div>
+            <hr class="my-4 md:hidden flex" />
 
-          <.footer class="pt-10">
-            <button class="btn-primary" title="Save" disabled={!step_valid?(assigns)}  type="submit" phx-disable-with="Save">
-              Save
-            </button>
-            <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
-              Close
-            </button>
-          </.footer>
-        </.form>
-      </div>
+            <%= if @show_enable_setting? do %>
+              <div class="mt-4">
+                <b>Email Status</b>
+                <span class="text-base-250">Choose whether or not this email should send</span>
+
+                <div>
+                  <label class="flex pt-4">
+                    <%= checkbox(f, :status,
+                      class: "peer hidden",
+                      checked: Changeset.get_field(@changeset, :status) == :active
+                    ) %>
+                    <div class="hidden peer-checked:flex cursor-pointer">
+                      <div
+                        testid="enable-toggle-in-edit-email-modal"
+                        class="rounded-full bg-blue-planning-300 border border-base-100 w-14 p-1 flex justify-end mr-4"
+                      >
+                        <div class="rounded-full h-5 w-5 bg-base-100"></div>
+                      </div>
+                      Email enabled
+                    </div>
+                    <div class="flex peer-checked:hidden cursor-pointer">
+                      <div
+                        testid="disable-toggle-in-edit-email-modal"
+                        class="rounded-full w-14 p-1 flex mr-4 border border-blue-planning-300"
+                      >
+                        <div class="rounded-full h-5 w-5 bg-blue-planning-300"></div>
+                      </div>
+                      Email disabled
+                    </div>
+                  </label>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <.footer class="pt-10">
+          <button
+            class="btn-primary"
+            title="Save"
+            disabled={!step_valid?(assigns)}
+            type="submit"
+            phx-disable-with="Save"
+          >
+            Save
+          </button>
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
+            Close
+          </button>
+        </.footer>
+      </.form>
+    </div>
     """
   end
 end

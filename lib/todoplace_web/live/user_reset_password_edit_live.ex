@@ -36,7 +36,7 @@ defmodule TodoplaceWeb.UserResetPasswordEditLive do
       socket.assigns.user
       |> User.password_changeset(user_params)
       |> Map.put(:action, :validate)
-      
+
     if changeset.valid? do
       {:ok, _} = Accounts.reset_user_password(socket.assigns.user, user_params)
 

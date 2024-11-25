@@ -127,54 +127,60 @@ defmodule TodoplaceWeb.GalleryLive.Photos.PhotoPreview do
     ~H"""
     <div class="flex flex-col p-10 bg-white rounded-lg mx-4 mb-4 relative max-h-[180vw] overflow-y-auto lg:w-full">
       <div class="flex items-start justify-between flex-shrink-0">
-          <h1 class="font-sans text-3xl font-bold">
-            Set as preview for which products?
-          </h1>
-          <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-            <.icon name="close-x" class="w-2 h-2 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
-          </button>
+        <h1 class="font-sans text-3xl font-bold">
+          Set as preview for which products?
+        </h1>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-2 h-2 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
+        </button>
       </div>
       <div class="flex justify-center py-10 font-sans bg-white">
-          <div id="product-preview" class="items-center grid lg:grid-cols-3 grid-cols-1 gap-4">
-              <%= for product <- @updated_products do %>
-                <%= unless product.category.coming_soon do %>
-                  <div class="items-center">
-                    <div
-                    id={"product-#{product.id}"}
-                    class={"flex p-6 font-sans text-black bg-gray-100 h-52 w-52 cursor-pointer #{Map.get(product.preview_photo, :selected, false) && 'preview-border'}"}
-                    phx-click="click" phx-target={@myself}
-                    phx-value-product={product.id}
-                    >
-                      <div class="flex justify-center row-span-2 previewImg">
-                        <.framed_preview item_id={product.category.id} category={product.category} photo={product.preview_photo} />
-                      </div>
-                    </div>
-                    <div class="flex items-center pt-4 font-sans fomt-bold">
-                      <%= product.category.name %>
-                    </div>
+        <div id="product-preview" class="items-center grid lg:grid-cols-3 grid-cols-1 gap-4">
+          <%= for product <- @updated_products do %>
+            <%= unless product.category.coming_soon do %>
+              <div class="items-center">
+                <div
+                  id={"product-#{product.id}"}
+                  class={"flex p-6 font-sans text-black bg-gray-100 h-52 w-52 cursor-pointer #{Map.get(product.preview_photo, :selected, false) && 'preview-border'}"}
+                  phx-click="click"
+                  phx-target={@myself}
+                  phx-value-product={product.id}
+                >
+                  <div class="flex justify-center row-span-2 previewImg">
+                    <.framed_preview
+                      item_id={product.category.id}
+                      category={product.category}
+                      photo={product.preview_photo}
+                    />
                   </div>
-                <% end %>
-              <% end %>
-          </div>
+                </div>
+                <div class="flex items-center pt-4 font-sans fomt-bold">
+                  <%= product.category.name %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
       </div>
       <div class="flex flex-col py-6 gap-2 lg:flex-row-reverse">
-          <button
+        <button
           phx-click="save"
           disabled={Enum.empty?(@selected)}
           phx-target={@myself}
           aria-label="save"
           class="btn-primary"
-          >
-            Save changes
-          </button>
-          <button
-          phx-click="modal"
-          phx-value-action="close"
-          title="close modal"
-          class="btn-secondary"
-          >
-            Cancel
-          </button>
+        >
+          Save changes
+        </button>
+        <button phx-click="modal" phx-value-action="close" title="close modal" class="btn-secondary">
+          Cancel
+        </button>
       </div>
     </div>
     """

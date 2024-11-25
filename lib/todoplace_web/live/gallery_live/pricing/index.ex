@@ -163,17 +163,17 @@ defmodule TodoplaceWeb.GalleryLive.Pricing.Index do
 
   def grid_item(assigns) do
     ~H"""
-      <div class="flex flex-row mt-2 items-center">
-        <div class="flex">
-            <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full bg-blue-planning-300">
-              <.icon name={@icon} class="w-4 h-4 text-white fill-current"/>
-            </div>
-        </div>
-        <div class="flex flex-col ml-2">
-            <p class="text-blue-planning-300 font-bold"><%= @item_name %></p>
-            <p class="text-base-250 font-normal"><%= @item_value %></p>
+    <div class="flex flex-row mt-2 items-center">
+      <div class="flex">
+        <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full bg-blue-planning-300">
+          <.icon name={@icon} class="w-4 h-4 text-white fill-current" />
         </div>
       </div>
+      <div class="flex flex-col ml-2">
+        <p class="text-blue-planning-300 font-bold"><%= @item_name %></p>
+        <p class="text-base-250 font-normal"><%= @item_value %></p>
+      </div>
+    </div>
     """
   end
 

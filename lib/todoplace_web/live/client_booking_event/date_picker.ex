@@ -19,24 +19,61 @@ defmodule TodoplaceWeb.ClientBookingEventLive.DatePicker do
       <% end %>
       <div class="flex items-center">
         <p class="font-semibold"><%= @month |> Calendar.strftime("%B %Y") %></p>
-        <button type="button" phx-click="todays-month" phx-target={@myself} title="today" class="h-9 text-white bg-black ml-auto py-2 px-4 disabled:opacity-60" disabled={same_month?(Date.utc_today(), @month)}>Today</button>
-        <button type="button" phx-click="previous-month" phx-target={@myself} title="previous month" class="h-9 text-white bg-black aspect-square mx-2 flex items-center justify-center" phx-click="previous-month" phx-target={@myself}><.icon name="back" class="w-4 h-4 stroke-3" /></button>
-        <button type="button" phx-click="next-month" phx-target={@myself} title="next month" class="h-9 text-white bg-black aspect-square flex items-center justify-center"><.icon name="forth" class="w-4 h-4 stroke-3" /></button>
+        <button
+          type="button"
+          phx-click="todays-month"
+          phx-target={@myself}
+          title="today"
+          class="h-9 text-white bg-black ml-auto py-2 px-4 disabled:opacity-60"
+          disabled={same_month?(Date.utc_today(), @month)}
+        >
+          Today
+        </button>
+        <button
+          type="button"
+          phx-click="previous-month"
+          phx-target={@myself}
+          title="previous month"
+          class="h-9 text-white bg-black aspect-square mx-2 flex items-center justify-center"
+          phx-click="previous-month"
+          phx-target={@myself}
+        >
+          <.icon name="back" class="w-4 h-4 stroke-3" />
+        </button>
+        <button
+          type="button"
+          phx-click="next-month"
+          phx-target={@myself}
+          title="next month"
+          class="h-9 text-white bg-black aspect-square flex items-center justify-center"
+        >
+          <.icon name="forth" class="w-4 h-4 stroke-3" />
+        </button>
       </div>
-      <hr class="border-gray-100 my-2">
+      <hr class="border-gray-100 my-2" />
       <div class="grid grid-cols-7 mt-2 gap-2">
         <%= for day_week <- ~w[SUN MON TUE WED THU FRI SAT] do %>
           <div class="text-center text-xs p-2"><%= day_week %></div>
         <% end %>
         <%= for day <- calendar_range(@month) do %>
-          <label class={classes("flex items-center justify-center p-2 aspect-square text-gray-400", %{
-            "text-white bg-black border border-black cursor-pointer font-semibold" => day == @selected_date,
-            "text-black border border-black cursor-pointer font-semibold" => day != @selected_date && day in @available_dates,
-            "invisible" => !same_month?(day, @month),
-          })}>
+          <label class={
+            classes("flex items-center justify-center p-2 aspect-square text-gray-400", %{
+              "text-white bg-black border border-black cursor-pointer font-semibold" =>
+                day == @selected_date,
+              "text-black border border-black cursor-pointer font-semibold" =>
+                day != @selected_date && day in @available_dates,
+              "invisible" => !same_month?(day, @month)
+            })
+          }>
             <%= day |> Calendar.strftime("%-d") %>
             <%= if day in @available_dates do %>
-              <input type="radio" checked={@selected_date == day} name={@name} value={day} class="hidden" />
+              <input
+                type="radio"
+                checked={@selected_date == day}
+                name={@name}
+                value={day}
+                class="hidden"
+              />
             <% end %>
           </label>
         <% end %>

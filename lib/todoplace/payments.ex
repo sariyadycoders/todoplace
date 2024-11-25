@@ -236,7 +236,9 @@ defmodule Todoplace.Payments do
         mode: "payment",
         automatic_tax: %{enabled: true}
       })
-      Logger.info("Reached Payments.create_session for #{inspect(params)}")
+
+    Logger.info("Reached Payments.create_session for #{inspect(params)}")
+
     case impl().create_session(params, opts) do
       {:ok, _} = session -> session
       _error -> params |> Map.drop([:automatic_tax]) |> impl().create_session(opts)

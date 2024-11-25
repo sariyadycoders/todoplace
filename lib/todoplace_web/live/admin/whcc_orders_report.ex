@@ -16,16 +16,16 @@ defmodule TodoplaceWeb.Live.Admin.WHCCOrdersReport do
     <div class="w-screen text-xs">
       <table class="w-full table-fixed">
         <tr class="border border-2">
-          <th> Sr. No. </th>
-          <th> Order Number </th>
-          <th> Gallery Name </th>
-          <th> Photographer </th>
-          <th> Client </th>
-          <th> Placed on </th>
-          <th> Confirmed on </th>
-          <th> WHCC Order No. </th>
-          <th> Tracking </th>
-          <th> Price Breakdown </th>
+          <th>Sr. No.</th>
+          <th>Order Number</th>
+          <th>Gallery Name</th>
+          <th>Photographer</th>
+          <th>Client</th>
+          <th>Placed on</th>
+          <th>Confirmed on</th>
+          <th>WHCC Order No.</th>
+          <th>Tracking</th>
+          <th>Price Breakdown</th>
         </tr>
         <%= for({%{number: number, placed_at: placed_at} = order, index} <- @orders |> Enum.with_index()) do %>
           <tr class="text-center w-full">
@@ -38,9 +38,15 @@ defmodule TodoplaceWeb.Live.Admin.WHCCOrdersReport do
             <td class="py-1"><%= confirmed_at(order) %></td>
             <td class="py-1"><%= tracking_info(order) |> Map.get(:whcc_order_number) %></td>
             <td class="break-words py-1">
-              <a class="underline" href={"#{tracking_info(order) |> Map.get(:url)}"} target="_blank"><%= tracking_info(order) |> Map.get(:url) %></a>
+              <a class="underline" href={"#{tracking_info(order) |> Map.get(:url)}"} target="_blank">
+                <%= tracking_info(order) |> Map.get(:url) %>
+              </a>
             </td>
-            <td class="py-1"><.link navigate={~p"/admin/whcc_orders_report/#{number}"} class={"underline"}>View Breakdown</.link></td>
+            <td class="py-1">
+              <.link navigate={~p"/admin/whcc_orders_report/#{number}"} class="underline">
+                View Breakdown
+              </.link>
+            </td>
           </tr>
         <% end %>
       </table>

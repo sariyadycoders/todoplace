@@ -31,11 +31,10 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart.Summary do
         <div class="flex items-center pb-2">
           <.icon name="up" class="toggle w-5 h-2.5 stroke-2 stroke-current mr-2.5" />
           <.icon name="down" class="hidden toggle w-5 h-2.5 stroke-2 stroke-current mr-2.5" />
-          See&nbsp;
-          <span class="toggle">more</span>
+          See&nbsp; <span class="toggle">more</span>
           <span class="hidden toggle">less</span>
         </div>
-        <hr class="mb-1 border-base-200">
+        <hr class="mb-1 border-base-200" />
       </button>
       <.inner_content {assigns} />
 
@@ -58,25 +57,25 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart.Summary do
 
     ~H"""
     <div class="px-5 mb-5">
-        <h3 class="uppercase text-base-250">Online payment options</h3>
-        <div class="mr-auto flex flex-wrap items-center gap-4 mt-2">
-          <.payment_icon icon="payment-card" option="Cards" />
-          <%= if(@payment_options.allow_cash) do %>
-            <.payment_icon icon="payment-offline" option="Manual payments (check/cash/Venmo/Etc)" />
-          <% end %>
-          <%= if(@payment_options.allow_afterpay_clearpay) do %>
-            <.payment_icon icon="payment-afterpay" option="Afterpay" />
-          <% end %>
-          <%= if(@payment_options.allow_affirm) do %>
-            <.payment_icon icon="payment-affirm" option="Affirm ($50.00 min.)" />
-          <% end %>
-          <%= if(@payment_options.allow_klarna) do %>
-            <.payment_icon icon="payment-klarna" option="Klarna" />
-          <% end %>
-          <%= if(@payment_options.allow_cashapp) do %>
-            <.payment_icon icon="payment-cashapp" option="Cashapp Pay" />
-          <% end %>
-        </div>
+      <h3 class="uppercase text-base-250">Online payment options</h3>
+      <div class="mr-auto flex flex-wrap items-center gap-4 mt-2">
+        <.payment_icon icon="payment-card" option="Cards" />
+        <%= if(@payment_options.allow_cash) do %>
+          <.payment_icon icon="payment-offline" option="Manual payments (check/cash/Venmo/Etc)" />
+        <% end %>
+        <%= if(@payment_options.allow_afterpay_clearpay) do %>
+          <.payment_icon icon="payment-afterpay" option="Afterpay" />
+        <% end %>
+        <%= if(@payment_options.allow_affirm) do %>
+          <.payment_icon icon="payment-affirm" option="Affirm ($50.00 min.)" />
+        <% end %>
+        <%= if(@payment_options.allow_klarna) do %>
+          <.payment_icon icon="payment-klarna" option="Klarna" />
+        <% end %>
+        <%= if(@payment_options.allow_cashapp) do %>
+          <.payment_icon icon="payment-cashapp" option="Cashapp Pay" />
+        <% end %>
+      </div>
     </div>
     """
   end
@@ -92,43 +91,43 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart.Summary do
 
     ~H"""
     <div class="px-5 grid grid-cols-[1fr,max-content] gap-3 mt-6 mb-5">
-    <dl class="text-lg contents">
-      <%= with [{label, value} | _] <- @product_charge_lines do %>
-        <.summary_block label={label} value={value} />
+      <dl class="text-lg contents">
+        <%= with [{label, value} | _] <- @product_charge_lines do %>
+          <.summary_block label={label} value={value} />
+        <% end %>
+
+        <%= if Enum.any?(@order.products, & &1.total_markuped_price) do %>
+          <.shipping_block {assigns} />
+        <% else %>
+          <.summary_block label="Shipping & handling" value="Included" />
+        <% end %>
+
+        <%= for {label, value} <- @charges do %>
+          <dt class="hidden toggle lg:block"><%= label %></dt>
+
+          <dd class="self-center hidden toggle lg:block justify-self-end"><%= value %></dd>
+        <% end %>
+
+        <dt class={"hidden #{!@is_proofing && 'text-2xl'} toggle md:block"}>
+          <%= if @is_proofing, do: "Purchased", else: "Subtotal" %>
+        </dt>
+        <dd class={"self-center hidden #{!@is_proofing && 'text-2xl'} toggle lg:block justify-self-end"}>
+          <%= @subtotal %>
+        </dd>
+      </dl>
+
+      <%= unless @discounts == [] or @is_proofing do %>
+        <hr class="hidden mt-2 mb-3 toggle lg:block col-span-2 border-base-200" />
+        <.discounts_content discounts={@discounts} class="text-lg text-green-finances-300" />
       <% end %>
 
-      <%= if Enum.any?(@order.products, & &1.total_markuped_price) do %>
-        <.shipping_block {assigns} />
-      <% else %>
-        <.summary_block label="Shipping & handling" value="Included" />
-      <% end %>
+      <hr class="hidden mt-2 mb-3 col-span-2 border-base-200 toggle lg:block" />
 
-      <%= for {label, value} <- @charges do %>
-        <dt class="hidden toggle lg:block"><%= label %></dt>
+      <dl class="contents">
+        <dt class="text-2xl">Total</dt>
 
-        <dd class="self-center hidden toggle lg:block justify-self-end"><%= value %></dd>
-      <% end %>
-
-      <dt class={"hidden #{!@is_proofing && 'text-2xl'} toggle md:block"}>
-        <%= if @is_proofing, do: "Purchased", else: "Subtotal" %>
-      </dt>
-      <dd class={"self-center hidden #{!@is_proofing && 'text-2xl'} toggle lg:block justify-self-end"}>
-        <%= @subtotal %>
-      </dd>
-    </dl>
-
-    <%= unless @discounts == [] or @is_proofing do %>
-      <hr class="hidden mt-2 mb-3 toggle lg:block col-span-2 border-base-200">
-      <.discounts_content discounts={@discounts} class="text-lg text-green-finances-300" />
-    <% end %>
-
-    <hr class="hidden mt-2 mb-3 col-span-2 border-base-200 toggle lg:block">
-
-    <dl class="contents">
-      <dt class="text-2xl">Total</dt>
-
-      <dd class="self-center text-2xl justify-self-end"><%= @total %></dd>
-    </dl>
+        <dd class="self-center text-2xl justify-self-end"><%= @total %></dd>
+      </dl>
     </div>
     """
   end
@@ -173,8 +172,9 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart.Summary do
 
     <%= unless @order.placed_at do %>
       <.summary_block
-        label={@added? && "#{zip(@order)} Edit" || "Add zipcode for actual"}
-        class="mt-[-4px] text-sm underline cursor-pointer text-blue-planning-300",
+        label={(@added? && "#{zip(@order)} Edit") || "Add zipcode for actual"}
+        class="mt-[-4px] text-sm underline cursor-pointer text-blue-planning-300"
+        ,
         event="zipcode"
       />
     <% end %>

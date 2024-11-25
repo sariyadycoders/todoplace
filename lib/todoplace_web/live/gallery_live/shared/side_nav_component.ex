@@ -97,7 +97,7 @@ defmodule TodoplaceWeb.GalleryLive.Shared.SideNavComponent do
       <.link navigate={@route}>
         <div class="flex items-center py-3 pl-3 pr-4 overflow-hidden text-sm rounded lg:h-11 lg:pl-2 lg:py-4 transition duration-300 ease-in-out text-ellipsis whitespace-nowrap hover:text-blue-planning-300">
           <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full bg-blue-planning-300">
-              <img src={static_path(TodoplaceWeb.Endpoint, "/images/#{@icon}")} width="16" height="16"/>
+            <img src={static_path(TodoplaceWeb.Endpoint, "/images/#{@icon}")} width="16" height="16" />
           </div>
           <div class="ml-3">
             <span class={@arrow_show && "text-blue-planning-300"}><%= @title %></span>
@@ -119,14 +119,17 @@ defmodule TodoplaceWeb.GalleryLive.Shared.SideNavComponent do
       <.link navigate={@route}>
         <li class="group">
           <button class={"#{@button_class} flex items-center justify-between h-6 py-4 pl-12 w-full pr-6 overflow-hidden text-xs transition duration-300 ease-in-out rounded-lg text-ellipsis whitespace-nowrap group-hover:!text-blue-planning-300"}>
-              <div class="flex items-center justify-between">
-                <.icon name={@name} class={"w-4 h-4 stroke-2 fill-current #{@button_class} mr-2 group-hover:!text-blue-planning-300"}/>
-                <%= if @is_finals, do: "Proofing " %>
-                <%= if @is_proofing || @is_finals, do: String.capitalize(@title), else: @title %>
-              </div>
-              <%= if @photos_count do %>
-                <.photo_count photos_count={@photos_count} />
-              <% end %>
+            <div class="flex items-center justify-between">
+              <.icon
+                name={@name}
+                class={"w-4 h-4 stroke-2 fill-current #{@button_class} mr-2 group-hover:!text-blue-planning-300"}
+              />
+              <%= if @is_finals, do: "Proofing " %>
+              <%= if @is_proofing || @is_finals, do: String.capitalize(@title), else: @title %>
+            </div>
+            <%= if @photos_count do %>
+              <.photo_count photos_count={@photos_count} />
+            <% end %>
           </button>
         </li>
       </.link>
@@ -138,7 +141,12 @@ defmodule TodoplaceWeb.GalleryLive.Shared.SideNavComponent do
     assigns = Enum.into(assigns, %{photos_count: 0})
 
     ~H"""
-      <span class="bg-white px-1 py-0.5 rounded-full min-w-[30px] font-normal text-xs flex items-center justify-center ml-auto" {testid("photo-count")}><%= @photos_count %></span>
+    <span
+      class="bg-white px-1 py-0.5 rounded-full min-w-[30px] font-normal text-xs flex items-center justify-center ml-auto"
+      {testid("photo-count")}
+    >
+      <%= @photos_count %>
+    </span>
     """
   end
 

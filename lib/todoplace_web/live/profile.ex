@@ -74,27 +74,57 @@ defmodule TodoplaceWeb.Live.Profile do
     <div class="flex-grow center-container client-app">
       <.sticky_upload current_user={@current_user} />
       <div class="flex flex-wrap items-center justify-between px-6 py-2 md:py-4 md:px-12">
-        <.logo_image icon_class={select_icon_class(@entry, @entry && @entry.upload_config == :logo)} uploads={@uploads} organization={@organization} edit={@edit} />
+        <.logo_image
+          icon_class={select_icon_class(@entry, @entry && @entry.upload_config == :logo)}
+          uploads={@uploads}
+          organization={@organization}
+          edit={@edit}
+        />
         <.book_now_button />
       </div>
 
-      <hr class="border-base-200 mt-2">
+      <hr class="border-base-200 mt-2" />
 
       <div class="flex flex-col justify-center max-w-screen-lg px-6 mx-auto mt-10 md:px-16">
-        <.main_image icon_class={select_icon_class(@entry, @entry && @entry.upload_config == :main_image)} edit={@edit} uploads={@uploads} image={@organization.profile.main_image} />
-        <h1 class="font-light mt-12 text-4xl text-center lg:text-3xl md:text-left">About <%= @organization.name %></h1>
+        <.main_image
+          icon_class={select_icon_class(@entry, @entry && @entry.upload_config == :main_image)}
+          edit={@edit}
+          uploads={@uploads}
+          image={@organization.profile.main_image}
+        />
+        <h1 class="font-light mt-12 text-4xl text-center lg:text-3xl md:text-left">
+          About <%= @organization.name %>
+        </h1>
 
         <%= if Enum.any?(@job_types) do %>
-          <.job_types_details socket={@socket} edit={@edit} job_types={@job_types} job_types_description={@job_types_description} />
+          <.job_types_details
+            socket={@socket}
+            edit={@edit}
+            job_types={@job_types}
+            job_types_description={@job_types_description}
+          />
         <% end %>
 
         <.rich_text_content edit={@edit} field_name="description" field_value={@description} />
 
         <%= if @website do %>
           <div class="flex items-center py-6">
-            <a href={website_url(@website)} style="text-decoration-thickness: 2px" class="block pt-2 underline underline-offset-1 font-light">See our full portfolio</a>
+            <a
+              href={website_url(@website)}
+              style="text-decoration-thickness: 2px"
+              class="block pt-2 underline underline-offset-1 font-light"
+            >
+              See our full portfolio
+            </a>
             <%= if @edit do %>
-              <.icon_button {testid("edit-link-button")} class="ml-5 bg-blue-planning-300 hover:bg-blue-planning-300/75" title="edit link" phx-click="edit-website" color="white" icon="pencil">
+              <.icon_button
+                {testid("edit-link-button")}
+                class="ml-5 bg-blue-planning-300 hover:bg-blue-planning-300/75"
+                title="edit link"
+                phx-click="edit-website"
+                color="white"
+                icon="pencil"
+              >
                 Edit Link
               </.icon_button>
             <% end %>
@@ -105,28 +135,43 @@ defmodule TodoplaceWeb.Live.Profile do
 
         <%= if Enum.any?(@booking_events) do %>
           <section class="mt-20">
-            <h2 class="text-4xl font-light mb-8" {testid("events-heading")}>Book a session with me!</h2>
+            <h2 class="text-4xl font-light mb-8" {testid("events-heading")}>
+              Book a session with me!
+            </h2>
             <div class="grid sm:grid-cols-2 gap-8">
               <%= for event <- @booking_events do %>
                 <div {testid("booking-cards")}>
-                    <div class="cursor-pointer" phx-click="redirect-to-event" phx-value-event-id={event.id}>
-                      <.blurred_thumbnail class="w-full" url={event.thumbnail_url} />
-                      <div>
-                        <h3 class="text-xl mt-4">
-                          <%= event.name %>
-                        </h3>
-                        <.subtitle_display booking_event={event} package={event.package_template} class="text-base-250 mt-2" />
-                        <div class="mt-4 flex flex-col border-gray-100 border-y py-4 text-base-250">
-                          <%= group_date_address(event.dates) |> Enum.map(fn booking_event_date -> %>
-                           <.date_and_address_display {booking_event_date} />
-                          <% end) %>
-                        </div>
+                  <div
+                    class="cursor-pointer"
+                    phx-click="redirect-to-event"
+                    phx-value-event-id={event.id}
+                  >
+                    <.blurred_thumbnail class="w-full" url={event.thumbnail_url} />
+                    <div>
+                      <h3 class="text-xl mt-4">
+                        <%= event.name %>
+                      </h3>
+                      <.subtitle_display
+                        booking_event={event}
+                        package={event.package_template}
+                        class="text-base-250 mt-2"
+                      />
+                      <div class="mt-4 flex flex-col border-gray-100 border-y py-4 text-base-250">
+                        <%= group_date_address(event.dates) |> Enum.map(fn booking_event_date -> %>
+                          <.date_and_address_display {booking_event_date} />
+                        <% end) %>
                       </div>
                     </div>
-                    <div class="my-4 raw_html"><%= raw event.description %></div>
-                    <button type="button" class="flex items-center justify-center btn-primary cursor-pointer" phx-click="redirect-to-event" phx-value-event-id={event.id}>
-                      Book now
-                    </button>
+                  </div>
+                  <div class="my-4 raw_html"><%= raw(event.description) %></div>
+                  <button
+                    type="button"
+                    class="flex items-center justify-center btn-primary cursor-pointer"
+                    phx-click="redirect-to-event"
+                    phx-value-event-id={event.id}
+                  >
+                    Book now
+                  </button>
                 </div>
               <% end %>
             </div>
@@ -136,17 +181,27 @@ defmodule TodoplaceWeb.Live.Profile do
 
         <%= if @job_types_description do %>
           <h3 class="mt-20 text-xl font-light">MORE ABOUT MY OFFERINGS:</h3>
-          <.rich_text_content edit={@edit} field_name="job_types_description" field_value={@job_types_description} />
+          <.rich_text_content
+            edit={@edit}
+            field_name="job_types_description"
+            field_value={@job_types_description}
+          />
           <hr class="mt-20" />
         <% end %>
 
         <%= if Enum.any?(@job_type_packages) do %>
           <h3 class="mt-20 font-light text-xl">PRICING & SERVICES:</h3>
           <%= for {job_type, packages} <- @job_type_packages do %>
-            <h2 class="mt-10 text-3xl" id={to_string(job_type)}><%= dyn_gettext job_type %></h2>
+            <h2 class="mt-10 text-3xl" id={to_string(job_type)}><%= dyn_gettext(job_type) %></h2>
             <div class="grid grid-cols-1 gap-8">
               <%= for package <- packages do %>
-                <.package_detail name={package.name} price={Packages.price(package)} description={package.description} download_count={package.download_count} thumbnail_url={package.thumbnail_url} />
+                <.package_detail
+                  name={package.name}
+                  price={Packages.price(package)}
+                  description={package.description}
+                  download_count={package.download_count}
+                  thumbnail_url={package.thumbnail_url}
+                />
               <% end %>
             </div>
             <div class="flex mb-4 mt-8">
@@ -156,12 +211,23 @@ defmodule TodoplaceWeb.Live.Profile do
           <hr class="mt-20" />
         <% end %>
 
-        <.live_component module={TodoplaceWeb.Live.Profile.ClientFormComponent} id="client-component" organization={@organization} color={@color} job_types={@job_types} job_type={@job_type} />
+        <.live_component
+          module={TodoplaceWeb.Live.Profile.ClientFormComponent}
+          id="client-component"
+          organization={@organization}
+          color={@color}
+          job_types={@job_types}
+          job_type={@job_type}
+        />
       </div>
 
-      <.profile_footer color={@color} photographer={@photographer} organization={@organization} include_font_bold?={false} />
+      <.profile_footer
+        color={@color}
+        photographer={@photographer}
+        organization={@organization}
+        include_font_bold?={false}
+      />
     </div>
-
 
     <%= if @edit do %>
       <.edit_footer url={@url} />
@@ -178,20 +244,30 @@ defmodule TodoplaceWeb.Live.Profile do
       <span class="w-auto mt-1">
         <span class="mr-5">
           <%= @job_types |> Enum.with_index |> Enum.map(fn({job_type, i}) -> %>
-            <%= if i > 0 do %><span>&nbsp;|&nbsp;</span><% end %>
+            <%= if i > 0 do %>
+              <span>&nbsp;|&nbsp;</span>
+            <% end %>
             <span {testid("job-type")} class="text-xl whitespace-nowrap font-light">
               <%= if job_type == "global" do %>
                 Other
               <% else %>
-                <%= dyn_gettext job_type %>
+                <%= dyn_gettext(job_type) %>
               <% end %>
             </span>
           <% end) %>
         </span>
         <%= if @edit do %>
           <span class="inline-block">
-            <.icon_button {testid("edit-link-button")} class="ml-0 bg-blue-planning-300 hover:bg-blue-planning-300/75" title="edit photography types" color="white" href={~p"/package_templates"} target="_blank" icon="external-link-gear">
-                  Edit Photography Types
+            <.icon_button
+              {testid("edit-link-button")}
+              class="ml-0 bg-blue-planning-300 hover:bg-blue-planning-300/75"
+              title="edit photography types"
+              color="white"
+              href={~p"/package_templates"}
+              target="_blank"
+              icon="external-link-gear"
+            >
+              Edit Photography Types
             </.icon_button>
           </span>
         <% end %>
@@ -214,7 +290,12 @@ defmodule TodoplaceWeb.Live.Profile do
     assigns = assigns |> Enum.into(%{job_type: nil})
 
     ~H"""
-    <a href="#contact-form" class="flex items-center justify-center btn-primary" phx-click="select-job-type" phx-value-job-type={@job_type}>
+    <a
+      href="#contact-form"
+      class="flex items-center justify-center btn-primary"
+      phx-click="select-job-type"
+      phx-value-job-type={@job_type}
+    >
       Let’s chat
     </a>
     """
@@ -401,19 +482,30 @@ defmodule TodoplaceWeb.Live.Profile do
   defp edit_image_button(assigns) do
     ~H"""
     <form id={@image_field <> "-form-existing"} phx-submit="save-image" phx-change="validate-image">
-      <div class={classes("rounded-3xl bg-white shadow-lg inline-block", %{"hidden" => Enum.any?(@image.entries)})}>
+      <div class={
+        classes("rounded-3xl bg-white shadow-lg inline-block", %{
+          "hidden" => Enum.any?(@image.entries)
+        })
+      }>
         <label class="inline-block p-3 cursor-pointer">
           <span class="font-sans text-blue-planning-300 hover:opacity-75">
             <%= image_text(@image_field) %>
           </span>
           <.live_file_input upload={@image} class="hidden" />
         </label>
-        <span phx-click="confirm-delete-image" phx-value-image-field={@image_field} class="cursor-pointer">
-          <.icon name="trash" class="relative inline-block w-5 h-5 mr-4 bottom-1 text-base-250 hover:opacity-75" />
+        <span
+          phx-click="confirm-delete-image"
+          phx-value-image-field={@image_field}
+          class="cursor-pointer"
+        >
+          <.icon
+            name="trash"
+            class="relative inline-block w-5 h-5 mr-4 bottom-1 text-base-250 hover:opacity-75"
+          />
         </span>
       </div>
     </form>
-    <.progress image={@image}/>
+    <.progress image={@image} />
     """
   end
 
@@ -421,15 +513,20 @@ defmodule TodoplaceWeb.Live.Profile do
     assigns = assigns |> Enum.into(%{class: "", label_class: "", supports_class: ""})
 
     ~H"""
-    <form id={"#{@image_upload.name}-form"} phx-submit="save-image" class={"flex #{@class}"} phx-change="validate-image" phx-drop-target={@image_upload.ref}>
+    <form
+      id={"#{@image_upload.name}-form"}
+      phx-submit="save-image"
+      class={"flex #{@class}"}
+      phx-change="validate-image"
+      phx-drop-target={@image_upload.ref}
+    >
       <label class={"w-full h-full flex items-center p-4 font-sans border border-#{@icon_class} border-2 border-dashed rounded-lg cursor-pointer #{@label_class}"}>
         <%= if @image && Enum.any?(@image_upload.entries) do %>
-          <.progress image={@image_upload} class="m-4"/>
+          <.progress image={@image_upload} class="m-4" />
         <% else %>
           <.icon name="upload" class={"w-10 h-10 mr-5 stroke-current text-#{@icon_class}"} />
           <div class={@supports_class}>
-            Drag your <%= @image_title %> or
-            <span class={"text-#{@icon_class}"}>browse</span>
+            Drag your <%= @image_title %> or <span class={"text-#{@icon_class}"}>browse</span>
             <p class="text-sm font-normal text-base-250">Supports <%= @supports %></p>
           </div>
         <% end %>
@@ -445,13 +542,25 @@ defmodule TodoplaceWeb.Live.Profile do
   defp logo_image(assigns) do
     ~H"""
     <div class="relative flex flex-wrap items-center justify-left">
-      <.photographer_logo organization={@organization} include_font_bold?={false} show_large_logo?={true} />
+      <.photographer_logo
+        organization={@organization}
+        include_font_bold?={false}
+        show_large_logo?={true}
+      />
       <%= if @edit do %>
         <%= if @organization.profile.logo && @organization.profile.logo.url do %>
-          <div class="my-8 sm:my-0 sm:ml-8"><.edit_image_button image={@uploads.logo} image_field={"logo"}/></div>
+          <div class="my-8 sm:my-0 sm:ml-8">
+            <.edit_image_button image={@uploads.logo} image_field="logo" />
+          </div>
         <% else %>
           <p class="mx-5 font-sans text-xl font-light">or</p>
-          <.drag_image_upload icon_class={@icon_class} image={@organization.profile.logo} image_upload={@uploads.logo} supports="PNG or SVG: under 10 mb" image_title="logo" />
+          <.drag_image_upload
+            icon_class={@icon_class}
+            image={@organization.profile.logo}
+            image_upload={@uploads.logo}
+            supports="PNG or SVG: under 10 mb"
+            image_title="logo"
+          />
         <% end %>
       <% end %>
     </div>
@@ -462,18 +571,29 @@ defmodule TodoplaceWeb.Live.Profile do
     ~H"""
     <div class="relative">
       <%= case @image do %>
-        <% %{url: "" <> url} -> %> <.photo_frame url={url} />
+        <% %{url: "" <> url} -> %>
+          <.photo_frame url={url} />
         <% _ -> %>
       <% end %>
       <%= if @edit do %>
         <%= if @image && @image.url do %>
-          <div class="absolute top-8 right-8"><.edit_image_button image={@uploads.main_image} image_field={"main_image"} /></div>
+          <div class="absolute top-8 right-8">
+            <.edit_image_button image={@uploads.main_image} image_field="main_image" />
+          </div>
         <% else %>
           <div class="bg-[#F6F6F6] w-full aspect-[2/1] flex items-center justify-center">
-            <.drag_image_upload icon_class={@icon_class} image={@image} image_upload={@uploads.main_image} supports_class="text-center" supports="JPEG or PNG: 1060x707 under 10mb" image_title="main image" label_class="justify-center flex-col" class="h-5/6 w-11/12 flex m-auto" />
+            <.drag_image_upload
+              icon_class={@icon_class}
+              image={@image}
+              image_upload={@uploads.main_image}
+              supports_class="text-center"
+              supports="JPEG or PNG: 1060x707 under 10mb"
+              image_title="main image"
+              label_class="justify-center flex-col"
+              class="h-5/6 w-11/12 flex m-auto"
+            />
           </div>
         <% end %>
-
       <% end %>
     </div>
     """
@@ -492,7 +612,7 @@ defmodule TodoplaceWeb.Live.Profile do
         <%= if @thumbnail_url do %>
           <.blurred_thumbnail class="items-center flex flex-col bg-base-200" url={@thumbnail_url} />
         <% end %>
-        <div class="whitespace-pre-line raw_html"><%=raw @description %></div>
+        <div class="whitespace-pre-line raw_html"><%= raw(@description) %></div>
       </div>
     </div>
     """
@@ -504,8 +624,9 @@ defmodule TodoplaceWeb.Live.Profile do
     ~H"""
     <%= for %{progress: progress} <- @image.entries do %>
       <div class={@class}>
-        <div class={"w-52 h-2 rounded-lg bg-base-200"}>
-          <div class="h-full rounded-lg bg-green-finances-300" style={"width: #{progress / 2}%"}></div>
+        <div class="w-52 h-2 rounded-lg bg-base-200">
+          <div class="h-full rounded-lg bg-green-finances-300" style={"width: #{progress / 2}%"}>
+          </div>
         </div>
       </div>
     <% end %>
@@ -517,20 +638,35 @@ defmodule TodoplaceWeb.Live.Profile do
     <div class="pt-6">
       <%= if @field_value do %>
         <div {testid(@field_name)} class="raw_html">
-          <%= raw @field_value %>
+          <%= raw(@field_value) %>
         </div>
       <% end %>
       <%= if @edit do %>
         <%= if !@field_value do %>
-          <svg width="100%" preserveAspectRatio="none" height="149" viewBox="0 0 561 149" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="561" height="21" fill="#F6F6F6"/>
-            <rect y="32" width="487" height="21" fill="#F6F6F6"/>
-            <rect y="64" width="518" height="21" fill="#F6F6F6"/>
-            <rect y="96" width="533" height="21" fill="#F6F6F6"/>
-            <rect y="128" width="445" height="21" fill="#F6F6F6"/>
+          <svg
+            width="100%"
+            preserveAspectRatio="none"
+            height="149"
+            viewBox="0 0 561 149"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect width="561" height="21" fill="#F6F6F6" />
+            <rect y="32" width="487" height="21" fill="#F6F6F6" />
+            <rect y="64" width="518" height="21" fill="#F6F6F6" />
+            <rect y="96" width="533" height="21" fill="#F6F6F6" />
+            <rect y="128" width="445" height="21" fill="#F6F6F6" />
           </svg>
         <% end %>
-        <.icon_button {testid("edit-#{@field_name}-button")} class="mt-4 shadow-lg bg-blue-planning-300 hover:bg-blue-planning-300/75" title="edit description" phx-click="edit-text-field-description" phx-value-field-name={@field_name} color="white" icon="pencil">
+        <.icon_button
+          {testid("edit-#{@field_name}-button")}
+          class="mt-4 shadow-lg bg-blue-planning-300 hover:bg-blue-planning-300/75"
+          title="edit description"
+          phx-click="edit-text-field-description"
+          phx-value-field-name={@field_name}
+          color="white"
+          icon="pencil"
+        >
           Edit Description
         </.icon_button>
       <% end %>
@@ -543,11 +679,21 @@ defmodule TodoplaceWeb.Live.Profile do
     <div class="mt-32"></div>
     <div class="fixed bottom-0 left-0 right-0 z-20 bg-base-300">
       <div class="flex flex-col-reverse justify-between px-6 py-2 center-container md:px-16 sm:py-4 sm:flex-row">
-        <button class="w-full my-2 border-white btn-primary sm:w-auto" title="close" type="button" phx-click="close">
+        <button
+          class="w-full my-2 border-white btn-primary sm:w-auto"
+          title="close"
+          type="button"
+          phx-click="close"
+        >
           Close
         </button>
         <div class="flex flex-row-reverse justify-between gap-4 sm:flex-row">
-          <a href={@url} class="w-full my-2 text-center btn-secondary sm:w-auto hover:bg-base-200" target="_blank" rel="noopener noreferrer">
+          <a
+            href={@url}
+            class="w-full my-2 text-center btn-secondary sm:w-auto hover:bg-base-200"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             View
           </a>
         </div>

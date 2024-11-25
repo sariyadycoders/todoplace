@@ -22,18 +22,47 @@ defmodule TodoplaceWeb.Live.Marketing.EditLinkComponent do
         <TodoplaceWeb.LiveModal.close_x />
       </div>
       <div class="flex">
-        <div id="side-nave" class={classes("lg:grid grid-cols-1 p-5 mt-6 bg-gray-100 rounded-xl grid-container w-full lg:w-2/5 gap-y-2", %{"hidden" => !@is_mobile})}>
+        <div
+          id="side-nave"
+          class={
+            classes(
+              "lg:grid grid-cols-1 p-5 mt-6 bg-gray-100 rounded-xl grid-container w-full lg:w-2/5 gap-y-2",
+              %{"hidden" => !@is_mobile}
+            )
+          }
+        >
           <%= for entry <- @brand_links do %>
             <div class="font-bold bg-gray-200 text-base-250 rounded-lg cursor-pointer grid-item">
-              <div phx-click="switch" phx-value-link_id={entry.link_id} phx-target={@myself} class={classes("brand-links", %{"text-base-250" => !entry.link})}>
-                <div class={classes("flex items-center justify-center flex-shrink-0 rounded-full w-7 h-7 bg-blue-planning-300", %{"bg-base-250" => !entry.link})}>
+              <div
+                phx-click="switch"
+                phx-value-link_id={entry.link_id}
+                phx-target={@myself}
+                class={classes("brand-links", %{"text-base-250" => !entry.link})}
+              >
+                <div class={
+                  classes(
+                    "flex items-center justify-center flex-shrink-0 rounded-full w-7 h-7 bg-blue-planning-300",
+                    %{"bg-base-250" => !entry.link}
+                  )
+                }>
                   <.icon name={get_brand_link_icon(entry.link_id)} class="h-3 w-3 text-base-100" />
                 </div>
                 <div class={classes("ml-2 truncate", %{"text-blue-planning-300" => entry.active?})}>
-                  <span><%= entry.title %><span class={classes("font-normal", %{"hidden" => entry.use_publicly?})}> (private)</span></span>
+                  <span>
+                    <%= entry.title %><span class={
+                      classes("font-normal", %{"hidden" => entry.use_publicly?})
+                    }> (private)</span>
+                  </span>
                 </div>
                 <div class="flex items-center ml-auto">
-                  <.icon name="tick" class={classes("inline-block w-4 h-4 text-blue-planning-300", %{"hidden" => !entry.show_on_profile?})}/>
+                  <.icon
+                    name="tick"
+                    class={
+                      classes("inline-block w-4 h-4 text-blue-planning-300", %{
+                        "hidden" => !entry.show_on_profile?
+                      })
+                    }
+                  />
                 </div>
               </div>
               <span class={classes("hidden", %{"lg:block" => entry.link_id == @brand_link.link_id})}>
@@ -51,17 +80,59 @@ defmodule TodoplaceWeb.Live.Marketing.EditLinkComponent do
           </div>
         </div>
         <div class={classes("lg:block w-full lg:ml-16 lg:mr-8", %{"hidden" => @is_mobile})}>
-          <.form id="brand-link" :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself}>
-            <%= hidden_input f, :organization_id %>
-            <%= hidden_input f, :link_id %>
-            <.title_field form={f} class="mt-4" custom?={is_custom_brand_link(@brand_link.link_id)} link_id={@brand_link.link_id}/>
-            <.link_field form={f} class="mt-5 pb-5" custom?={is_custom_brand_link(@brand_link.link_id)} link_id={@brand_link.link_id} placeholder="Add your link url…"/>
+          <.form
+            :let={f}
+            id="brand-link"
+            for={@changeset}
+            phx-change="validate"
+            phx-submit="save"
+            phx-target={@myself}
+          >
+            <%= hidden_input(f, :organization_id) %>
+            <%= hidden_input(f, :link_id) %>
+            <.title_field
+              form={f}
+              class="mt-4"
+              custom?={is_custom_brand_link(@brand_link.link_id)}
+              link_id={@brand_link.link_id}
+            />
+            <.link_field
+              form={f}
+              class="mt-5 pb-5"
+              custom?={is_custom_brand_link(@brand_link.link_id)}
+              link_id={@brand_link.link_id}
+              placeholder="Add your link url…"
+            />
           </.form>
           <%= if !is_custom_brand_link(@brand_link.link_id) do %>
-            <.check_box target={@myself} field="active?" brand_link={@brand_link} class={classes(%{"pointer-events-none opacity-50 cursor-not-allowed" => !@changeset.valid?})} label="Enable this link"/>
+            <.check_box
+              target={@myself}
+              field="active?"
+              brand_link={@brand_link}
+              class={
+                classes(%{"pointer-events-none opacity-50 cursor-not-allowed" => !@changeset.valid?})
+              }
+              label="Enable this link"
+            />
           <% end %>
-          <.check_box target={@myself} field="use_publicly?" brand_link={@brand_link} class={classes(%{"pointer-events-none opacity-50 cursor-not-allowed" => !@brand_link.active?})} label="Use link publicly?"/>
-          <.check_box target={@myself} field="show_on_profile?" brand_link={@brand_link} class={classes(%{"pointer-events-none opacity-50 cursor-not-allowed" => !@brand_link.active?})} label="Show link in your Public Profile?"/>
+          <.check_box
+            target={@myself}
+            field="use_publicly?"
+            brand_link={@brand_link}
+            class={
+              classes(%{"pointer-events-none opacity-50 cursor-not-allowed" => !@brand_link.active?})
+            }
+            label="Use link publicly?"
+          />
+          <.check_box
+            target={@myself}
+            field="show_on_profile?"
+            brand_link={@brand_link}
+            class={
+              classes(%{"pointer-events-none opacity-50 cursor-not-allowed" => !@brand_link.active?})
+            }
+            label="Show link in your Public Profile?"
+          />
           <div class={classes(%{"hidden" => !is_custom_brand_link(@brand_link.link_id)})}>
             <div class="text-red-sales-300 mt-11 font-extrabold">
               Delete link
@@ -70,7 +141,12 @@ defmodule TodoplaceWeb.Live.Marketing.EditLinkComponent do
               <p class="flex mt-0.5">
                 If this link no longer sparks joy or you need to get rid of it, this is the place for you!
               </p>
-              <button id="delete-link" phx-click="delete_brand_link" phx-target={@myself} class="flex text-red-sales-300 border-red-sales-300 border rounded-lg px-2 py-1 lg:mt-0 mt-4 font-semibold">
+              <button
+                id="delete-link"
+                phx-click="delete_brand_link"
+                phx-target={@myself}
+                class="flex text-red-sales-300 border-red-sales-300 border rounded-lg px-2 py-1 lg:mt-0 mt-4 font-semibold"
+              >
                 Delete
               </button>
             </div>
@@ -79,16 +155,42 @@ defmodule TodoplaceWeb.Live.Marketing.EditLinkComponent do
       </div>
 
       <div class="flex items-end flex-col gap-2 py-5 sm:flex-row-reverse">
-        <button disabled={!@changeset.valid?} id="save" phx-click="save" phx-target={@myself} class="lg:flex hidden btn-primary lg:w-auto w-full" title="save" type="button" phx-click="submit" phx-disable-with="Saving...">
+        <button
+          disabled={!@changeset.valid?}
+          id="save"
+          phx-click="save"
+          phx-target={@myself}
+          class="lg:flex hidden btn-primary lg:w-auto w-full"
+          title="save"
+          type="button"
+          phx-click="submit"
+          phx-disable-with="Saving..."
+        >
           Save
         </button>
-        <button disabled={!@changeset.valid?} id="save_mobile" class={classes("lg:hidden btn-primary lg:w-auto w-full", %{"hidden" => @is_mobile})} phx-click="save_mobile" phx-target={@myself} title="save" type="button" phx-click="submit" phx-disable-with="Saving...">
+        <button
+          disabled={!@changeset.valid?}
+          id="save_mobile"
+          class={classes("lg:hidden btn-primary lg:w-auto w-full", %{"hidden" => @is_mobile})}
+          phx-click="save_mobile"
+          phx-target={@myself}
+          title="save"
+          type="button"
+          phx-click="submit"
+          phx-disable-with="Saving..."
+        >
           <span class="flex items-center justify-center">
-            <.icon name="back" class="text-base-100 w-2 h-4 mr-2.5 stroke-2"/>
-            Save & go back
+            <.icon name="back" class="text-base-100 w-2 h-4 mr-2.5 stroke-2" /> Save & go back
           </span>
         </button>
-        <button id="close" class={classes("btn-secondary lg:w-auto w-full", %{"hidden lg:flex" => @is_mobile})}  title="close" type="button" phx-click="modal" phx-value-action="close">
+        <button
+          id="close"
+          class={classes("btn-secondary lg:w-auto w-full", %{"hidden lg:flex" => @is_mobile})}
+          title="close"
+          type="button"
+          phx-click="modal"
+          phx-value-action="close"
+        >
           Close
         </button>
       </div>
@@ -108,17 +210,20 @@ defmodule TodoplaceWeb.Live.Marketing.EditLinkComponent do
 
     ~H"""
     <label class={"flex flex-col #{@class}"}>
-        <p class="py-2 font-extrabold"><%= @label %> <i class="italic font-light">(public facing or private logins)</i></p>
+      <p class="py-2 font-extrabold">
+        <%= @label %> <i class="italic font-light">(public facing or private logins)</i>
+      </p>
 
-        <div class="relative flex flex-col">
-          <%= input @form, @name,
-              phx_debounce: "500",
-              disabled: !@custom? && @link_id != "website",
-              placeholder: @placeholder,
-              class: classes("p-4", %{"bg-gray-200" => !@custom? && @link_id != "website"}) %>
-          <%= error_tag @form, @name, class: "text-red-sales-300 text-sm", prefix: @label %>
-        </div>
-      </label>
+      <div class="relative flex flex-col">
+        <%= input(@form, @name,
+          phx_debounce: "500",
+          disabled: !@custom? && @link_id != "website",
+          placeholder: @placeholder,
+          class: classes("p-4", %{"bg-gray-200" => !@custom? && @link_id != "website"})
+        ) %>
+        <%= error_tag(@form, @name, class: "text-red-sales-300 text-sm", prefix: @label) %>
+      </div>
+    </label>
     """
   end
 
@@ -135,37 +240,50 @@ defmodule TodoplaceWeb.Live.Marketing.EditLinkComponent do
 
     ~H"""
     <label class={"flex flex-col #{@class}"}>
-        <p class="py-2 font-extrabold"><%= @label %> <i class="italic font-light"><%= @sub_label %></i></p>
+      <p class="py-2 font-extrabold">
+        <%= @label %> <i class="italic font-light"><%= @sub_label %></i>
+      </p>
 
-        <div class="relative flex flex-col">
-          <%= input @form, @name,
-              type: :url_input,
-              phx_debounce: "500",
-              placeholder: @placeholder,
-              autocomplete: "url",
-              novalidate: true,
-              phx_hook: "PrefixHttp",
-              class: "p-4" %>
-          <%= error_tag @form, @name, class: "text-red-sales-300 text-sm", prefix: @label %>
-        </div>
-      </label>
+      <div class="relative flex flex-col">
+        <%= input(@form, @name,
+          type: :url_input,
+          phx_debounce: "500",
+          placeholder: @placeholder,
+          autocomplete: "url",
+          novalidate: true,
+          phx_hook: "PrefixHttp",
+          class: "p-4"
+        ) %>
+        <%= error_tag(@form, @name, class: "text-red-sales-300 text-sm", prefix: @label) %>
+      </div>
+    </label>
     """
   end
 
   defp check_box(assigns) do
     ~H"""
-    <label {testid(@field)} class={"flex items-center lg:order-2 order-1 mt-7 cursor-pointer #{@class}"}>
+    <label
+      {testid(@field)}
+      class={"flex items-center lg:order-2 order-1 mt-7 cursor-pointer #{@class}"}
+    >
       <div class="font-sans font-extrabold">
         <%= @label %>
       </div>
       <div class="relative ml-auto">
-        <input type="checkbox" class="sr-only" phx-value-field={@field} phx-click="toggle" phx-target={@target}>
+        <input
+          type="checkbox"
+          class="sr-only"
+          phx-value-field={@field}
+          phx-click="toggle"
+          phx-target={@target}
+        />
         <%= if Map.get(@brand_link, String.to_existing_atom(@field)) do %>
           <div class="flex w-12 h-6 border rounded-full bg-blue-planning-300 border-base-100"></div>
           <div class="absolute w-4 h-4 rounded-full transition dot right-1 top-1 bg-base-100"></div>
         <% else %>
           <div class="block w-12 h-6 bg-gray-200 border rounded-full border-blue-planning-300"></div>
-          <div class="absolute w-4 h-4 rounded-full transition dot left-1 top-1 bg-blue-planning-300"></div>
+          <div class="absolute w-4 h-4 rounded-full transition dot left-1 top-1 bg-blue-planning-300">
+          </div>
         <% end %>
       </div>
     </label>

@@ -33,8 +33,10 @@ defmodule Todoplace.Auth.Authorization do
       case handler do
         fun when is_function(fun, 2) ->
           fun.(params, socket)
+
         atom when is_atom(atom) ->
           apply(module, atom, [params, socket])
+
         _ ->
           raise ArgumentError, "Handler must be an atom or a function reference"
       end
@@ -74,6 +76,7 @@ defmodule Todoplace.Auth.Authorization do
   end
 
   defp exclude_results(query) do
-    from(q in query, where: false) # This will return no results
+    # This will return no results
+    from(q in query, where: false)
   end
 end

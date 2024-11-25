@@ -47,11 +47,15 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.AuthenticationComponent do
     assigns = Map.put(assigns, :organization, organization)
 
     ~H"""
-      <%= case logo_url(@organization) do %>
-        <% nil -> %> <h1 class="pt-3 text-3xl font-light font-client text-base-300 mb-2 text-center"><%= @organization.name %></h1>
-        <% url -> %> <img class="h-20 mx-auto" src={url} />
-      <% end %>
-      <.welcome_message />
+    <%= case logo_url(@organization) do %>
+      <% nil -> %>
+        <h1 class="pt-3 text-3xl font-light font-client text-base-300 mb-2 text-center">
+          <%= @organization.name %>
+        </h1>
+      <% url -> %>
+        <img class="h-20 mx-auto" src={url} />
+    <% end %>
+    <.welcome_message />
     """
   end
 
@@ -64,7 +68,9 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.AuthenticationComponent do
 
   def welcome_message(assigns) do
     ~H"""
-    <p class="text-base-300/75 text-center">Welcome! To view your gallery and access any digital image and print credits, enter the email address that matches the inbox to which you received your gallery link and password below.</p>
+    <p class="text-base-300/75 text-center">
+      Welcome! To view your gallery and access any digital image and print credits, enter the email address that matches the inbox to which you received your gallery link and password below.
+    </p>
     """
   end
 

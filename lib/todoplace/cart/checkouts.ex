@@ -176,7 +176,9 @@ defmodule Todoplace.Cart.Checkouts do
         entry_id: order |> Order.number() |> to_string(),
         address: delivery_info
       )
-      Logger.info("Reached create whcc order method for #{inspect(gallery_id)}")
+
+    Logger.info("Reached create whcc order method for #{inspect(gallery_id)}")
+
     new()
     |> run(:whcc_order, fn _, _ ->
       WHCC.create_order(account_id, export)
@@ -194,6 +196,7 @@ defmodule Todoplace.Cart.Checkouts do
   defp create_session(cart, opts) do
     shipping_price = Cart.total_shipping(cart)
     Logger.info("Reached create_session method for order id #{inspect(cart.id)}")
+
     create_session(
       cart,
       Product.total_cost(cart) |> Money.add(shipping_price),
@@ -243,6 +246,7 @@ defmodule Todoplace.Cart.Checkouts do
       params = build_stripe_customer_params(order)
       opts = [connect_account: stripe_account_id]
       Logger.info("Reached create session method for #{inspect(params)}")
+
       order
       |> Repo.preload(:gallery_client)
       |> Map.get(:gallery_client)
@@ -262,6 +266,7 @@ defmodule Todoplace.Cart.Checkouts do
     end)
     |> run(:session, fn _, %{gallery_client: %{stripe_customer_id: stripe_customer_id}} ->
       Logger.info("Reached create session method for #{inspect(stripe_customer_id)}")
+
       Payments.create_session(
         params |> Map.put(:customer, stripe_customer_id),
         expand: [:payment_intent],

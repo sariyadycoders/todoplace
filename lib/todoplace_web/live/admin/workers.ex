@@ -33,7 +33,15 @@ defmodule TodoplaceWeb.Live.Admin.Workers do
       <ul class="my-4 flex grid gap-10 grid-cols-1 sm:grid-cols-4">
         <%= for {name, _} <- @workers do %>
           <%= if name not in ["Sync email presets"] do %>
-            <li><button phx-click="start" phx-value-name={name} class="border flex items-center justify-center rounded-lg p-8 font-bold text-blue-planning-300 w-full"><%= name %></button></li>
+            <li>
+              <button
+                phx-click="start"
+                phx-value-name={name}
+                class="border flex items-center justify-center rounded-lg p-8 font-bold text-blue-planning-300 w-full"
+              >
+                <%= name %>
+              </button>
+            </li>
           <% end %>
         <% end %>
       </ul>
@@ -42,20 +50,19 @@ defmodule TodoplaceWeb.Live.Admin.Workers do
         <h2 class="text-lg">Currently Working</h2>
 
         <div class="mt-4 grid gap-2 items-center">
-        <div class="col-start-1 font-bold">Worker</div>
-        <div class="col-start-2 font-bold">State</div>
-        <div class="col-start-3 font-bold">Attempted</div>
-        <div class="col-start-4 font-bold">Completed</div>
+          <div class="col-start-1 font-bold">Worker</div>
+          <div class="col-start-2 font-bold">State</div>
+          <div class="col-start-3 font-bold">Attempted</div>
+          <div class="col-start-4 font-bold">Completed</div>
 
-        <%= for %{completed_at: completed_at, attempted_at: attempted_at, worker: worker, state: state} <- @jobs do %>
-          <div class="contents">
-            <div class="col-start-1"><%= name(worker) %></div>
-            <div class="col-start-2"><%= state %></div>
-            <div class="col-start-3"><%= attempted_at %></div>
-            <div class="col-start-4"><%= completed_at %></div>
-          </div>
-        <% end %>
-
+          <%= for %{completed_at: completed_at, attempted_at: attempted_at, worker: worker, state: state} <- @jobs do %>
+            <div class="contents">
+              <div class="col-start-1"><%= name(worker) %></div>
+              <div class="col-start-2"><%= state %></div>
+              <div class="col-start-3"><%= attempted_at %></div>
+              <div class="col-start-4"><%= completed_at %></div>
+            </div>
+          <% end %>
         </div>
       <% end %>
     </div>

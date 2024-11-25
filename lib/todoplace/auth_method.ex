@@ -12,6 +12,7 @@ defmodule Todoplace.AuthMethod do
     auth_method
     |> cast(attrs, [:name])
     |> validate_required([:name])
-    |> validate_inclusion(:name, ["google", "email", "facebook"]) # Enforce valid values
+    # Enforce valid values
+    |> validate_inclusion(:name, ["google", "email", "facebook"])
   end
 end

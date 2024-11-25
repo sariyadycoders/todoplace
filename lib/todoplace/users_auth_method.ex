@@ -7,10 +7,10 @@ defmodule Todoplace.UsersAuthMethod do
     belongs_to(:user, Todoplace.Accounts.User)
 
     belongs_to(:auth_method, Todoplace.AuthMethod,
-    references: :name,
-    type: :string,
-    foreign_key: :auth_method_name
-  )
+      references: :name,
+      type: :string,
+      foreign_key: :auth_method_name
+    )
 
     timestamps()
   end

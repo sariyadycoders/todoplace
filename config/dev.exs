@@ -58,7 +58,7 @@ config :todoplace, TodoplaceWeb.Endpoint,
       ~r"lib/todoplace_web/templates/.*(eex)$",
       ~r"lib/todoplace/.*(ex)$",
       ~r"lib/builder/.*(ex|heex)$",
-      ~r"assets/.*(scss|js|css)$",
+      ~r"assets/.*(scss|js|css)$"
     ]
   ]
 

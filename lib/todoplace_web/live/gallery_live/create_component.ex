@@ -280,27 +280,27 @@ defmodule TodoplaceWeb.GalleryLive.CreateComponent do
   @impl true
   def render(%{step: :choose_type} = assigns) do
     ~H"""
-      <div class="relative bg-white p-6 modal">
-        <.render_modal
-          {assigns}
-          heading="Create a Gallery:"
-          heading_subtitle={heading_subtitle(@step)}
-          title_one="Standard Gallery"
-          subtitle_one="Use this option if you already have your photos retouched, and your photos are ready to hand off to your client."
-          icon_one="photos-2"
-          btn_one_event="gallery_type"
-          btn_one_class="btn-primary"
-          btn_one_label="Next"
-          btn_one_value="standard"
-          title_two="Proofing Gallery"
-          subtitle_two="Use this option if you have proofs, but your client still needs to select which photos they’d like retouched."
-          icon_two="proofing"
-          btn_two_event="gallery_type"
-          btn_two_class="btn-secondary"
-          btn_two_label="Next"
-          btn_two_value="proofing"
-        />
-      </div>
+    <div class="relative bg-white p-6 modal">
+      <.render_modal
+        {assigns}
+        heading="Create a Gallery:"
+        heading_subtitle={heading_subtitle(@step)}
+        title_one="Standard Gallery"
+        subtitle_one="Use this option if you already have your photos retouched, and your photos are ready to hand off to your client."
+        icon_one="photos-2"
+        btn_one_event="gallery_type"
+        btn_one_class="btn-primary"
+        btn_one_label="Next"
+        btn_one_value="standard"
+        title_two="Proofing Gallery"
+        subtitle_two="Use this option if you have proofs, but your client still needs to select which photos they’d like retouched."
+        icon_two="proofing"
+        btn_two_event="gallery_type"
+        btn_two_class="btn-secondary"
+        btn_two_label="Next"
+        btn_two_value="proofing"
+      />
+    </div>
     """
   end
 
@@ -318,20 +318,51 @@ defmodule TodoplaceWeb.GalleryLive.CreateComponent do
       </h1>
 
       <%= if is_nil(@selected_client) && @step == :details do %>
-        <.search_clients new_client={@new_client} search_results={@search_results} search_phrase={@search_phrase} selected_client={@selected_client} searched_client={@searched_client} current_focus={@current_focus} clients={@clients} myself={@myself}/>
+        <.search_clients
+          new_client={@new_client}
+          search_results={@search_results}
+          search_phrase={@search_phrase}
+          selected_client={@selected_client}
+          searched_client={@searched_client}
+          current_focus={@current_focus}
+          clients={@clients}
+          myself={@myself}
+        />
       <% end %>
 
-      <.form for={@changeset} :let={f} phx-change={:validate} phx-submit={:submit} phx-target={@myself} id={"form-#{@step}"}>
+      <.form
+        :let={f}
+        for={@changeset}
+        phx-change={:validate}
+        phx-submit={:submit}
+        phx-target={@myself}
+        id={"form-#{@step}"}
+      >
         <input type="hidden" name="step" value={@step} />
         <.step name={@step} f={f} {assigns} />
 
         <%= unless @step == :choose_type do %>
           <.footer>
-            <.step_button name={@step} form={f} is_valid={valid?(assigns)} myself={@myself} searched_client={@searched_client} selected_client={@selected_client} new_client={@new_client} />
-            <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">Cancel</button>
+            <.step_button
+              name={@step}
+              form={f}
+              is_valid={valid?(assigns)}
+              myself={@myself}
+              searched_client={@searched_client}
+              selected_client={@selected_client}
+              new_client={@new_client}
+            />
+            <button
+              class="btn-secondary"
+              title="cancel"
+              type="button"
+              phx-click="modal"
+              phx-value-action="close"
+            >
+              Cancel
+            </button>
           </.footer>
         <% end %>
-
       </.form>
     </div>
     """
@@ -339,12 +370,14 @@ defmodule TodoplaceWeb.GalleryLive.CreateComponent do
 
   def step(%{name: :choose_type} = assigns) do
     ~H"""
-      <.live_component module={GalleryTypeComponent}
+    <.live_component
+      module={GalleryTypeComponent}
       id="choose_gallery_type"
       target={@myself}
       main_class="px-2"
       button_title="Next"
-      hide_close_button={true} />
+      hide_close_button={true}
+    />
     """
   end
 
@@ -352,32 +385,48 @@ defmodule TodoplaceWeb.GalleryLive.CreateComponent do
     assigns = assigns |> Enum.into(%{email: nil, name: nil, phone: nil})
 
     ~H"""
-      <.job_form_fields myself={@myself} form={@f} new_client={@new_client} job_types={@job_types} />
-      <hr class="mt-10 mb-3" />
-      <div class="grid md:grid-cols-2">
-
-        <%= labeled_select to_form(@package_changeset), :shoot_count, Enum.to_list(1..10), label: "# of Shoots", phx_debounce: "500" %>
-        <%= hidden_input @f, :is_gallery_only, value: true %>
-      </div>
+    <.job_form_fields myself={@myself} form={@f} new_client={@new_client} job_types={@job_types} />
+    <hr class="mt-10 mb-3" />
+    <div class="grid md:grid-cols-2">
+      <%= labeled_select(to_form(@package_changeset), :shoot_count, Enum.to_list(1..10),
+        label: "# of Shoots",
+        phx_debounce: "500"
+      ) %>
+      <%= hidden_input(@f, :is_gallery_only, value: true) %>
+    </div>
     """
   end
 
   def step(%{step: :pricing} = assigns) do
     ~H"""
-      <div class="">
-        <% package = to_form(@package_changeset) %>
-        <%= hidden_input package, :turnaround_weeks, value: 1 %>
-        <%= if @currency in products_currency() do%>
-          <.print_credit_fields f={package} package_pricing={@package_pricing} currency_symbol={@currency_symbol} currency={@currency} />
-        <% else %>
-          <% p = to_form(@package_pricing) %>
-          <%= hidden_input p, :is_enabled, value: false %>
-        <% end %>
-        <.digital_download_fields for={:create_gallery} package_form={package} currency_symbol={@currency_symbol} currency={@currency} download_changeset={@download_changeset} package_pricing={@package_pricing}  target={@myself} show_digitals={@show_digitals} />
-        <%= if @new_gallery do %>
-          <div id="set-gallery-cookie" data-gallery-type={@new_gallery.type} phx-hook="SetGalleryCookie">
-          </div>
-        <% end %>
+    <div class="">
+      <% package = to_form(@package_changeset) %>
+      <%= hidden_input(package, :turnaround_weeks, value: 1) %>
+      <%= if @currency in products_currency() do %>
+        <.print_credit_fields
+          f={package}
+          package_pricing={@package_pricing}
+          currency_symbol={@currency_symbol}
+          currency={@currency}
+        />
+      <% else %>
+        <% p = to_form(@package_pricing) %>
+        <%= hidden_input(p, :is_enabled, value: false) %>
+      <% end %>
+      <.digital_download_fields
+        for={:create_gallery}
+        package_form={package}
+        currency_symbol={@currency_symbol}
+        currency={@currency}
+        download_changeset={@download_changeset}
+        package_pricing={@package_pricing}
+        target={@myself}
+        show_digitals={@show_digitals}
+      />
+      <%= if @new_gallery do %>
+        <div id="set-gallery-cookie" data-gallery-type={@new_gallery.type} phx-hook="SetGalleryCookie">
+        </div>
+      <% end %>
     </div>
     """
   end
@@ -410,7 +459,13 @@ defmodule TodoplaceWeb.GalleryLive.CreateComponent do
     assigns = assign(assigns, title: button_title(name), disabled?: disabled?)
 
     ~H"""
-    <button class="btn-primary" title={@title} type="submit" disabled={!@is_valid || @disabled?} phx-disable-with={@title}>
+    <button
+      class="btn-primary"
+      title={@title}
+      type="submit"
+      disabled={!@is_valid || @disabled?}
+      phx-disable-with={@title}
+    >
       <%= @title %>
     </button>
     """

@@ -32,7 +32,7 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
     ~H"""
     <div class="pt-6 px-6 py-2 center-container mt-12 sm:mt-0">
       <div class="flex text-4xl items-center">
-        <.back_button to={~p"/calendar"} class="lg:hidden"/>
+        <.back_button to={~p"/calendar"} class="lg:hidden" />
         <.crumbs class="text-sm text-base-250">
           <:crumb to={~p"/calendar"}>Calendar</:crumb>
           <:crumb>Booking events</:crumb>
@@ -43,26 +43,32 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
 
       <div class="flex items-center justify-between lg:mt-2 md:justify-start">
         <div class="flex text-4xl font-bold items-center">
-          <.back_button to={~p"/calendar"} class="hidden lg:flex mt-2"/>
-          Booking events
+          <.back_button to={~p"/calendar"} class="hidden lg:flex mt-2" /> Booking events
         </div>
         <div class="fixed top-12 left-0 right-0 z-10 flex flex-shrink-0 w-full sm:p-0 p-6 mt-1 sm:mt-0 sm:bottom-auto sm:ml-auto sm:static sm:items-start sm:w-auto">
-          <a title="add booking event" class="w-full md:w-auto btn-primary text-center cursor-pointer" phx-click="new-event">
+          <a
+            title="add booking event"
+            class="w-full md:w-auto btn-primary text-center cursor-pointer"
+            phx-click="new-event"
+          >
             Add booking event
           </a>
         </div>
       </div>
       <%= unless [:charges_enabled, :loading] |> Enum.member?(@stripe_status) do %>
         <div class="flex flex-col items-center px-4 py-2 mt-8 text-center rounded-lg md:flex-row bg-red-sales-300/10 sm:text-left">
-          <.icon name="warning-orange-dark" class="inline-block w-4 h-4 mr-2"/>
-            It looks like you haven’t setup Stripe yet. You won’t be able to enable your events until that is setup.
+          <.icon name="warning-orange-dark" class="inline-block w-4 h-4 mr-2" />
+          It looks like you haven’t setup Stripe yet. You won’t be able to enable your events until that is setup.
           <div class="flex-shrink-0 my-1 mt-4 md:ml-auto sm:max-w-xs sm:mt-0">
-            <.live_component module={TodoplaceWeb.StripeOnboardingComponent} id={:stripe_onboarding_banner}
-                  error_class="text-center"
-                  current_user={@current_user}
-                  class="btn-primary py-1 px-3 text-sm intro-stripe mx-auto block"
-                  return_url={url(~p"/booking-events")}
-                  stripe_status={@stripe_status} />
+            <.live_component
+              module={TodoplaceWeb.StripeOnboardingComponent}
+              id={:stripe_onboarding_banner}
+              error_class="text-center"
+              current_user={@current_user}
+              class="btn-primary py-1 px-3 text-sm intro-stripe mx-auto block"
+              return_url={url(~p"/booking-events")}
+              stripe_status={@stripe_status}
+            />
           </div>
         </div>
       <% end %>
@@ -75,20 +81,46 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
             <a class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2">
               <%= if @search_phrase do %>
                 <span phx-click="clear-search" class="cursor-pointer">
-                  <.icon name="close-x" class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300" />
+                  <.icon
+                    name="close-x"
+                    class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300"
+                  />
                 </span>
               <% else %>
                 <.icon name="search" class="w-4 ml-1 fill-current" />
               <% end %>
             </a>
-            <input disabled={!is_nil(@selected_event) || @new_event} type="text" class="form-control w-full text-input indent-6" id="search_phrase_input" name="search_phrase" value={"#{@search_phrase}"} phx-debounce="500" spellcheck="false" placeholder="Search booking events..." />
+            <input
+              disabled={!is_nil(@selected_event) || @new_event}
+              type="text"
+              class="form-control w-full text-input indent-6"
+              id="search_phrase_input"
+              name="search_phrase"
+              value={"#{@search_phrase}"}
+              phx-debounce="500"
+              spellcheck="false"
+              placeholder="Search booking events..."
+            />
           </div>
           <div class="flex lg:ml-auto mt-2 lg:mt-0">
-            <div class = "flex flex-col">
-              <.select_dropdown sort_direction={@sort_direction} title="Filter" id="status" selected_option={@event_status} options_list={filter_options()}}/>
+            <div class="flex flex-col">
+              <.select_dropdown
+                sort_direction={@sort_direction}
+                title="Filter"
+                id="status"
+                selected_option={@event_status}
+                options_list={filter_options()}
+                }
+              />
             </div>
-            <div class= "flex flex-col ml-4">
-              <.select_dropdown sort_direction={@sort_direction} title="Sort" id="sort-by" selected_option={@sort_by} options_list={sort_options()}/>
+            <div class="flex flex-col ml-4">
+              <.select_dropdown
+                sort_direction={@sort_direction}
+                title="Sort"
+                id="sort-by"
+                selected_option={@sort_by}
+                options_list={sort_options()}
+              />
             </div>
           </div>
         </div>
@@ -101,14 +133,24 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
           <p class="text-lg lg:text-2xl text-base-250">No events match your search or filters.</p>
         <% else %>
           <div class="p-6 center-container">
-            <.empty_state_base tour_embed="https://demo.arcade.software/eOBqmup7RcW8EVmGpqrY?embed" headline="Meet Client Booking" eyebrow_text="Booking Events Product Tour" body="Accelerate your business growth with mini-sessions, portraits & more! Create a booking link that you can share and take tedious work out of booking" third_party_padding="calc(66.66666666666666% + 41px)">
-              <a title="Add booking event" class="w-full cursor-pointer md:w-auto btn-primary text-center" phx-click="new-event">
+            <.empty_state_base
+              tour_embed="https://demo.arcade.software/eOBqmup7RcW8EVmGpqrY?embed"
+              headline="Meet Client Booking"
+              eyebrow_text="Booking Events Product Tour"
+              body="Accelerate your business growth with mini-sessions, portraits & more! Create a booking link that you can share and take tedious work out of booking"
+              third_party_padding="calc(66.66666666666666% + 41px)"
+            >
+              <a
+                title="Add booking event"
+                class="w-full cursor-pointer md:w-auto btn-primary text-center"
+                phx-click="new-event"
+              >
                 Add booking event
               </a>
             </.empty_state_base>
           </div>
         <% end %>
-    </div>
+      </div>
     <% else %>
       <div class="p-6 center-container">
         <div class="hidden sm:grid sm:grid-cols-5 gap-2 border-b-8 border-blue-planning-300 font-semibold text-lg pb-6">
@@ -117,7 +159,11 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
         </div>
         <%= for event <- @booking_events do %>
           <div class="grid lg:grid-cols-5 grid-cols-1 gap-2 border p-3 sm:pt-0 sm:px-0 sm:pb-4 sm:border-b sm:border-t-0 sm:border-x-0 rounded-lg sm:rounded-none border-gray-100 mt-4">
-            <.details_cell booking_event={event} socket={assigns.socket} migrated={BEShared.migrated(event)} />
+            <.details_cell
+              booking_event={event}
+              socket={assigns.socket}
+              migrated={BEShared.migrated(event)}
+            />
             <hr class="sm:hidden border-gray-100 my-2" />
             <.bookings_cell booking_event={event} />
             <hr class="sm:hidden border-gray-100 my-2" />
@@ -374,52 +420,158 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
   defp bookings_cell(assigns) do
     ~H"""
     <div class="flex flex-col justify-center">
-      <p><%= if BEShared.incomplete_status?(@booking_event), do: "-", else: ngettext("%{count} booking", "%{count} bookings", @booking_event.booking_count) <> " so far" %></p>
+      <p>
+        <%= if BEShared.incomplete_status?(@booking_event),
+          do: "-",
+          else:
+            ngettext("%{count} booking", "%{count} bookings", @booking_event.booking_count) <>
+              " so far" %>
+      </p>
     </div>
     """
   end
 
   defp actions_cell(assigns) do
     ~H"""
-    <div id={"action-#{@booking_event.id}"} class="flex flex-wrap gap-3 items-center lg:ml-auto justify-start md:w-auto w-full col-span-2">
+    <div
+      id={"action-#{@booking_event.id}"}
+      class="flex flex-wrap gap-3 items-center lg:ml-auto justify-start md:w-auto w-full col-span-2"
+    >
       <%= cond do %>
         <% @migrated == :unmigrated -> %>
-          <button class="justify-center bg-blue-planning-300 hover:bg-blue-planning-300/75 rounded-lg text-white grow sm:grow-0 flex-shrink-0 xl:w-auto sm:w-full py-1 px-2" type="button" phx-click="migrate" phx-value-event_id={@booking_event.id}>Migrate event</button>
+          <button
+            class="justify-center bg-blue-planning-300 hover:bg-blue-planning-300/75 rounded-lg text-white grow sm:grow-0 flex-shrink-0 xl:w-auto sm:w-full py-1 px-2"
+            type="button"
+            phx-click="migrate"
+            phx-value-event_id={@booking_event.id}
+          >
+            Migrate event
+          </button>
         <% BEShared.incomplete_status?(@booking_event) -> %>
-          <.icon_button id={"action-edit-#{@booking_event.id}"} phx-click="edit-event" phx-value-event-id={@booking_event.id} icon="pencil" color="white" class="justify-center bg-blue-planning-300 hover:bg-blue-planning-300/75 grow sm:grow-0 flex-shrink-0 xl:w-auto sm:w-full p-1 px-3" rel="noopener noreferrer">
+          <.icon_button
+            id={"action-edit-#{@booking_event.id}"}
+            phx-click="edit-event"
+            phx-value-event-id={@booking_event.id}
+            icon="pencil"
+            color="white"
+            class="justify-center bg-blue-planning-300 hover:bg-blue-planning-300/75 grow sm:grow-0 flex-shrink-0 xl:w-auto sm:w-full p-1 px-3"
+            rel="noopener noreferrer"
+          >
             Edit
           </.icon_button>
         <% true -> %>
-          <.icon_button id={"action-preview-#{@booking_event.id}"} icon="eye" color="white" class="justify-center bg-blue-planning-300 hover:bg-blue-planning-300/75 grow sm:grow-0 flex-shrink-0 xl:w-auto sm:w-full" href={@booking_event.url} disabled={BEShared.incomplete_status?(@booking_event) ||  Enum.any?(@booking_event.dates, &is_nil(Morphix.atomorphiform!(&1).date))} target="_blank" rel="noopener noreferrer">
+          <.icon_button
+            id={"action-preview-#{@booking_event.id}"}
+            icon="eye"
+            color="white"
+            class="justify-center bg-blue-planning-300 hover:bg-blue-planning-300/75 grow sm:grow-0 flex-shrink-0 xl:w-auto sm:w-full"
+            href={@booking_event.url}
+            disabled={
+              BEShared.incomplete_status?(@booking_event) ||
+                Enum.any?(@booking_event.dates, &is_nil(Morphix.atomorphiform!(&1).date))
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Preview
           </.icon_button>
-          <.icon_button icon="anchor" color="blue-planning-300" class="justify-center text-blue-planning-300 grow md:grow-0 flex-shrink-0 xl:w-auto sm:w-full p-1 px-2" id={"copy-event-link-#{@booking_event.id}"} disabled={BEShared.incomplete_status?(@booking_event) ||  Enum.any?(@booking_event.dates, &is_nil(Morphix.atomorphiform!(&1).date))} data-clipboard-text={@booking_event.url} phx-hook="Clipboard">
+          <.icon_button
+            icon="anchor"
+            color="blue-planning-300"
+            class="justify-center text-blue-planning-300 grow md:grow-0 flex-shrink-0 xl:w-auto sm:w-full p-1 px-2"
+            id={"copy-event-link-#{@booking_event.id}"}
+            disabled={
+              BEShared.incomplete_status?(@booking_event) ||
+                Enum.any?(@booking_event.dates, &is_nil(Morphix.atomorphiform!(&1).date))
+            }
+            data-clipboard-text={@booking_event.url}
+            phx-hook="Clipboard"
+          >
             <span>Copy link</span>
             <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
               Copied!
             </div>
           </.icon_button>
       <% end %>
-      <div class="flex items-center w-full xl:w-auto grow sm:grow-0" data-offset-x="-21" data-placement="bottom-end" phx-hook="Select" id={"manage-event-#{@booking_event.id}-#{@booking_event.status}"}>
-        <button {testid("actions")} title="Manage" class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 w-full">
+      <div
+        class="flex items-center w-full xl:w-auto grow sm:grow-0"
+        data-offset-x="-21"
+        data-placement="bottom-end"
+        phx-hook="Select"
+        id={"manage-event-#{@booking_event.id}-#{@booking_event.status}"}
+      >
+        <button
+          {testid("actions")}
+          title="Manage"
+          class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 w-full"
+        >
           Actions
-          <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-          <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+          <.icon
+            name="down"
+            class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+          />
+          <.icon
+            name="up"
+            class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+          />
         </button>
         <div class="z-10 flex hidden flex-col w-44 bg-white border rounded-lg shadow-lg popover-content">
           <%= case @booking_event.status do %>
             <% :archive -> %>
-              <.button title="Unarchive" icon="plus"  click_event="unarchive-event" id={@booking_event.id} color="blue-planning" />
+              <.button
+                title="Unarchive"
+                icon="plus"
+                click_event="unarchive-event"
+                id={@booking_event.id}
+                color="blue-planning"
+              />
             <% status -> %>
-              <.button title="Edit" hidden={BEShared.disabled?(@booking_event, [:disabled]) && 'hidden'} icon="pencil"  click_event="edit-event" id={@booking_event.id} color="blue-planning" />
-              <.button title="Send update" icon="envelope"  click_event="send-email" id={@booking_event.id} color="blue-planning" />
-              <.button title="Duplicate" icon="duplicate"  click_event="duplicate-event" id={@booking_event.id} color="blue-planning" />
+              <.button
+                title="Edit"
+                hidden={BEShared.disabled?(@booking_event, [:disabled]) && ~c"hidden"}
+                icon="pencil"
+                click_event="edit-event"
+                id={@booking_event.id}
+                color="blue-planning"
+              />
+              <.button
+                title="Send update"
+                icon="envelope"
+                click_event="send-email"
+                id={@booking_event.id}
+                color="blue-planning"
+              />
+              <.button
+                title="Duplicate"
+                icon="duplicate"
+                click_event="duplicate-event"
+                id={@booking_event.id}
+                color="blue-planning"
+              />
               <%= cond do %>
                 <% status == :active && !BEShared.incomplete_status?(@booking_event) -> %>
-                  <.button title="Disable" icon="eye"  click_event="confirm-disable-event" id={@booking_event.id} color="red-sales" />
-                  <.button title="Archive" icon="trash"  click_event="confirm-archive-event" id={@booking_event.id} color="red-sales" />
+                  <.button
+                    title="Disable"
+                    icon="eye"
+                    click_event="confirm-disable-event"
+                    id={@booking_event.id}
+                    color="red-sales"
+                  />
+                  <.button
+                    title="Archive"
+                    icon="trash"
+                    click_event="confirm-archive-event"
+                    id={@booking_event.id}
+                    color="red-sales"
+                  />
                 <% :disabled-> %>
-                  <.button title="Enable" icon="plus"  click_event="enable-event" id={@booking_event.id} color="blue-planning" />
+                  <.button
+                    title="Enable"
+                    icon="plus"
+                    click_event="enable-event"
+                    id={@booking_event.id}
+                    color="blue-planning"
+                  />
               <% end %>
           <% end %>
         </div>
@@ -431,34 +583,66 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
   defp select_dropdown(assigns) do
     ~H"""
     <h1 class="font-extrabold text-sm flex flex-col"><%= @title %></h1>
-      <div class="flex">
-        <div id="select" class={classes("relative w-40 border-grey border rounded-l-lg p-2 cursor-pointer", %{"rounded-lg" => @title == "Filter"})} data-offset-y="5" phx-hook="Select">
-          <div class="flex flex-row items-center border-gray-700">
-            <%= Utils.capitalize_all_words(String.replace(@selected_option, "_", " ")) %>
-            <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
-            <.icon name="up" class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon" />
-          </div>
-          <ul class={classes("absolute z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200",%{"w-41" => @id == "status", "w-40" => @id=="sort-by"})}>
-            <%= for option <- @options_list do %>
-              <li id={option.id} target-class="toggle-it" parent-class="toggle" toggle-type="selected-active" phx-hook="ToggleSiblings"
-              class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md">
-
-                <button class="album-select w-40" phx-click={"apply-filter-#{@id}"} phx-value-option={option.id}><%= option.title %></button>
-                <%= if option.id == @selected_option do %>
-                  <.icon name="tick" class="w-6 h-5 mr-1 toggle-it text-green" />
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
+    <div class="flex">
+      <div
+        id="select"
+        class={
+          classes("relative w-40 border-grey border rounded-l-lg p-2 cursor-pointer", %{
+            "rounded-lg" => @title == "Filter"
+          })
+        }
+        data-offset-y="5"
+        phx-hook="Select"
+      >
+        <div class="flex flex-row items-center border-gray-700">
+          <%= Utils.capitalize_all_words(String.replace(@selected_option, "_", " ")) %>
+          <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
+          <.icon
+            name="up"
+            class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon"
+          />
         </div>
-        <%= if @title == "Sort" do%>
-          <div class="items-center flex border rounded-r-lg border-grey p-2">
-            <button phx-click="switch-sort">
-              <.icon name={if @sort_direction == "asc", do: "sort-vector", else: "sort-vector-2"} {testid("edit-link-button")} class="blue-planning-300 w-5 h-5" />
-            </button>
-          </div>
-        <% end %>
+        <ul class={
+          classes(
+            "absolute z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200",
+            %{"w-41" => @id == "status", "w-40" => @id == "sort-by"}
+          )
+        }>
+          <%= for option <- @options_list do %>
+            <li
+              id={option.id}
+              target-class="toggle-it"
+              parent-class="toggle"
+              toggle-type="selected-active"
+              phx-hook="ToggleSiblings"
+              class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md"
+            >
+              <button
+                class="album-select w-40"
+                phx-click={"apply-filter-#{@id}"}
+                phx-value-option={option.id}
+              >
+                <%= option.title %>
+              </button>
+              <%= if option.id == @selected_option do %>
+                <.icon name="tick" class="w-6 h-5 mr-1 toggle-it text-green" />
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
       </div>
+      <%= if @title == "Sort" do %>
+        <div class="items-center flex border rounded-r-lg border-grey p-2">
+          <button phx-click="switch-sort">
+            <.icon
+              name={if @sort_direction == "asc", do: "sort-vector", else: "sort-vector-2"}
+              {testid("edit-link-button")}
+              class="blue-planning-300 w-5 h-5"
+            />
+          </button>
+        </div>
+      <% end %>
+    </div>
     """
   end
 
@@ -471,7 +655,9 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
           <% @migrated == :unmigrated and @booking_event.status != :archive -> %>
             <p class="bg-blue-planning-300 text-white text-xs rounded-lg px-1 py-0.5">
               Client Booking 1.0—
-              <button class="underline" phx-click="migrate" phx-value-event_id={@booking_event.id}>Migrate event</button>
+              <button class="underline" phx-click="migrate" phx-value-event_id={@booking_event.id}>
+                Migrate event
+              </button>
             </p>
           <% BEShared.incomplete_status?(@booking_event) and @booking_event.status != :archive -> %>
             <.badge color={:gray}>Incomplete-Disabled</.badge>
@@ -480,10 +666,22 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
           <% @booking_event.status == :disabled -> %>
             <.badge color={:gray}>Disabled</.badge>
           <% true -> %>
-            <p class="font-semibold"><%= if Map.has_key?(@booking_event, :start_date) && !is_nil(@booking_event.start_date), do: get_formatted_date(@booking_event.start_date, @booking_event.end_date), else: "Date not set" %></p>
+            <p class="font-semibold">
+              <%= if Map.has_key?(@booking_event, :start_date) && !is_nil(@booking_event.start_date),
+                do: get_formatted_date(@booking_event.start_date, @booking_event.end_date),
+                else: "Date not set" %>
+            </p>
         <% end %>
         <div class="font-bold w-full">
-          <a href={if BEShared.disabled?(@booking_event, [:disabled, :archive]), do: "javascript:void(0)", else: ~p"/booking-events/#{@booking_event.id}"} style="text-decoration-thickness: 2px" class="block pt-2 underline underline-offset-1">
+          <a
+            href={
+              if BEShared.disabled?(@booking_event, [:disabled, :archive]),
+                do: "javascript:void(0)",
+                else: ~p"/booking-events/#{@booking_event.id}"
+            }
+            style="text-decoration-thickness: 2px"
+            class="block pt-2 underline underline-offset-1"
+          >
             <span class="w-full text-blue-planning-300 underline">
               <%= if String.length(@booking_event.name) < 30 do
                 @booking_event.name
@@ -494,14 +692,18 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
           </a>
         </div>
         <div class="text-gray-400">
-          <p class={classes(%{"text-red-sales-300 font-bold" => is_nil(@booking_event.package_name)})}><%= if is_nil(@booking_event.package_name), do: "No package selected", else: @booking_event.package_name  %></p>
+          <p class={classes(%{"text-red-sales-300 font-bold" => is_nil(@booking_event.package_name)})}>
+            <%= if is_nil(@booking_event.package_name),
+              do: "No package selected",
+              else: @booking_event.package_name %>
+          </p>
           <p>
-         <%= if @booking_event.duration_minutes do %>
-            <%= @booking_event.duration_minutes %> minutes
-          <% else %>
-            -
-          <% end %>
-      </p>
+            <%= if @booking_event.duration_minutes do %>
+              <%= @booking_event.duration_minutes %> minutes
+            <% else %>
+              -
+            <% end %>
+          </p>
         </div>
       </div>
     </div>
@@ -764,10 +966,18 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Index do
       |> Enum.into(%{class: "", hidden: "", disabled: false, inner_block: nil})
 
     ~H"""
-      <button title={@title} type="button" phx-click={@click_event} phx-value-event-id={@id} class={"flex items-center px-3 py-2 rounded-lg hover:bg-#{@color}-100 hover:font-bold #{@hidden}"} disabled={@disabled} {@rest}>
-        <.icon name={@icon} class={"inline-block w-4 h-4 mr-3 fill-current text-#{@color}-300"} />
-        <%= @title %>
-      </button>
+    <button
+      title={@title}
+      type="button"
+      phx-click={@click_event}
+      phx-value-event-id={@id}
+      class={"flex items-center px-3 py-2 rounded-lg hover:bg-#{@color}-100 hover:font-bold #{@hidden}"}
+      disabled={@disabled}
+      {@rest}
+    >
+      <.icon name={@icon} class={"inline-block w-4 h-4 mr-3 fill-current text-#{@color}-300"} />
+      <%= @title %>
+    </button>
     """
   end
 end

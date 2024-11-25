@@ -18,7 +18,11 @@ defmodule TodoplaceWeb.Live.Admin.AutomationsReportIndex do
     </header>
     <nav class="p-8">
       <ul class="mt-4 font-bold grid gap-10 grid-cols-1 sm:grid-cols-4 text-blue-planning-300">
-        <li><.link navigate={~p"/admin/automations/sent-today-report"} class={@class}>Today Report</.link></li>
+        <li>
+          <.link navigate={~p"/admin/automations/sent-today-report"} class={@class}>
+            Today Report
+          </.link>
+        </li>
         <li class={"#{@class} opacity-50"}>Prediction report (coming soon)</li>
       </ul>
     </nav>

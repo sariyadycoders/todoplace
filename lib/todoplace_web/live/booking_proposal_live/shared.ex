@@ -47,10 +47,10 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
 
     <div class="py-4 bg-base-200 modal-banner">
       <div class="text-2xl font-light">
-        <h2><%= Job.name @job %> Shoot <%= if @package, do: @package.name %></h2>
+        <h2><%= Job.name(@job) %> Shoot <%= if @package, do: @package.name %></h2>
       </div>
 
-      <%= render_slot @inner_block%>
+      <%= render_slot(@inner_block) %>
     </div>
     """
   end
@@ -76,30 +76,42 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
         </h1>
 
         <%= if @proposal && @proposal.accepted_at do %>
-          <.badge color={:gray} mode={:outlined}>Accepted on <%= strftime(@photographer.time_zone, @proposal.accepted_at, "%b %d, %Y") %></.badge>
+          <.badge color={:gray} mode={:outlined}>
+            Accepted on <%= strftime(@photographer.time_zone, @proposal.accepted_at, "%b %d, %Y") %>
+          </.badge>
         <% end %>
 
         <%= if @package do %>
           <%= if @job do %>
-            <p class="mt-2 text-base-250"><%= Money.to_string(PaymentSchedules.total_price(@job), symbol: false, code: true) %></p>
+            <p class="mt-2 text-base-250">
+              <%= Money.to_string(PaymentSchedules.total_price(@job), symbol: false, code: true) %>
+            </p>
           <% end %>
           <.photo_dowloads_display package={@package} class="text-base-250 mt-2" />
         <% end %>
 
         <%= if @package && @package.description do %>
           <hr class="my-4" />
-          <div class="mt-2 mb-4" phx-hook="PackageDescription" id={"package-description-#{@package.id}"} data-event="click">
+          <div
+            class="mt-2 mb-4"
+            phx-hook="PackageDescription"
+            id={"package-description-#{@package.id}"}
+            data-event="click"
+          >
             <div class="line-clamp-2 raw_html raw_html_inline mb-4 text-base-250">
-              <%= raw @package.description %>
+              <%= raw(@package.description) %>
             </div>
             <%= if package_description_length_long?(@package.description) do %>
               <button class="flex items-center font-light text-base-250 view_more_click" type="button">
-                <span>See more</span> <.icon name="down" class="text-base-250 h-4 w-4 stroke-current stroke-2 ml-1 transition-transform" />
+                <span>See more</span>
+                <.icon
+                  name="down"
+                  class="text-base-250 h-4 w-4 stroke-current stroke-2 ml-1 transition-transform"
+                />
               </button>
             <% end %>
           </div>
         <% end %>
-
       </div>
 
       <%= if @package && @package.thumbnail_url do %>
@@ -129,7 +141,9 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
       <%= with discount_percent when discount_percent != nil <- Packages.discount_percent(@package) do %>
         <dl class="flex justify-between">
           <dt>Session fee</dt>
-          <dd><%= Money.to_string(Package.price_before_discounts(@package), symbol: false, code: true)%></dd>
+          <dd>
+            <%= Money.to_string(Package.price_before_discounts(@package), symbol: false, code: true) %>
+          </dd>
         </dl>
         <dl class="flex justify-between text-green-finances-300 my-2">
           <dt>Discount</dt>
@@ -142,11 +156,12 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
             <%= @total_heading %>
           <% else %>
             Total
-          <%end%>
+          <% end %>
         </dt>
-        <dd class="bold"><%= Money.to_string(Package.price(@package), symbol: false, code: true)%></dd>
+        <dd class="bold">
+          <%= Money.to_string(Package.price(@package), symbol: false, code: true) %>
+        </dd>
       </dl>
-
     </div>
     """
   end
@@ -165,20 +180,24 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
       <%= if @show_header do %>
         <dl class="flex flex-col">
           <dt class="inline-block font-light">Dated:</dt>
-          <dd class="inline"><%= strftime(@photographer.time_zone, @proposal.inserted_at, "%b %d, %Y") %></dd>
+          <dd class="inline">
+            <%= strftime(@photographer.time_zone, @proposal.inserted_at, "%b %d, %Y") %>
+          </dd>
         </dl>
 
         <dl class="flex flex-col">
           <dt class="inline-block font-light">Order #:</dt>
           <dl class="flex justify-between">
-            <dd class="inline after:block"><%= @proposal.id |> Integer.to_string |> String.pad_leading(6, "0") %></dd>
+            <dd class="inline after:block">
+              <%= @proposal.id |> Integer.to_string() |> String.pad_leading(6, "0") %>
+            </dd>
             <%= link to: ~p"/jobs/#{@proposal.job_id}/booking_proposals/#{@proposal.id}" do %>
               <dd class="inline link text-black">Download Invoice</dd>
             <% end %>
           </dl>
         </dl>
 
-        <hr class="col-span-2">
+        <hr class="col-span-2" />
 
         <dl class="flex flex-col col-span-2 sm:col-span-1">
           <dt class="font-light">For:</dt>
@@ -196,7 +215,7 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
 
       <div class="block pt-2 border-t col-span-2 sm:hidden">
         <.total package={@package} total_heading={@total_heading} />
-        <%= if @inner_block, do: render_slot @inner_block %>
+        <%= if @inner_block, do: render_slot(@inner_block) %>
       </div>
 
       <div class="modal-banner uppercase font-light py-2 bg-base-200 grid grid-cols-[2fr,2fr] gap-4 col-span-2">
@@ -213,13 +232,16 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
 
           <div {testid("shoot-description")} class="flex flex-col col-span-1 sm:col-span-1">
             <p>
-              <%= dyn_gettext("duration-#{shoot.duration_minutes}") %>
-              starting at <%= strftime(@photographer.time_zone, shoot.starts_at, "%-I:%M %P") %>
+              <%= dyn_gettext("duration-#{shoot.duration_minutes}") %> starting at <%= strftime(
+                @photographer.time_zone,
+                shoot.starts_at,
+                "%-I:%M %P"
+              ) %>
             </p>
             <p><%= shoot_location(shoot) %></p>
           </div>
 
-          <hr class="col-span-2">
+          <hr class="col-span-2" />
         <% end %>
       <% end %>
 
@@ -232,21 +254,23 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
       </div>
 
       <%= if @print_credit do %>
-        <hr class="col-span-2">
+        <hr class="col-span-2" />
         <div class="flex flex-col col-span-1 sm:col-span-1">
           <h3 class="font-light sm:col-span-1 pl-4 md:pl-8">Print Credits</h3>
         </div>
 
         <div class="flex flex-col col-span-1 sm:col-span-1">
-          <p><%= get_amount(@print_credit) %><%= @print_credit.currency%> in print credits to use in your gallery</p>
+          <p>
+            <%= get_amount(@print_credit) %><%= @print_credit.currency %> in print credits to use in your gallery
+          </p>
         </div>
       <% end %>
 
-      <hr class="hidden col-span-2 sm:block">
+      <hr class="hidden col-span-2 sm:block" />
 
       <div class="hidden col-start-2 col-span-1 sm:block pr-4 md:pr-8">
         <.total package={@package} total_heading={@total_heading} />
-        <%= if @inner_block, do: render_slot @inner_block %>
+        <%= if @inner_block, do: render_slot(@inner_block) %>
       </div>
     </div>
     """
@@ -262,12 +286,14 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
     <div class={"#{@class}"}>
       <%= case Packages.Download.from_package(@package) do %>
         <% %{status: :limited} = d -> %>
-          <p><%= ngettext "1 photo download", "%{count} photo downloads", d.count %></p>
-          <p> Additional downloads @ <%= Money.to_string(d.each_price, symbol: false, code: true)%>/ea </p>
+          <p><%= ngettext("1 photo download", "%{count} photo downloads", d.count) %></p>
+          <p>
+            Additional downloads @ <%= Money.to_string(d.each_price, symbol: false, code: true) %>/ea
+          </p>
         <% %{status: :none} = d -> %>
-          <p> Download photos @ <%= Money.to_string(d.each_price, symbol: false, code: true)%>/ea </p>
+          <p>Download photos @ <%= Money.to_string(d.each_price, symbol: false, code: true) %>/ea</p>
         <% _ -> %>
-          <p> All photos downloadable </p>
+          <p>All photos downloadable</p>
       <% end %>
     </div>
     """
@@ -283,79 +309,109 @@ defmodule TodoplaceWeb.BookingProposalLive.Shared do
         <em class="text-xs">(optional)</em>
       <% end %>
     </dt>
-      <%= case @question.type do %>
-        <% :multiselect -> %>
-          <input type="hidden" name={"answers[#{@question_index}][]"} value="">
+    <%= case @question.type do %>
+      <% :multiselect -> %>
+        <input type="hidden" name={"answers[#{@question_index}][]"} value="" />
 
-          <dd>
-            <%= for {option, option_index} <- @question.options |> Enum.with_index() do %>
-              <label class="flex items-center mt-2">
-                <input
-                  class="checkbox"
-                  type="checkbox"
-                  name={"answers[#{@question_index}][]"}
-                  value={option_index}
-                  checked={@answer |> Enum.map(&String.to_integer(&1)) |> Enum.member?(option_index)}>
-                  <div class="pl-2 input-label" ><%= option %></div>
-              </label>
-            <% end %>
-          </dd>
-
-        <% :select -> %>
-          <dd>
-            <%= for {option, option_index} <- @question.options |> Enum.with_index() do %>
-              <label class="flex items-center mt-2">
-                <input
-                  class="radio"
-                  type="radio"
-                  name={"answers[#{@question_index}][]"}
-                  value={option_index}
-                  checked={@answer |> Enum.map(&String.to_integer(&1)) |> Enum.member?(option_index)}>
-                <div class="pl-2 input-label" ><%= option %></div>
-              </label>
-            <% end %>
-          </dd>
-
-        <% :text -> %>
-          <dd class="mt-2">
-            <input type="text" phx-debounce="1000" class="w-full text-input" id={"question_#{@question_index}"} name={"answers[#{@question_index}][]"} value={@answer} placeholder={@question.placeholder} />
-          </dd>
-
-        <% :phone -> %>
-          <dd class="mt-2">
-            <%= hidden_input :question_index, :value, value:  @question_index %>
-            <%= if @disable? do %>
-              <input type="tel" phx-debounce="1000" class="w-full text-input" id={"question_#{@question_index}"} name={"answers[#{@question_index}][]"} value={@answer} />
-            <% else %>
-              <.live_component
-                module={LivePhone}
-                id={"question_#{@question_index}"}
-                form={:Phone}
-                field={:value}
-                tabindex={0}
-                preferred={["US", "CA"]}
-                disable?={@disable?}
-                valid?={true}
-                value={List.first(@answer)}
+        <dd>
+          <%= for {option, option_index} <- @question.options |> Enum.with_index() do %>
+            <label class="flex items-center mt-2">
+              <input
+                class="checkbox"
+                type="checkbox"
+                name={"answers[#{@question_index}][]"}
+                value={option_index}
+                checked={@answer |> Enum.map(&String.to_integer(&1)) |> Enum.member?(option_index)}
               />
-            <% end %>
-          </dd>
-
-        <% :email -> %>
-          <dd class="mt-2">
-            <input type="email" phx-debounce="1000" class="w-full text-input" id={"question_#{@question_index}"} name={"answers[#{@question_index}][]"} value={@answer} />
-          </dd>
-
-        <% :date -> %>
-          <dd class="mt-2">
-            <input type="date" phx-debounce="1000" class="w-full text-input" id={"question_#{@question_index}"} name={"answers[#{@question_index}][]"} value={@answer} />
-          </dd>
-
-        <% :textarea -> %>
-          <dd class="mt-2">
-            <textarea phx-debounce="1000" class="w-full text-input"  id={"question_#{@question_index}"} name={"answers[#{@question_index}][]"}><%= @answer %></textarea>
-          </dd>
-      <% end %>
+              <div class="pl-2 input-label"><%= option %></div>
+            </label>
+          <% end %>
+        </dd>
+      <% :select -> %>
+        <dd>
+          <%= for {option, option_index} <- @question.options |> Enum.with_index() do %>
+            <label class="flex items-center mt-2">
+              <input
+                class="radio"
+                type="radio"
+                name={"answers[#{@question_index}][]"}
+                value={option_index}
+                checked={@answer |> Enum.map(&String.to_integer(&1)) |> Enum.member?(option_index)}
+              />
+              <div class="pl-2 input-label"><%= option %></div>
+            </label>
+          <% end %>
+        </dd>
+      <% :text -> %>
+        <dd class="mt-2">
+          <input
+            type="text"
+            phx-debounce="1000"
+            class="w-full text-input"
+            id={"question_#{@question_index}"}
+            name={"answers[#{@question_index}][]"}
+            value={@answer}
+            placeholder={@question.placeholder}
+          />
+        </dd>
+      <% :phone -> %>
+        <dd class="mt-2">
+          <%= hidden_input(:question_index, :value, value: @question_index) %>
+          <%= if @disable? do %>
+            <input
+              type="tel"
+              phx-debounce="1000"
+              class="w-full text-input"
+              id={"question_#{@question_index}"}
+              name={"answers[#{@question_index}][]"}
+              value={@answer}
+            />
+          <% else %>
+            <.live_component
+              module={LivePhone}
+              id={"question_#{@question_index}"}
+              form={:Phone}
+              field={:value}
+              tabindex={0}
+              preferred={["US", "CA"]}
+              disable?={@disable?}
+              valid?={true}
+              value={List.first(@answer)}
+            />
+          <% end %>
+        </dd>
+      <% :email -> %>
+        <dd class="mt-2">
+          <input
+            type="email"
+            phx-debounce="1000"
+            class="w-full text-input"
+            id={"question_#{@question_index}"}
+            name={"answers[#{@question_index}][]"}
+            value={@answer}
+          />
+        </dd>
+      <% :date -> %>
+        <dd class="mt-2">
+          <input
+            type="date"
+            phx-debounce="1000"
+            class="w-full text-input"
+            id={"question_#{@question_index}"}
+            name={"answers[#{@question_index}][]"}
+            value={@answer}
+          />
+        </dd>
+      <% :textarea -> %>
+        <dd class="mt-2">
+          <textarea
+            phx-debounce="1000"
+            class="w-full text-input"
+            id={"question_#{@question_index}"}
+            name={"answers[#{@question_index}][]"}
+          ><%= @answer %></textarea>
+        </dd>
+    <% end %>
     """
   end
 

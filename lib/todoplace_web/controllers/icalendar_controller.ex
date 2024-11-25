@@ -4,15 +4,16 @@ defmodule TodoplaceWeb.ICalendarController do
   alias Todoplace.{Accounts, Shoots, Repo, Job}
 
   import TodoplaceWeb.Helpers, only: [job_url: 1, lead_url: 1]
-  
+
   use PhoenixSwagger
 
   swagger_path :index do
-    get "/calendar/{token}"
-    description "Retrieve calendar events in iCalendar format"
-    response 200, "Success", :ICalendarResponse
-    response 404, "Unauthorized"
+    get("/calendar/{token}")
+    description("Retrieve calendar events in iCalendar format")
+    response(200, "Success", :ICalendarResponse)
+    response(404, "Unauthorized")
   end
+
   def index(conn, %{"token" => token}) do
     case Phoenix.Token.verify(conn, "USER_ID", token, max_age: :infinity) do
       {:ok, user_id} ->
@@ -74,32 +75,35 @@ defmodule TodoplaceWeb.ICalendarController do
 
   def swagger_definitions do
     %{
-      ICalendarResponse: swagger_schema do
-        title "ICalendar Response"
-        description "Response schema for iCalendar data"
-        example """
-          BEGIN:VCALENDAR
-          CALSCALE:GREGORIAN
-          VERSION:2.0
-          PRODID:-//Elixir ICalendar//Elixir ICalendar//EN
-          BEGIN:VEVENT
-          DESCRIPTION:Let's go see Star Wars.
-          DTEND:20151224T084500
-          DTSTART:20151224T083000
-          LOCATION:123 Fun Street\\, Toronto ON\\, Canada
-          SUMMARY:Film with Amy and Adam
-          END:VEVENT
-          BEGIN:VEVENT
-          DESCRIPTION:A big long meeting with lots of details.
-          DTEND:20240806T191722Z
-          DTSTART:20240806T161722Z
-          LOCATION:456 Boring Street\\, Toronto ON\\, Canada
-          SUMMARY:Morning meeting
-          END:VEVENT
-          END:VCALENDAR
-        """
-        type :string
-      end
+      ICalendarResponse:
+        swagger_schema do
+          title("ICalendar Response")
+          description("Response schema for iCalendar data")
+
+          example("""
+            BEGIN:VCALENDAR
+            CALSCALE:GREGORIAN
+            VERSION:2.0
+            PRODID:-//Elixir ICalendar//Elixir ICalendar//EN
+            BEGIN:VEVENT
+            DESCRIPTION:Let's go see Star Wars.
+            DTEND:20151224T084500
+            DTSTART:20151224T083000
+            LOCATION:123 Fun Street\\, Toronto ON\\, Canada
+            SUMMARY:Film with Amy and Adam
+            END:VEVENT
+            BEGIN:VEVENT
+            DESCRIPTION:A big long meeting with lots of details.
+            DTEND:20240806T191722Z
+            DTSTART:20240806T161722Z
+            LOCATION:456 Boring Street\\, Toronto ON\\, Canada
+            SUMMARY:Morning meeting
+            END:VEVENT
+            END:VCALENDAR
+          """)
+
+          type(:string)
+        end
     }
   end
 end

@@ -17,35 +17,61 @@ defmodule TodoplaceWeb.JobLive.Shared.NotesModal do
     <div class="modal">
       <h1 class="flex justify-between mb-4 text-3xl font-bold">
         Edit Note
-
-        <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
         </button>
-
       </h1>
 
       <.form :let={f} for={@changeset} phx-submit="save" phx-target={@myself}>
         <div class="mt-2">
           <div class="flex items-center justify-between mb-2">
-            <%= label_for f, :notes, label: "Private Notes" %>
+            <%= label_for(f, :notes, label: "Private Notes") %>
 
-            <.icon_button color="red-sales-300" icon="trash" phx-hook="ClearInput" id="clear-notes" data-input-name={input_name(f,:notes)}>
+            <.icon_button
+              color="red-sales-300"
+              icon="trash"
+              phx-hook="ClearInput"
+              id="clear-notes"
+              data-input-name={input_name(f, :notes)}
+            >
               Clear
             </.icon_button>
-
           </div>
 
           <fieldset>
-            <%= input f, :notes, type: :textarea, class: "w-full max-h-60", phx_hook: "AutoHeight", phx_update: "ignore" %>
+            <%= input(f, :notes,
+              type: :textarea,
+              class: "w-full max-h-60",
+              phx_hook: "AutoHeight",
+              phx_update: "ignore"
+            ) %>
           </fieldset>
         </div>
 
         <TodoplaceWeb.LiveModal.footer>
-          <button class="btn-primary" title="save" type="submit" disabled={!@changeset.valid?} phx-disable-with="Saving...">
+          <button
+            class="btn-primary"
+            title="save"
+            type="submit"
+            disabled={!@changeset.valid?}
+            phx-disable-with="Saving..."
+          >
             Save
           </button>
 
-          <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Cancel
           </button>
         </TodoplaceWeb.LiveModal.footer>

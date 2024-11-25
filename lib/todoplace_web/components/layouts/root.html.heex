@@ -113,16 +113,16 @@
     <script defer phx-track-static type="module" src={static_path(@conn, "/js/app.js")}>
     </script>
     <script type="text/javascript">
-        window.FIREBASE_CONFIG = {
-          apiKey: <%= raw(Application.get_env(:todoplace, :firebase)[:api_key]) %>,
-          authDomain: <%= raw(Application.get_env(:todoplace, :firebase)[:auth_domain]) %>,
-          projectId: <%= raw(Application.get_env(:todoplace, :firebase)[:project_id]) %>,
-          storageBucket: <%= raw(Application.get_env(:todoplace, :firebase)[:storage_bucket]) %>,
-          messagingSenderId: <%= raw(Application.get_env(:todoplace, :firebase)[:messaging_sender_id]) %>,
-          appId: <%= raw(Application.get_env(:todoplace, :firebase)[:app_id]) %>,
-          measurementId: <%= raw(Application.get_env(:todoplace, :firebase)[:measurement_id]) %>
-        };
-  </script>
+      window.FIREBASE_CONFIG = {
+        apiKey: <%= raw(Application.get_env(:todoplace, :firebase)[:api_key]) %>,
+        authDomain: <%= raw(Application.get_env(:todoplace, :firebase)[:auth_domain]) %>,
+        projectId: <%= raw(Application.get_env(:todoplace, :firebase)[:project_id]) %>,
+        storageBucket: <%= raw(Application.get_env(:todoplace, :firebase)[:storage_bucket]) %>,
+        messagingSenderId: <%= raw(Application.get_env(:todoplace, :firebase)[:messaging_sender_id]) %>,
+        appId: <%= raw(Application.get_env(:todoplace, :firebase)[:app_id]) %>,
+        measurementId: <%= raw(Application.get_env(:todoplace, :firebase)[:measurement_id]) %>
+      };
+    </script>
   </head>
   <body>
     <%= @inner_content %>

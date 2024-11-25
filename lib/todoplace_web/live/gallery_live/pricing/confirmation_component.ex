@@ -41,21 +41,50 @@ defmodule TodoplaceWeb.GalleryLive.Pricing.ConfirmationComponent do
       <p class="pt-4 whitespace-pre-wrap text-base-250">Here's what you have set in the package:</p>
 
       <div class="flex flex-col mt-2">
-        <.grid_item icon="money-bags" item_name="Print Credits" item_value={@payload.gallery.package.print_credits || @payload.gallery.gallery_digital_pricing.print_credits || "-"} />
-        <.grid_item icon="money-bags" item_name="Digital Image Price" item_value={@payload.gallery.package.download_each_price || "-"} />
-        <.grid_item icon="photos-2" item_name="Included Digital Images" item_value={@payload.gallery.package.download_count || "-"} />
-        <.grid_item icon="money-bags" item_name="Buy Them All Price" item_value={@payload.gallery.package.buy_all || "-"} />
-
+        <.grid_item
+          icon="money-bags"
+          item_name="Print Credits"
+          item_value={
+            @payload.gallery.package.print_credits ||
+              @payload.gallery.gallery_digital_pricing.print_credits || "-"
+          }
+        />
+        <.grid_item
+          icon="money-bags"
+          item_name="Digital Image Price"
+          item_value={@payload.gallery.package.download_each_price || "-"}
+        />
+        <.grid_item
+          icon="photos-2"
+          item_name="Included Digital Images"
+          item_value={@payload.gallery.package.download_count || "-"}
+        />
+        <.grid_item
+          icon="money-bags"
+          item_name="Buy Them All Price"
+          item_value={@payload.gallery.package.buy_all || "-"}
+        />
       </div>
 
-      <button class={"w-full mt-8 " <> @confirm_class} title="Yes, reset" type="button" phx-click="reset-digital-pricing" phx-disable-with="Saving&hellip;" phx-target={@myself}>
+      <button
+        class={"w-full mt-8 " <> @confirm_class}
+        title="Yes, reset"
+        type="button"
+        phx-click="reset-digital-pricing"
+        phx-disable-with="Saving&hellip;"
+        phx-target={@myself}
+      >
         Yes, reset
       </button>
 
-      <button class={"w-full mt-6 " <> @close_class} type="button" phx-click="modal" phx-value-action="close">
+      <button
+        class={"w-full mt-6 " <> @close_class}
+        type="button"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         Cancel
       </button>
-
     </div>
     """
   end

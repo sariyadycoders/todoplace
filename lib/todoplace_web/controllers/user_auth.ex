@@ -137,11 +137,11 @@ defmodule TodoplaceWeb.UserAuth do
     # user = user_token && Accounts.get_user_by_session_token(user_token)
     current_user_data = Todoplace.Cache.get_user_data(user_token)
     user = current_user_data && current_user_data.current_user
+
     conn
     |> assign(:current_user, user)
     |> assign(:user_token, user_token)
     |> assign(:current_user_data, current_user_data)
-
   end
 
   defp ensure_user_token(conn) do

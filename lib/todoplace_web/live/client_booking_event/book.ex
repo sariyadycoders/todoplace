@@ -53,52 +53,90 @@ defmodule TodoplaceWeb.ClientBookingEventLive.Book do
   def render(assigns) do
     ~H"""
     <%= if @status == :active do %>
-    <div class="center-container px-8 pt-6 mx-auto min-h-screen flex flex-col">
-      <div class="flex">
-        <.photographer_logo organization={@organization} />
-      </div>
-      <hr class="border-gray-100 my-8">
+      <div class="center-container px-8 pt-6 mx-auto min-h-screen flex flex-col">
+        <div class="flex">
+          <.photographer_logo organization={@organization} />
+        </div>
+        <hr class="border-gray-100 my-8" />
 
-      <div class="sm:mt-6 sm:mx-auto border border-gray-100 flex flex-col p-8 max-w-screen-lg">
-        <h1 class="text-3xl">Booking with <%= @organization.name %></h1>
-        <hr class="border-gray-100 my-8">
-        <h2 class="text-2xl">Your details</h2>
+        <div class="sm:mt-6 sm:mx-auto border border-gray-100 flex flex-col p-8 max-w-screen-lg">
+          <h1 class="text-3xl">Booking with <%= @organization.name %></h1>
+          <hr class="border-gray-100 my-8" />
+          <h2 class="text-2xl">Your details</h2>
 
-        <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save">
-          <div class="grid gap-5 sm:grid-cols-2 mt-4">
-            <%= labeled_input f, :name, label: "Your name", placeholder: "Type your first and last name…", phx_debounce: "500" %>
-            <%= labeled_input f, :email, type: :email_input, label: "Your email", placeholder: "Type email…", phx_debounce: "500" %>
-            <div class="flex flex-col" >
-              <%= label_for f, :phone, label: "Your phone number" %>
-              <.live_component module={LivePhone} id="phone" form={f} field={:phone} tabindex={0} preferred={["US", "CA"]} />
+          <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save">
+            <div class="grid gap-5 sm:grid-cols-2 mt-4">
+              <%= labeled_input(f, :name,
+                label: "Your name",
+                placeholder: "Type your first and last name…",
+                phx_debounce: "500"
+              ) %>
+              <%= labeled_input(f, :email,
+                type: :email_input,
+                label: "Your email",
+                placeholder: "Type email…",
+                phx_debounce: "500"
+              ) %>
+              <div class="flex flex-col">
+                <%= label_for(f, :phone, label: "Your phone number") %>
+                <.live_component
+                  module={LivePhone}
+                  id="phone"
+                  form={f}
+                  field={:phone}
+                  tabindex={0}
+                  preferred={["US", "CA"]}
+                />
+              </div>
             </div>
-          </div>
 
-          <hr class="border-gray-100 my-8 sm:my-12">
-          <h2 class="text-2xl mb-2">Pick your session time</h2>
+            <hr class="border-gray-100 my-8 sm:my-12" />
+            <h2 class="text-2xl mb-2">Pick your session time</h2>
 
-          <div class="grid sm:grid-cols-2 gap-10">
-            <.date_picker name={input_name(f, :date)} selected_date={input_value(f, :date)} available_dates={available_dates(@booking_event)} />
-            <.time_picker name={input_name(f, :time)} selected_date={input_value(f, :date)} selected_time={input_value(f, :time)} available_slots={available_slots(@booking_event, @booking_date, @time_zone, @external_events)}/>
-          </div>
+            <div class="grid sm:grid-cols-2 gap-10">
+              <.date_picker
+                name={input_name(f, :date)}
+                selected_date={input_value(f, :date)}
+                available_dates={available_dates(@booking_event)}
+              />
+              <.time_picker
+                name={input_name(f, :time)}
+                selected_date={input_value(f, :date)}
+                selected_time={input_value(f, :time)}
+                available_slots={
+                  available_slots(@booking_event, @booking_date, @time_zone, @external_events)
+                }
+              />
+            </div>
 
-          <div class="flex flex-col py-6 bg-white gap-5 mt-4 sm:mt-2 sm:flex-row-reverse">
-            <button class="btn-primary w-full sm:w-36" title="next" type="submit" disabled={!@changeset.valid?} phx-disable-with="Next">
-              Next
-            </button>
+            <div class="flex flex-col py-6 bg-white gap-5 mt-4 sm:mt-2 sm:flex-row-reverse">
+              <button
+                class="btn-primary w-full sm:w-36"
+                title="next"
+                type="submit"
+                disabled={!@changeset.valid?}
+                phx-disable-with="Next"
+              >
+                Next
+              </button>
 
-            <.live_link to={~p"/photographer/#{@organization.slug}/event/#{@booking_event.id}"} class="btn-secondary flex items-center justify-center w-full sm:w-48">Cancel</.live_link>
-          </div>
-        </.form>
+              <.live_link
+                to={~p"/photographer/#{@organization.slug}/event/#{@booking_event.id}"}
+                class="btn-secondary flex items-center justify-center w-full sm:w-48"
+              >
+                Cancel
+              </.live_link>
+            </div>
+          </.form>
+        </div>
+
+        <hr class="border-gray-100 mt-8 sm:mt-20" />
+
+        <.profile_footer color={@color} photographer={@photographer} organization={@organization} />
       </div>
-
-      <hr class="border-gray-100 mt-8 sm:mt-20">
-
-      <.profile_footer color={@color} photographer={@photographer} organization={@organization} />
-    </div>
     <% else %>
       <div class="center-container px-8 pt-6 mx-auto min-h-screen flex flex-col">
-        <h1 class="text-1x text-center"> No available times </h1>
+        <h1 class="text-1x text-center">No available times</h1>
       </div>
     <% end %>
     """
@@ -117,15 +155,28 @@ defmodule TodoplaceWeb.ClientBookingEventLive.Book do
         <%= if Enum.empty?(@available_slots) do %>
           <p class="mt-2">No available times</p>
         <% end %>
-        <%= Enum.map(@available_slots, fn slot ->  %>
-            <label class={classes("flex items-center justify-center border border-black py-3 my-4 cursor-pointer", %{
-                "bg-black text-white" => Time.compare(slot.slot_start, @selected_time || Time.utc_now) == :eq,
-                "bg-white !text-grey !border-grey pointer-events-none opacity-40 hover:cursor-not-allowed" => (disabled_slot?(slot.status))}
-                )}>
-                <%= slot.slot_start |> Calendar.strftime("%-I:%M%P") %>
-                <input type="radio" name={@name} value={slot.slot_start} class="hidden" disabled={disabled_slot?(slot.status)}/>
-              </label>
-        <% end )%>
+        <%= Enum.map(@available_slots, fn slot -> %>
+          <label class={
+            classes(
+              "flex items-center justify-center border border-black py-3 my-4 cursor-pointer",
+              %{
+                "bg-black text-white" =>
+                  Time.compare(slot.slot_start, @selected_time || Time.utc_now()) == :eq,
+                "bg-white !text-grey !border-grey pointer-events-none opacity-40 hover:cursor-not-allowed" =>
+                  disabled_slot?(slot.status)
+              }
+            )
+          }>
+            <%= slot.slot_start |> Calendar.strftime("%-I:%M%P") %>
+            <input
+              type="radio"
+              name={@name}
+              value={slot.slot_start}
+              class="hidden"
+              disabled={disabled_slot?(slot.status)}
+            />
+          </label>
+        <% end ) %>
       </div>
     </div>
     """

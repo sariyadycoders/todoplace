@@ -135,6 +135,7 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart do
         das_type = DasType.get_by_zipcode(zipcode)
         Cart.add_default_shipping_to_products(order, %{das_type: das_type, force_update: true})
       end
+
       Logger.info("shipping updated")
       {:ok, :updated}
     end)
@@ -147,9 +148,11 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart do
 
       {:error, :order, changeset, _} ->
         Logger.info("error in chageset: #inspect({changeset})")
+
         socket
         |> assign(:delivery_info_changeset, changeset)
         |> noreply()
+
       error ->
         Logger.info("some other error in chageset: #inspect({error})")
 
@@ -285,6 +288,7 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart do
 
   defp cart_checkout(%{assigns: %{checkout_routes: checkout_routes}} = socket, order) do
     Logger.info("cart_checkout method reached for #{inspect(order.id)} -----------------")
+
     order
     |> Cart.checkout(
       success_url:
@@ -398,14 +402,17 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart do
     assigns = assign(assigns, title: title, back_btn: back_btn, back_route: back_route)
 
     ~H"""
-    <.link navigate={@back_route} class="flex w-32 font-extrabold text-base-250 items-center mt-6 lg:mt-8 px-4 md:px-0">
+    <.link
+      navigate={@back_route}
+      class="flex w-32 font-extrabold text-base-250 items-center mt-6 lg:mt-8 px-4 md:px-0"
+    >
       <.icon name="back" class="h-3.5 w-1.5 stroke-2 mr-2" />
       <p class="mt-1"><%= @back_btn %></p>
     </.link>
 
     <div class="py-5 lg:pt-8 lg:pb-10 px-4 md:px-0">
       <div class="text-xl lg:text-3xl"><%= @title %></div>
-      <%= if @title != "Review Selections" do%>
+      <%= if @title != "Review Selections" do %>
         <div class="mt-2 text-lg">
           Choose how you want your items shipped; certain types of items will ship separately.
           Shipping estimates don’t include printing/production turnaround times.
@@ -448,9 +455,11 @@ defmodule TodoplaceWeb.GalleryLive.ClientShow.Cart do
         <span class="flex mb-4">
           Total: <b>0.00</b>
         </span>
-        <button disabled class="flex items-center justify-center border border-base-225 text-base-225 w-full py-2">
-          Send to my photographer
-          <.icon name="send" class="w-4 h-4 ml-3" />
+        <button
+          disabled
+          class="flex items-center justify-center border border-base-225 text-base-225 w-full py-2"
+        >
+          Send to my photographer <.icon name="send" class="w-4 h-4 ml-3" />
         </button>
       </div>
     </div>

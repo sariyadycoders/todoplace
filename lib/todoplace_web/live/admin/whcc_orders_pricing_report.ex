@@ -21,28 +21,28 @@ defmodule TodoplaceWeb.Live.Admin.WHCCOrdersPricingReport do
 
   def render(assigns) do
     ~H"""
-      <div class="w-screen text-xs">
-        <table class="w-full table-fixed">
-          <tr class="border">
-              <th> Client Paid </th>
-              <th> Shipping </th>
-              <th> Print Cost for Photog</th>
-              <th> Discounted Print Cost for Todoplace</th>
-              <th> Stripe fee </th>
-              <th> Photographer Paid to us </th>
-              <th> Photographer's Profit </th>
-          </tr>
-            <tr class="text-center w-full">
-              <td><%= Cart.Order.total_cost(@order) %></td>
-              <td><%= Cart.total_shipping(@order) %></td>
-              <td><%= print_cost_for_photog(@order) %></td>
-              <td><%= print_cost_for_todoplace(@order) %></td>
-              <td><%= @stripe_fee %></td>
-              <td><%= @photographer_charge %></td>
-              <td><%= @photographer_payment %></td>
-            </tr>
-        </table>
-      </div>
+    <div class="w-screen text-xs">
+      <table class="w-full table-fixed">
+        <tr class="border">
+          <th>Client Paid</th>
+          <th>Shipping</th>
+          <th>Print Cost for Photog</th>
+          <th>Discounted Print Cost for Todoplace</th>
+          <th>Stripe fee</th>
+          <th>Photographer Paid to us</th>
+          <th>Photographer's Profit</th>
+        </tr>
+        <tr class="text-center w-full">
+          <td><%= Cart.Order.total_cost(@order) %></td>
+          <td><%= Cart.total_shipping(@order) %></td>
+          <td><%= print_cost_for_photog(@order) %></td>
+          <td><%= print_cost_for_todoplace(@order) %></td>
+          <td><%= @stripe_fee %></td>
+          <td><%= @photographer_charge %></td>
+          <td><%= @photographer_payment %></td>
+        </tr>
+      </table>
+    </div>
     """
   end
 

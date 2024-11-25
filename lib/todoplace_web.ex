@@ -162,7 +162,9 @@ defmodule TodoplaceWeb do
             user_organizations =
               Todoplace.Organization.list_organizations_active(socket.assigns.current_user.id)
 
-            Todoplace.Cache.refresh_current_user_cache(socket.assigns.current_user_data.session_token)
+            Todoplace.Cache.refresh_current_user_cache(
+              socket.assigns.current_user_data.session_token
+            )
 
             Phoenix.PubSub.broadcast(
               Todoplace.PubSub,

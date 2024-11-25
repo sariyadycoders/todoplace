@@ -18,37 +18,56 @@ defmodule TodoplaceWeb.Live.Pricing.Category.Attribute do
   def render(assigns) do
     ~H"""
     <div class="contents">
-        <%# desktop %>
-        <div class="items-center hidden py-8 pl-12 pr-4 font-bold capitalize sm:flex"><%= @attribute.category_name %> <%= @attribute.name %></div>
-        <div class="items-center hidden px-4 py-8 sm:flex"><%= @attribute.price %></div>
-        <div class="items-center hidden px-4 py-8 sm:flex"><%= final_price(@attribute, @changeset) %></div>
-        <div {testid("profit")} class="items-center hidden px-4 py-8 sm:flex"><%= profit(@attribute, @changeset) %></div>
+      
+      <div class="items-center hidden py-8 pl-12 pr-4 font-bold capitalize sm:flex">
+        <%= @attribute.category_name %> <%= @attribute.name %>
+      </div>
+      <div class="items-center hidden px-4 py-8 sm:flex"><%= @attribute.price %></div>
+      <div class="items-center hidden px-4 py-8 sm:flex">
+        <%= final_price(@attribute, @changeset) %>
+      </div>
+      <div {testid("profit")} class="items-center hidden px-4 py-8 sm:flex">
+        <%= profit(@attribute, @changeset) %>
+      </div>
 
-        <div class="items-center hidden px-4 py-8 sm:flex">
-          <.markup_form id={"desktop-#{@id}"} changeset={@changeset} myself={@myself} class="w-20 text-right text-input" />
-        </div>
+      <div class="items-center hidden px-4 py-8 sm:flex">
+        <.markup_form
+          id={"desktop-#{@id}"}
+          changeset={@changeset}
+          myself={@myself}
+          class="w-20 text-right text-input"
+        />
+      </div>
 
-        <%# mobile %>
-        <div class="px-5 py-4 mt-4 text-lg font-bold capitalize border-t border-l rounded-tl-lg ml-14 sm:hidden"><%= @attribute.category_name %> <%= @attribute.name %></div>
-        <div class="py-4 mt-4 border-t border-r rounded-tr-lg pl-14 sm:hidden"><%= profit(@attribute, @changeset) %></div>
-        <hr class="block ml-20 mr-6 sm:hidden col-span-2" />
+      <div class="px-5 py-4 mt-4 text-lg font-bold capitalize border-t border-l rounded-tl-lg ml-14 sm:hidden">
+        <%= @attribute.category_name %> <%= @attribute.name %>
+      </div>
+      <div class="py-4 mt-4 border-t border-r rounded-tr-lg pl-14 sm:hidden">
+        <%= profit(@attribute, @changeset) %>
+      </div>
+      <hr class="block ml-20 mr-6 sm:hidden col-span-2" />
 
-        <dl class="block py-2 pl-5 border-l ml-14 sm:hidden">
-          <dt class="font-bold">Base Cost</dt>
-          <dd><%= @attribute.price %></dd>
-        </dl>
+      <dl class="block py-2 pl-5 border-l ml-14 sm:hidden">
+        <dt class="font-bold">Base Cost</dt>
+        <dd><%= @attribute.price %></dd>
+      </dl>
 
-        <dl class="py-2 border-b border-r rounded-br-lg pl-14 row-span-2 sm:hidden">
-          <dt class="mb-4 font-bold">Markup</dt>
-          <dd>
-            <.markup_form id={"mobile-#{@id}"} changeset={@changeset} myself={@myself} class="w-20 px-3 py-4 text-center text-input" />
-          </dd>
-        </dl>
+      <dl class="py-2 border-b border-r rounded-br-lg pl-14 row-span-2 sm:hidden">
+        <dt class="mb-4 font-bold">Markup</dt>
+        <dd>
+          <.markup_form
+            id={"mobile-#{@id}"}
+            changeset={@changeset}
+            myself={@myself}
+            class="w-20 px-3 py-4 text-center text-input"
+          />
+        </dd>
+      </dl>
 
-        <dl class="block pt-2 pb-3 pl-5 border-b border-l rounded-bl-lg ml-14 sm:hidden">
-          <dt class="font-bold">Final price</dt>
-          <dd><%= final_price(@attribute, @changeset) %></dd>
-        </dl>
+      <dl class="block pt-2 pb-3 pl-5 border-b border-l rounded-bl-lg ml-14 sm:hidden">
+        <dt class="font-bold">Final price</dt>
+        <dd><%= final_price(@attribute, @changeset) %></dd>
+      </dl>
     </div>
     """
   end
@@ -79,8 +98,29 @@ defmodule TodoplaceWeb.Live.Pricing.Category.Attribute do
 
   defp markup_form(assigns) do
     ~H"""
-    <.form for={@changeset} :let={f} phx-submit="change" phx-change="change" phx-target={@myself} id={"form-#{@id}"}>
-    <%= input f, :value, "markup" |> testid() |> Map.to_list() |> Enum.concat(value: markup(@changeset), class: @class, id: "input-#{@id}", phx_hook: "PercentMask", phx_debounce: 300, phx_update: "ignore") %>
+    <.form
+      :let={f}
+      for={@changeset}
+      phx-submit="change"
+      phx-change="change"
+      phx-target={@myself}
+      id={"form-#{@id}"}
+    >
+      <%= input(
+        f,
+        :value,
+        "markup"
+        |> testid()
+        |> Map.to_list()
+        |> Enum.concat(
+          value: markup(@changeset),
+          class: @class,
+          id: "input-#{@id}",
+          phx_hook: "PercentMask",
+          phx_debounce: 300,
+          phx_update: "ignore"
+        )
+      ) %>
     </.form>
     """
   end

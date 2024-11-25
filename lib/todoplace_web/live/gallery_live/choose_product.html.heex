@@ -1,52 +1,95 @@
 <div class="relative" id="choose_product_modal" phx-hook="DisableRightClick">
   <div class="relative choose-product__modal">
     <div class="sticky md:static -top-2 bg-white py-4 z-[60]">
-      <a phx-click="close" title="close" phx-target={@myself} class="absolute cursor-pointer md:right-5 md:top-5 right-8 top-6">
+      <a
+        phx-click="close"
+        title="close"
+        phx-target={@myself}
+        class="absolute cursor-pointer md:right-5 md:top-5 right-8 top-6"
+      >
         <.icon name="close-x" class="w-4 h-4 stroke-current lg:w-5 lg:h-5 stroke-2" />
       </a>
-      <p class={classes("px-5 md:pt-2 md:pb-5 text-2xl font-bold text-base-300 lg:hidden", %{"hidden" => disabled?(@gallery)})}>Select an option below</p>
+      <p class={
+        classes("px-5 md:pt-2 md:pb-5 text-2xl font-bold text-base-300 lg:hidden", %{
+          "hidden" => disabled?(@gallery)
+        })
+      }>
+        Select an option below
+      </p>
     </div>
 
     <div class="flex-row w-full px-5 md:pb-20 select-none grid lg:flex lg:h-full lg:overflow-y-auto lg:justify-between lg:px-0 lg:pl-16 xl:pl-20">
       <div class="relative flex items-start justify-center w-full mb-5 choose-product-item lg:w-7/12 lg:mb-0">
         <div id="wrapper" class="flex flex-row lg:justify-center aspect-[3/2] wrapper relative">
-           <div phx-click="prev" phx-window-keyup="keydown" phx-target={@myself} class="left-0 choose-product__btn top-1/2 -translate-y-1/2 -translate-x-1/4 swiper-button-prev">
+          <div
+            phx-click="prev"
+            phx-window-keyup="keydown"
+            phx-target={@myself}
+            class="left-0 choose-product__btn top-1/2 -translate-y-1/2 -translate-x-1/4 swiper-button-prev"
+          >
             <.icon name="back" class="w-8 h-8 cursor-pointer text-base-300" />
           </div>
-          <div {testid("next")} phx-click="next" phx-target={@myself} class="right-0 choose-product__btn top-1/2 -translate-y-1/2 translate-x-1/4 swiper-button-next">
+          <div
+            {testid("next")}
+            phx-click="next"
+            phx-target={@myself}
+            class="right-0 choose-product__btn top-1/2 -translate-y-1/2 translate-x-1/4 swiper-button-next"
+          >
             <.icon name="forth" class="w-8 h-8 cursor-pointer text-base-300" />
           </div>
           <div class="relative flex items-center h-full">
-            <button phx-click="photo_view" phx-value-photo_id={@photo.id} phx-target={@myself} class="absolute opacity-100 cursor-pointer removeBtn">
-              <.icon name={"eye"} class="h-7 text-white z-1 w-8"/>
+            <button
+              phx-click="photo_view"
+              phx-value-photo_id={@photo.id}
+              phx-target={@myself}
+              class="absolute opacity-100 cursor-pointer removeBtn"
+            >
+              <.icon name="eye" class="h-7 text-white z-1 w-8" />
             </button>
             <%= cond do %>
-            <% @is_proofing && @photo.is_selected -> %>
-              <div class="absolute opacity-100 cursor-pointer likeBtn">
-                <.icon name="star" class="h-6 text-white z-1 w-7"/>
-              </div>
-            <% !@is_proofing -> %>
-              <button class="likeBtn absolute" phx-click={js_like_click(@photo.id, @myself)}>
-                <div id={"photo-#{@photo.id}-liked"} style={!@photo.client_liked && "display: none"}>
-                  <.icon name="heart-filled" class="text-gray-200 w-8 h-8"/>
+              <% @is_proofing && @photo.is_selected -> %>
+                <div class="absolute opacity-100 cursor-pointer likeBtn">
+                  <.icon name="star" class="h-6 text-white z-1 w-7" />
                 </div>
+              <% !@is_proofing -> %>
+                <button class="likeBtn absolute" phx-click={js_like_click(@photo.id, @myself)}>
+                  <div
+                    id={"photo-#{@photo.id}-liked"}
+                    style={!@photo.client_liked && "display: none"}
+                  >
+                    <.icon name="heart-filled" class="text-gray-200 w-8 h-8" />
+                  </div>
 
-                <div id={"photo-#{@photo.id}-to-like"} style={@photo.client_liked && "display: none"}>
-                  <.icon name="heart-white" class="text-transparent fill-current w-7 h-7 hover:text-base-200 hover:text-opacity-40"/>
-                </div>
-              </button>
-            <% true -> %>
+                  <div
+                    id={"photo-#{@photo.id}-to-like"}
+                    style={@photo.client_liked && "display: none"}
+                  >
+                    <.icon
+                      name="heart-white"
+                      class="text-transparent fill-current w-7 h-7 hover:text-base-200 hover:text-opacity-40"
+                    />
+                  </div>
+                </button>
+              <% true -> %>
             <% end %>
             <div class="relative aspect-[3/2] items-center js-disable-right-click border">
-              <img src={preview_url(@photo, proofing_client_view?: @is_proofing)} class="h-full w-full object-contain pointer-events-none" loading="lazy">
-            </div> 
+              <img
+                src={preview_url(@photo, proofing_client_view?: @is_proofing)}
+                class="h-full w-full object-contain pointer-events-none"
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div class={classes("relative choose-product-item lg:w-5/12", %{"hidden" => disabled?(@gallery)})}>
+      <div class={
+        classes("relative choose-product-item lg:w-5/12", %{"hidden" => disabled?(@gallery)})
+      }>
         <div class="flex flex-col ml-auto lg:w-11/12 pb-24 lg:pb-0">
-          <p class="hidden mb-6 text-2xl text-base-300 lg:pt-2 lg:block">Select an option below</p>
+          <p class="hidden mb-6 text-2xl text-base-300 lg:pt-2 lg:block">
+            Select an option below
+          </p>
 
           <%= unless @is_proofing do %>
             <%= for %{category: category, id: gallery_product_id} <- @products do %>
@@ -54,12 +97,14 @@
                 testid={gallery_product_id}
                 title={category.name}
                 min_price={min_price(category, @organization.id, @gallery)}
-              }>
+                }
+              >
                 <:button
                   phx-click="product_preview_photo_popup"
                   phx-target="*[role=main]"
                   phx-value-template-id={gallery_product_id}
-                  phx-value-photo-id={@photo.id}>
+                  phx-value-photo-id={@photo.id}
+                >
                   Select
                 </:button>
               </.option>
@@ -68,9 +113,13 @@
 
           <.button_option {assigns} />
           <%= if @cart_count > 0 do %>
-            
-            <.go_to_cart_wrapper route={@checkout_routes.cart} count={@cart_count} >
-              <button type="button" class="bg-base-300 border-base-100 text-base-250 text-sm w-full py-2 mb-4 h-10">Go to cart</button>
+            <.go_to_cart_wrapper route={@checkout_routes.cart} count={@cart_count}>
+              <button
+                type="button"
+                class="bg-base-300 border-base-100 text-base-250 text-sm w-full py-2 mb-4 h-10"
+              >
+                Go to cart
+              </button>
             </.go_to_cart_wrapper>
           <% end %>
         </div>
@@ -78,9 +127,17 @@
     </div>
   </div>
   <%= if @album && Map.get(@album, :is_proofing) do %>
-    <.credits_footer total_count={@gallery.gallery_digital_pricing.download_count} for={:proofing_album_product_modal} cart_count={@cart_count} credits={@credits}/>
+    <.credits_footer
+      total_count={@gallery.gallery_digital_pricing.download_count}
+      for={:proofing_album_product_modal}
+      cart_count={@cart_count}
+      credits={@credits}
+    />
   <% else %>
-    <.credits_footer total_count={@gallery.gallery_digital_pricing.download_count} cart_count={@cart_count} credits={@credits}/>
+    <.credits_footer
+      total_count={@gallery.gallery_digital_pricing.download_count}
+      cart_count={@cart_count}
+      credits={@credits}
+    />
   <% end %>
 </div>
-

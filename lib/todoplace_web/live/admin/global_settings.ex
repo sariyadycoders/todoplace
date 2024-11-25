@@ -24,32 +24,34 @@ defmodule TodoplaceWeb.Live.Admin.GlobalSettings do
             <tr>
               <%= for value <- ["Setting", "value", "Status"] do %>
                 <th scope="col" class="px-12 py-3">
-                  <%= value%>
+                  <%= value %>
                 </th>
               <% end %>
             </tr>
           </thead>
           <tbody>
             <%= for({changeset, i} <- @changesets) do %>
-
               <tr class="bg-white dark:bg-gray-800">
                 <.form :let={f} for={changeset} class="contents" phx-change="save" id={"form-#{i}"}>
-                  <%= hidden_input f, :index, value: i %>
-                  <%= hidden_input f, :slug %>
-                  <%= hidden_input f, :title %>
-                  <%= hidden_input f, :description %>
+                  <%= hidden_input(f, :index, value: i) %>
+                  <%= hidden_input(f, :slug) %>
+                  <%= hidden_input(f, :title) %>
+                  <%= hidden_input(f, :description) %>
                   <td class="px-12 py-4">
-                    <div class="uppercase font-bold"> <%= input_value(f, :title) %> </div>
-                    <div class="text-sm text-sm"> <%= input_value(f, :description) %> </div>
+                    <div class="uppercase font-bold"><%= input_value(f, :title) %></div>
+                    <div class="text-sm text-sm"><%= input_value(f, :description) %></div>
                   </td>
                   <td class="px-12 py-4">
-                    <%= input f, :value, phx_debounce: 200, class: "w-2/5" %>
+                    <%= input(f, :value, phx_debounce: 200, class: "w-2/5") %>
                   </td>
                   <td class="px-12 py-4">
-                    <%= select f, :status, [:active, :disabled, :archived], phx_debounce: 200, disabled: true %>
+                    <%= select(f, :status, [:active, :disabled, :archived],
+                      phx_debounce: 200,
+                      disabled: true
+                    ) %>
                   </td>
                 </.form>
-                </tr>
+              </tr>
             <% end %>
           </tbody>
         </table>

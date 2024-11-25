@@ -26,43 +26,127 @@ defmodule TodoplaceWeb.Live.FinancesManage.ExportTransactionsComponent do
   def render(assigns) do
     ~H"""
     <div class="flex flex-col w-80 modal-small p-30 text-black">
-    <%= if @loading do %>
-      <div class="text-3xl mb-4 font-bold flex justify-center">Export Transactions CSV</div>
-      <div class="flex gap-2 items-center justify-center p-1 bg-white rounded-full">
-        <.icon class="animate-spin w-5 h-5 text-blue-planning-300" name="loader"/>
-        <p class="text-base-250 font-bold text-center">Generating Export</p>
-      </div>
-    <% else %>
-      <div class="flex items-start justify-between flex-shrink-0">
-        <div class="mb-4">
-          <div class="text-3xl font-bold">Export Transactions CSV</div>
-          <div class="text-base-250 mt-1.5">Select your parameters  for your export</div>
+      <%= if @loading do %>
+        <div class="text-3xl mb-4 font-bold flex justify-center">Export Transactions CSV</div>
+        <div class="flex gap-2 items-center justify-center p-1 bg-white rounded-full">
+          <.icon class="animate-spin w-5 h-5 text-blue-planning-300" name="loader" />
+          <p class="text-base-250 font-bold text-center">Generating Export</p>
+        </div>
+      <% else %>
+        <div class="flex items-start justify-between flex-shrink-0">
+          <div class="mb-4">
+            <div class="text-3xl font-bold">Export Transactions CSV</div>
+            <div class="text-base-250 mt-1.5">Select your parameters  for your export</div>
+          </div>
+
+          <button
+            phx-click="modal"
+            phx-value-action="close"
+            title="close modal"
+            type="button"
+            class="p-2"
+          >
+            <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
+          </button>
         </div>
 
-        <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
+        <.form
+          :let={f}
+          for={%{}}
+          as={:dates}
+          phx-change="apply-filter-date-range"
+          phx-target={@myself}
+          class="flex flex-col gap-1"
+        >
+          <.date_range_picker_field
+            class="relative flex flex-col col-span-3 sm:col-span-1 w-full xl:w-full mb-3 lg:mb-0 pt-1"
+            id="date_range"
+            form={f}
+            field={:date_range}
+            default_date={@transaction_date_range}
+            input_placeholder="mm/dd/yyyy to mm/dd/yyyy"
+            input_label="Date Range"
+            data_max_date="today"
+          />
+        </.form>
+        <.select_dropdown
+          myself={@myself}
+          title="Type"
+          id="type"
+          selected_option={@transaction_type}
+          options_list={
+            %{
+              "all" => "All",
+              "job-retainer" => "Job-Retainer",
+              "job-payment" => "Job-Payment",
+              "gallery-order" => "Gallery-Order"
+            }
+          }
+        />
+        <.select_dropdown
+          myself={@myself}
+          title="Source"
+          id="source"
+          selected_option={@transaction_source}
+          options_list={%{"all" => "All", "stripe" => "Stripe", "offline" => "Offline"}}
+        />
+        <.select_dropdown
+          myself={@myself}
+          title="Status"
+          id="status"
+          selected_option={@transaction_status}
+          options_list={
+            %{"all" => "All", "overdue" => "Overdue", "paid" => "Paid", "pending" => "Pending"}
+          }
+        />
+        <.select_dropdown
+          myself={@myself}
+          class="col-span-2 sm:col-span-1"
+          sort_direction={@sort_direction}
+          title="Sort"
+          id="sort_by"
+          selected_option={@sort_by}
+          options_list={
+            %{
+              "newest" => "Newest",
+              "oldest" => "Oldest",
+              "highest" => "Highest",
+              "lowest" => "Lowest"
+            }
+          }
+        />
+        <div class=" flex gap-2 my-3">
+          <.form :let={f} for={%{}} phx-change="toggle_include_stripe" phx-target={@myself}>
+            <%= input(f, :include_stripe,
+              type: :checkbox,
+              checked: true,
+              class: "checkbox w-5 h-5 mb-1 cursor-pointer border-blue-planning-300"
+            ) %>
+          </.form>
+          <div>
+            <p class="font-bold">Include Stripe details</p>
+            <p class="text-base-250">This will capture taxes and fees if applicable
+              (Note: export may take longer)</p>
+          </div>
+        </div>
+        <button
+          phx-click="export_csv"
+          phx-target={@myself}
+          type="button"
+          disabled={@disable_export}
+          class="btn-primary my-3"
+        >
+          Start Export
         </button>
-      </div>
-
-      <.form :let={f} for={%{}} as={:dates} phx-change="apply-filter-date-range" phx-target={@myself} class="flex flex-col gap-1">
-          <.date_range_picker_field class="relative flex flex-col col-span-3 sm:col-span-1 w-full xl:w-full mb-3 lg:mb-0 pt-1" id="date_range" form={f} field={:date_range} default_date={@transaction_date_range} input_placeholder="mm/dd/yyyy to mm/dd/yyyy" input_label="Date Range" data_max_date="today" />
-      </.form>
-      <.select_dropdown myself={@myself} title="Type" id="type" selected_option={@transaction_type} options_list={%{"all" => "All", "job-retainer" => "Job-Retainer", "job-payment" => "Job-Payment", "gallery-order" => "Gallery-Order"}}/>
-      <.select_dropdown myself={@myself} title="Source" id="source" selected_option={@transaction_source} options_list={%{"all" => "All", "stripe" => "Stripe", "offline" => "Offline"}}/>
-      <.select_dropdown myself={@myself} title="Status" id="status" selected_option={@transaction_status} options_list={%{"all" => "All", "overdue" => "Overdue", "paid" => "Paid", "pending" => "Pending"}}/>
-      <.select_dropdown myself={@myself} class="col-span-2 sm:col-span-1" sort_direction={@sort_direction} title="Sort" id="sort_by" selected_option={@sort_by} options_list={%{"newest" => "Newest", "oldest" => "Oldest", "highest" => "Highest", "lowest" => "Lowest"}}/>
-      <div class=" flex gap-2 my-3">
-      <.form :let={f} for={%{}} phx-change="toggle_include_stripe" phx-target={@myself}>
-        <%= input f, :include_stripe, type: :checkbox, checked: true, class: "checkbox w-5 h-5 mb-1 cursor-pointer border-blue-planning-300"%>
-      </.form>
-        <div>
-          <p class="font-bold">Include Stripe details</p>
-          <p class="text-base-250">This will capture taxes and fees if applicable
-          (Note: export may take longer)</p>
-        </div>
-      </div>
-      <button phx-click="export_csv" phx-target={@myself} type="button" disabled={@disable_export} class="btn-primary my-3">Start Export</button>
-      <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="btn-secondary text-black">Cancel</button>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="btn-secondary text-black"
+        >
+          Cancel
+        </button>
       <% end %>
     </div>
     """
@@ -74,40 +158,70 @@ defmodule TodoplaceWeb.Live.FinancesManage.ExportTransactionsComponent do
       |> Enum.into(%{class: ""})
 
     ~H"""
-      <div class={"flex flex-col w-full mb-3 lg:mb-0 #{@class}"}>
-        <h1 class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></h1>
-        <div class="flex h-11 w-full">
-          <div id={@id} class={classes("relative w-full border-grey border p-2 cursor-pointer", %{"rounded-l-lg" => @id == "sort_by", "rounded-lg" => @id != "sort_by"})} data-offset-y="5" phx-hook="Select">
-            <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
-                <%= @options_list[@selected_option] %>
-                <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
-                <.icon name="up" class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon" />
-            </div>
-            <ul class={"absolute z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 w-full"}>
-              <%= for {key, label} <- @options_list do %>
-                <li id={key} target-class="toggle-it" parent-class="toggle" toggle-type="selected-active" phx-hook="ToggleSiblings"
-                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md" phx-click={"apply-filter-#{@id}"} phx-target={@myself} phx-value-option={key}>
-                  <button id={"btn-#{key}"} class={"pl-2"}><%= label %></button>
-                  <%= if key == @selected_option do %>
-                    <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
+    <div class={"flex flex-col w-full mb-3 lg:mb-0 #{@class}"}>
+      <h1 class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></h1>
+      <div class="flex h-11 w-full">
+        <div
+          id={@id}
+          class={
+            classes("relative w-full border-grey border p-2 cursor-pointer", %{
+              "rounded-l-lg" => @id == "sort_by",
+              "rounded-lg" => @id != "sort_by"
+            })
+          }
+          data-offset-y="5"
+          phx-hook="Select"
+        >
+          <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
+            <%= @options_list[@selected_option] %>
+            <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
+            <.icon
+              name="up"
+              class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon"
+            />
           </div>
-          <%= if @title == "Sort" do%>
-            <div class="items-center flex border rounded-r-lg border-grey p-2">
-              <button phx-click="sort_direction" phx-target={@myself}>
-                <%= if @sort_direction == "asc" do %>
-                  <.icon name="sort-vector-2" {testid("edit-link-button")} class="blue-planning-300 w-5 h-5" />
-                <% else %>
-                  <.icon name="sort-vector" {testid("edit-link-button")} class="blue-planning-300 w-5 h-5" />
+          <ul class="absolute z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 w-full">
+            <%= for {key, label} <- @options_list do %>
+              <li
+                id={key}
+                target-class="toggle-it"
+                parent-class="toggle"
+                toggle-type="selected-active"
+                phx-hook="ToggleSiblings"
+                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md"
+                phx-click={"apply-filter-#{@id}"}
+                phx-target={@myself}
+                phx-value-option={key}
+              >
+                <button id={"btn-#{key}"} class="pl-2"><%= label %></button>
+                <%= if key == @selected_option do %>
+                  <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
                 <% end %>
-              </button>
-            </div>
-          <% end %>
+              </li>
+            <% end %>
+          </ul>
         </div>
+        <%= if @title == "Sort" do %>
+          <div class="items-center flex border rounded-r-lg border-grey p-2">
+            <button phx-click="sort_direction" phx-target={@myself}>
+              <%= if @sort_direction == "asc" do %>
+                <.icon
+                  name="sort-vector-2"
+                  {testid("edit-link-button")}
+                  class="blue-planning-300 w-5 h-5"
+                />
+              <% else %>
+                <.icon
+                  name="sort-vector"
+                  {testid("edit-link-button")}
+                  class="blue-planning-300 w-5 h-5"
+                />
+              <% end %>
+            </button>
+          </div>
+        <% end %>
       </div>
+    </div>
     """
   end
 
@@ -198,7 +312,9 @@ defmodule TodoplaceWeb.Live.FinancesManage.ExportTransactionsComponent do
       signed_at = DateTime.utc_now() |> DateTime.to_unix()
 
       token =
-        Phoenix.Token.sign(TodoplaceWeb.Endpoint, "CSV-filename", date_range, signed_at: signed_at)
+        Phoenix.Token.sign(TodoplaceWeb.Endpoint, "CSV-filename", date_range,
+          signed_at: signed_at
+        )
 
       csv_data = generate_csv_data(socket)
       file_path = save_csv_file(csv_data, date_range)
@@ -263,7 +379,8 @@ defmodule TodoplaceWeb.Live.FinancesManage.ExportTransactionsComponent do
 
   defp get_transaction_date(date), do: date |> format_date_via_type("MM/DD/YY")
 
-  defp get_client_name(%Todoplace.PaymentSchedule{} = transaction), do: transaction.job.client.name
+  defp get_client_name(%Todoplace.PaymentSchedule{} = transaction),
+    do: transaction.job.client.name
 
   defp get_client_name(%Todoplace.Cart.Order{} = transaction),
     do: transaction.gallery.job.client.name
@@ -311,7 +428,9 @@ defmodule TodoplaceWeb.Live.FinancesManage.ExportTransactionsComponent do
          %{assigns: %{current_user: %{organization: %{stripe_account_id: stripe_account_id}}}},
          stripe_session_id
        ) do
-    case Todoplace.Payments.retrieve_session(stripe_session_id, connect_account: stripe_account_id) do
+    case Todoplace.Payments.retrieve_session(stripe_session_id,
+           connect_account: stripe_account_id
+         ) do
       {:ok, session} -> session.total_details.amount_tax
       {:error, _} -> 0
     end

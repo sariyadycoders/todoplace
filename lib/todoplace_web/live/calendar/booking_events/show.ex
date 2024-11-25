@@ -145,9 +145,7 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Show do
 
     socket
     |> assign(migrated: !migrated)
-    |> push_redirect(
-      to: ~p"/booking-events/#{booking_event.id}"
-    )
+    |> push_redirect(to: ~p"/booking-events/#{booking_event.id}")
     |> noreply()
   end
 
@@ -512,8 +510,21 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Show do
     ~H"""
     <ul class="flex overflow-auto gap-6 md:mb-6 py-6 md:py-0">
       <%= for {true, %{name: name, concise_name: concise_name, redirect_route: redirect_route}} <- @booking_slot_tabs do %>
-        <li class={classes("text-blue-planning-300 font-bold text-lg border-b-4 transition-all shrink-0", %{"opacity-100 border-b-blue-planning-300" => @booking_slot_tab_active === concise_name, "opacity-40 border-b-transparent hover:opacity-100" => @booking_slot_tab_active !== concise_name})}>
-          <button type="button" phx-click="change-booking-slot-tab" phx-value-tab={concise_name} phx-value-to={redirect_route}><%= name %></button>
+        <li class={
+          classes("text-blue-planning-300 font-bold text-lg border-b-4 transition-all shrink-0", %{
+            "opacity-100 border-b-blue-planning-300" => @booking_slot_tab_active === concise_name,
+            "opacity-40 border-b-transparent hover:opacity-100" =>
+              @booking_slot_tab_active !== concise_name
+          })
+        }>
+          <button
+            type="button"
+            phx-click="change-booking-slot-tab"
+            phx-value-tab={concise_name}
+            phx-value-to={redirect_route}
+          >
+            <%= name %>
+          </button>
         </li>
       <% end %>
     </ul>
@@ -532,30 +543,36 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Show do
       })
 
     ~H"""
-      <div class="flex mt-2">
-        <div>
-          <div class={classes("uppercase text-lg font-bold", %{"text-base-250" => @status})}>BEESKNEES</div>
-          <%= if !@status do %>
-            <div class={classes("", %{"text-blue-planning-300 underline" => @uses > 0})}><%= @uses %> uses</div>
-          <% else %>
-            <%= if @uses > 0 do %>
-              <div class="text-base-250 capitalize"><span class="text-blue-planning-300 underline opacity-60"><%= @uses %> uses</span>-Disabled</div>
-            <% else %>
-              <div class="text-base-250 capitalize">Disabled</div>
-            <% end %>
-          <% end %>
+    <div class="flex mt-2">
+      <div>
+        <div class={classes("uppercase text-lg font-bold", %{"text-base-250" => @status})}>
+          BEESKNEES
         </div>
-        <div class="ml-auto flex items-center">
-          <div class="flex gap-1.5">
-            <%= if @status do %>
-              <.button_simple icon="eye" color="blue-planning-300"class={@btn_class}/>
-            <% else %>
-              <.button_simple icon="closed-eye" color="red-sales-300"class={@btn_class}/>
-            <% end %>
-            <.button_simple icon="trash" color="red-sales-300"class={@btn_class}/>
+        <%= if !@status do %>
+          <div class={classes("", %{"text-blue-planning-300 underline" => @uses > 0})}>
+            <%= @uses %> uses
           </div>
+        <% else %>
+          <%= if @uses > 0 do %>
+            <div class="text-base-250 capitalize">
+              <span class="text-blue-planning-300 underline opacity-60"><%= @uses %> uses</span>-Disabled
+            </div>
+          <% else %>
+            <div class="text-base-250 capitalize">Disabled</div>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="ml-auto flex items-center">
+        <div class="flex gap-1.5">
+          <%= if @status do %>
+            <.button_simple icon="eye" color="blue-planning-300" class={@btn_class} />
+          <% else %>
+            <.button_simple icon="closed-eye" color="red-sales-300" class={@btn_class} />
+          <% end %>
+          <.button_simple icon="trash" color="red-sales-300" class={@btn_class} />
         </div>
       </div>
+    </div>
     """
   end
 
@@ -563,81 +580,177 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Show do
     ~H"""
     <div>
       <%= case @booking_slot_tab_active do %>
-      <% "list" -> %>
-        <%= if @booking_event_dates && @booking_event_dates != [] do %>
-          <%= for booking_event_date <- @booking_event_dates do %>
-            <% booking_date_slots = booking_event_date |> BookingEvents.filter_booking_slots(@booking_event) |> remove_conflicting_slots(booking_event_date.date, @external_events, @current_user.time_zone) %>
-            <div class={classes("p-3 border rounded-lg border-base-200", %{"border-red-sales-300" => is_nil(booking_event_date.date)})}>
-              <div class="flex mb-1">
-                <p class={classes("text-2xl font-bold", %{"text-red-sales-300" => is_nil(booking_event_date.date)})}> <%= if booking_event_date.date, do: date_formatter(booking_event_date.date, :day), else: "Select day" %> </p>
-                <button class="flex text-blue-planning-300 ml-auto items-center justify-center whitespace-nowrap hover:opacity-75" phx-click="toggle-section" phx-value-section_id={booking_event_date.id}>
-                  View details
-                  <.icon name={if Enum.member?(@collapsed_sections, booking_event_date.id), do: "up", else: "down"} class="mt-1.5 md:mt-1 w-4 h-4 ml-2 stroke-current stroke-3 text-blue-planning-300"/>
-                </button>
-              </div>
-              <p class="text-base-250 text-md"> <%= if !is_nil(booking_event_date.address), do: booking_event_date.address %> </p>
-              <div class="flex">
-              <p class="text-blue-planning-300 mr-4"><b><%= BEShared.count_booked_slots(booking_date_slots) %></b> bookings</p>
-                <p class="text-blue-planning-300 mr-4"><b><%= BEShared.count_available_slots(booking_date_slots) %></b> available</p>
-                <p class="text-blue-planning-300"><b><%= BEShared.count_hidden_slots(booking_date_slots) %></b> hidden</p>
-              </div>
-              <hr class="block md:hidden my-2">
-              <%= if Enum.member?(@collapsed_sections, booking_event_date.id) do %>
-                <div class="hidden md:grid grid-cols-4 border-b-4 border-blue-planning-300 font-bold text-lg my-4">
-                <%= for title <- ["Time", "Status", "Client"] do %>
-                  <div class="col-span-1"><%= title %></div>
-                <% end %>
+        <% "list" -> %>
+          <%= if @booking_event_dates && @booking_event_dates != [] do %>
+            <%= for booking_event_date <- @booking_event_dates do %>
+              <% booking_date_slots =
+                booking_event_date
+                |> BookingEvents.filter_booking_slots(@booking_event)
+                |> remove_conflicting_slots(
+                  booking_event_date.date,
+                  @external_events,
+                  @current_user.time_zone
+                ) %>
+              <div class={
+                classes("p-3 border rounded-lg border-base-200", %{
+                  "border-red-sales-300" => is_nil(booking_event_date.date)
+                })
+              }>
+                <div class="flex mb-1">
+                  <p class={
+                    classes("text-2xl font-bold", %{
+                      "text-red-sales-300" => is_nil(booking_event_date.date)
+                    })
+                  }>
+                    <%= if booking_event_date.date,
+                      do: date_formatter(booking_event_date.date, :day),
+                      else: "Select day" %>
+                  </p>
+                  <button
+                    class="flex text-blue-planning-300 ml-auto items-center justify-center whitespace-nowrap hover:opacity-75"
+                    phx-click="toggle-section"
+                    phx-value-section_id={booking_event_date.id}
+                  >
+                    View details
+                    <.icon
+                      name={
+                        if Enum.member?(@collapsed_sections, booking_event_date.id),
+                          do: "up",
+                          else: "down"
+                      }
+                      class="mt-1.5 md:mt-1 w-4 h-4 ml-2 stroke-current stroke-3 text-blue-planning-300"
+                    />
+                  </button>
                 </div>
-                <%= booking_date_slots |> Enum.with_index(fn slot, slot_index -> %>
-                <.slots_description current_user={@current_user} client={slot.client} booking_event_date={booking_event_date} booking_event={@booking_event} booking_slot_tab_active={@booking_slot_tab_active} slot_index={slot_index} slot={slot} button_actions={slot_actions(slot.status, @package)} />
-                <% end) %>
-                <div class="flex justify-end gap-2">
-                  <%= for %{action: action, icon: icon, disabled: disabled?} <- date_actions(@booking_slot_tab_active, @booking_event, booking_event_date) do %>
-                    <.icon_button icon={icon} phx-click={action} phx-value-id={booking_event_date.id} disabled={disabled?} class="px-2 py-2" text_color={"text-black"} color={if icon == "trash", do: "red-sales-300", else: "blue-planning-300"}/>
-                  <% end %>
+                <p class="text-base-250 text-md">
+                  <%= if !is_nil(booking_event_date.address), do: booking_event_date.address %>
+                </p>
+                <div class="flex">
+                  <p class="text-blue-planning-300 mr-4">
+                    <b><%= BEShared.count_booked_slots(booking_date_slots) %></b> bookings
+                  </p>
+                  <p class="text-blue-planning-300 mr-4">
+                    <b><%= BEShared.count_available_slots(booking_date_slots) %></b> available
+                  </p>
+                  <p class="text-blue-planning-300">
+                    <b><%= BEShared.count_hidden_slots(booking_date_slots) %></b> hidden
+                  </p>
+                </div>
+                <hr class="block md:hidden my-2" />
+                <%= if Enum.member?(@collapsed_sections, booking_event_date.id) do %>
+                  <div class="hidden md:grid grid-cols-4 border-b-4 border-blue-planning-300 font-bold text-lg my-4">
+                    <%= for title <- ["Time", "Status", "Client"] do %>
+                      <div class="col-span-1"><%= title %></div>
+                    <% end %>
+                  </div>
+                  <%= booking_date_slots |> Enum.with_index(fn slot, slot_index -> %>
+                    <.slots_description
+                      current_user={@current_user}
+                      client={slot.client}
+                      booking_event_date={booking_event_date}
+                      booking_event={@booking_event}
+                      booking_slot_tab_active={@booking_slot_tab_active}
+                      slot_index={slot_index}
+                      slot={slot}
+                      button_actions={slot_actions(slot.status, @package)}
+                    />
+                  <% end) %>
+                  <div class="flex justify-end gap-2">
+                    <%= for %{action: action, icon: icon, disabled: disabled?} <- date_actions(@booking_slot_tab_active, @booking_event, booking_event_date) do %>
+                      <.icon_button
+                        icon={icon}
+                        phx-click={action}
+                        phx-value-id={booking_event_date.id}
+                        disabled={disabled?}
+                        class="px-2 py-2"
+                        text_color="text-black"
+                        color={if icon == "trash", do: "red-sales-300", else: "blue-planning-300"}
+                      />
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="p-3 border border-base-200 rounded-lg">
+              <div class="font-bold text-base-250 text-xl flex items-center justify-center p-3 opacity-50">
+                <div>Pick a package and add a date</div>
+              </div>
+            </div>
+          <% end %>
+        <% "calendar" -> %>
+          <div class="mt-10 flex flex-col xl:flex-row gap-8">
+            <div class="flex xl:w-1/2 flex-col">
+              <div
+                phx-hook="BookingEventCalendar"
+                phx-update="ignore"
+                id={"booking_event_calendar_#{@booking_event.id}"}
+                data-current-date={@user_current_date}
+                data-time-zone={@current_user.time_zone}
+                data-feed-path={~p"/calendar-feed/#{@booking_event.id}"}
+              />
+            </div>
+            <div class="xl:h-[600px] flex flex-col flex-grow">
+              <%= if @calendar_date_event do %>
+                <% booking_date_slots =
+                  @calendar_date_event
+                  |> BookingEvents.filter_booking_slots(@booking_event)
+                  |> remove_conflicting_slots(
+                    @calendar_date_event.date,
+                    @external_events,
+                    @current_user.time_zone
+                  ) %>
+                <div class="flex">
+                  <div class="flex text-2xl font-bold">
+                    <%= date_formatter(@calendar_date_event.date) %>
+                  </div>
+                  <div class="flex items-start ml-auto gap-1">
+                    <%= for %{action: action, icon: icon, disabled: disabled?} <- date_actions(@booking_slot_tab_active, @booking_event, @calendar_date_event) do %>
+                      <.icon_button
+                        icon={icon}
+                        phx-click={action}
+                        phx-value-id={@calendar_date_event.id}
+                        disabled={disabled?}
+                        class="px-2 py-2"
+                        text_color="text-black"
+                        color={if icon == "trash", do: "red-sales-300", else: "blue-planning-300"}
+                      />
+                    <% end %>
+                  </div>
+                </div>
+                <div class="flex mb-2">
+                  <p class="text-blue-planning-300 mr-4">
+                    <b><%= BEShared.count_booked_slots(booking_date_slots) %></b> bookings
+                  </p>
+                  <p class="text-blue-planning-300 mr-4">
+                    <b><%= BEShared.count_available_slots(booking_date_slots) %></b> available
+                  </p>
+                  <p class="text-blue-planning-300">
+                    <b><%= BEShared.count_hidden_slots(booking_date_slots) %></b> hidden
+                  </p>
+                </div>
+                <div class="xl:overflow-y-scroll flex flex-col gap-1.5">
+                  <%= Enum.with_index(booking_date_slots, fn slot, slot_index -> %>
+                    <.slots_description
+                      client={slot.client}
+                      slot_index={slot_index}
+                      booking_event_date={@calendar_date_event}
+                      booking_event={@booking_event}
+                      booking_slot_tab_active={@booking_slot_tab_active}
+                      slot={slot}
+                      button_actions={slot_actions(slot.status, @package)}
+                    />
+                  <% end) %>
+                </div>
+              <% else %>
+                <div class="p-3 border border-base-200 rounded-lg">
+                  <div class="font-bold text-base-250 text-xl flex items-center justify-center p-3 opacity-50">
+                    <div>Pick a package and add a date</div>
+                  </div>
                 </div>
               <% end %>
             </div>
-          <% end %>
-        <% else %>
-          <div class="p-3 border border-base-200 rounded-lg">
-            <div class="font-bold text-base-250 text-xl flex items-center justify-center p-3 opacity-50"> <div> Pick a package and add a date </div> </div>
           </div>
-        <% end %>
-
-      <% "calendar" -> %>
-        <div class="mt-10 flex flex-col xl:flex-row gap-8">
-          <div class="flex xl:w-1/2 flex-col">
-            <div phx-hook="BookingEventCalendar" phx-update="ignore" id={"booking_event_calendar_#{@booking_event.id}"} data-current-date={@user_current_date} data-time-zone={@current_user.time_zone} data-feed-path={~p"/calendar-feed/#{@booking_event.id}"}/>
-          </div>
-          <div class="xl:h-[600px] flex flex-col flex-grow">
-            <%= if @calendar_date_event do %>
-            <% booking_date_slots =  @calendar_date_event |> BookingEvents.filter_booking_slots(@booking_event) |> remove_conflicting_slots(@calendar_date_event.date, @external_events, @current_user.time_zone) %>
-              <div class="flex">
-                <div class="flex text-2xl font-bold"><%= date_formatter(@calendar_date_event.date) %></div>
-                <div class="flex items-start ml-auto gap-1">
-                  <%= for %{action: action, icon: icon, disabled: disabled?} <- date_actions(@booking_slot_tab_active, @booking_event, @calendar_date_event) do %>
-                    <.icon_button icon={icon} phx-click={action} phx-value-id={@calendar_date_event.id} disabled={disabled?} class="px-2 py-2" text_color={"text-black"} color={if icon == "trash", do: "red-sales-300", else: "blue-planning-300"}/>
-                  <% end %>
-                </div>
-              </div>
-              <div class="flex mb-2">
-                <p class="text-blue-planning-300 mr-4"><b><%= BEShared.count_booked_slots(booking_date_slots) %></b> bookings</p>
-                <p class="text-blue-planning-300 mr-4"><b><%= BEShared.count_available_slots(booking_date_slots) %></b> available</p>
-                <p class="text-blue-planning-300"><b><%= BEShared.count_hidden_slots(booking_date_slots) %></b> hidden</p>
-              </div>
-              <div class="xl:overflow-y-scroll flex flex-col gap-1.5">
-              <%= Enum.with_index(booking_date_slots, fn slot, slot_index -> %>
-                <.slots_description client={slot.client} slot_index={slot_index} booking_event_date={@calendar_date_event} booking_event={@booking_event} booking_slot_tab_active={@booking_slot_tab_active} slot={slot} button_actions={slot_actions(slot.status, @package)} />
-              <% end) %>
-              </div>
-            <% else %>
-              <div class="p-3 border border-base-200 rounded-lg">
-                <div class="font-bold text-base-250 text-xl flex items-center justify-center p-3 opacity-50"> <div> Pick a package and add a date </div> </div>
-              </div>
-            <% end %>
-          </div>
-        </div>
       <% end %>
     </div>
     """
@@ -645,86 +758,165 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Show do
 
   defp slots_description(assigns) do
     ~H"""
-      <%= case @booking_slot_tab_active do %>
-        <% "list" -> %>
-          <div class="grid grid-cols-3 md:grid-cols-4 items-start md:items-center my-2">
-            <div class="col-span-4 grid grid-cols-3 md:grid-cols-4">
-              <div class="flex flex-col col-span-3 md:grid md:col-span-3 md:grid-cols-6">
-                 <div class={classes("col-span-2 pr-2 break-words", %{"text-base-250" => @slot.status == :hidden || @slot.status == :external_booked})}>
-                   <%= case @slot.status do %>
-                    <% :booked -> %>
-                      <div class="flex gap-2 items-center">
-                        <.icon name="clock-2" class="block md:hidden w-3 h-3 stroke-current text-blue-planning-300 mt-1" />
-                        <div phx-click="open-job" phx-value-slot_job_id={@slot.job_id} class="text-blue-planning-300 underline cursor-pointer"><%= slot_time_formatter(@slot) %></div>
+    <%= case @booking_slot_tab_active do %>
+      <% "list" -> %>
+        <div class="grid grid-cols-3 md:grid-cols-4 items-start md:items-center my-2">
+          <div class="col-span-4 grid grid-cols-3 md:grid-cols-4">
+            <div class="flex flex-col col-span-3 md:grid md:col-span-3 md:grid-cols-6">
+              <div class={
+                classes("col-span-2 pr-2 break-words", %{
+                  "text-base-250" => @slot.status == :hidden || @slot.status == :external_booked
+                })
+              }>
+                <%= case @slot.status do %>
+                  <% :booked -> %>
+                    <div class="flex gap-2 items-center">
+                      <.icon
+                        name="clock-2"
+                        class="block md:hidden w-3 h-3 stroke-current text-blue-planning-300 mt-1"
+                      />
+                      <div
+                        phx-click="open-job"
+                        phx-value-slot_job_id={@slot.job_id}
+                        class="text-blue-planning-300 underline cursor-pointer"
+                      >
+                        <%= slot_time_formatter(@slot) %>
                       </div>
-                    <% :reserved -> %>
-                      <div class="flex gap-2 items-center">
-                        <.icon name="clock-2" class="block md:hidden w-3 h-3 stroke-current text-blue-planning-300 mt-1" />
-                        <div phx-click="open-lead" phx-value-slot_job_id={@slot.job_id} class="text-blue-planning-300 underline cursor-pointer"><%= slot_time_formatter(@slot) %></div>
+                    </div>
+                  <% :reserved -> %>
+                    <div class="flex gap-2 items-center">
+                      <.icon
+                        name="clock-2"
+                        class="block md:hidden w-3 h-3 stroke-current text-blue-planning-300 mt-1"
+                      />
+                      <div
+                        phx-click="open-lead"
+                        phx-value-slot_job_id={@slot.job_id}
+                        class="text-blue-planning-300 underline cursor-pointer"
+                      >
+                        <%= slot_time_formatter(@slot) %>
                       </div>
-                    <% _ -> %>
-                      <div class="flex gap-2 items-center">
-                        <.icon name="clock-2" class="block md:hidden w-3 h-3 stroke-current text-blue-planning-300 mt-1" />
-                        <div><%= slot_time_formatter(@slot) %></div>
-                      </div>
-                   <% end %>
-                 </div>
-                 <div class={classes("col-span-2", %{"text-base-250" => @slot.status != :open})}>
-                   <div class="flex gap-2 items-center lg:justify-start md:justify-start">
-                     <.icon name={@slot.status != :open && "booked-slot" || "open-slot"} class="block md:hidden w-3 h-3 fill-blue-planning-300 mt-1.5" />
-                     <div><%= String.capitalize(slot_status(@slot.status)) %></div>
-                   </div>
-                 </div>
-                 <div class="col-span-2">
-                   <%= if @client && @slot.status in [:booked, :reserved] do %>
-                     <div class="flex gap-2 items-center">
-                       <.icon name="client-icon" class="block md:hidden w-3 h-3 text-blue-planning-300 mt-1.5" />
-                       <div phx-click="open-client" phx-value-client_id={@client.id} class="text-blue-planning-300 underline cursor-pointer">
-                        <%= String.capitalize(@client.name) |> Utils.truncate_name(15) %>
-                       </div>
-                     </div>
-                   <% else %>
-                     <div class="flex gap-2 items-center ">
-                       <.icon name="client-icon" class=" w-3 h-3 text-blue-planning-300 md:hidden" />
-                       -
-                     </div>
-                   <% end %>
-                 </div>
+                    </div>
+                  <% _ -> %>
+                    <div class="flex gap-2 items-center">
+                      <.icon
+                        name="clock-2"
+                        class="block md:hidden w-3 h-3 stroke-current text-blue-planning-300 mt-1"
+                      />
+                      <div><%= slot_time_formatter(@slot) %></div>
+                    </div>
+                <% end %>
               </div>
-              <div class="items-start sm:justify-end flex">
-                <.actions id={@booking_event_date.id} booking_event_date_id={@booking_event_date.id} disabled?={disable_slot_actions?(@booking_event_date, @booking_event.status) || @slot.status == :break || @slot.status == :external_booked} booking_event={@booking_event} button_actions={@button_actions} slot_index={@slot_index} slot_client_id={@slot.client_id} slot_job_id={@slot.job_id}/>
+              <div class={classes("col-span-2", %{"text-base-250" => @slot.status != :open})}>
+                <div class="flex gap-2 items-center lg:justify-start md:justify-start">
+                  <.icon
+                    name={(@slot.status != :open && "booked-slot") || "open-slot"}
+                    class="block md:hidden w-3 h-3 fill-blue-planning-300 mt-1.5"
+                  />
+                  <div><%= String.capitalize(slot_status(@slot.status)) %></div>
+                </div>
               </div>
-              <hr class="my-2 md:my-3 col-span-7">
+              <div class="col-span-2">
+                <%= if @client && @slot.status in [:booked, :reserved] do %>
+                  <div class="flex gap-2 items-center">
+                    <.icon
+                      name="client-icon"
+                      class="block md:hidden w-3 h-3 text-blue-planning-300 mt-1.5"
+                    />
+                    <div
+                      phx-click="open-client"
+                      phx-value-client_id={@client.id}
+                      class="text-blue-planning-300 underline cursor-pointer"
+                    >
+                      <%= String.capitalize(@client.name) |> Utils.truncate_name(15) %>
+                    </div>
+                  </div>
+                <% else %>
+                  <div class="flex gap-2 items-center ">
+                    <.icon name="client-icon" class=" w-3 h-3 text-blue-planning-300 md:hidden" /> -
+                  </div>
+                <% end %>
+              </div>
             </div>
+            <div class="items-start sm:justify-end flex">
+              <.actions
+                id={@booking_event_date.id}
+                booking_event_date_id={@booking_event_date.id}
+                disabled?={
+                  disable_slot_actions?(@booking_event_date, @booking_event.status) ||
+                    @slot.status == :break || @slot.status == :external_booked
+                }
+                booking_event={@booking_event}
+                button_actions={@button_actions}
+                slot_index={@slot_index}
+                slot_client_id={@slot.client_id}
+                slot_job_id={@slot.job_id}
+              />
+            </div>
+            <hr class="my-2 md:my-3 col-span-7" />
           </div>
+        </div>
       <% "calendar" -> %>
         <div class="border border-base-200 rounded-lg flex p-3 my-1.5">
           <div class="flex flex-col">
             <p class="mb-1 font-bold text-black text-lg">
               <%= case @slot.status do %>
                 <% :booked -> %>
-                  <div phx-click="open-job" phx-value-slot_job_id={@slot.job_id} class="text-blue-planning-300 underline"><%= slot_time_formatter(@slot) %></div>
+                  <div
+                    phx-click="open-job"
+                    phx-value-slot_job_id={@slot.job_id}
+                    class="text-blue-planning-300 underline"
+                  >
+                    <%= slot_time_formatter(@slot) %>
+                  </div>
                 <% :reserved -> %>
-                  <div phx-click="open-lead" phx-value-slot_job_id={@slot.job_id} class="text-blue-planning-300 underline"><%= slot_time_formatter(@slot) %></div>
+                  <div
+                    phx-click="open-lead"
+                    phx-value-slot_job_id={@slot.job_id}
+                    class="text-blue-planning-300 underline"
+                  >
+                    <%= slot_time_formatter(@slot) %>
+                  </div>
                 <% _ -> %>
                   <%= slot_time_formatter(@slot) %>
               <% end %>
             </p>
             <p class="text-blue-planning-300 underline">
               <%= if @slot.client_id && @slot.status in [:booked, :reserved] do %>
-                <button phx-click="open-client" phx-value-client_id={@client.id} class="text-blue-planning-300 underline cursor-pointer">
+                <button
+                  phx-click="open-client"
+                  phx-value-client_id={@client.id}
+                  class="text-blue-planning-300 underline cursor-pointer"
+                >
                   <%= String.capitalize(@client.name) |> Utils.truncate_name(15) %>
                 </button>
               <% else %>
-                <p class={classes(%{"text-base-250" => @slot.status == :hidden || @slot.status == :external_booked})}><%= slot_status(@slot.status) %></p>
+                <p class={
+                  classes(%{
+                    "text-base-250" => @slot.status == :hidden || @slot.status == :external_booked
+                  })
+                }>
+                  <%= slot_status(@slot.status) %>
+                </p>
               <% end %>
             </p>
           </div>
           <div class="flex ml-auto">
-            <.actions id={@slot_index} booking_event_date_id={@booking_event_date.id} disabled?={disable_slot_actions?(@booking_event_date, @booking_event.status) || @slot.status == :external_booked} button_actions={@button_actions} slot_index={@slot_index} slot_client_id={@slot.client_id} slot_job_id={@slot.job_id}/>
+            <.actions
+              id={@slot_index}
+              booking_event_date_id={@booking_event_date.id}
+              disabled?={
+                disable_slot_actions?(@booking_event_date, @booking_event.status) ||
+                  @slot.status == :external_booked
+              }
+              button_actions={@button_actions}
+              slot_index={@slot_index}
+              slot_client_id={@slot.client_id}
+              slot_job_id={@slot.job_id}
+            />
           </div>
         </div>
-      <% end %>
+    <% end %>
     """
   end
 
@@ -738,10 +930,18 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Show do
       |> Enum.into(%{class: "", hidden: "", disabled: false, inner_block: nil})
 
     ~H"""
-      <button title={@title} type="button" class={"flex items-center px-3 py-2 rounded-lg text-left #{if @disabled, do: "hover:opacity-75 hover:cursor-not-allowed bg-gray-50", else: "hover:font-bold"} #{@text_color} #{@hidden}"} disabled={@disabled} {@rest}>
-        <div><.icon name={@icon} class={"inline-block w-4 h-5 mr-3 fill-current text-#{@color}"} /></div>
-        <div><%= @title %></div>
-      </button>
+    <button
+      title={@title}
+      type="button"
+      class={"flex items-center px-3 py-2 rounded-lg text-left #{if @disabled, do: "hover:opacity-75 hover:cursor-not-allowed bg-gray-50", else: "hover:font-bold"} #{@text_color} #{@hidden}"}
+      disabled={@disabled}
+      {@rest}
+    >
+      <div>
+        <.icon name={@icon} class={"inline-block w-4 h-5 mr-3 fill-current text-#{@color}"} />
+      </div>
+      <div><%= @title %></div>
+    </button>
     """
   end
 
@@ -774,25 +974,69 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Show do
       |> Enum.into(%{id_for_actions_div: id_for_actions_div})
 
     ~H"""
-      <div>
-        <div class={classes("flex items-center md:ml-auto w-full md:w-auto left-3 sm:left-8", %{"pointer-events-none opacity-40" => @disabled?})} data-placement="bottom-end" phx-hook="Select" id={@id_for_actions_div}}>
-          <button title="Manage" class={"btn-tertiary px-2 py-1 flex items-center gap-4 xl:w-auto w-full #{@main_button_class}"}>
-            Actions
-            <.icon name="down" class="w-4 h-4 ml-auto mr-1 mt-0.5 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-            <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 mt-0.5 stroke-current stroke-3 text-blue-planning-300 close-icon" />
-          </button>
+    <div>
+      <div
+        class={
+          classes("flex items-center md:ml-auto w-full md:w-auto left-3 sm:left-8", %{
+            "pointer-events-none opacity-40" => @disabled?
+          })
+        }
+        data-placement="bottom-end"
+        phx-hook="Select"
+        id={@id_for_actions_div}
+        }
+      >
+        <button
+          title="Manage"
+          class={"btn-tertiary px-2 py-1 flex items-center gap-4 xl:w-auto w-full #{@main_button_class}"}
+        >
+          Actions
+          <.icon
+            name="down"
+            class="w-4 h-4 ml-auto mr-1 mt-0.5 stroke-current stroke-3 text-blue-planning-300 open-icon"
+          />
+          <.icon
+            name="up"
+            class="hidden w-4 h-4 ml-auto mr-1 mt-0.5 stroke-current stroke-3 text-blue-planning-300 close-icon"
+          />
+        </button>
 
-          <div class="z-10 flex hidden flex-col w-auto bg-white border rounded-lg shadow-lg popover-content">
-            <%= for %{title: title, action: action, icon: icon, disabled: disabled?} <- @button_actions do %>
-              <%= if icon == "anchor" && BookingProposal.url(@proposal.id) do %>
-                <.button icon={icon} title={title} class="text-base-300 mt-0" text_color={"text-black"} color="blue-planning" id={"copy-booking-link-#{@proposal.id}"} phx-click={action} data-clipboard-text={BookingProposal.url(@proposal.id)} phx-hook="Clipboard" />
-              <% else %>
-                <.button icon={icon} title={title} disabled={disabled?} phx-click={action} phx-value-booking_event_date_id={@booking_event_date_id} phx-value-slot_client_id={@slot_client_id} phx-value-slot_job_id={@slot_job_id} phx-value-slot_index={@slot_index} text_color={if disabled?, do: "text-gray-300", else: "text-black"} color={if title in ["Archive", "Disable"], do: "red-sales-300", else: (if disabled?, do: "blue-planning-200", else: "blue-planning-300")} />
-              <% end %>
+        <div class="z-10 flex hidden flex-col w-auto bg-white border rounded-lg shadow-lg popover-content">
+          <%= for %{title: title, action: action, icon: icon, disabled: disabled?} <- @button_actions do %>
+            <%= if icon == "anchor" && BookingProposal.url(@proposal.id) do %>
+              <.button
+                icon={icon}
+                title={title}
+                class="text-base-300 mt-0"
+                text_color="text-black"
+                color="blue-planning"
+                id={"copy-booking-link-#{@proposal.id}"}
+                phx-click={action}
+                data-clipboard-text={BookingProposal.url(@proposal.id)}
+                phx-hook="Clipboard"
+              />
+            <% else %>
+              <.button
+                icon={icon}
+                title={title}
+                disabled={disabled?}
+                phx-click={action}
+                phx-value-booking_event_date_id={@booking_event_date_id}
+                phx-value-slot_client_id={@slot_client_id}
+                phx-value-slot_job_id={@slot_job_id}
+                phx-value-slot_index={@slot_index}
+                text_color={if disabled?, do: "text-gray-300", else: "text-black"}
+                color={
+                  if title in ["Archive", "Disable"],
+                    do: "red-sales-300",
+                    else: if(disabled?, do: "blue-planning-200", else: "blue-planning-300")
+                }
+              />
             <% end %>
-          </div>
+          <% end %>
         </div>
       </div>
+    </div>
     """
   end
 
@@ -817,75 +1061,92 @@ defmodule TodoplaceWeb.Live.Calendar.BookingEvents.Show do
     assigns = Map.put(assigns, :description, HtmlSanitizeEx.strip_tags(description))
 
     ~H"""
-      <div class="rounded-lg border border-gray-300 flex flex-col p-3">
-        <div class="flex items-center mb-4">
-          <div class="flex items-center">
-            <.icon name="marketing" class="inline-block w-5 h-5 mr-3 mt-0.5 fill-blue-planning-300" />
+    <div class="rounded-lg border border-gray-300 flex flex-col p-3">
+      <div class="flex items-center mb-4">
+        <div class="flex items-center">
+          <.icon name="marketing" class="inline-block w-5 h-5 mr-3 mt-0.5 fill-blue-planning-300" />
+        </div>
+        <div id="marketing_section" class="text-xl font-bold">
+          Marketing preview
+        </div>
+      </div>
+      <%= if @booking_event.thumbnail_url do %>
+        <.blurred_thumbnail
+          class="h-full items-center flex flex-col bg-base-400"
+          url={@booking_event.thumbnail_url}
+        />
+      <% else %>
+        <div class="aspect-video h-full p-6 mb-2 items-center flex flex-col bg-white">
+          <div class="flex justify-center h-auto mt-6 items-center">
+            <.icon name="photos-2" class="inline-block w-12 h-12 text-base-250" />
           </div>
-          <div id="marketing_section" class="text-xl font-bold">
-            Marketing preview
+          <div class="mt-1 p-4 text-base-250 text-center h-full">
+            <span>Edit marketing details to add a photo. Don’t forget to add a package too</span>
           </div>
         </div>
-        <%= if @booking_event.thumbnail_url do %>
-            <.blurred_thumbnail class="h-full items-center flex flex-col bg-base-400" url={@booking_event.thumbnail_url} />
-        <% else %>
-          <div class="aspect-video h-full p-6 mb-2 items-center flex flex-col bg-white">
-            <div class="flex justify-center h-auto mt-6 items-center">
-              <.icon name="photos-2" class="inline-block w-12 h-12 text-base-250"/>
-            </div>
-            <div class="mt-1 p-4 text-base-250 text-center h-full">
-              <span>Edit marketing details to add a photo. Don’t forget to add a package too</span>
-            </div>
+      <% end %>
+      <div class="grid grid-cols-1">
+        <div class="text-3xl font-bold mb-2 mt-2">
+          <%= @booking_event.name %>
+        </div>
+        <%= if @package do %>
+          <div class="text-base-250 text-md">
+            <%= Money.to_string(Package.price(@package)) %>
+          </div>
+          <div class="text-base-250 text-md">
+            <%= if @package.download_count < 1, do: "No digital", else: @package.download_count %> images included <%= if Enum.any?(
+                                                                                                                            @booking_event.dates
+                                                                                                                          ),
+                                                                                                                          do:
+                                                                                                                            "| #{session_info(@booking_event)} min session" %>
           </div>
         <% end %>
-        <div class="grid grid-cols-1">
-          <div class="text-3xl font-bold mb-2 mt-2">
-            <%= @booking_event.name %>
-          </div>
-          <%= if @package do %>
-            <div class="text-base-250 text-md">
-              <%= Money.to_string(Package.price(@package)) %>
-            </div>
-            <div class="text-base-250 text-md">
-              <%= if @package.download_count < 1, do: "No digital", else: @package.download_count %> images included <%= if Enum.any?(@booking_event.dates), do: "| #{session_info(@booking_event)} min session" %>
-            </div>
-          <% end %>
-          <hr class="my-3">
-        </div>
-          <%= if Enum.any?(@booking_event.dates) do %>
-            <div class="flex flex-col">
-              <div class="flex items-center">
-                <div class="text-base-250 text-md">
-                  <%= Enum.map(group_date_address(@booking_event.dates), fn booking_event_date -> %>
-                  <.date_and_address_display {booking_event_date}  />
-                  <% end) %>
-                </div>
-              </div>
-              <hr class="my-3">
-            </div>
-          <% end %>
-          <div class={classes("flex flex-col mb-3 items-start", %{"text-base-250" => !@package})}>
-            <%= if package_description_length_long?(@description) do %>
-              <%= if !Enum.member?(@collapsed_sections, "Read more") do %>
-                <%= @description |> slice_description() |> raw() %>
-              <% else %>
-                <%= @description %>
-              <% end %>
-              <button class="mt-2 flex text-base-250 items-center" phx-click="toggle-section" phx-value-section_id="Read more">
-                <%= if Enum.member?(@collapsed_sections, "Read more") do %>
-                  Read less <.icon name="up" class="mt-1 w-4 h-4 ml-2 stroke-current stroke-3 text-base-250"/>
-                <% else %>
-                  Read more <.icon name="down" class="mt-1 w-4 h-4 ml-2 stroke-current stroke-3 text-base-250"/>
-                <% end %>
-              </button>
-            <% else %>
-              <%= @description %>
-            <% end %>
-          </div>
-        <button phx-click="edit-marketing-event" phx-value-event-id={@booking_event.id} class="p-2 px-4 w-fit bg-base-250/20 font-bold rounded-lg">
-            Edit marketing details
-        </button>
+        <hr class="my-3" />
       </div>
+      <%= if Enum.any?(@booking_event.dates) do %>
+        <div class="flex flex-col">
+          <div class="flex items-center">
+            <div class="text-base-250 text-md">
+              <%= Enum.map(group_date_address(@booking_event.dates), fn booking_event_date -> %>
+                <.date_and_address_display {booking_event_date} />
+              <% end) %>
+            </div>
+          </div>
+          <hr class="my-3" />
+        </div>
+      <% end %>
+      <div class={classes("flex flex-col mb-3 items-start", %{"text-base-250" => !@package})}>
+        <%= if package_description_length_long?(@description) do %>
+          <%= if !Enum.member?(@collapsed_sections, "Read more") do %>
+            <%= @description |> slice_description() |> raw() %>
+          <% else %>
+            <%= @description %>
+          <% end %>
+          <button
+            class="mt-2 flex text-base-250 items-center"
+            phx-click="toggle-section"
+            phx-value-section_id="Read more"
+          >
+            <%= if Enum.member?(@collapsed_sections, "Read more") do %>
+              Read less
+              <.icon name="up" class="mt-1 w-4 h-4 ml-2 stroke-current stroke-3 text-base-250" />
+            <% else %>
+              Read more
+              <.icon name="down" class="mt-1 w-4 h-4 ml-2 stroke-current stroke-3 text-base-250" />
+            <% end %>
+          </button>
+        <% else %>
+          <%= @description %>
+        <% end %>
+      </div>
+      <button
+        phx-click="edit-marketing-event"
+        phx-value-event-id={@booking_event.id}
+        class="p-2 px-4 w-fit bg-base-250/20 font-bold rounded-lg"
+      >
+        Edit marketing details
+      </button>
+    </div>
     """
   end
 

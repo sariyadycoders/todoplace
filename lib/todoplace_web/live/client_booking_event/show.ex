@@ -38,21 +38,36 @@ defmodule TodoplaceWeb.ClientBookingEventLive.Show do
         <div class="flex">
           <.photographer_logo class="font-normal" organization={@organization} />
         </div>
-        <hr class="border-gray-100 my-8">
+        <hr class="border-gray-100 my-8" />
 
         <div class="grid gap-8 sm:grid-cols-2">
           <div class="flex-1 order-2 sm:order-1">
             <div class="flex flex-col sm:max-w-lg">
               <h1 class="text-4xl"><%= @booking_event.name %></h1>
-              <p class="text-base-250 mt-2 text-lg"><%= Todoplace.Package.price(@booking_event.package_template) %> <%= if Enum.any?(@booking_event.dates), do: "| #{session_info(@booking_event)} min session" %></p>
-              <.subtitle_display booking_event={@booking_event} package={@booking_event.package_template} class="text-base-250 mt-2" />
+              <p class="text-base-250 mt-2 text-lg">
+                <%= Todoplace.Package.price(@booking_event.package_template) %> <%= if Enum.any?(
+                                                                                         @booking_event.dates
+                                                                                       ),
+                                                                                       do:
+                                                                                         "| #{session_info(@booking_event)} min session" %>
+              </p>
+              <.subtitle_display
+                booking_event={@booking_event}
+                package={@booking_event.package_template}
+                class="text-base-250 mt-2"
+              />
               <div class="mt-4 flex flex-col border-gray-100 border-y py-4 text-base-250">
                 <%= group_date_address(@booking_event.dates) |> Enum.map(fn booking_event_date -> %>
-                <.date_and_address_display {booking_event_date}  />
+                  <.date_and_address_display {booking_event_date} />
                 <% end) %>
               </div>
-              <div class="mt-4 raw_html"><%= raw @booking_event.description %></div>
-              <.live_link to={~p"/photographer/#{@organization.slug}/event/#{@booking_event.id}"} class="btn-primary text-center mt-12">Book now</.live_link>
+              <div class="mt-4 raw_html"><%= raw(@booking_event.description) %></div>
+              <.live_link
+                to={~p"/photographer/#{@organization.slug}/event/#{@booking_event.id}"}
+                class="btn-primary text-center mt-12"
+              >
+                Book now
+              </.live_link>
             </div>
           </div>
           <div class="flex items-start justify-center relative overflow-hidden order-1 sm:order-2">
@@ -60,13 +75,13 @@ defmodule TodoplaceWeb.ClientBookingEventLive.Show do
           </div>
         </div>
 
-        <hr class="border-gray-100 mt-8 sm:mt-20">
+        <hr class="border-gray-100 mt-8 sm:mt-20" />
 
         <.profile_footer color={@color} photographer={@photographer} organization={@organization} />
       </div>
-      <% else %>
+    <% else %>
       <div class="center-container px-8 pt-6 mx-auto min-h-screen flex flex-col">
-        <h1 class="text-1x text-center font-bold"> No available times </h1>
+        <h1 class="text-1x text-center font-bold">No available times</h1>
       </div>
     <% end %>
     """

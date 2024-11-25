@@ -1,4 +1,4 @@
-<%= live_render @socket, TodoplaceWeb.LiveModal, id: "live_modal" %>
+<%= live_render(@socket, TodoplaceWeb.LiveModal, id: "live_modal") %>
 <main role="main" phx-hook="showAdminBanner" id="show-admin-banner">
   <%= TodoplaceWeb.LayoutView.flash(@flash) %>
   <%= @inner_content %>

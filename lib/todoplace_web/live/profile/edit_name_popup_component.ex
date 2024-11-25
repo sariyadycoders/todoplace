@@ -45,20 +45,32 @@ defmodule TodoplaceWeb.Live.Profile.EditNamePopupComponent do
     <div class="modal">
       <.close_x />
       <%= if assigns.job.job_status.is_lead do %>
-        <h1 class="text-3xl font-bold py-5"> Edit Lead Name</h1>
+        <h1 class="text-3xl font-bold py-5">Edit Lead Name</h1>
       <% else %>
-        <h1 class="text-3xl font-bold py-5"> Edit Job Name</h1>
+        <h1 class="text-3xl font-bold py-5">Edit Job Name</h1>
       <% end %>
       <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself}>
         <div class="py-5">
-          <%= labeled_input f, :job_name, label: "Name:", class: "h-12", phx_debounce: "500" %>
+          <%= labeled_input(f, :job_name, label: "Name:", class: "h-12", phx_debounce: "500") %>
         </div>
 
         <.footer>
-          <button class="btn-primary px-11" title="save" type="submit" disabled={!@changeset.valid?} phx-disable-with="Sending...">
+          <button
+            class="btn-primary px-11"
+            title="save"
+            type="submit"
+            disabled={!@changeset.valid?}
+            phx-disable-with="Sending..."
+          >
             Save
           </button>
-          <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Cancel
           </button>
         </.footer>

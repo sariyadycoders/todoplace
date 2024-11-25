@@ -3,7 +3,6 @@ defmodule TodoplaceWeb.LiveOrganization do
 
   @impl true
   def mount(_params, %{"organization_id" => organization_id}, socket) do
-
     {:ok, socket}
   end
 

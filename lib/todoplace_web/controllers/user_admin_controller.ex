@@ -22,6 +22,5 @@ defmodule TodoplaceWeb.UserAdminSessionHTML do
   import TodoplaceWeb.LiveHelpers, only: [icon: 1, classes: 2]
   import TodoplaceWeb.ViewHelpers
 
-
   embed_templates "templates/*"
 end

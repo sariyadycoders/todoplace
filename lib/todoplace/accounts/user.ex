@@ -45,7 +45,8 @@ defmodule Todoplace.Accounts.User do
     # many_to_many :organizations, Todoplace.Organization, join_through: "users_organizations"
     field :role, :string
     has_one :user_preference, Todoplace.Accounts.UserPreference
-    has_many :notifications, Todoplace.Accounts.Notification # Set up the relationship
+    # Set up the relationship
+    has_many :notifications, Todoplace.Accounts.Notification
 
     timestamps()
   end
@@ -363,7 +364,10 @@ defmodule Todoplace.Accounts.User do
   def update_user_preference(user_id, new_settings) do
     user_preference = Todoplace.Repo.get_by(Todoplace.Accounts.UserPreference, user_id: user_id)
 
-    changeset = Todoplace.Accounts.UserPreference.changeset(user_preference, %{settings: Map.merge(user_preference.settings, new_settings)})
+    changeset =
+      Todoplace.Accounts.UserPreference.changeset(user_preference, %{
+        settings: Map.merge(user_preference.settings, new_settings)
+      })
 
     Todoplace.Repo.update(changeset)
   end
@@ -374,7 +378,9 @@ defmodule Todoplace.Accounts.User do
   end
 
   def update_menu_collapsed(user_id, menu_collapsed) do
-    user_preference = Repo.get_by(UserPreference, user_id: user_id) || %Todoplace.Accounts.UserPreference{user_id: user_id}
+    user_preference =
+      Repo.get_by(UserPreference, user_id: user_id) ||
+        %Todoplace.Accounts.UserPreference{user_id: user_id}
 
     updated_settings =
       user_preference.settings

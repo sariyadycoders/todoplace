@@ -121,27 +121,57 @@ defmodule TodoplaceWeb.GalleryLive.Albums.AlbumSettings do
     <div class="flex flex-col modal rounded-lg sm:mb-8">
       <div class="flex items-start justify-between flex-shrink-0">
         <h1 class="mb-4 text-3xl font-bold"><%= @title %></h1>
-        <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-        <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
         </button>
       </div>
-      <.form for={@changeset} :let={f} phx-submit="submit" phx-change="validate" phx-target={@myself}>
-        <%= labeled_input f, :name, label: "Album Name", placeholder: @album && @album.name, autocapitalize: "words", autocorrect: "false", spellcheck: "false", autocomplete: "name", phx_debounce: "500"%>
-        <%= hidden_input f, :gallery_id%>
+      <.form :let={f} for={@changeset} phx-submit="submit" phx-change="validate" phx-target={@myself}>
+        <%= labeled_input(f, :name,
+          label: "Album Name",
+          placeholder: @album && @album.name,
+          autocapitalize: "words",
+          autocorrect: "false",
+          spellcheck: "false",
+          autocomplete: "name",
+          phx_debounce: "500"
+        ) %>
+        <%= hidden_input(f, :gallery_id) %>
 
         <div class="flex flex-row items-center justify-end w-full mt-5 lg:items-start">
           <%= if @album && !@has_order? && !@album.is_finals && !@album.is_proofing do %>
-          <div class="flex flex-row items-center justify-start w-full lg:items-start">
-            <button type="button" phx-click="delete_album_popup" phx-target={@myself} phx-value-id={@album.id} class="btn-settings-secondary flex items-center border-gray-200" id="close">
-              <.icon name="trash" class="flex w-4 h-5 mr-2 text-red-400" />
-              Delete
-            </button>
-          </div>
+            <div class="flex flex-row items-center justify-start w-full lg:items-start">
+              <button
+                type="button"
+                phx-click="delete_album_popup"
+                phx-target={@myself}
+                phx-value-id={@album.id}
+                class="btn-settings-secondary flex items-center border-gray-200"
+                id="close"
+              >
+                <.icon name="trash" class="flex w-4 h-5 mr-2 text-red-400" /> Delete
+              </button>
+            </div>
           <% end %>
-          <button type="button" phx-click="modal" phx-value-action="close" class="btn-settings-secondary" id="close">
+          <button
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+            class="btn-settings-secondary"
+            id="close"
+          >
             Close
           </button>
-          <%= submit @action, class: "btn-settings ml-4 px-11", disabled: !@changeset.valid?, phx_disable_with: "Saving..." %>
+          <%= submit(@action,
+            class: "btn-settings ml-4 px-11",
+            disabled: !@changeset.valid?,
+            phx_disable_with: "Saving..."
+          ) %>
         </div>
       </.form>
     </div>

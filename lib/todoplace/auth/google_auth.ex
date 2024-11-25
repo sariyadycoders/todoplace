@@ -46,7 +46,6 @@ defmodule Todoplace.Auth.GoogleAuth do
       "assertion" => jwt
     }
 
-
     # Convert the body to JSON
     encoded_body = Jason.encode!(body)
 

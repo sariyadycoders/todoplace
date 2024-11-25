@@ -23,13 +23,14 @@ defmodule TodoplaceWeb.GalleryLive.Photos.ThumbnailPhoto do
               id={"photo-#{@id}"}
               class="galleryItem"
               phx-click={toggle_border(@id)}
-              phx-click-away={JS.remove_class("item-border", to: "#item-#{@id}")}>
-                <.photo
-                  target={@component}
-                  preview={@photo.preview_url}
-                  photo_id={@photo.id}
-                  url={preview_url(@photo, proofing_client_view?: false)}
-                />
+              phx-click-away={JS.remove_class("item-border", to: "#item-#{@id}")}
+            >
+              <.photo
+                target={@component}
+                preview={@photo.preview_url}
+                photo_id={@photo.id}
+                url={preview_url(@photo, proofing_client_view?: false)}
+              />
             </div>
           </div>
         </div>

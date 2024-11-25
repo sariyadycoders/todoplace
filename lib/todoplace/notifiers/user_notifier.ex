@@ -68,8 +68,8 @@ defmodule Todoplace.Notifiers.UserNotifier do
   end
 
   def deliver_join_organization(organization_name, email, invite_token) do
-   user_name = email |> String.split("@") |> List.first()
-   url = ~p"/join_organization/#{invite_token}"
+    user_name = email |> String.split("@") |> List.first()
+    url = ~p"/join_organization/#{invite_token}"
 
     %{
       subject: "Invitation to Join #{organization_name}",

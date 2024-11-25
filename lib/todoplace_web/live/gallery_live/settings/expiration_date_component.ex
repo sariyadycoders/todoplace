@@ -270,20 +270,70 @@ defmodule TodoplaceWeb.GalleryLive.Settings.ExpirationDateComponent do
     ~H"""
     <div>
       <h3>Expiration date</h3>
-      <.form :let={f} for={%{}} as={:date} phx-change="update-options" phx-submit="save" phx-target={@myself} id="updateGalleryExpirationForm">
+      <.form
+        :let={f}
+        for={%{}}
+        as={:date}
+        phx-change="update-options"
+        phx-submit="save"
+        phx-target={@myself}
+        id="updateGalleryExpirationForm"
+      >
         <div class="flex justify-between">
-          <%= select_field f, :month, @month_options, id: "month-#{@is_never_expires}", prompt: "Month", value: @month, class: "month border-blue-planning-300 w-1/3 cursor-pointer #{(@is_never_expires || disabled?(@gallery)) && 'text-gray-400 cursor-default border-blue-planning-200'}", disabled: @is_never_expires || disabled?(@gallery) %>
-          <%= select_field f, :day, @day_options, id: "day-#{@is_never_expires}", prompt: "Day", value: @day, class: "day border-blue-planning-300 mx-2 md:mx-3 w-1/3 cursor-pointer #{(@is_never_expires || disabled?(@gallery)) && 'text-gray-400 cursor-default border-blue-planning-200'}", disabled: @is_never_expires || disabled?(@gallery) %>
-          <%= select_field f, :year, @year_options, id: "year-#{@is_never_expires}", prompt: "Year", value: @year, class: "year border-blue-planning-300 w-1/3 cursor-pointer #{(@is_never_expires || disabled?(@gallery)) && 'text-gray-400 cursor-default border-blue-planning-200'}", disabled: @is_never_expires || disabled?(@gallery) %>
+          <%= select_field(f, :month, @month_options,
+            id: "month-#{@is_never_expires}",
+            prompt: "Month",
+            value: @month,
+            class:
+              "month border-blue-planning-300 w-1/3 cursor-pointer #{(@is_never_expires || disabled?(@gallery)) && ~c"text-gray-400 cursor-default border-blue-planning-200"}",
+            disabled: @is_never_expires || disabled?(@gallery)
+          ) %>
+          <%= select_field(f, :day, @day_options,
+            id: "day-#{@is_never_expires}",
+            prompt: "Day",
+            value: @day,
+            class:
+              "day border-blue-planning-300 mx-2 md:mx-3 w-1/3 cursor-pointer #{(@is_never_expires || disabled?(@gallery)) && ~c"text-gray-400 cursor-default border-blue-planning-200"}",
+            disabled: @is_never_expires || disabled?(@gallery)
+          ) %>
+          <%= select_field(f, :year, @year_options,
+            id: "year-#{@is_never_expires}",
+            prompt: "Year",
+            value: @year,
+            class:
+              "year border-blue-planning-300 w-1/3 cursor-pointer #{(@is_never_expires || disabled?(@gallery)) && ~c"text-gray-400 cursor-default border-blue-planning-200"}",
+            disabled: @is_never_expires || disabled?(@gallery)
+          ) %>
         </div>
-        <div {testid("toggle_expiry")} class="flex flex-row-reverse items-center justify-between w-full mt-5 lg:items-start">
-            <%= submit "Save", class: "btn-settings w-32 px-11", disabled: save_disabled?(@year, @month, @day, @is_never_expires, @gallery), phx_disable_with: "Saving...", id: "saveGalleryExpiration" %>
-            <div class="flex items-center" phx-click="toggle-never-expires" phx-target={@myself} id="updateGalleryNeverExpire">
-                <input id="neverExpire" disabled={disabled?(@gallery)} type="checkbox" class="w-6 h-6 mr-3 checkbox-exp cursor-pointer" checked={@is_never_expires} />
-                <label class={classes("cursor-pointer", %{"text-gray-400 cursor-default" => disabled?(@gallery)})}>
-                    Never expires
-                </label>
-            </div>
+        <div
+          {testid("toggle_expiry")}
+          class="flex flex-row-reverse items-center justify-between w-full mt-5 lg:items-start"
+        >
+          <%= submit("Save",
+            class: "btn-settings w-32 px-11",
+            disabled: save_disabled?(@year, @month, @day, @is_never_expires, @gallery),
+            phx_disable_with: "Saving...",
+            id: "saveGalleryExpiration"
+          ) %>
+          <div
+            class="flex items-center"
+            phx-click="toggle-never-expires"
+            phx-target={@myself}
+            id="updateGalleryNeverExpire"
+          >
+            <input
+              id="neverExpire"
+              disabled={disabled?(@gallery)}
+              type="checkbox"
+              class="w-6 h-6 mr-3 checkbox-exp cursor-pointer"
+              checked={@is_never_expires}
+            />
+            <label class={
+              classes("cursor-pointer", %{"text-gray-400 cursor-default" => disabled?(@gallery)})
+            }>
+              Never expires
+            </label>
+          </div>
         </div>
       </.form>
     </div>

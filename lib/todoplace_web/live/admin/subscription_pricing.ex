@@ -16,7 +16,12 @@ defmodule TodoplaceWeb.Live.Admin.SubscriptionPricing do
     ~H"""
     <header class="p-8 bg-gray-100">
       <h1 class="text-4xl font-bold">Manage Subscription Pricing</h1>
-      <p class="mt-4">Please make sure you have already synced your pricing changes from Stripe before modifying the active state below. <.link navigate={~p"/admin/workers"} class="text-blue-planning-300 underline">Go here to sync.</.link></p>
+      <p class="mt-4">
+        Please make sure you have already synced your pricing changes from Stripe before modifying the active state below.
+        <.link navigate={~p"/admin/workers"} class="text-blue-planning-300 underline">
+          Go here to sync.
+        </.link>
+      </p>
     </header>
     <div class="p-4">
       <h2 class="text-2xl font-bold px-6 pb-6">Active Subscription Pricing</h2>
@@ -27,21 +32,30 @@ defmodule TodoplaceWeb.Live.Admin.SubscriptionPricing do
         <div class="col-start-4 font-bold">Set price active?</div>
         <%= for(%{price: %{stripe_price_id: stripe_price_id, active: active, id: id, recurring_interval: recurring_interval}, changeset: changeset} <- @pricing_rows) do %>
           <.form :let={f} for={changeset} class="contents" id={"form-#{stripe_price_id}"}>
-            <%= hidden_input f, :id %>
+            <%= hidden_input(f, :id) %>
             <div class="col-start-1">
-              <%= input f, :stripe_price_id, phx_debounce: 200, disabled: true, class: "w-full" %>
+              <%= input(f, :stripe_price_id, phx_debounce: 200, disabled: true, class: "w-full") %>
             </div>
             <div class="col-start-2">
-              <%= input f, :price, phx_debounce: 200, disabled: true, class: "w-full" %>
+              <%= input(f, :price, phx_debounce: 200, disabled: true, class: "w-full") %>
             </div>
             <div class="col-start-3">
-              <%= input f, :recurring_interval, phx_debounce: 200, disabled: true, class: "w-full" %>
+              <%= input(f, :recurring_interval, phx_debounce: 200, disabled: true, class: "w-full") %>
             </div>
             <div class="col-start-4">
               <%= if !active do %>
-              <button class="flex-1 py-2 text-sm btn-secondary" type="button" phx-click="save_subscription_pricing" phx-value-recurring-interval={recurring_interval} phx-value-id={id} phx-value-active={"#{active}"}>Set active</button>
+                <button
+                  class="flex-1 py-2 text-sm btn-secondary"
+                  type="button"
+                  phx-click="save_subscription_pricing"
+                  phx-value-recurring-interval={recurring_interval}
+                  phx-value-id={id}
+                  phx-value-active={"#{active}"}
+                >
+                  Set active
+                </button>
               <% else %>
-              <.badge color={:green}>Current price</.badge>
+                <.badge color={:green}>Current price</.badge>
               <% end %>
             </div>
           </.form>
@@ -60,34 +74,40 @@ defmodule TodoplaceWeb.Live.Admin.SubscriptionPricing do
         <div class="col-start-3 col-span-4 font-bold">Content</div>
         <div class="col-start-7 font-bold text-center">Actions</div>
         <%= for(%{row: %{id: id}, changeset: changeset} <- @pricing_metadata) do %>
-          <.form :let={f} for={changeset} phx-change="save_subscription_metadata" class="contents" id={"form-#{id}"}>
-            <%= hidden_input f, :id %>
+          <.form
+            :let={f}
+            for={changeset}
+            phx-change="save_subscription_metadata"
+            class="contents"
+            id={"form-#{id}"}
+          >
+            <%= hidden_input(f, :id) %>
             <div class="col-start-1">
-              <%= input f, :code, phx_debounce: 200, class: "w-full" %>
+              <%= input(f, :code, phx_debounce: 200, class: "w-full") %>
             </div>
             <div class="col-start-2">
-              <%= input f, :trial_length, type: :number_input, phx_debounce: 200, class: "w-full" %>
+              <%= input(f, :trial_length, type: :number_input, phx_debounce: 200, class: "w-full") %>
             </div>
             <div class="col-start-3 col-span-4">
               <div class="flex items-center gap-10 mb-2">
                 <label class="font-bold shrink-0 w-1/4">Signup Title</label>
-                <%= input f, :signup_title, phx_debounce: 200, class: "w-3/4" %>
+                <%= input(f, :signup_title, phx_debounce: 200, class: "w-3/4") %>
               </div>
               <div class="flex items-center gap-10 mb-2">
                 <label class="font-bold shrink-0 w-1/4">Signup Description</label>
-                <%= input f, :signup_description, phx_debounce: 200, class: "w-3/4" %>
+                <%= input(f, :signup_description, phx_debounce: 200, class: "w-3/4") %>
               </div>
               <div class="flex items-center gap-10 mb-2">
                 <label class="font-bold shrink-0 w-1/4">Onboarding Title</label>
-                <%= input f, :onboarding_title, phx_debounce: 200, class: "w-3/4" %>
+                <%= input(f, :onboarding_title, phx_debounce: 200, class: "w-3/4") %>
               </div>
               <div class="flex items-center gap-10 mb-2">
                 <label class="font-bold shrink-0 w-1/4">Onboarding Description</label>
-                <%= input f, :onboarding_description, phx_debounce: 200, class: "w-3/4" %>
+                <%= input(f, :onboarding_description, phx_debounce: 200, class: "w-3/4") %>
               </div>
               <div class="flex items-center gap-10 mb-2">
                 <label class="font-bold shrink-0 w-1/4">Success Title</label>
-                <%= input f, :success_title, phx_debounce: 200, class: "w-3/4" %>
+                <%= input(f, :success_title, phx_debounce: 200, class: "w-3/4") %>
               </div>
             </div>
             <div class="col-start-7 flex flex-col items-center justify-center">
@@ -96,7 +116,14 @@ defmodule TodoplaceWeb.Live.Admin.SubscriptionPricing do
                 <label>Set code active?</label>
               </div>
               <div>
-                <button type="button" class="mb-4 btn-secondary block py-1 px-2 border-red-sales-300 text-red-sales-300" phx-click="delete_subscription_metadata" phx-value-id={id}>Delete code</button>
+                <button
+                  type="button"
+                  class="mb-4 btn-secondary block py-1 px-2 border-red-sales-300 text-red-sales-300"
+                  phx-click="delete_subscription_metadata"
+                  phx-value-id={id}
+                >
+                  Delete code
+                </button>
               </div>
             </div>
           </.form>

@@ -3,7 +3,7 @@ defmodule TodoplaceWeb.OrganizationLive.AddOrganizationComponent do
   use TodoplaceWeb, :live_component
   alias Todoplace.{Profiles, Organization, Workers.CleanStore}
   @impl true
-  def update(assigns,  socket) do
+  def update(assigns, socket) do
     organizations =
       case assigns.user_data.user_organizations_ids do
         nil -> []
@@ -20,14 +20,15 @@ defmodule TodoplaceWeb.OrganizationLive.AddOrganizationComponent do
   @impl true
   def handle_event("toggle_status", %{"id" => id}, socket) do
     organization_id = String.to_integer(id)
-    
+
     case Todoplace.Organization.toggle_status(organization_id) do
       :ok ->
         send(socket.parent_pid, {:update_status, organization_id})
+
         socket
         |> put_flash(:info, "Organization status updated successfully")
         |> noreply()
-      
+
       {:error, _reason} ->
         socket
         |> put_flash(:error, "Failed to update organization status")
@@ -55,9 +56,7 @@ defmodule TodoplaceWeb.OrganizationLive.AddOrganizationComponent do
         </button>
       </div>
       <%= for organization <- @organizations do %>
-        <div
-          class="grid sm:grid-cols-3 gap-2 border p-3 items-center sm:pt-0 sm:px-0 sm:pb-2 sm:border-b sm:border-t-0 sm:border-x-0 rounded-lg sm:rounded-none border-gray-100 mt-2"
-        >
+        <div class="grid sm:grid-cols-3 gap-2 border p-3 items-center sm:pt-0 sm:px-0 sm:pb-2 sm:border-b sm:border-t-0 sm:border-x-0 rounded-lg sm:rounded-none border-gray-100 mt-2">
           <div class="flex flex-col">
             <p><%= Map.get(organization, :name, "") %></p>
           </div>
@@ -69,10 +68,10 @@ defmodule TodoplaceWeb.OrganizationLive.AddOrganizationComponent do
           </div>
           <hr class="sm:hidden border-gray-100 my-2" />
           <div class="sm:col-span-1 grid sm:flex gap-2 sm:gap-0 overflow-hidden slider-container">
-            <p 
-              phx-click="remove-from-selected-list" 
-              phx-value-id={Map.get(organization, :id, 0)} 
-              phx-value-value={Map.get(organization, :id, "")} 
+            <p
+              phx-click="remove-from-selected-list"
+              phx-value-id={Map.get(organization, :id, 0)}
+              phx-value-value={Map.get(organization, :id, "")}
               class="cursor-pointer"
             >
               <%= if Todoplace.Organization.get_org_status(@user_id, Map.get(organization, :id, 0)) == :active do %>
@@ -83,19 +82,20 @@ defmodule TodoplaceWeb.OrganizationLive.AddOrganizationComponent do
             </p>
           </div>
           <hr class="sm:hidden border-gray-100 my-2" />
-
         </div>
       <% end %>
       <div>
         <div class="flex flex-col py-6 bg-white gap-2 sm:flex-row-reverse">
-          <button
-            class="px-8 btn-primary"
-            title="Save"
-            phx-target={@myself}
-          >
+          <button class="px-8 btn-primary" title="Save" phx-target={@myself}>
             Save
           </button>
-          <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
             Cancel
           </button>
         </div>

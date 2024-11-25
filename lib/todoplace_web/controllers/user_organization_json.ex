@@ -8,7 +8,6 @@ defmodule TodoplaceWeb.UserOrganizationJSON do
     %{data: for(organization <- organizations, do: data(organization))}
   end
 
-
   defp data(%Todoplace.Organization{} = organization) do
     %{
       id: organization.id,

@@ -47,28 +47,61 @@ defmodule TodoplaceWeb.ConfirmationComponent do
         </div>
       <% else %>
         <%= if @subtitle do %>
-          <p class={classes("pt-4 whitespace-pre-wrap text-base-250", %{"text-black" => @modal_name == :automation_email_modal})}><%= raw @subtitle %></p>
+          <p class={
+            classes("pt-4 whitespace-pre-wrap text-base-250", %{
+              "text-black" => @modal_name == :automation_email_modal
+            })
+          }>
+            <%= raw(@subtitle) %>
+          </p>
         <% end %>
       <% end %>
 
       <%= if @external_link do %>
-        <a class="flex items-center pt-4 text-blue-planning-300 underline font-medium hover:cursor-pointer" href={@url} target="_blank"><%= @external_link %><.icon name="external-link" class="ml-2 w-4 h-4" /></a>
+        <a
+          class="flex items-center pt-4 text-blue-planning-300 underline font-medium hover:cursor-pointer"
+          href={@url}
+          target="_blank"
+        >
+          <%= @external_link %><.icon name="external-link" class="ml-2 w-4 h-4" />
+        </a>
       <% end %>
 
       <%= if @confirm_event do %>
-        <button class={"w-full mt-6 " <> @confirm_class} title={@confirm_label} type="button" phx-click={@confirm_event} phx-disable-with={"#{@confirm_label}..."} phx-target={@myself}>
+        <button
+          class={"w-full mt-6 " <> @confirm_class}
+          title={@confirm_label}
+          type="button"
+          phx-click={@confirm_event}
+          phx-disable-with={"#{@confirm_label}..."}
+          phx-target={@myself}
+        >
           <%= @confirm_label %>
         </button>
       <% end %>
 
       <%= if @close_event do %>
-        <button id="cancel-button" phx-hook="PreserveToggleState" data-element-id={@element_id} class={"w-full mt-6 " <> @close_class} title={@close_label} type="button" phx-click={"close_event"} phx-target={@myself}>
+        <button
+          id="cancel-button"
+          phx-hook="PreserveToggleState"
+          data-element-id={@element_id}
+          class={"w-full mt-6 " <> @close_class}
+          title={@close_label}
+          type="button"
+          phx-click="close_event"
+          phx-target={@myself}
+        >
           <%= @close_label %>
         </button>
-        <% else %>
-          <button class={"w-full mt-6 " <> @close_class} type="button" phx-click="modal" phx-value-action="close">
-            <%= @close_label %>
-          </button>
+      <% else %>
+        <button
+          class={"w-full mt-6 " <> @close_class}
+          type="button"
+          phx-click="modal"
+          phx-value-action="close"
+        >
+          <%= @close_label %>
+        </button>
       <% end %>
     </div>
     """

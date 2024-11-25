@@ -1,26 +1,42 @@
 <%= if @credits_available do %>
-  <div class={classes("text-sm bg-gray-100 p-1 block lg:hidden mt-16 md:mt-0 lg:mt-16", %{"hidden" => @open_profile_logout?, "mt-24" => not is_nil(Profiles.logo_url(@organization))})}>
+  <div class={
+    classes("text-sm bg-gray-100 p-1 block lg:hidden mt-16 md:mt-0 lg:mt-16", %{
+      "hidden" => @open_profile_logout?,
+      "mt-24" => not is_nil(Profiles.logo_url(@organization))
+    })
+  }>
     <div class="flex border border-base-200 px-4 justify-between px:7 sm:px-16 mt-2.5">
       <div class="flex items-center gap-1">
-        <.icon name="gallery-credit" class="w-4 h-4 fill-current"/>
-        <p class="text-base-250"><%= @gallery.gallery_digital_pricing.print_credits %> print credit</p>
+        <.icon name="gallery-credit" class="w-4 h-4 fill-current" />
+        <p class="text-base-250">
+          <%= @gallery.gallery_digital_pricing.print_credits %> print credit
+        </p>
       </div>
       <div class="flex items-center gap-1">
-        <.icon name="download-credit" class="w-4 h-4 fill-current"/>
-        <p class="text-base-250"><%= @gallery.gallery_digital_pricing.download_count %> digital credits</p>
+        <.icon name="download-credit" class="w-4 h-4 fill-current" />
+        <p class="text-base-250">
+          <%= @gallery.gallery_digital_pricing.download_count %> digital credits
+        </p>
       </div>
     </div>
   </div>
-<% end %> 
+<% end %>
 
 <%= if @client_email do %>
-  <div class={classes("bg-gray-100 p-1 block lg:hidden mt-20", %{"hidden lg:block" => !@open_profile_logout?, "mt-28" => not is_nil(Profiles.logo_url(@organization))})}>
+  <div class={
+    classes("bg-gray-100 p-1 block lg:hidden mt-20", %{
+      "hidden lg:block" => !@open_profile_logout?,
+      "mt-28" => not is_nil(Profiles.logo_url(@organization))
+    })
+  }>
     <.logout_wrapper client_email={@client_email} gallery={@gallery} socket={@socket} />
   </div>
 <% end %>
 
-<div 
-  class={classes("w-screen lg:h-screen h-[66vw]", %{"block sm:hidden" => @active, "hidden" => !@active})}
+<div
+  class={
+    classes("w-screen lg:h-screen h-[66vw]", %{"block sm:hidden" => @active, "hidden" => !@active})
+  }
   id="gallery-conver-photo"
   phx-hook="ClientGalleryCookie"
   data-name={cover_photo_cookie(@gallery.id)}
@@ -39,7 +55,11 @@
         </h1>
 
         <p class="hidden w-full text-center sm:block">
-          <a {testid("view-gallery")} phx-click="view_gallery" class="text-center text-white bg-transparent border-white cursor-pointer gallery__button btn-secondary hover:bg-white/10">
+          <a
+            {testid("view-gallery")}
+            phx-click="view_gallery"
+            class="text-center text-white bg-transparent border-white cursor-pointer gallery__button btn-secondary hover:bg-white/10"
+          >
             View Gallery
           </a>
         </p>
@@ -49,9 +69,20 @@
   </div>
 </div>
 
-<div {testid("gallery-client")} class={classes("relative mx-auto max-w-screen-xl", %{"block sm:hidden" => !@active})}>
+<div
+  {testid("gallery-client")}
+  class={classes("relative mx-auto max-w-screen-xl", %{"block sm:hidden" => !@active})}
+>
   <div class="fixed top-0 sm:px-16 w-full z-40 bg-white max-w-screen-xl">
-    <.live_component module={TodoplaceWeb.GalleryLive.ClientMenuComponent} id={@gallery.id} cart_count={@cart_count} live_action={@live_action} gallery={@gallery} client_email={@client_email} credits_available={@credits_available} />
+    <.live_component
+      module={TodoplaceWeb.GalleryLive.ClientMenuComponent}
+      id={@gallery.id}
+      cart_count={@cart_count}
+      live_action={@live_action}
+      gallery={@gallery}
+      client_email={@client_email}
+      credits_available={@credits_available}
+    />
   </div>
 
   <%= if @client_email do %>
@@ -63,14 +94,29 @@
   <%= unless Enum.empty?(@products) || disabled?(@gallery) do %>
     <div class="h-full py-0 mx-auto center-container gallery__container my-0 px-7 sm:px-16">
       <div class={classes("pt-8", %{"lg:pt-24" => !@client_email})}>
-       <div class={classes("text-2xl lg:text-3xl", %{"sm:pt-5" => !@client_email})}>
+        <div class={classes("text-2xl lg:text-3xl", %{"sm:pt-5" => !@client_email})}>
           Order custom products with <%= @organization.name %>
         </div>
 
-        <ul {testid("products")} class="pt-2 pb-5 mx-auto grid gap-6 sm:gap-8 grid-cols-2 xl:grid-cols-4 lg:pb-4 lg:pt-6 productPreview__client" id="products_gallery" phx-hook="DisableRightClick">
+        <ul
+          {testid("products")}
+          class="pt-2 pb-5 mx-auto grid gap-6 sm:gap-8 grid-cols-2 xl:grid-cols-4 lg:pb-4 lg:pt-6 productPreview__client"
+          id="products_gallery"
+          phx-hook="DisableRightClick"
+        >
           <%= for product <- @products do %>
             <%= if product.product_preview_enabled do %>
-              <.live_component module={TodoplaceWeb.GalleryLive.ProductPreviewComponent} id={product.id} photo={product.preview_photo} category={product.category} click_params={product.id} organization={@organization} gallery={@gallery} client_email: @client_email />
+              <.live_component
+                module={TodoplaceWeb.GalleryLive.ProductPreviewComponent}
+                id={product.id}
+                photo={product.preview_photo}
+                category={product.category}
+                click_params={product.id}
+                organization={@organization}
+                gallery={@gallery}
+                client_email:
+                @client_email
+              />
             <% end %>
           <% end %>
         </ul>
@@ -79,39 +125,49 @@
   <% end %>
 
   <%= if @gallery.gallery_digital_pricing.buy_all && !@download_all_visible && !disabled?(@gallery) do %>
-    <div class={classes("relative py-8 sm:py-6 bg-gray-100 mt-6", %{"mt-48" => Enum.empty?(@products)})}>
+    <div class={
+      classes("relative py-8 sm:py-6 bg-gray-100 mt-6", %{"mt-48" => Enum.empty?(@products)})
+    }>
       <div class="flex flex-col justify-between px-7 sm:px-16 sm:flex-row">
         <div class="sm:mr-28">
           <h3 class="text-2xl sm:text-3xl">All digital downloads</h3>
 
           <p class="text-base-250 sm:mt-2.5">Bundle all your digital images for savings!</p>
         </div>
-        <button {testid("buy-bundle")} title="Buy now" class="flex items-center justify-center gap-2 py-2 px-6 font-medium font-client text-white bg-base-300 border border-base-200 rounded-none w-full mt-6 mb-0 sm:my-3 sm:w-60" phx-click="buy-all-digitals">
-          Buy now
-          <.icon name="forth" class="stroke-2 stroke-current h-3 w-3" />
+        <button
+          {testid("buy-bundle")}
+          title="Buy now"
+          class="flex items-center justify-center gap-2 py-2 px-6 font-medium font-client text-white bg-base-300 border border-base-200 rounded-none w-full mt-6 mb-0 sm:my-3 sm:w-60"
+          phx-click="buy-all-digitals"
+        >
+          Buy now <.icon name="forth" class="stroke-2 stroke-current h-3 w-3" />
         </button>
       </div>
     </div>
   <% end %>
-
   <!-- Content -->
   <div class="h-full pt-0 mx-auto center-container gallery__container my-0 pb-28 sm:pb-24 px-7 sm:px-16 mt-16">
     <div class="pt-5 lg:pt-16" id="gallery" phx-hook="DisableRightClick">
       <div class="flex flex-col mb-8 sm:flex-row sm:justify-between sm:items-end lg:mb-16">
         <div>
           <div class="text-2xl lg:text-3xl">
-          <%= if(Enum.count(@albums) > 0, do: "Your curated albums", else: "#{@gallery.name} Gallery") %>
+            <%= if(Enum.count(@albums) > 0,
+              do: "Your curated albums",
+              else: "#{@gallery.name} Gallery"
+            ) %>
           </div>
 
           <div class="flex items-end">
             <%= if @download_all_visible do %>
-              <.download_link packable={@gallery} class="mt-4 mr-4 px-8 font-medium text-base-300 bg-base-100 border border-base-300 min-w-[12rem] hover:text-base-100 hover:bg-base-300">
+              <.download_link
+                packable={@gallery}
+                class="mt-4 mr-4 px-8 font-medium text-base-300 bg-base-100 border border-base-300 min-w-[12rem] hover:text-base-100 hover:bg-base-300"
+              >
                 Download purchased photos
-
                 <.icon name="download" class="w-4 h-4 ml-2 fill-current" />
               </.download_link>
             <% end %>
-            <div class="text-sm lg:text-xl text-base-250"> <%= photos_count(@photos_count) %></div>
+            <div class="text-sm lg:text-xl text-base-250"><%= photos_count(@photos_count) %></div>
           </div>
         </div>
 
@@ -121,16 +177,20 @@
               <div class="text-sm lg:text-xl">Show favorites only</div>
 
               <div class="relative ml-3">
-                <input type="checkbox" class="sr-only" phx-click="toggle_favorites">
+                <input type="checkbox" class="sr-only" phx-click="toggle_favorites" />
 
                 <%= if @favorites_filter do %>
-                  <div class="block h-8 border rounded-full bg-blue-planning-100 w-14 border-blue-planning-300"></div>
+                  <div class="block h-8 border rounded-full bg-blue-planning-100 w-14 border-blue-planning-300">
+                  </div>
 
-                  <div class="absolute w-6 h-6 rounded-full dot right-1 top-1 bg-blue-planning-300 transition"></div>
+                  <div class="absolute w-6 h-6 rounded-full dot right-1 top-1 bg-blue-planning-300 transition">
+                  </div>
                 <% else %>
-                  <div class="block h-8 bg-gray-200 border rounded-full w-14 border-blue-planning-300"></div>
+                  <div class="block h-8 bg-gray-200 border rounded-full w-14 border-blue-planning-300">
+                  </div>
 
-                  <div class="absolute w-6 h-6 rounded-full dot left-1 top-1 bg-blue-planning-300 transition"></div>
+                  <div class="absolute w-6 h-6 rounded-full dot left-1 top-1 bg-blue-planning-300 transition">
+                  </div>
                 <% end %>
               </div>
             <% end %>
@@ -144,49 +204,57 @@
             <a class="albumPreview" phx-click="go_to_album" phx-value-album={album.id}>
               <div class="flex flex-col h-72 albumPreview-photo">
                 <img class="object-cover w-full h-full" src={thumbnail_url(album)} />
-                <span class="absolute font-sans text-white bottom-4 left-4 text-1xl"><%= album.name %></span>
+                <span class="absolute font-sans text-white bottom-4 left-4 text-1xl">
+                  <%= album.name %>
+                </span>
               </div>
             </a>
+          <% end %>
+        </div>
+      <% else %>
+        <%= if(Enum.empty?(@streams) && @favorites_filter) do %>
+          <div class="relative justify-between mb-12 text-2xl text-center text-base-250">
+            Oops, you have no liked photos!
+          </div>
+        <% else %>
+          <!-- images -->
+          <div
+            id="muuri-grid"
+            class="mb-6 muuri grid"
+            phx-hook="MasonryGrid"
+            phx-update="stream"
+            data-page={@page}
+            data-id="muuri-grid"
+            data-drag-enabled="false"
+            data-uploading="0"
+            data-total={@gallery.total_count}
+            data-favorites-count={@favorites_count}
+            data-is-favorites-shown={ "#{@favorites_filter}" }
+            data-has-more-photos={ "#{@has_more_photos}" }
+            data-photo-width="300"
+          >
+            <%= for {id, %{aspect_ratio: aspect_ratio} = photo} when not is_nil(aspect_ratio) <- @streams.photos_new do %>
+              <.live_component
+                module={ClientPhoto}
+                dom_id={id}
+                id={photo.id}
+                photo={photo}
+                favorites_count={@favorites_count}
+                photo_width={300}
+                is_likable={true}
+              />
             <% end %>
           </div>
-      <% else %>
-    <%= if(Enum.empty?(@streams) && @favorites_filter) do %>
-      <div class="relative justify-between mb-12 text-2xl text-center text-base-250">
-          Oops, you have no liked photos!
-      </div>
-    <% else %>
-      <!-- images -->
-      <div
-        id="muuri-grid"
-        class="mb-6 muuri grid"
-        phx-hook="MasonryGrid"
-        phx-update="stream"
-        data-page={@page}
-        data-id="muuri-grid"
-        data-drag-enabled="false"
-        data-uploading="0"
-        data-total={@gallery.total_count}
-        data-favorites-count={@favorites_count}
-        data-is-favorites-shown={ "#{@favorites_filter}" }
-        data-has-more-photos={ "#{@has_more_photos}" }
-        data-photo-width="300">
-        <%= for {id, %{aspect_ratio: aspect_ratio} = photo} when not is_nil(aspect_ratio) <- @streams.photos_new do %>
-          <.live_component
-            module={ClientPhoto}
-            dom_id={id}
-            id={photo.id}
-            photo={photo}
-            favorites_count={@favorites_count}
-            photo_width={300}
-            is_likable={true}
-          />
         <% end %>
-      </div>
-    <% end %>
-    <div class="hidden">
-      <div id="photo-update-listener" phx-hook="PhotoUpdate" data-photo-updates={@photo_updates}></div>
+        <div class="hidden">
+          <div
+            id="photo-update-listener"
+            phx-hook="PhotoUpdate"
+            data-photo-updates={@photo_updates}
+          >
+          </div>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-</div>
-</div>
+  </div>
 </div>

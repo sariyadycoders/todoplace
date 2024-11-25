@@ -6,7 +6,7 @@ defmodule Todoplace.Repo.Migrations.SeedUpdateDefaultPackageTemplates do
 
   def change do
     query =
-      from p in "packages",
+      from(p in "packages",
         where: not is_nil(p.job_type),
         select: %{
           id: p.id,
@@ -14,6 +14,7 @@ defmodule Todoplace.Repo.Migrations.SeedUpdateDefaultPackageTemplates do
           base_price: p.base_price,
           base_multiplier: p.base_multiplier
         }
+      )
 
     Repo.all(query)
     |> Enum.reduce(0, fn package, acc ->

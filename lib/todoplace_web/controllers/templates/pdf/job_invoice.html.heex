@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-
 <html>
   <head>
-    <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap"
+      rel="stylesheet"
+    />
     <style>
       html {
         font-family: 'Montserrat', sans-serif;
@@ -252,8 +254,10 @@
   <body style="border:0; margin: 0;">
     <header>
       <%= case @organization_logo_url do %>
-        <% nil -> %> <h1><%= @organization.name %></h1>
-        <% organization_logo_url -> %> <img class="logo-img" src={organization_logo_url} />
+        <% nil -> %>
+          <h1><%= @organization.name %></h1>
+        <% organization_logo_url -> %>
+          <img class="logo-img" src={organization_logo_url} />
       <% end %>
     </header>
 
@@ -263,14 +267,18 @@
         <div class="quote-flex">
           <div>
             Dated:<br />
-            <%= TodoplaceWeb.LiveHelpers.strftime(@photographer.time_zone, @proposal.inserted_at, "%b %d, %Y") %>
+            <%= TodoplaceWeb.LiveHelpers.strftime(
+              @photographer.time_zone,
+              @proposal.inserted_at,
+              "%b %d, %Y"
+            ) %>
           </div>
         </div>
 
         <div class="quote-flex">
           <div>
             Quote #:<br />
-            <%= @proposal.id |> Integer.to_string |> String.pad_leading(6, "0") %>
+            <%= @proposal.id |> Integer.to_string() |> String.pad_leading(6, "0") %>
           </div>
         </div>
       </div>
@@ -307,13 +315,20 @@
           <div class="invoice-column">
             <p class="pl1">
               <%= shoot.name %><br />
-              <%= TodoplaceWeb.LiveHelpers.strftime(@photographer.time_zone, shoot.starts_at, "%B %d, %Y") %>
+              <%= TodoplaceWeb.LiveHelpers.strftime(
+                @photographer.time_zone,
+                shoot.starts_at,
+                "%B %d, %Y"
+              ) %>
             </p>
           </div>
           <div class="invoice-column">
             <p>
-              <%= dyn_gettext("duration-#{shoot.duration_minutes}") %>
-              starting at <%= TodoplaceWeb.LiveHelpers.strftime(@photographer.time_zone, shoot.starts_at, "%-I:%M %P") %>
+              <%= dyn_gettext("duration-#{shoot.duration_minutes}") %> starting at <%= TodoplaceWeb.LiveHelpers.strftime(
+                @photographer.time_zone,
+                shoot.starts_at,
+                "%-I:%M %P"
+              ) %>
             </p>
             <p><%= TodoplaceWeb.LiveHelpers.shoot_location(shoot) %></p>
           </div>
@@ -328,12 +343,19 @@
         <%= case Todoplace.Packages.Download.from_package(@package) do %>
           <% %{status: :limited} = d -> %>
             <div class="invoice-column">
-              <div><%= ngettext "1 photo download", "%{count} photo downloads", d.count %></div>
-              <div>Additional downloads @ <%= Money.to_string(d.each_price, symbol: false, code: true)%>/ea</div>
+              <div><%= ngettext("1 photo download", "%{count} photo downloads", d.count) %></div>
+              <div>
+                Additional downloads @ <%= Money.to_string(d.each_price,
+                  symbol: false,
+                  code: true
+                ) %>/ea
+              </div>
             </div>
           <% %{status: :none} = d -> %>
             <div class="invoice-column">
-              <div>Download photos @ <%= Money.to_string(d.each_price, symbol: false, code: true)%>/ea</div>
+              <div>
+                Download photos @ <%= Money.to_string(d.each_price, symbol: false, code: true) %>/ea
+              </div>
             </div>
           <% _ -> %>
             <div class="invoice-column">
@@ -350,7 +372,9 @@
             <div class="pl1">Print Credit</div>
           </div>
           <div class="invoice-column">
-            <div><%= @amount %><%= @print_credit.currency%> in print credits to use in your gallery</div>
+            <div>
+              <%= @amount %><%= @print_credit.currency %> in print credits to use in your gallery
+            </div>
           </div>
         </div>
 
@@ -362,7 +386,12 @@
           <%= with discount_percent when discount_percent != nil <- Todoplace.Packages.discount_percent(@package) do %>
             <div class="invoice-row invoice-between mb1">
               <div>Session fee</div>
-              <div><%= Money.to_string(Todoplace.Package.base_price(@package), symbol: false, code: true)%></div>
+              <div>
+                <%= Money.to_string(Todoplace.Package.base_price(@package),
+                  symbol: false,
+                  code: true
+                ) %>
+              </div>
             </div>
             <div class="invoice-row invoice-between mb1 text-green">
               <div>Discount</div>
@@ -371,7 +400,9 @@
           <% end %>
           <div class="invoice-row invoice-between">
             <div>Invoice Total</div>
-            <div><%= Money.to_string(Todoplace.Package.price(@package), symbol: false, code: true)%></div>
+            <div>
+              <%= Money.to_string(Todoplace.Package.price(@package), symbol: false, code: true) %>
+            </div>
           </div>
         </div>
 
@@ -380,7 +411,7 @@
         <%= if @package.collected_price do %>
           <div class="invoice-row invoice-between mb1">
             <div>Previously collected</div>
-            <div><%= Money.to_string(@package.collected_price, symbol: false, code: true)%></div>
+            <div><%= Money.to_string(@package.collected_price, symbol: false, code: true) %></div>
           </div>
         <% end %>
 
@@ -388,11 +419,15 @@
           <div class="invoice-payment-container">
             <div class="invoice-row invoice-between mb1">
               <div class="invoice-status">Paid</div>
-              <div class="invoice-status"><%= Money.to_string(PaymentSchedules.paid_price(@job), symbol: false, code: true) %></div>
+              <div class="invoice-status">
+                <%= Money.to_string(PaymentSchedules.paid_price(@job), symbol: false, code: true) %>
+              </div>
             </div>
             <div class="invoice-row invoice-between">
               <div class="invoice-status">Owed</div>
-              <div class="invoice-status"><%=  Money.to_string(PaymentSchedules.owed_price(@job), symbol: false, code: true) %></div>
+              <div class="invoice-status">
+                <%= Money.to_string(PaymentSchedules.owed_price(@job), symbol: false, code: true) %>
+              </div>
             </div>
           </div>
         <% end %>
@@ -407,17 +442,19 @@
         </h1>
 
         <table class="payment-schedule-table" border="0">
-          <tr class="payment-schedule-row payment-schedule-headerRow"> 
+          <tr class="payment-schedule-row payment-schedule-headerRow">
             <th class="payment-schedule-col payment-schedule-headerCol">Payment Name</th>
             <th class="payment-schedule-col payment-schedule-headerCol">Status</th>
             <th class="payment-schedule-col payment-schedule-headerCol">Amount</th>
           </tr>
           <%= for schedule <- @job.payment_schedules do %>
-            <tr class={"payment-schedule-row #{status_class(make_status(schedule))}"}>      
+            <tr class={"payment-schedule-row #{status_class(make_status(schedule))}"}>
               <td class="payment-schedule-col"><%= schedule.description %></td>
               <td class="payment-schedule-col"><%= make_status(schedule) %></td>
-              <td class="payment-schedule-col"><%= Money.to_string(schedule.price, symbol: false, code: true) %></td>
-            </tr> 
+              <td class="payment-schedule-col">
+                <%= Money.to_string(schedule.price, symbol: false, code: true) %>
+              </td>
+            </tr>
           <% end %>
         </table>
       </section>
@@ -430,10 +467,16 @@
           Contract
         </h1>
         <div class="mt-4 raw_html text-base-250 min-h-[8rem]">
-          <%= raw @contract_content %>
+          <%= raw(@contract_content) %>
         </div>
         <%= if @proposal && @proposal.accepted_at do %>
-          <p class="text-base-250">Signed <%= TodoplaceWeb.LiveHelpers.strftime(@photographer.time_zone, @proposal.accepted_at, "%b %d, %Y") %> by </p>
+          <p class="text-base-250">
+            Signed <%= TodoplaceWeb.LiveHelpers.strftime(
+              @photographer.time_zone,
+              @proposal.accepted_at,
+              "%b %d, %Y"
+            ) %> by
+          </p>
           <div class="contract-signature">
             <%= @proposal.signed_legal_name %>
           </div>
@@ -451,16 +494,16 @@
           <dl>
             <%= for {{question, answer}, question_index} <- @proposal.questionnaire.questions |> Enum.zip(@proposal.answer.answers) |> Enum.with_index() do %>
               <dt class="pt-4">
-              <label class="input-label" for={"question_#{question_index}"}>
-                <%= question.prompt %>
-              </label>
-              <%= if question.optional do %>
-                <em class="text-xs">(optional)</em>
-              <% end %>
-            </dt>
+                <label class="input-label" for={"question_#{question_index}"}>
+                  <%= question.prompt %>
+                </label>
+                <%= if question.optional do %>
+                  <em class="text-xs">(optional)</em>
+                <% end %>
+              </dt>
               <%= case question.type do %>
                 <% :multiselect -> %>
-                  <input type="hidden" name={"answers[#{question_index}][]"} value="">
+                  <input type="hidden" name={"answers[#{question_index}][]"} value="" />
 
                   <dd>
                     <%= for {option, option_index} <- question.options |> Enum.with_index() do %>
@@ -470,12 +513,16 @@
                           type="checkbox"
                           name={"answers[#{question_index}][]"}
                           value={option_index}
-                          checked={answer |> Enum.map(&String.to_integer(&1)) |> Enum.member?(option_index)}>
-                          <div class="pl-2 input-label" ><%= option %></div>
+                          checked={
+                            answer
+                            |> Enum.map(&String.to_integer(&1))
+                            |> Enum.member?(option_index)
+                          }
+                        />
+                        <div class="pl-2 input-label"><%= option %></div>
                       </label>
                     <% end %>
                   </dd>
-
                 <% :select -> %>
                   <dd>
                     <%= for {option, option_index} <- question.options |> Enum.with_index() do %>
@@ -485,35 +532,66 @@
                           type="radio"
                           name={"answers[#{question_index}][]"}
                           value={option_index}
-                          checked={answer |> Enum.map(&String.to_integer(&1)) |> Enum.member?(option_index)}>
-                        <div class="pl-2 input-label" ><%= option %></div>
+                          checked={
+                            answer
+                            |> Enum.map(&String.to_integer(&1))
+                            |> Enum.member?(option_index)
+                          }
+                        />
+                        <div class="pl-2 input-label"><%= option %></div>
                       </label>
                     <% end %>
                   </dd>
-
                 <% :text -> %>
                   <dd class="mt-2">
-                    <p class="w-full mb-8 mt-1" id={"question_#{question_index}"} data-name={"answers[#{question_index}][]"}><%= answer %></p>
+                    <p
+                      class="w-full mb-8 mt-1"
+                      id={"question_#{question_index}"}
+                      data-name={"answers[#{question_index}][]"}
+                    >
+                      <%= answer %>
+                    </p>
                   </dd>
-
                 <% :phone -> %>
                   <dd class="mt-2">
-                    <p class="w-full mb-8 mt-1" id={"question_#{question_index}"} data-name={"answers[#{question_index}][]"}><%= answer %></p>
+                    <p
+                      class="w-full mb-8 mt-1"
+                      id={"question_#{question_index}"}
+                      data-name={"answers[#{question_index}][]"}
+                    >
+                      <%= answer %>
+                    </p>
                   </dd>
-
                 <% :email -> %>
                   <dd class="mt-2">
-                    <p class="w-full mb-8 mt-1" id={"question_#{question_index}"} data-name={"answers[#{question_index}][]"}><%= answer %></p>
+                    <p
+                      class="w-full mb-8 mt-1"
+                      id={"question_#{question_index}"}
+                      data-name={"answers[#{question_index}][]"}
+                    >
+                      <%= answer %>
+                    </p>
                   </dd>
-
                 <% :date -> %>
                   <dd class="mt-2">
-                    <input type="date" phx-debounce="1000" class="w-full text-input mb-8 mt-1" id={"question_#{question_index}"} name={"answers[#{question_index}][]"} value={answer} />
+                    <input
+                      type="date"
+                      phx-debounce="1000"
+                      class="w-full text-input mb-8 mt-1"
+                      id={"question_#{question_index}"}
+                      name={"answers[#{question_index}][]"}
+                      value={answer}
+                    />
                   </dd>
-
                 <% :textarea -> %>
                   <dd class="mt-2">
-                    <p class="w-full mb-8 mt-1" id={"question_#{question_index}"} data-name={"answers[#{question_index}][]"}><%= answer %></p>
+                    <p
+                      class="w-full mb-8 mt-1"
+                      id={"question_#{question_index}"}
+                      data-name={"answers[#{question_index}][]"}
+                    >
+                      <%= answer %>
+                    </p>
                   </dd>
               <% end %>
             <% end %>

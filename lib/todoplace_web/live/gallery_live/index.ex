@@ -156,9 +156,7 @@ defmodule TodoplaceWeb.GalleryLive.Index do
   def handle_event("view_gallery", %{"id" => id}, socket),
     do:
       socket
-      |> push_redirect(
-        to: ~p"/galleries/#{id}?#{%{is_mobile: false}}"
-      )
+      |> push_redirect(to: ~p"/galleries/#{id}?#{%{is_mobile: false}}")
       |> noreply()
 
   @impl true
@@ -178,9 +176,7 @@ defmodule TodoplaceWeb.GalleryLive.Index do
 
   def handle_info({:success_event, "view-gallery", %{gallery_id: gallery_id}}, socket) do
     socket
-    |> push_redirect(
-      to: ~p"/galleries/#{gallery_id}?#{%{is_mobile: false}}"
-    )
+    |> push_redirect(to: ~p"/galleries/#{gallery_id}?#{%{is_mobile: false}}")
     |> noreply()
   end
 
@@ -239,46 +235,50 @@ defmodule TodoplaceWeb.GalleryLive.Index do
     assigns = assign(assigns, albums: albums)
 
     ~H"""
-      <div class="flex flex-wrap w-full md:w-auto">
-        <div class="flex flex-col md:flex-row grow">
-          <%= if @gallery.cover_photo do %>
-            <div>
-              <.link navigate={~p"/galleries/#{gallery.id}?#{%{is_mobile: false}}"}>
-                <div class="rounded-lg float-left w-[200px] mr-4 md:mr-7 min-h-[130px]" style={"background-image: url('#{cover_photo_url(@gallery)}'); background-repeat: no-repeat; background-size: cover; background-position: center;"}></div>
-              </.link>
-            </div>
-          <% else %>
-            <div class="rounded-lg h-full p-4 items-center flex flex-col w-[200px] h-[130px] mr-4 md:mr-7 bg-base-200">
-              <div class="flex justify-center h-full items-center">
-                <.icon name="photos-2" class="inline-block w-9 h-9 text-base-250"/>
+    <div class="flex flex-wrap w-full md:w-auto">
+      <div class="flex flex-col md:flex-row grow">
+        <%= if @gallery.cover_photo do %>
+          <div>
+            <.link navigate={~p"/galleries/#{gallery.id}?#{%{is_mobile: false}}"}>
+              <div
+                class="rounded-lg float-left w-[200px] mr-4 md:mr-7 min-h-[130px]"
+                style={"background-image: url('#{cover_photo_url(@gallery)}'); background-repeat: no-repeat; background-size: cover; background-position: center;"}
+              >
               </div>
-              <div class="mt-1 text-base-250 text-center h-full">
-                <span>Edit your gallery to upload a cover photo</span>
-              </div>
-            </div>
-          <% end %>
-        </div>
-
-        <div class="py-0 md:py-2 mt-4 md:mt-0">
-          <div class="font-bold">
-            <%= Calendar.strftime(@gallery.inserted_at, "%m/%d/%y") %>
-          </div>
-          <div class={"font-bold w-full"}>
-            <.link navigate={~p"/galleries/#{@gallery.id}?#{%{is_mobile: false}}"}>
-              <span class="w-full text-blue-planning-300 underline">
-                <%= if String.length(@gallery.name) < 30 do
-                  @gallery.name
-                else
-                  "#{@gallery.name |> String.slice(0..29)} ..."
-                end %>
-              </span>
             </.link>
           </div>
-          <div class="text-base-250 font-normal ">
-            <%= @albums %>
+        <% else %>
+          <div class="rounded-lg h-full p-4 items-center flex flex-col w-[200px] h-[130px] mr-4 md:mr-7 bg-base-200">
+            <div class="flex justify-center h-full items-center">
+              <.icon name="photos-2" class="inline-block w-9 h-9 text-base-250" />
+            </div>
+            <div class="mt-1 text-base-250 text-center h-full">
+              <span>Edit your gallery to upload a cover photo</span>
+            </div>
           </div>
+        <% end %>
+      </div>
+
+      <div class="py-0 md:py-2 mt-4 md:mt-0">
+        <div class="font-bold">
+          <%= Calendar.strftime(@gallery.inserted_at, "%m/%d/%y") %>
+        </div>
+        <div class="font-bold w-full">
+          <.link navigate={~p"/galleries/#{@gallery.id}?#{%{is_mobile: false}}"}>
+            <span class="w-full text-blue-planning-300 underline">
+              <%= if String.length(@gallery.name) < 30 do
+                @gallery.name
+              else
+                "#{@gallery.name |> String.slice(0..29)} ..."
+              end %>
+            </span>
+          </.link>
+        </div>
+        <div class="text-base-250 font-normal ">
+          <%= @albums %>
         </div>
       </div>
+    </div>
     """
   end
 
@@ -357,8 +357,26 @@ defmodule TodoplaceWeb.GalleryLive.Index do
       Enum.into(assigns, %{class: "", id: "", disable: false, action: "", value: "", icon: ""})
 
     ~H"""
-    <div title={@title} type="button" phx-click={@action} phx-value-id={@value} class={classes("cursor-pointer text-gray-700 block px-4 py-2 text-sm hover:bg-blue-planning-100", %{"opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disable})}>
-      <.icon name={@icon} class={classes("w-4 h-4 fill-current inline mr-1", %{"text-red-sales-300" => @icon == "trash" || @icon == "closed-eye", "text-blue-planning-300" => @icon != "trash" && @icon != "closed-eye"})} />
+    <div
+      title={@title}
+      type="button"
+      phx-click={@action}
+      phx-value-id={@value}
+      class={
+        classes("cursor-pointer text-gray-700 block px-4 py-2 text-sm hover:bg-blue-planning-100", %{
+          "opacity-50 hover:opacity-30 hover:cursor-not-allowed" => @disable
+        })
+      }
+    >
+      <.icon
+        name={@icon}
+        class={
+          classes("w-4 h-4 fill-current inline mr-1", %{
+            "text-red-sales-300" => @icon == "trash" || @icon == "closed-eye",
+            "text-blue-planning-300" => @icon != "trash" && @icon != "closed-eye"
+          })
+        }
+      />
       <%= @title %>
     </div>
     """

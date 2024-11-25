@@ -16,40 +16,57 @@ defmodule TodoplaceWeb.Shared.ShortCodeComponent do
       })
 
     ~H"""
-      <div>
-        <div testid="variables" class="flex items-center font-bold bg-gray-100 rounded-t-lg border-gray-200 text-blue-planning-300 p-2.5">
-          <.icon name="vertical-list" class="w-4 h-4 mr-2 text-blue-planning-300" />
-          Email Variables
-
-          <a href="#" phx-click="toggle-variables" phx-value-show-variables={"#{@show_variables}"} phx-target={@target} title="close" class="ml-auto cursor-pointer">
-            <.icon name="close-x" class="w-3 h-3 stroke-current text-base-300 stroke-2" />
-          </a>
-        </div>
-        <div class="flex flex-col p-2.5 border border-gray-200 rounded-b-lg h-72 overflow-auto">
-          <p class="text-base-250">Copy & paste the variable to use in your email. If you remove a variable, the information won’t be inserted.</p>
-          <hr class="my-3" />
-          <%= for code <- @variables_list do%>
-            <p class="text-blue-planning-300 capitalize mb-3"><%= code.type %> variables</p>
-            <%= for variable <- code.variables do%>
-            <% name = "{{" <> variable.name <> "}}" %>
-              <div class="flex-col flex mb-2">
-                  <div class="flex">
-                    <p><%= name %></p>
-                    <div class="ml-auto flex flex-row items-center justify-center">
-                    <a href="#" id={"copy-code-#{code.type}-#{variable.id}"} data-clipboard-text={name} phx-hook="Clipboard" title="copy" class="ml-auto cursor-pointer">
-                      <.icon name="clip-board" class="w-4 h-4 text-blue-planning-300" />
-                      <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
-                        Copied!
-                      </div>
-                    </a>
-                    </div>
-                  </div>
-                <span class="text-base-250 text-sm"><%= variable.description %></span>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
+    <div>
+      <div
+        testid="variables"
+        class="flex items-center font-bold bg-gray-100 rounded-t-lg border-gray-200 text-blue-planning-300 p-2.5"
+      >
+        <.icon name="vertical-list" class="w-4 h-4 mr-2 text-blue-planning-300" /> Email Variables
+        <a
+          href="#"
+          phx-click="toggle-variables"
+          phx-value-show-variables={"#{@show_variables}"}
+          phx-target={@target}
+          title="close"
+          class="ml-auto cursor-pointer"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current text-base-300 stroke-2" />
+        </a>
       </div>
+      <div class="flex flex-col p-2.5 border border-gray-200 rounded-b-lg h-72 overflow-auto">
+        <p class="text-base-250">
+          Copy & paste the variable to use in your email. If you remove a variable, the information won’t be inserted.
+        </p>
+        <hr class="my-3" />
+        <%= for code <- @variables_list do %>
+          <p class="text-blue-planning-300 capitalize mb-3"><%= code.type %> variables</p>
+          <%= for variable <- code.variables do %>
+            <% name = "{{" <> variable.name <> "}}" %>
+            <div class="flex-col flex mb-2">
+              <div class="flex">
+                <p><%= name %></p>
+                <div class="ml-auto flex flex-row items-center justify-center">
+                  <a
+                    href="#"
+                    id={"copy-code-#{code.type}-#{variable.id}"}
+                    data-clipboard-text={name}
+                    phx-hook="Clipboard"
+                    title="copy"
+                    class="ml-auto cursor-pointer"
+                  >
+                    <.icon name="clip-board" class="w-4 h-4 text-blue-planning-300" />
+                    <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
+                      Copied!
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <span class="text-base-250 text-sm"><%= variable.description %></span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
     """
   end
 

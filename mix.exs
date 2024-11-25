@@ -119,7 +119,8 @@ defmodule Todoplace.MixProject do
       {:mox, "~> 1.0.0", only: [:dev, :test]},
       {:bypass, "~> 2.1", only: :test},
       {:ex_machina, "~> 2.7.0", only: [:dev, :test]},
-      {:triplex, "~> 1.3.0"}, # Or the latest version compatible with your setup
+      # Or the latest version compatible with your setup
+      {:triplex, "~> 1.3.0"},
       {:redix, "~> 1.1"},
       {:httpoison, "~> 2.2"},
       {:wallaby, "~> 0.30.3", runtime: false, only: :test},
@@ -145,7 +146,9 @@ defmodule Todoplace.MixProject do
       "assets.setup": ["cmd --cd assets npm install", "assets.build"],
       "assets.build": ["cmd --cd assets npm run build:prod"],
       "assets.deploy": ["cmd --cd assets npm run build:prod", "phx.digest"],
-      "swagger": ["phx.swagger.generate priv/static/swagger.json --router DistanceTracker.Router --endpoint DistanceTracker.Endpoint"]
+      swagger: [
+        "phx.swagger.generate priv/static/swagger.json --router DistanceTracker.Router --endpoint DistanceTracker.Endpoint"
+      ]
     ]
   end
 end

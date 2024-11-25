@@ -84,10 +84,27 @@ defmodule TodoplaceWeb.LiveModal do
   @impl true
   def render(assigns) do
     ~H"""
-    <div role="dialog" id="modal-wrapper" data-closable={@modal.closable} phx-hook="Modal" style={"transition-duration: #{@modal.transition_ms}ms"} class={classes(["flex items-center justify-center w-full h-full #{@modal.background} z-[80] fixed transition-opacity ease-in-out", %{open: "opacity-100 bottom-0 top-0", opening: "opacity-0", closed: "opacity-0 hidden"}[@modal.state]])}>
+    <div
+      role="dialog"
+      id="modal-wrapper"
+      data-closable={@modal.closable}
+      phx-hook="Modal"
+      style={"transition-duration: #{@modal.transition_ms}ms"}
+      class={
+        classes([
+          "flex items-center justify-center w-full h-full #{@modal.background} z-[80] fixed transition-opacity ease-in-out",
+          %{open: "opacity-100 bottom-0 top-0", opening: "opacity-0", closed: "opacity-0 hidden"}[
+            @modal.state
+          ]
+        ])
+      }
+    >
       <%= if @modal.state != :closed do %>
         <div class="modal-container relative">
-          <.live_component module={@modal.component} {@modal.assigns |> Map.merge(%{id: @modal.component})} />
+          <.live_component
+            module={@modal.component}
+            {@modal.assigns |> Map.merge(%{id: @modal.component})}
+          />
         </div>
       <% end %>
     </div>
@@ -103,23 +120,38 @@ defmodule TodoplaceWeb.LiveModal do
       })
 
     ~H"""
-      <div class={@class}></div>
+    <div class={@class}></div>
 
-      <div {testid("modal-buttons")} class="sticky px-4 -m-4 bg-white -bottom-6 sm:px-8 sm:-m-8 sm:-bottom-8">
-        <div class="flex flex-col py-6 bg-white gap-2 sm:flex-row-reverse">
-          <%= if @inner_block do %>
-            <%= render_slot @inner_block %>
-          <% else %>
-            <button class="btn-primary" title="save" type="submit" disabled={@disabled} phx-disable-with="Save">
-              Save
-            </button>
+    <div
+      {testid("modal-buttons")}
+      class="sticky px-4 -m-4 bg-white -bottom-6 sm:px-8 sm:-m-8 sm:-bottom-8"
+    >
+      <div class="flex flex-col py-6 bg-white gap-2 sm:flex-row-reverse">
+        <%= if @inner_block do %>
+          <%= render_slot(@inner_block) %>
+        <% else %>
+          <button
+            class="btn-primary"
+            title="save"
+            type="submit"
+            disabled={@disabled}
+            phx-disable-with="Save"
+          >
+            Save
+          </button>
 
-            <button class="btn-secondary" title="cancel" type="button" phx-click="modal" phx-value-action="close">
-              Cancel
-            </button>
-          <% end %>
-        </div>
+          <button
+            class="btn-secondary"
+            title="cancel"
+            type="button"
+            phx-click="modal"
+            phx-value-action="close"
+          >
+            Cancel
+          </button>
+        <% end %>
       </div>
+    </div>
     """
   end
 
@@ -128,11 +160,25 @@ defmodule TodoplaceWeb.LiveModal do
 
     ~H"""
     <%= if @close_event do %>
-      <button phx-click="close_event" phx-value-action={@close_event} phx-value-link={@phx_value_link} phx-target={@myself} type="button" title="cancel" class="absolute p-2 top-3 right-3 sm:top-6 sm:right-6">
+      <button
+        phx-click="close_event"
+        phx-value-action={@close_event}
+        phx-value-link={@phx_value_link}
+        phx-target={@myself}
+        type="button"
+        title="cancel"
+        class="absolute p-2 top-3 right-3 sm:top-6 sm:right-6"
+      >
         <.icon name="close-x" class="w-6 h-6 stroke-current" />
       </button>
     <% else %>
-      <button phx-click="modal" phx-value-action="close" type="button" title="cancel" class="absolute p-2 top-3 right-3 sm:top-6 sm:right-6">
+      <button
+        phx-click="modal"
+        phx-value-action="close"
+        type="button"
+        title="cancel"
+        class="absolute p-2 top-3 right-3 sm:top-6 sm:right-6"
+      >
         <.icon name="close-x" class="w-6 h-6 stroke-current" />
       </button>
     <% end %>

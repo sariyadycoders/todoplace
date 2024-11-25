@@ -25,7 +25,7 @@ defmodule TodoplaceWeb.Live.Admin.User.Index do
   def render(assigns) do
     ~H"""
     <%= TodoplaceWeb.LayoutView.flash(@flash) %>
-    <%= live_render @socket, TodoplaceWeb.LiveModal, id: "live_modal" %>
+    <%= live_render(@socket, TodoplaceWeb.LiveModal, id: "live_modal") %>
     <header class="p-8 bg-gray-100">
       <h1 class="text-4xl font-bold">Find user to edit</h1>
       <p class="text-md">Search your user and pick the action you'd like to do</p>
@@ -33,8 +33,19 @@ defmodule TodoplaceWeb.Live.Admin.User.Index do
     <div class="p-8" phx-hook="showAdminBanner" id="show-admin-banner">
       <%= form_tag("#", [phx_change: :search, phx_submit: :search]) do %>
         <div class="flex flex-col px-1.5 mb-10">
-          <label for="search_phrase_input" class="text-lg font-bold block mb-2">Enter user email</label>
-          <input type="text" class="form-control w-full text-input" id="search_phrase_input" name="search_phrase" value={"#{@search_phrase}"} phx-debounce="500" spellcheck="false" placeholder="heyyou@todoplace.com…" />
+          <label for="search_phrase_input" class="text-lg font-bold block mb-2">
+            Enter user email
+          </label>
+          <input
+            type="text"
+            class="form-control w-full text-input"
+            id="search_phrase_input"
+            name="search_phrase"
+            value={"#{@search_phrase}"}
+            phx-debounce="500"
+            spellcheck="false"
+            placeholder="heyyou@todoplace.com…"
+          />
         </div>
       <% end %>
       <div class="grid grid-cols-4 gap-8">
@@ -44,7 +55,14 @@ defmodule TodoplaceWeb.Live.Admin.User.Index do
             <h4><%= email %></h4>
             <h4>Organization id: <%= organization_id %></h4>
             <h5 class="mt-4 upppercase font-bold">Actions</h5>
-            <.form :let={f} for={changeset} phx-change="save" id={"form-user-#{id}"} class="mb-4" phx-value-index={index}>
+            <.form
+              :let={f}
+              for={changeset}
+              phx-change="save"
+              id={"form-user-#{id}"}
+              class="mb-4"
+              phx-value-index={index}
+            >
               <label class="flex items-center mt-3">
                 <input type="hidden" name="index" value={index} />
                 <%= checkbox(f, :is_test_account, class: "w-5 h-5 mr-2.5 checkbox") %>
@@ -52,8 +70,19 @@ defmodule TodoplaceWeb.Live.Admin.User.Index do
               </label>
             </.form>
             <hr class="mb-4" />
-            <.link navigate={~p"/admin/user/#{id}/contact_upload"} class="underline text-blue-planning-300">Upload contacts</.link>
-            <a phx-click="open_reset_popup" phx-value-user_id={id} class="block underline text-blue-planning-300 cursor-pointer">Reset Data</a>
+            <.link
+              navigate={~p"/admin/user/#{id}/contact_upload"}
+              class="underline text-blue-planning-300"
+            >
+              Upload contacts
+            </.link>
+            <a
+              phx-click="open_reset_popup"
+              phx-value-user_id={id}
+              class="block underline text-blue-planning-300 cursor-pointer"
+            >
+              Reset Data
+            </a>
             <form action={~p"/admin/users/log_in"} method="POST" class="mt-4">
               <%= csrf_input_tag("/admin/users/log_in") %>
               <input type="hidden" value={id} name="user_id" />

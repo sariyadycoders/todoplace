@@ -919,16 +919,16 @@ defmodule TodoplaceWeb.JobLive.Shared do
       })
 
     ~H"""
-      <span>
-        <.badge class={@class} color={@color}>
-          <%= @label %>
+    <span>
+      <.badge class={@class} color={@color}>
+        <%= @label %>
+      </.badge>
+      <%= if @second_badge do %>
+        <.badge class={"ml-1 #{@class}"} color={@second_badge.color}>
+          <%= @second_badge.label %>
         </.badge>
-        <%= if @second_badge do %>
-          <.badge class={"ml-1 #{@class}"} color={@second_badge.color}>
-            <%= @second_badge.label %>
-          </.badge>
-        <% end %>
-      </span>
+      <% end %>
+    </span>
     """
   end
 
@@ -960,14 +960,25 @@ defmodule TodoplaceWeb.JobLive.Shared do
     assigns = assigns |> Enum.into(%{badge: 0})
 
     ~H"""
-    <section testid={"#{@id} section"} {if @id == "gallery" && @anchor == "anchor-to-gallery", do: %{id: "gallery-anchor", phx_hook: "ScrollIntoView"}, else: %{}} class="sm:border sm:border-base-200 sm:rounded-lg mt-8 overflow-hidden">
-      <div class="flex bg-base-200 px-4 py-3 items-center cursor-pointer" phx-click="toggle-section" phx-value-section_id={@id}>
+    <section
+      testid={"#{@id} section"}
+      {if @id == "gallery" && @anchor == "anchor-to-gallery", do: %{id: "gallery-anchor", phx_hook: "ScrollIntoView"}, else: %{}}
+      class="sm:border sm:border-base-200 sm:rounded-lg mt-8 overflow-hidden"
+    >
+      <div
+        class="flex bg-base-200 px-4 py-3 items-center cursor-pointer"
+        phx-click="toggle-section"
+        phx-value-section_id={@id}
+      >
         <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center">
           <.icon name={@icon} class="w-5 h-5" />
         </div>
         <h2 class="text-2xl font-bold ml-3"><%= @title %></h2>
         <%= if @badge > 0 do %>
-          <div {testid("section-badge")} class="ml-4 leading-none w-5 h-5 rounded-full pb-0.5 flex items-center justify-center text-xs bg-base-300 text-white">
+          <div
+            {testid("section-badge")}
+            class="ml-4 leading-none w-5 h-5 rounded-full pb-0.5 flex items-center justify-center text-xs bg-base-300 text-white"
+          >
             <%= @badge %>
           </div>
         <% end %>
@@ -980,7 +991,7 @@ defmodule TodoplaceWeb.JobLive.Shared do
         </div>
       </div>
       <div class={classes("p-6", %{"hidden" => Enum.member?(@collapsed_sections, @id)})}>
-        <%= render_slot @inner_block %>
+        <%= render_slot(@inner_block) %>
       </div>
     </section>
     """
@@ -999,7 +1010,7 @@ defmodule TodoplaceWeb.JobLive.Shared do
         <.icon name={@icon} class="w-6 h-6 text-blue-planning-300" />
         <h3 class="font-bold text-xl"><%= @heading %></h3>
       </div>
-      <%= render_slot @inner_block %>
+      <%= render_slot(@inner_block) %>
     </section>
     """
   end
@@ -1014,14 +1025,17 @@ defmodule TodoplaceWeb.JobLive.Shared do
       })
 
     ~H"""
-    <div {testid("card-#{@title}")} class={"flex overflow-hidden border border-base-200 rounded-lg #{@class}"}>
+    <div
+      {testid("card-#{@title}")}
+      class={"flex overflow-hidden border border-base-200 rounded-lg #{@class}"}
+    >
       <div class={"w-3 flex-shrink-0 border-r rounded-l-lg bg-#{@color} #{@gallery_card? && 'hidden'}"} />
       <div class="flex flex-col w-full p-4">
         <.card_title
-        color={@color}
-        title={@title}
-        gallery_card?={@gallery_card?}
-        gallery_type={@gallery_type}
+          color={@color}
+          title={@title}
+          gallery_card?={@gallery_card?}
+          gallery_type={@gallery_type}
         />
         <%= render_slot(@inner_block) %>
       </div>
@@ -1032,11 +1046,16 @@ defmodule TodoplaceWeb.JobLive.Shared do
   def card_title(%{gallery_card?: true} = assigns) do
     ~H"""
     <div class="flex justify-between">
-      <.card_title color={@color} title={@title}  />
-      <h4 class="border rounded-md bg-base-200 px-2 mb-1.5 text-base-250 font-bold text-base"><%= Utils.capitalize_all_words(@gallery_type) %>
-      <%= if @gallery_type == :unlinked_finals do %>
-        <.tooltip id="unlinked-finals" class="ml-2" content="<b>Note:</b> You had more than one finals album, within your proofing gallery. To keep your data safe, we have created a gallery to hold those and you can reorganize/reupload photos to the new/improved proofing gallery"/>
-      <% end %>
+      <.card_title color={@color} title={@title} />
+      <h4 class="border rounded-md bg-base-200 px-2 mb-1.5 text-base-250 font-bold text-base">
+        <%= Utils.capitalize_all_words(@gallery_type) %>
+        <%= if @gallery_type == :unlinked_finals do %>
+          <.tooltip
+            id="unlinked-finals"
+            class="ml-2"
+            content="<b>Note:</b> You had more than one finals album, within your proofing gallery. To keep your data safe, we have created a gallery to hold those and you can reorganize/reupload photos to the new/improved proofing gallery"
+          />
+        <% end %>
       </h4>
     </div>
     """
@@ -1057,25 +1076,28 @@ defmodule TodoplaceWeb.JobLive.Shared do
     ~H"""
     <.card color="orange-inbox-300" title="Communications" class="md:col-span-2">
       <div {testid("inbox")} class="flex flex-col lg:flex-row gap-4">
-
         <div class="flex-1 flex flex-col border border-base-200 rounded-lg p-3">
-
           <div class="flex flex-row items-center mb-4">
             <span class="flex w-8 h-8 justify-center items-center">
-            <.icon name="envelope" class="text-orange-inbox-300 mr-2 w-6 h-6" />
+              <.icon name="envelope" class="text-orange-inbox-300 mr-2 w-6 h-6" />
             </span>
             <span class="text-black font-black">Inbox</span>
           </div>
 
           <div class="flex">
-            <span class={classes("w-7 h-7 flex items-center justify-center text-lg font-bold text-white rounded-full mr-2 pb-1", %{"bg-orange-inbox-300" => @inbox_count > 0,"bg-base-250" => @inbox_count <= 0})}>
+            <span class={
+              classes(
+                "w-7 h-7 flex items-center justify-center text-lg font-bold text-white rounded-full mr-2 pb-1",
+                %{"bg-orange-inbox-300" => @inbox_count > 0, "bg-base-250" => @inbox_count <= 0}
+              )
+            }>
               <%= @inbox_count %>
             </span>
             <%!-- <span class={if @inbox_count > 0, do: "text-orange-inbox-300", else: "text-base-250"}>
               <%= ngettext "new message", "new messages", @inbox_count %>
             </span> --%>
             <span class="text-base-250">
-              <%= ngettext "new message", "new messages", @inbox_count %>
+              <%= ngettext("new message", "new messages", @inbox_count) %>
             </span>
           </div>
 
@@ -1083,9 +1105,14 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <button type="button" class="link mx-5 whitespace-nowrap" phx-click="open-inbox">
               View inbox
             </button>
-            <button class="h-8 flex content-center items-center px-2 py-1 btn-tertiary text-blue-planning-300  hover:border-blue-planning-300 mr-2 whitespace-nowrap" phx-click="open-compose" phx-value-client_id={@job.client_id} phx-value-is_thanks={@is_thanks}>
+            <button
+              class="h-8 flex content-center items-center px-2 py-1 btn-tertiary text-blue-planning-300  hover:border-blue-planning-300 mr-2 whitespace-nowrap"
+              phx-click="open-compose"
+              phx-value-client_id={@job.client_id}
+              phx-value-is_thanks={@is_thanks}
+            >
               <span class="flex w-8 h-8 justify-center items-center">
-              <.icon name="envelope" class="text-blue-planning-300 mr-2 w-6 h-6" />
+                <.icon name="envelope" class="text-blue-planning-300 mr-2 w-6 h-6" />
               </span>
               Send message
             </button>
@@ -1093,33 +1120,44 @@ defmodule TodoplaceWeb.JobLive.Shared do
         </div>
 
         <div class="flex-1 flex flex-col border border-base-200 rounded-lg p-3">
-
           <div class="flex flex-row items-center mb-4">
             <span class="flex w-8 h-8 justify-center items-center">
-            <.icon name="automation-card" class="text-orange-inbox-300 mr-2 w-6 h-6" />
+              <.icon name="automation-card" class="text-orange-inbox-300 mr-2 w-6 h-6" />
             </span>
             <div class="flex items-center flex-wrap">
               <span class="text-black font-black text-base-250">Automations</span>
-              <div class="bg-blue-planning-300 pt-0.5 pb-1 px-2 text-blue-planning-100 mt-1 sm:mt-0 sm:ml-2 uppercase font-bold text-xs rounded-md tracking-wider">Beta</div>
+              <div class="bg-blue-planning-300 pt-0.5 pb-1 px-2 text-blue-planning-100 mt-1 sm:mt-0 sm:ml-2 uppercase font-bold text-xs rounded-md tracking-wider">
+                Beta
+              </div>
             </div>
           </div>
           <% is_view_all? = Enum.any?(@job.email_schedules) or Enum.any?(@job.email_schedules_history) %>
           <% emails_count = EmailAutomationSchedules.get_active_email_schedule_count(@job.id) %>
           <div class="flex">
             <%= if is_view_all? do %>
-              <span class={classes("w-7 h-7 flex items-center justify-center text-lg font-bold text-white rounded-full mr-2 pb-1", %{"bg-orange-inbox-300" => emails_count > 0,"bg-base-250" => emails_count <= 0})}>
+              <span class={
+                classes(
+                  "w-7 h-7 flex items-center justify-center text-lg font-bold text-white rounded-full mr-2 pb-1",
+                  %{"bg-orange-inbox-300" => emails_count > 0, "bg-base-250" => emails_count <= 0}
+                )
+              }>
                 <%= @emails_count %>
               </span>
             <% end %>
             <span class="text-base-250">
-              <%= if is_view_all?, do: ngettext("automations", "automations", @emails_count), else: "No automations" %>
+              <%= if is_view_all?,
+                do: ngettext("automations", "automations", @emails_count),
+                else: "No automations" %>
             </span>
           </div>
 
           <%= if is_view_all? do %>
-            <button class="h-8 mt-auto ml-auto flex content-center items-center px-2 py-1 btn-tertiary text-blue-planning-300  hover:border-blue-planning-300 mr-2 whitespace-nowrap" phx-click="email-automation">
+            <button
+              class="h-8 mt-auto ml-auto flex content-center items-center px-2 py-1 btn-tertiary text-blue-planning-300  hover:border-blue-planning-300 mr-2 whitespace-nowrap"
+              phx-click="email-automation"
+            >
               <span class="flex w-8 h-8 justify-center items-center">
-              <.icon name="eye" class="text-blue-planning-300 mr-2 w-6 h-6" />
+                <.icon name="eye" class="text-blue-planning-300 mr-2 w-6 h-6" />
               </span>
               View all
             </button>
@@ -1127,10 +1165,9 @@ defmodule TodoplaceWeb.JobLive.Shared do
         </div>
 
         <div class="flex-1 flex flex-col border border-base-200 rounded-lg p-3">
-
           <div class="flex flex-row items-center mb-1">
             <span class="flex w-8 h-8 justify-center items-center">
-            <.icon name="client-icon" class="text-orange-inbox-300 mr-2 w-6 h-6" />
+              <.icon name="client-icon" class="text-orange-inbox-300 mr-2 w-6 h-6" />
             </span>
             <span class="text-black font-black text-base-250">Client</span>
           </div>
@@ -1142,7 +1179,11 @@ defmodule TodoplaceWeb.JobLive.Shared do
                 <span class="text-base-250"><%= @job.client.phone %></span>
               </a>
             <% end %>
-            <a phx-click="open-compose" phx-value-client_id={@job.client_id} class="flex items-center hover:cursor-pointer">
+            <a
+              phx-click="open-compose"
+              phx-value-client_id={@job.client_id}
+              class="flex items-center hover:cursor-pointer"
+            >
               <span class="text-base-250 mb-2"><%= @job.client.email %></span>
             </a>
             <%= if !@job.client.phone do %>
@@ -1152,9 +1193,13 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <% end %>
           </div>
 
-          <a target="_blank" href={~p"/clients/#{@job.client_id}"} class="ml-auto mt-auto h-8 flex content-center items-center px-2 py-1 btn-tertiary text-blue-planning-300  hover:border-blue-planning-300 mr-2 whitespace-nowrap">
+          <a
+            target="_blank"
+            href={~p"/clients/#{@job.client_id}"}
+            class="ml-auto mt-auto h-8 flex content-center items-center px-2 py-1 btn-tertiary text-blue-planning-300  hover:border-blue-planning-300 mr-2 whitespace-nowrap"
+          >
             <span class="flex w-8 h-8 justify-center items-center">
-            <.icon name="eye" class="text-blue-planning-300 mr-2 w-6 h-6" />
+              <.icon name="eye" class="text-blue-planning-300 mr-2 w-6 h-6" />
             </span>
             View
           </a>
@@ -1184,29 +1229,53 @@ defmodule TodoplaceWeb.JobLive.Shared do
           <div class="sm:col-span-3 flex flex-col text-sm">
             <div class="flex items-center gap-1">
               <.icon name="package" class="text-blue-planning-300 w-4 h-4" />
-              <p class="text-base-250"><%= @package |> Package.price() |> Money.to_string(fractional_unit: false) %></p>
+              <p class="text-base-250">
+                <%= @package |> Package.price() |> Money.to_string(fractional_unit: false) %>
+              </p>
             </div>
             <%= unless @package |> Package.print_credits() |> Money.zero?() do %>
               <div class="flex items-center gap-1">
                 <.icon name="loose-print" class="text-blue-planning-300 w-4 h-4" />
-                <p class="text-base-250"><%= "#{Money.to_string(@package.print_credits, fractional_unit: false)} print credit" %></p>
+                <p class="text-base-250">
+                  <%= "#{Money.to_string(@package.print_credits, fractional_unit: false)} print credit" %>
+                </p>
               </div>
             <% end %>
             <div class="flex items-center gap-1">
               <.icon name="image" class="text-blue-planning-300 w-4 h-4" />
-              <p class="text-base-250"><%= if Money.zero?(@package.download_each_price) do %>--<% else %><%= @package.download_each_price %>/each<% end %></p>
+              <p class="text-base-250">
+                <%= if Money.zero?(@package.download_each_price) do %>
+                  --
+                <% else %>
+                  <%= @package.download_each_price %>/each
+                <% end %>
+              </p>
             </div>
             <%= if @package.download_count > 0 do %>
               <div class="flex items-center gap-1">
                 <.icon name="package" class="text-blue-planning-300 w-4 h-4" />
-                <p class="text-base-250"><%= ngettext "%{count} image", "%{count} images", @package.download_count %> included</p>
+                <p class="text-base-250">
+                  <%= ngettext("%{count} image", "%{count} images", @package.download_count) %> included
+                </p>
               </div>
             <% end %>
           </div>
           <div class="sm:col-span-2 flex flex-col">
             <%= if !@job.is_gallery_only do %>
               <div class="self-end relative py-1">
-                <.icon_button color="blue-planning-300" phx-click="edit-package" icon="pencil" class="mt-auto" disabled={!Job.lead?(@job) || (@proposal && @proposal.signed_at)} title={if !Job.lead?(@job) || (@proposal && @proposal.signed_at), do: "Your client has already signed their proposal so package details are no longer editable.", else: "Edit package"}>
+                <.icon_button
+                  color="blue-planning-300"
+                  phx-click="edit-package"
+                  icon="pencil"
+                  class="mt-auto"
+                  disabled={!Job.lead?(@job) || (@proposal && @proposal.signed_at)}
+                  title={
+                    if !Job.lead?(@job) || (@proposal && @proposal.signed_at),
+                      do:
+                        "Your client has already signed their proposal so package details are no longer editable.",
+                      else: "Edit package"
+                  }
+                >
                   Edit
                 </.icon_button>
               </div>
@@ -1238,21 +1307,42 @@ defmodule TodoplaceWeb.JobLive.Shared do
         <p class="font-bold"><%= @package.name %></p>
         <p><%= @package |> Package.price() |> Money.to_string(fractional_unit: false) %></p>
         <%= if @package.download_count > 0 do %>
-          <p><%= ngettext "%{count} image", "%{count} images", @package.download_count %></p>
+          <p><%= ngettext("%{count} image", "%{count} images", @package.download_count) %></p>
         <% end %>
         <%= unless @package |> Package.print_credits() |> Money.zero?() do %>
-          <p><%= "#{Money.to_string(@package.print_credits, fractional_unit: false)} print credit" %></p>
+          <p>
+            <%= "#{Money.to_string(@package.print_credits, fractional_unit: false)} print credit" %>
+          </p>
         <% end %>
         <%= if !@job.is_gallery_only do %>
           <div class="mt-auto self-end relative py-1">
-            <.icon_button color="blue-planning-300" phx-click="edit-package" icon="pencil" class="mt-auto" disabled={!Job.lead?(@job) || (@proposal && @proposal.signed_at)} title={if !Job.lead?(@job) || (@proposal && @proposal.signed_at), do: "Your client has already signed their proposal so package details are no longer editable.", else: "Edit package"}>
+            <.icon_button
+              color="blue-planning-300"
+              phx-click="edit-package"
+              icon="pencil"
+              class="mt-auto"
+              disabled={!Job.lead?(@job) || (@proposal && @proposal.signed_at)}
+              title={
+                if !Job.lead?(@job) || (@proposal && @proposal.signed_at),
+                  do:
+                    "Your client has already signed their proposal so package details are no longer editable.",
+                  else: "Edit package"
+              }
+            >
               Edit
             </.icon_button>
           </div>
         <% end %>
       <% else %>
-        <p class="text-base-250">Click edit to add a package. You can come back to this later if your client isn’t ready for pricing quite yet.</p>
-        <.icon_button color="blue-planning-300" icon="pencil" phx-click="add-package" class="mt-auto self-end">
+        <p class="text-base-250">
+          Click edit to add a package. You can come back to this later if your client isn’t ready for pricing quite yet.
+        </p>
+        <.icon_button
+          color="blue-planning-300"
+          icon="pencil"
+          phx-click="add-package"
+          class="mt-auto self-end"
+        >
           Edit
         </.icon_button>
       <% end %>
@@ -1290,9 +1380,16 @@ defmodule TodoplaceWeb.JobLive.Shared do
       <%= if @job.notes do %>
         <p class={"whitespace-pre-line #{@content_class}"}><%= @job.notes %></p>
       <% else %>
-        <p class={"text-base-250 #{@content_class}"}>Click edit to add a note about your client and any details you want to remember.</p>
+        <p class={"text-base-250 #{@content_class}"}>
+          Click edit to add a note about your client and any details you want to remember.
+        </p>
       <% end %>
-      <.icon_button color="blue-planning-300" icon="pencil" phx-click="open-notes" class="mt-auto self-end">
+      <.icon_button
+        color="blue-planning-300"
+        icon="pencil"
+        phx-click="open-notes"
+        class="mt-auto self-end"
+      >
         Edit
       </.icon_button>
     </.card>
@@ -1304,22 +1401,38 @@ defmodule TodoplaceWeb.JobLive.Shared do
     <.form :let={f} for={@notes_changeset} phx-submit="save-notes">
       <div class="my-2">
         <div class="flex items-center justify-between mb-2">
-          <%= label_for f, :notes, label: "Private Notes" %>
+          <%= label_for(f, :notes, label: "Private Notes") %>
 
-          <.icon_button color="red-sales-300" icon="trash" phx-hook="ClearInput" id="clear-notes" data-input-name={input_name(f,:notes)}>
+          <.icon_button
+            color="red-sales-300"
+            icon="trash"
+            phx-hook="ClearInput"
+            id="clear-notes"
+            data-input-name={input_name(f, :notes)}
+          >
             Clear
           </.icon_button>
-
         </div>
 
         <fieldset>
-          <%= input f, :notes, type: :textarea, class: "w-full min-h-[300px]", phx_hook: "AutoHeight", phx_update: "ignore" %>
+          <%= input(f, :notes,
+            type: :textarea,
+            class: "w-full min-h-[300px]",
+            phx_hook: "AutoHeight",
+            phx_update: "ignore"
+          ) %>
         </fieldset>
       </div>
 
-       <button class="btn-primary" title="save" type="submit" disabled={!@notes_changeset.valid?} phx-disable-with="Saving...">
-          Save
-        </button>
+      <button
+        class="btn-primary"
+        title="save"
+        type="submit"
+        disabled={!@notes_changeset.valid?}
+        phx-disable-with="Saving..."
+      >
+        Save
+      </button>
     </.form>
     """
   end
@@ -1336,7 +1449,12 @@ defmodule TodoplaceWeb.JobLive.Shared do
           <%= for {shoot_number, shoot} <- @shoots do %>
             <li {testid("shoot-card")} class="border-b border-b-base-250/25">
               <%= if shoot do %>
-                <button class="flex flex-col w-full h-full py-4 text-left" type="button" phx-click="edit-shoot-details" phx-value-shoot-number={shoot_number}>
+                <button
+                  class="flex flex-col w-full h-full py-4 text-left"
+                  type="button"
+                  phx-click="edit-shoot-details"
+                  phx-value-shoot-number={shoot_number}
+                >
                   <div class="flex items-center justify-between font-semibold">
                     <div>
                       <%= if shoot.starts_at do %>
@@ -1345,14 +1463,23 @@ defmodule TodoplaceWeb.JobLive.Shared do
                         <%= shoot.name %>
                       <% end %>
                     </div>
-                    <.icon name="forth" class="w-4 h-4 stroke-current text-blue-planning-300 stroke-2" />
+                    <.icon
+                      name="forth"
+                      class="w-4 h-4 stroke-current text-blue-planning-300 stroke-2"
+                    />
                   </div>
                   <div class="text-base-250">
                     <%= shoot.name %>—<%= shoot_location(shoot) %>
                   </div>
                 </button>
               <% else %>
-                <button title="Add shoot details" class="flex flex-col w-full h-full py-4 text-left" type="button" phx-click="edit-shoot-details" phx-value-shoot-number={shoot_number}>
+                <button
+                  title="Add shoot details"
+                  class="flex flex-col w-full h-full py-4 text-left"
+                  type="button"
+                  phx-click="edit-shoot-details"
+                  phx-value-shoot-number={shoot_number}
+                >
                   <.badge color={:red}>Missing information</.badge>
 
                   <div class="flex items-center justify-between w-full mt-1 font-semibold">
@@ -1374,20 +1501,40 @@ defmodule TodoplaceWeb.JobLive.Shared do
 
   def shoot_details_section(assigns) do
     ~H"""
-    <.section id="shoot-details" icon="camera-check" title="Shoot details" collapsed_sections={@collapsed_sections}>
+    <.section
+      id="shoot-details"
+      icon="camera-check"
+      title="Shoot details"
+      collapsed_sections={@collapsed_sections}
+    >
       <%= if is_nil(@package) do %>
-        <p>You don’t have any shoots yet! If your client has a date but hasn’t decided on pricing, add a placeholder package for now.</p>
+        <p>
+          You don’t have any shoots yet! If your client has a date but hasn’t decided on pricing, add a placeholder package for now.
+        </p>
 
-        <button {testid("add-package-from-shoot")} type="button" phx-click="add-package" class="mt-2 text-center btn-primary intro-add-package">
+        <button
+          {testid("add-package-from-shoot")}
+          type="button"
+          phx-click="add-package"
+          class="mt-2 text-center btn-primary intro-add-package"
+        >
           Add a package
         </button>
-
       <% else %>
         <ul class="text-left grid gap-5 lg:grid-cols-2 grid-cols-1">
           <%= for {shoot_number, shoot} <- @shoots do %>
-            <li {testid("shoot-card")} class="border rounded-lg hover:bg-blue-planning-100 hover:border-blue-planning-300">
+            <li
+              {testid("shoot-card")}
+              class="border rounded-lg hover:bg-blue-planning-100 hover:border-blue-planning-300"
+            >
               <%= if shoot do %>
-                <button title="Add shoot details" class="flex flex-col w-full h-full p-4 text-left" type="button" phx-click="edit-shoot-details" phx-value-shoot-number={shoot_number}>
+                <button
+                  title="Add shoot details"
+                  class="flex flex-col w-full h-full p-4 text-left"
+                  type="button"
+                  phx-click="edit-shoot-details"
+                  phx-value-shoot-number={shoot_number}
+                >
                   <div class="flex items-center justify-between text-xl font-semibold">
                     <div>
                       <%= shoot.name %>
@@ -1396,16 +1543,24 @@ defmodule TodoplaceWeb.JobLive.Shared do
                     <.icon name="forth" class="w-4 h-4 stroke-current text-base-300 stroke-2" />
                   </div>
 
-                  <div class="font-semibold text-blue-planning-300"> On <%= strftime(@current_user.time_zone, shoot.starts_at, "%B %d, %Y @ %I:%M %p") %> </div>
+                  <div class="font-semibold text-blue-planning-300">
+                    On <%= strftime(@current_user.time_zone, shoot.starts_at, "%B %d, %Y @ %I:%M %p") %>
+                  </div>
 
-                  <hr class="my-3 border-top">
+                  <hr class="my-3 border-top" />
 
                   <span class="text-gray-400">
                     <%= shoot_location(shoot) %>
                   </span>
                 </button>
               <% else %>
-                <button title="Add shoot details" class="flex flex-col w-full h-full p-4 text-left" type="button" phx-click="edit-shoot-details" phx-value-shoot-number={shoot_number}>
+                <button
+                  title="Add shoot details"
+                  class="flex flex-col w-full h-full p-4 text-left"
+                  type="button"
+                  phx-click="edit-shoot-details"
+                  phx-value-shoot-number={shoot_number}
+                >
                   <.badge color={:red}>Missing information</.badge>
 
                   <div class="flex items-center justify-between w-full mt-1 text-xl font-semibold">
@@ -1435,7 +1590,13 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <%= @package |> Package.price() |> Money.to_string(fractional_unit: false) %>
           </div>
         <% else %>
-          <.finances_job_menu job={@job} proposal={@proposal} current_user={@current_user} show_manage_actions?={@show_manage_actions?} socket={@socket} />
+          <.finances_job_menu
+            job={@job}
+            proposal={@proposal}
+            current_user={@current_user}
+            show_manage_actions?={@show_manage_actions?}
+            socket={@socket}
+          />
         <% end %>
       <% else %>
         <p class="text-base-250">Looks like you need to choose a package to see your finances</p>
@@ -1449,7 +1610,12 @@ defmodule TodoplaceWeb.JobLive.Shared do
     <.simple_card icon="client-icon" heading="Client">
       <div class="flex justify-between items-center">
         <h3><%= @client.name %></h3>
-        <button type="button" phx-click="view-client" phx-value-id={@client.id} class="ml-auto mt-auto h-8 flex content-center items-center px-2 py-1 btn-tertiary text-blue-planning-300  hover:border-blue-planning-300 mr-2 whitespace-nowrap">
+        <button
+          type="button"
+          phx-click="view-client"
+          phx-value-id={@client.id}
+          class="ml-auto mt-auto h-8 flex content-center items-center px-2 py-1 btn-tertiary text-blue-planning-300  hover:border-blue-planning-300 mr-2 whitespace-nowrap"
+        >
           <span class="flex w-8 h-8 justify-center items-center">
             <.icon name="eye" class="text-blue-planning-300 mr-2 w-6 h-6" />
           </span>
@@ -1469,16 +1635,37 @@ defmodule TodoplaceWeb.JobLive.Shared do
         <div class="flex justify-between items-center border-b pb-4 mt-4">
           <div>
             <h3 class="font-bold text-xl">Client Payment & Booking Portal</h3>
-            <p class="text-base-250">Proposal portal sent to client that can be shared for making additional payments</p>
+            <p class="text-base-250">
+              Proposal portal sent to client that can be shared for making additional payments
+            </p>
           </div>
           <div class="flex gap-2">
-            <.icon_button icon="anchor" color="blue-planning-300" class="btn-secondary" id="copy-client-link" data-clipboard-text={if @proposal, do: BookingProposal.url(@proposal.id)} phx-click="copy-or-view-client-link" phx-value-action="copy" phx-hook="Clipboard" disabled={@disabled_copy_link}>
+            <.icon_button
+              icon="anchor"
+              color="blue-planning-300"
+              class="btn-secondary"
+              id="copy-client-link"
+              data-clipboard-text={if @proposal, do: BookingProposal.url(@proposal.id)}
+              phx-click="copy-or-view-client-link"
+              phx-value-action="copy"
+              phx-hook="Clipboard"
+              disabled={@disabled_copy_link}
+            >
               <span>Copy</span>
               <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
                 Copied!
               </div>
             </.icon_button>
-            <.icon_button icon="eye" color="blue-planning-300" class="btn-secondary" id="client-preview" disabled={@disabled_copy_link} phx-click="copy-or-view-client-link" phx-value-action="view" phx-hook="ViewProposal">
+            <.icon_button
+              icon="eye"
+              color="blue-planning-300"
+              class="btn-secondary"
+              id="client-preview"
+              disabled={@disabled_copy_link}
+              phx-click="copy-or-view-client-link"
+              phx-value-action="view"
+              phx-hook="ViewProposal"
+            >
               View
             </.icon_button>
           </div>
@@ -1486,15 +1673,26 @@ defmodule TodoplaceWeb.JobLive.Shared do
         <div class="flex justify-between items-center border-b pb-4 mt-4">
           <div>
             <h3 class="font-bold text-xl">Client Invoice</h3>
-            <p class="text-base-250">Includes full proposal, contract and questionnaire as executed</p>
+            <p class="text-base-250">
+              Includes full proposal, contract and questionnaire as executed
+            </p>
           </div>
           <div class="flex gap-2">
             <%= if @proposal do %>
               <%= link to: ~p"/jobs/#{@proposal.job_id}/booking_proposals/#{@proposal.id}" do %>
-                <button type="button" class="link text-blue-planning-300 text-base flex-shrink-0">Download</button>
+                <button type="button" class="link text-blue-planning-300 text-base flex-shrink-0">
+                  Download
+                </button>
               <% end %>
-             <% end %>
-            <.icon_button class="btn-secondary" phx-click="open-proposal" phx-value-action="details" disabled={is_nil(@proposal)} icon="eye" color="blue-planning-300">
+            <% end %>
+            <.icon_button
+              class="btn-secondary"
+              phx-click="open-proposal"
+              phx-value-action="details"
+              disabled={is_nil(@proposal)}
+              icon="eye"
+              color="blue-planning-300"
+            >
               View
             </.icon_button>
           </div>
@@ -1504,9 +1702,18 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <div class="flex justify-between items-center border-b pb-4 mt-4">
               <div>
                 <h3 class="font-bold text-xl">Contract</h3>
-                <p class="text-base-250">Manage your contract here. Selected contract: <%= if @package.contract, do: @package.contract.name, else: "#{Todoplace} Default Contract" %></p>
+                <p class="text-base-250">
+                  Manage your contract here. Selected contract: <%= if @package.contract,
+                    do: @package.contract.name,
+                    else: "#{Todoplace} Default Contract" %>
+                </p>
               </div>
-              <.icon_button class="btn-secondary self-end flex-grow-0" phx-click="edit-contract" color="blue-planning-300" icon="pencil">
+              <.icon_button
+                class="btn-secondary self-end flex-grow-0"
+                phx-click="edit-contract"
+                color="blue-planning-300"
+                icon="pencil"
+              >
                 Edit
               </.icon_button>
             </div>
@@ -1514,16 +1721,28 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <div class="flex justify-between items-center border-b pb-4 mt-4">
               <div>
                 <h3 class="font-bold text-xl">Contract</h3>
-                <p class="text-base-250">During your job import, you marked this as an external document.</p>
+                <p class="text-base-250">
+                  During your job import, you marked this as an external document.
+                </p>
               </div>
             </div>
           <% @package.contract -> %>
             <div class="flex justify-between items-center border-b pb-4 mt-4">
               <div>
                 <h3 class="font-bold text-xl">Contract</h3>
-                <p class="text-base-250">You sent the <%= @package.contract.name %> to your client.</p>
+                <p class="text-base-250">
+                  You sent the <%= @package.contract.name %> to your client.
+                </p>
               </div>
-              <.icon_button {testid("view-contract")} type="button" phx-click="open-proposal" phx-value-action="contract" color="blue-planning-300" class="btn-secondary self-end flex-grow-0" icon="eye">
+              <.icon_button
+                {testid("view-contract")}
+                type="button"
+                phx-click="open-proposal"
+                phx-value-action="contract"
+                color="blue-planning-300"
+                class="btn-secondary self-end flex-grow-0"
+                icon="eye"
+              >
                 View
               </.icon_button>
             </div>
@@ -1534,17 +1753,46 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <div class="flex justify-between items-center pb-4 mt-4">
               <div>
                 <h3 class="font-bold text-xl">Questionnaire</h3>
-                <p class="text-base-250">Manage your questionnaire here. Selected questionnaire: <%= if @package.questionnaire_template, do: @package.questionnaire_template.name, else: "One of the #{Todoplace} Default Questionnaire's" %></p>
+                <p class="text-base-250">
+                  Manage your questionnaire here. Selected questionnaire: <%= if @package.questionnaire_template,
+                    do: @package.questionnaire_template.name,
+                    else: "One of the #{Todoplace} Default Questionnaire's" %>
+                </p>
                 <label class="flex mt-4 cursor-pointer text-base-250">
-                  <input type="checkbox" class="w-6 h-6 mt-1 checkbox" phx-click="toggle-questionnaire" checked={@include_questionnaire} />
+                  <input
+                    type="checkbox"
+                    class="w-6 h-6 mt-1 checkbox"
+                    phx-click="toggle-questionnaire"
+                    checked={@include_questionnaire}
+                  />
                   <p class="ml-3">Include questionnaire in proposal?</p>
                 </label>
               </div>
               <div class="flex gap-2">
-                <.icon_button {testid("edit-questionnaire")} type="button" phx-click="edit-questionnaire" color="blue-planning-300" class="btn-secondary" disabled={!@include_questionnaire} icon="pencil">
+                <.icon_button
+                  {testid("edit-questionnaire")}
+                  type="button"
+                  phx-click="edit-questionnaire"
+                  color="blue-planning-300"
+                  class="btn-secondary"
+                  disabled={!@include_questionnaire}
+                  icon="pencil"
+                >
                   Edit
                 </.icon_button>
-                <.icon_button {testid("view-questionnaire")} type="button" phx-click="open-questionnaire" color="blue-planning-300" class={classes("btn-secondary", %{"opacity-50 cursor-not-allowed" => !@include_questionnaire})} disabled={!@include_questionnaire} icon="eye">
+                <.icon_button
+                  {testid("view-questionnaire")}
+                  type="button"
+                  phx-click="open-questionnaire"
+                  color="blue-planning-300"
+                  class={
+                    classes("btn-secondary", %{
+                      "opacity-50 cursor-not-allowed" => !@include_questionnaire
+                    })
+                  }
+                  disabled={!@include_questionnaire}
+                  icon="eye"
+                >
                   View
                 </.icon_button>
               </div>
@@ -1553,16 +1801,29 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <div class="flex justify-between items-center border-b pb-4 mt-4">
               <div>
                 <h3 class="font-bold text-xl">Questionnaire</h3>
-                <p class="text-base-250">During your job import, you marked this as an external document.</p>
+                <p class="text-base-250">
+                  During your job import, you marked this as an external document.
+                </p>
               </div>
             </div>
           <% @proposal && @proposal.questionnaire_id -> %>
             <div class="flex justify-between items-center border-b pb-4 mt-4">
               <div>
                 <h3 class="font-bold text-xl">Questionnaire</h3>
-                <p class="text-base-250">You sent <%= if @package.questionnaire_template, do: @package.questionnaire_template.name, else: "one of #{Todoplace} Default Questionnaire's" %> to your client.</p>
+                <p class="text-base-250">
+                  You sent <%= if @package.questionnaire_template,
+                    do: @package.questionnaire_template.name,
+                    else: "one of #{Todoplace} Default Questionnaire's" %> to your client.
+                </p>
               </div>
-              <.icon_button {testid("view-questionnaire")} phx-click="open-proposal" phx-value-action="questionnaire" class="btn-secondary" color="blue-planning-300" icon="eye">
+              <.icon_button
+                {testid("view-questionnaire")}
+                phx-click="open-proposal"
+                phx-value-action="questionnaire"
+                class="btn-secondary"
+                color="blue-planning-300"
+                icon="eye"
+              >
                 View
               </.icon_button>
             </div>
@@ -1575,7 +1836,9 @@ defmodule TodoplaceWeb.JobLive.Shared do
             </div>
         <% end %>
       <% else %>
-        <p class="text-base-250">Looks like you need to choose a package before seeing your client's documents</p>
+        <p class="text-base-250">
+          Looks like you need to choose a package before seeing your client's documents
+        </p>
       <% end %>
     </.simple_card>
     """
@@ -1592,53 +1855,74 @@ defmodule TodoplaceWeb.JobLive.Shared do
         <div class="grid sm:grid-cols-1 gap-5 my-5">
           <div class="flex flex-col">
             <div class="flex flex-col">
-            <%= if(is_nil(@job.documents) || @job.documents == []) do %>
-            <div class="text-gray-400 italic">No additional files have been uploaded</div>
-            <% end %>
+              <%= if(is_nil(@job.documents) || @job.documents == []) do %>
+                <div class="text-gray-400 italic">No additional files have been uploaded</div>
+              <% end %>
               <%= for document <- @job.documents do %>
-              <div id={document.id} class="flex flex-row justify-between items-center">
-                <a href={path_to_url(document.url)} target="_blank" rel="document">
-                  <dl class="flex items-center">
-                    <dd>
-                    <.icon name="files-icon" class="w-4 h-4" />
-                    </dd>
-                    <dd class="block link pl-1"><%= truncate_name(%{client_name: document.name}, @string_length) %></dd>
-                  </dl>
-                </a>
-                <div id={"options-#{document.id}"} phx-update="ignore" data-offset="0" phx-hook="Select" >
-                  <button title="Options" type="button" class="flex-shrink-0 btn-tertiary flex items-center px-2 py-1 font-sans rounded-lg hover:opacity-75 transition-colors text-blue-planning-300 btn-secondary">
-                    <.icon name="hellip" class="w-4 h-1 m-1 fill-current open-icon text-blue-planning-300" />
-                    <.icon name="close-x" class="hidden w-3 h-3 mx-1.5 stroke-current close-icon stroke-2 text-blue-planning-300" />
-                  </button>
-
-                  <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content">
-                    <button title="Deletes" type="button" phx-click="delete_document" phx-value-name={document.name} phx-value-document_id={document.id} class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                      <.icon name="trash" class="inline-block w-4 h-4 mr-2 fill-current text-red-sales-300" />
-                      Delete
+                <div id={document.id} class="flex flex-row justify-between items-center">
+                  <a href={path_to_url(document.url)} target="_blank" rel="document">
+                    <dl class="flex items-center">
+                      <dd>
+                        <.icon name="files-icon" class="w-4 h-4" />
+                      </dd>
+                      <dd class="block link pl-1">
+                        <%= truncate_name(%{client_name: document.name}, @string_length) %>
+                      </dd>
+                    </dl>
+                  </a>
+                  <div
+                    id={"options-#{document.id}"}
+                    phx-update="ignore"
+                    data-offset="0"
+                    phx-hook="Select"
+                  >
+                    <button
+                      title="Options"
+                      type="button"
+                      class="flex-shrink-0 btn-tertiary flex items-center px-2 py-1 font-sans rounded-lg hover:opacity-75 transition-colors text-blue-planning-300 btn-secondary"
+                    >
+                      <.icon
+                        name="hellip"
+                        class="w-4 h-1 m-1 fill-current open-icon text-blue-planning-300"
+                      />
+                      <.icon
+                        name="close-x"
+                        class="hidden w-3 h-3 mx-1.5 stroke-current close-icon stroke-2 text-blue-planning-300"
+                      />
                     </button>
+
+                    <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content">
+                      <button
+                        title="Deletes"
+                        type="button"
+                        phx-click="delete_document"
+                        phx-value-name={document.name}
+                        phx-value-document_id={document.id}
+                        class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+                      >
+                        <.icon
+                          name="trash"
+                          class="inline-block w-4 h-4 mr-2 fill-current text-red-sales-300"
+                        /> Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
               <% end %>
             </div>
-            <div>
-            </div>
+            <div></div>
           </div>
           <div class="flex flex-col" id={"document-upload-#{@job.id}"} phx-hook="ResumeUpload">
             <form phx-change="validate" phx-submit="submit" id="upload_documents">
-              <.drag_drop
-              upload_entity={@uploads.documents}
-              label_class="py-8"
-              job_view?={true}
-              />
+              <.drag_drop upload_entity={@uploads.documents} label_class="py-8" job_view?={true} />
             </form>
             <%= Enum.map(@invalid_entries, fn entry -> %>
-              <.files_to_upload entry={entry} for={:job_detail} >
+              <.files_to_upload entry={entry} for={:job_detail}>
                 <.error_action error={@invalid_entries_errors[entry.ref]} entry={entry} />
               </.files_to_upload>
             <% end) %>
             <%= Enum.map(@uploads.documents.entries, fn entry -> %>
-              <.files_to_upload entry={entry} for={:job_detail} >
+              <.files_to_upload entry={entry} for={:job_detail}>
                 <p class="btn items-center">Uploading...</p>
               </.files_to_upload>
             <% end) %>
@@ -1661,10 +1945,20 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <%= @package |> Package.price() |> Money.to_string(fractional_unit: false) %>
           </div>
         <% else %>
-          <.finances_job_menu job={@job} proposal={@proposal} current_user={@current_user} show_manage_actions?={@show_manage_actions?} socket={@socket} />
+          <.finances_job_menu
+            job={@job}
+            proposal={@proposal}
+            current_user={@current_user}
+            show_manage_actions?={@show_manage_actions?}
+            socket={@socket}
+          />
         <% end %>
       <% else %>
-        <p class="text-base-250">Looks like you need to choose a package before seeing your finances for this <%= if @job.job_status.is_lead, do: "lead", else: "job" %></p>
+        <p class="text-base-250">
+          Looks like you need to choose a package before seeing your finances for this <%= if @job.job_status.is_lead,
+            do: "lead",
+            else: "job" %>
+        </p>
       <% end %>
     </.simple_card>
     """
@@ -1675,36 +1969,63 @@ defmodule TodoplaceWeb.JobLive.Shared do
     <div class="grid grid-cols-2 gap-5">
       <dl class={classes(%{"col-span-2" => PaymentSchedules.all_paid?(@job)})}>
         <dt class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-2">Paid</dt>
-        <dd class="font-bold text-green-finances-300 rounded-lg border border-base-250/25 text-center py-2"><%= PaymentSchedules.paid_price(@job) |> Money.to_string(fractional_unit: false) %></dd>
+        <dd class="font-bold text-green-finances-300 rounded-lg border border-base-250/25 text-center py-2">
+          <%= PaymentSchedules.paid_price(@job) |> Money.to_string(fractional_unit: false) %>
+        </dd>
       </dl>
       <%= unless PaymentSchedules.all_paid?(@job) do %>
         <dl>
           <dt class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-2">Owed</dt>
-          <dd class="font-bold text-red-sales-300 rounded-lg border border-base-250/25 text-center py-2"><%= PaymentSchedules.owed_offline_price(@job) |> Money.to_string(fractional_unit: false) %></dd>
+          <dd class="font-bold text-red-sales-300 rounded-lg border border-base-250/25 text-center py-2">
+            <%= PaymentSchedules.owed_offline_price(@job) |> Money.to_string(fractional_unit: false) %>
+          </dd>
         </dl>
       <% end %>
     </div>
     <%= if @show_manage_actions? do %>
       <div class="flex justify-end mt-4">
         <%= unless PaymentSchedules.all_paid?(@job) do %>
-          <button class="link mr-4" phx-click="open-compose" phx-value-client_id={@job.client_id}>Send reminder</button>
+          <button class="link mr-4" phx-click="open-compose" phx-value-client_id={@job.client_id}>
+            Send reminder
+          </button>
         <% end %>
         <div id="options" phx-update="ignore" data-offset="0" phx-hook="Select">
           <button class="btn-tertiary flex flex-shrink-0 text-sm items-center gap-3 ml-2 p-2.5 text-blue-planning-300">
             Actions
-            <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-            <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+            <.icon
+              name="down"
+              class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+            />
+            <.icon
+              name="up"
+              class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+            />
           </button>
           <div class="flex-col hidden bg-white border rounded-lg shadow-lg popover-content">
-            <button title="Go to Stripe" type="button" phx-click="open-stripe"  class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-            <.icon name="money-bags" class="inline-block w-4 h-4 mr-2 fill-current text-blue-planning-300" />
-              Go to Stripe
+            <button
+              title="Go to Stripe"
+              type="button"
+              phx-click="open-stripe"
+              class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+            >
+              <.icon
+                name="money-bags"
+                class="inline-block w-4 h-4 mr-2 fill-current text-blue-planning-300"
+              /> Go to Stripe
             </button>
             <%= if @proposal do %>
-            <button title="Mark as paid" type="button" phx-click="open-mark-as-paid" phx-value-user={@current_user.email} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-              <.icon name="checkcircle" class="inline-block w-4 h-4 mr-2 fill-current text-blue-planning-300" />
-              Mark as paid
-            </button>
+              <button
+                title="Mark as paid"
+                type="button"
+                phx-click="open-mark-as-paid"
+                phx-value-user={@current_user.email}
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+              >
+                <.icon
+                  name="checkcircle"
+                  class="inline-block w-4 h-4 mr-2 fill-current text-blue-planning-300"
+                /> Mark as paid
+              </button>
             <% end %>
           </div>
         </div>
@@ -1713,7 +2034,9 @@ defmodule TodoplaceWeb.JobLive.Shared do
       <div class="flex gap-6 justify-end mt-4">
         <%= if @proposal do %>
           <%= link to: ~p"/jobs/#{@job.id}/booking_proposals/#{@proposal.id}" do %>
-            <button type="button" class="link text-blue-planning-300 text-base flex-shrink-0">Download invoice</button>
+            <button type="button" class="link text-blue-planning-300 text-base flex-shrink-0">
+              Download invoice
+            </button>
           <% end %>
         <% end %>
         <button class="link" phx-click="change-tab" phx-value-tab="finances">View</button>
@@ -1728,16 +2051,23 @@ defmodule TodoplaceWeb.JobLive.Shared do
       <div class="flex justify-between items-center">
         <div>
           <div class="flex gap-1 text-lg">
-            <span class={classes("text-black font-bold", %{"text-orange-inbox-300" => @inbox_count > 0})}>
+            <span class={
+              classes("text-black font-bold", %{"text-orange-inbox-300" => @inbox_count > 0})
+            }>
               <%= @inbox_count %>
             </span>
             <span class="text-base-250">
-              <%= ngettext "new message", "new messages", @inbox_count %>
+              <%= ngettext("new message", "new messages", @inbox_count) %>
             </span>
           </div>
           <button href="" class="link" phx-click="open-inbox">View inbox</button>
         </div>
-        <div phx-click="open-compose" phx-value-client_id={@client.id} phx-value-is_thanks={@is_thanks} class="cursor-pointer">
+        <div
+          phx-click="open-compose"
+          phx-value-client_id={@client.id}
+          phx-value-is_thanks={@is_thanks}
+          class="cursor-pointer"
+        >
           <.icon_button class="" color="blue-planning-300" icon="envelope">
             Compose
           </.icon_button>
@@ -1753,90 +2083,138 @@ defmodule TodoplaceWeb.JobLive.Shared do
       |> Enum.into(%{disabled_copy_link: false, string_length: @string_length})
 
     ~H"""
-    <.section id="booking-details" icon="camera-laptop" title="Booking details" collapsed_sections={@collapsed_sections}>
-      <.card title={if @proposal && (@proposal.sent_to_client || @proposal.accepted_at), do: "Here’s what you sent your client", else: "Here’s what you’ll be sending your client"}>
-      <%= if(!@job.job_status.is_lead) do %>
-      <div class="grid sm:grid-cols-2 gap-5 border border-base-200 rounded-lg my-5">
-        <div class="flex flex-col p-4">
-          <div class="flex flex-row font-bold">
-            Additional files
-          </div>
-          <div class="flex flex-col">
-          <%= if(is_nil(@job.documents) || @job.documents == []) do %>
-          <div class="p-12 text-gray-400 italic">No additional files have been uploaded</div>
-          <% end %>
-            <%= for document <- @job.documents do %>
-            <div id={document.id} class="flex flex-row justify-between items-center">
-              <a href={path_to_url(document.url)} target="_blank" rel="document">
-                <dl class="flex items-center">
-                  <dd>
-                  <.icon name="files-icon" class="w-4 h-4" />
-                  </dd>
-                  <dd class="block link pl-1"><%= truncate_name(%{client_name: document.name}, @string_length) %></dd>
-                </dl>
-              </a>
-              <div id={"options-#{document.id}"} phx-update="ignore" data-offset="0" phx-hook="Select" >
-                <button title="Options" type="button" class="flex-shrink-0 btn-tertiary flex items-center px-2 py-1 font-sans rounded-lg hover:opacity-75 transition-colors text-blue-planning-300 btn-secondary">
-                  <.icon name="hellip" class="w-4 h-1 m-1 fill-current open-icon text-blue-planning-300" />
-                  <.icon name="close-x" class="hidden w-3 h-3 mx-1.5 stroke-current close-icon stroke-2 text-blue-planning-300" />
-                </button>
-
-                <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content">
-                  <button title="Deletes" type="button" phx-click="delete_document" phx-value-name={document.name} phx-value-document_id={document.id} class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                    <.icon name="trash" class="inline-block w-4 h-4 mr-2 fill-current text-red-sales-300" />
-                    Delete
-                  </button>
-                </div>
+    <.section
+      id="booking-details"
+      icon="camera-laptop"
+      title="Booking details"
+      collapsed_sections={@collapsed_sections}
+    >
+      <.card title={
+        if @proposal && (@proposal.sent_to_client || @proposal.accepted_at),
+          do: "Here’s what you sent your client",
+          else: "Here’s what you’ll be sending your client"
+      }>
+        <%= if(!@job.job_status.is_lead) do %>
+          <div class="grid sm:grid-cols-2 gap-5 border border-base-200 rounded-lg my-5">
+            <div class="flex flex-col p-4">
+              <div class="flex flex-row font-bold">
+                Additional files
               </div>
+              <div class="flex flex-col">
+                <%= if(is_nil(@job.documents) || @job.documents == []) do %>
+                  <div class="p-12 text-gray-400 italic">No additional files have been uploaded</div>
+                <% end %>
+                <%= for document <- @job.documents do %>
+                  <div id={document.id} class="flex flex-row justify-between items-center">
+                    <a href={path_to_url(document.url)} target="_blank" rel="document">
+                      <dl class="flex items-center">
+                        <dd>
+                          <.icon name="files-icon" class="w-4 h-4" />
+                        </dd>
+                        <dd class="block link pl-1">
+                          <%= truncate_name(%{client_name: document.name}, @string_length) %>
+                        </dd>
+                      </dl>
+                    </a>
+                    <div
+                      id={"options-#{document.id}"}
+                      phx-update="ignore"
+                      data-offset="0"
+                      phx-hook="Select"
+                    >
+                      <button
+                        title="Options"
+                        type="button"
+                        class="flex-shrink-0 btn-tertiary flex items-center px-2 py-1 font-sans rounded-lg hover:opacity-75 transition-colors text-blue-planning-300 btn-secondary"
+                      >
+                        <.icon
+                          name="hellip"
+                          class="w-4 h-1 m-1 fill-current open-icon text-blue-planning-300"
+                        />
+                        <.icon
+                          name="close-x"
+                          class="hidden w-3 h-3 mx-1.5 stroke-current close-icon stroke-2 text-blue-planning-300"
+                        />
+                      </button>
+
+                      <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content">
+                        <button
+                          title="Deletes"
+                          type="button"
+                          phx-click="delete_document"
+                          phx-value-name={document.name}
+                          phx-value-document_id={document.id}
+                          class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+                        >
+                          <.icon
+                            name="trash"
+                            class="inline-block w-4 h-4 mr-2 fill-current text-red-sales-300"
+                          /> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div></div>
             </div>
-            <% end %>
+            <div class="flex flex-col p-4" id={"document-upload-#{@job.id}"} phx-hook="ResumeUpload">
+              <form phx-change="validate" phx-submit="submit" id="upload_documents">
+                <.drag_drop upload_entity={@uploads.documents} label_class="py-8" job_view?={true} />
+              </form>
+              <%= Enum.map(@invalid_entries, fn entry -> %>
+                <.files_to_upload entry={entry} for={:job_detail}>
+                  <.error_action error={@invalid_entries_errors[entry.ref]} entry={entry} />
+                </.files_to_upload>
+              <% end) %>
+              <%= Enum.map(@uploads.documents.entries, fn entry -> %>
+                <.files_to_upload entry={entry} for={:job_detail}>
+                  <p class="btn items-center">Uploading...</p>
+                </.files_to_upload>
+              <% end) %>
+            </div>
           </div>
-          <div>
-          </div>
-        </div>
-        <div class="flex flex-col p-4" id={"document-upload-#{@job.id}"} phx-hook="ResumeUpload">
-          <form phx-change="validate" phx-submit="submit" id="upload_documents">
-            <.drag_drop
-            upload_entity={@uploads.documents}
-            label_class="py-8"
-            job_view?={true}
-            />
-          </form>
-          <%= Enum.map(@invalid_entries, fn entry -> %>
-            <.files_to_upload entry={entry} for={:job_detail} >
-              <.error_action error={@invalid_entries_errors[entry.ref]} entry={entry} />
-            </.files_to_upload>
-          <% end) %>
-          <%= Enum.map(@uploads.documents.entries, fn entry -> %>
-            <.files_to_upload entry={entry} for={:job_detail} >
-              <p class="btn items-center">Uploading...</p>
-            </.files_to_upload>
-          <% end) %>
-        </div>
-      </div>
-      <% end %>
+        <% end %>
         <div {testid("contract")} class="grid sm:grid-cols-2 gap-5">
           <div class="flex flex-col border border-base-200 rounded-lg p-4">
             <h3 class="font-bold text-xl">Contract</h3>
             <%= cond do %>
               <% !@package -> %>
                 <p class="my-2 text-base-250">You haven’t selected a package yet.</p>
-                <button {testid("view-contract")} phx-click="add-package" class="mt-auto btn-primary self-end">
+                <button
+                  {testid("view-contract")}
+                  phx-click="add-package"
+                  class="mt-auto btn-primary self-end"
+                >
                   Add a package
                 </button>
               <% !@proposal || (@proposal && (!@proposal.sent_to_client && is_nil(@proposal.accepted_at))) -> %>
-                <p class="mt-2 text-base-250">We’ve created a contract for you to start with. If you have your own or would like to tweak the language of ours—this is the place to change. We have Business Coaching available if you need advice.</p>
+                <p class="mt-2 text-base-250">
+                  We’ve created a contract for you to start with. If you have your own or would like to tweak the language of ours—this is the place to change. We have Business Coaching available if you need advice.
+                </p>
                 <div class="border rounded-lg px-4 py-2 mb-4 mt-auto">
-                  <span class="font-bold">Selected contract:</span> <%= if @package.contract, do: @package.contract.name, else: "#{Todoplace} Default Contract" %>
+                  <span class="font-bold">Selected contract:</span> <%= if @package.contract,
+                    do: @package.contract.name,
+                    else: "#{Todoplace} Default Contract" %>
                 </div>
                 <button type="button" phx-click="edit-contract" class="btn-primary self-end">
                   Edit or Select New
                 </button>
               <% @package && @package.collected_price -> %>
-                <p class="mt-2 text-base-250">During your job import, you marked this as an external document.</p>
+                <p class="mt-2 text-base-250">
+                  During your job import, you marked this as an external document.
+                </p>
               <% @package.contract -> %>
-                <p class="mt-2 text-base-250">You sent the <%= @package.contract.name %> to your client.</p>
-                <button {testid("view-contract")} type="button" phx-click="open-proposal" phx-value-action="contract" class="mt-4 btn-primary self-end">
+                <p class="mt-2 text-base-250">
+                  You sent the <%= @package.contract.name %> to your client.
+                </p>
+                <button
+                  {testid("view-contract")}
+                  type="button"
+                  phx-click="open-proposal"
+                  phx-value-action="contract"
+                  class="mt-4 btn-primary self-end"
+                >
                   View
                 </button>
               <% true -> %>
@@ -1847,31 +2225,77 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <%= cond do %>
               <% !@package -> %>
                 <p class="my-2 text-base-250">You haven’t selected a package yet.</p>
-                <button {testid("view-contract")} type="button" phx-click="add-package" class="mt-auto btn-primary self-end">
+                <button
+                  {testid("view-contract")}
+                  type="button"
+                  phx-click="add-package"
+                  class="mt-auto btn-primary self-end"
+                >
                   Add a package
                 </button>
               <% !@proposal && !@job.is_gallery_only || (@proposal && (!@proposal.sent_to_client && is_nil(@proposal.accepted_at)))-> %>
-                <p class="mt-2 text-base-250">We've created a questionnaire for you to start with. You can build your own templates <.live_link to={~p"/questionnaires"} class="underline text-blue-planning-300">here</.live_link>. You can come back and select your new one or add to your package templates for ease of future reuse!</p>
+                <p class="mt-2 text-base-250">
+                  We've created a questionnaire for you to start with. You can build your own templates
+                  <.live_link to={~p"/questionnaires"} class="underline text-blue-planning-300">
+                    here
+                  </.live_link>. You can come back and select your new one or add to your package templates for ease of future reuse!
+                </p>
                 <label class="flex my-4 cursor-pointer">
-                  <input type="checkbox" class="w-6 h-6 mt-1 checkbox" phx-click="toggle-questionnaire" checked={@include_questionnaire} />
+                  <input
+                    type="checkbox"
+                    class="w-6 h-6 mt-1 checkbox"
+                    phx-click="toggle-questionnaire"
+                    checked={@include_questionnaire}
+                  />
                   <p class="ml-3">Include questionnaire in proposal?</p>
                 </label>
-                <div class={classes("border rounded-lg px-4 py-2 mb-4 mt-auto", %{"opacity-50" => !@include_questionnaire})}>
-                  Selected questionnaire: <%= if @package.questionnaire_template, do: @package.questionnaire_template.name, else: "#{Todoplace} Default Questionnaire" %>
+                <div class={
+                  classes("border rounded-lg px-4 py-2 mb-4 mt-auto", %{
+                    "opacity-50" => !@include_questionnaire
+                  })
+                }>
+                  Selected questionnaire: <%= if @package.questionnaire_template,
+                    do: @package.questionnaire_template.name,
+                    else: "#{Todoplace} Default Questionnaire" %>
                 </div>
                 <div class="self-end mt-auto">
-                  <button {testid("view-questionnaire")} type="button" phx-click="open-questionnaire" class={classes("underline text-blue-planning-300 mr-4", %{"opacity-50 cursor-not-allowed" => !@include_questionnaire})} disabled={!@include_questionnaire}>
+                  <button
+                    {testid("view-questionnaire")}
+                    type="button"
+                    phx-click="open-questionnaire"
+                    class={
+                      classes("underline text-blue-planning-300 mr-4", %{
+                        "opacity-50 cursor-not-allowed" => !@include_questionnaire
+                      })
+                    }
+                    disabled={!@include_questionnaire}
+                  >
                     Preview
                   </button>
-                  <button {testid("edit-questionnaire")} type="button" phx-click="edit-questionnaire" class="btn-primary" disabled={!@include_questionnaire}>
+                  <button
+                    {testid("edit-questionnaire")}
+                    type="button"
+                    phx-click="edit-questionnaire"
+                    class="btn-primary"
+                    disabled={!@include_questionnaire}
+                  >
                     Edit or Select New
                   </button>
                 </div>
               <% @package && @package.collected_price -> %>
-                <p class="mt-2 text-base-250">During your job import, you marked this as an external document.</p>
+                <p class="mt-2 text-base-250">
+                  During your job import, you marked this as an external document.
+                </p>
               <% @proposal && @proposal.questionnaire_id -> %>
-                <p class="mt-2 text-base-250">You sent the #{Todoplace} Default Questionnaire to your client.</p>
-                <button {testid("view-questionnaire")} phx-click="open-proposal" phx-value-action="questionnaire" class="mt-4 btn-primary self-end">
+                <p class="mt-2 text-base-250">
+                  You sent the #{Todoplace} Default Questionnaire to your client.
+                </p>
+                <button
+                  {testid("view-questionnaire")}
+                  phx-click="open-proposal"
+                  phx-value-action="questionnaire"
+                  class="mt-4 btn-primary self-end"
+                >
                   View answers
                 </button>
               <% true -> %>
@@ -1884,13 +2308,17 @@ defmodule TodoplaceWeb.JobLive.Shared do
             <dt class="font-bold">Payment schedule:</dt>
             <dd>
               <%= if !@is_schedule_valid do %>
-                <.badge color={:red}>You changed a shoot date. You need to review or fix your payment schedule date.</.badge>
+                <.badge color={:red}>
+                  You changed a shoot date. You need to review or fix your payment schedule date.
+                </.badge>
               <% end %>
             </dd>
             <dd>
               <%= PaymentSchedules.get_description(@job) %>
               <%= if @proposal  && (@proposal.sent_to_client || @proposal.accepted_at) do %>
-                <button phx-click="open-proposal" phx-value-action="invoice" class="block link mt-2">View invoice</button>
+                <button phx-click="open-proposal" phx-value-action="invoice" class="block link mt-2">
+                  View invoice
+                </button>
               <% end %>
             </dd>
           </dl>
@@ -1904,7 +2332,9 @@ defmodule TodoplaceWeb.JobLive.Shared do
                   <.badge color={:red}>Missing information in shoot details</.badge>
                 <% true -> %>
                   <%= for {_, %{name: name, starts_at: starts_at}} <- @shoots do %>
-                    <p><%= "#{name}—#{strftime(@current_user.time_zone, starts_at, "%m/%d/%Y")}" %></p>
+                    <p>
+                      <%= "#{name}—#{strftime(@current_user.time_zone, starts_at, "%m/%d/%Y")}" %>
+                    </p>
                   <% end %>
               <% end %>
             </dd>
@@ -1921,26 +2351,56 @@ defmodule TodoplaceWeb.JobLive.Shared do
           </dl>
         </div>
         <%= unless @job.is_gallery_only do %>
-        <div class="md:flex lg:flex justify-end items-center mt-8 gap-1">
-          <div class="flex gap-1">
-            <.icon_button icon="eye" color="blue-planning-300" class="flex-shrink-0 transition-colors px-6 py-3" id="client-preview" disabled={@disabled_copy_link} phx-click="copy-or-view-client-link" phx-value-action="view" phx-hook="ViewProposal">
-              <a href={if @proposal, do: BookingProposal.url(@proposal.id)}} target="_blank" rel="noopener noreferrer">
-                Client preview
-              </a>
-            </.icon_button>
-            <.icon_button icon="anchor" color="blue-planning-300" class="flex-shrink-0 lg:mx-4 transition-colors px-6 py-3" id="copy-client-link" data-clipboard-text={if @proposal, do: BookingProposal.url(@proposal.id)} phx-click="copy-or-view-client-link" phx-value-action="copy" phx-hook="Clipboard" disabled={@disabled_copy_link}>
-              <span>Copy client link</span>
-              <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
-                Copied!
-              </div>
-            </.icon_button>
+          <div class="md:flex lg:flex justify-end items-center mt-8 gap-1">
+            <div class="flex gap-1">
+              <.icon_button
+                icon="eye"
+                color="blue-planning-300"
+                class="flex-shrink-0 transition-colors px-6 py-3"
+                id="client-preview"
+                disabled={@disabled_copy_link}
+                phx-click="copy-or-view-client-link"
+                phx-value-action="view"
+                phx-hook="ViewProposal"
+              >
+                <a
+                  href={if @proposal, do: BookingProposal.url(@proposal.id)}
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Client preview
+                </a>
+              </.icon_button>
+              <.icon_button
+                icon="anchor"
+                color="blue-planning-300"
+                class="flex-shrink-0 lg:mx-4 transition-colors px-6 py-3"
+                id="copy-client-link"
+                data-clipboard-text={if @proposal, do: BookingProposal.url(@proposal.id)}
+                phx-click="copy-or-view-client-link"
+                phx-value-action="copy"
+                phx-hook="Clipboard"
+                disabled={@disabled_copy_link}
+              >
+                <span>Copy client link</span>
+                <div class="hidden p-1 text-sm rounded shadow" role="tooltip">
+                  Copied!
+                </div>
+              </.icon_button>
+            </div>
+            <%= if @proposal && (@proposal.sent_to_client || @proposal.accepted_at) do %>
+              <button
+                class="btn-primary mt-2 md:mt-0 lg:mt-0 lg:w-auto md:w-auto w-full"
+                phx-click="open-proposal"
+                phx-value-action="details"
+              >
+                View proposal
+              </button>
+            <% else %>
+              <%= render_slot(@send_proposal_button) %>
+            <% end %>
           </div>
-          <%= if @proposal && (@proposal.sent_to_client || @proposal.accepted_at) do %>
-            <button class="btn-primary mt-2 md:mt-0 lg:mt-0 lg:w-auto md:w-auto w-full" phx-click="open-proposal" phx-value-action="details">View proposal</button>
-          <% else %>
-            <%= render_slot(@send_proposal_button) %>
-          <% end %>
-        </div>
         <% end %>
       </.card>
     </.section>
@@ -1950,7 +2410,12 @@ defmodule TodoplaceWeb.JobLive.Shared do
   def history_card(%{leads_jobs_redesign: true} = assigns) do
     ~H"""
     <.simple_card icon="activity-history" heading="Activity History" {testid("history")}>
-      <.live_component module={TodoplaceWeb.JobLive.Shared.HistoryComponent} id="history" job={@job} current_user={@current_user} />
+      <.live_component
+        module={TodoplaceWeb.JobLive.Shared.HistoryComponent}
+        id="history"
+        job={@job}
+        current_user={@current_user}
+      />
     </.simple_card>
     """
   end
@@ -1965,7 +2430,12 @@ defmodule TodoplaceWeb.JobLive.Shared do
         <% end %>
       </ul>
       <h3 class="mt-4 text-xl font-bold">History</h3>
-      <.live_component module={TodoplaceWeb.JobLive.Shared.HistoryComponent} id="history" job={@job} current_user={@current_user} />
+      <.live_component
+        module={TodoplaceWeb.JobLive.Shared.HistoryComponent}
+        id="history"
+        job={@job}
+        current_user={@current_user}
+      />
     </div>
     """
   end
@@ -1978,7 +2448,6 @@ defmodule TodoplaceWeb.JobLive.Shared do
         }) :: Phoenix.LiveView.Rendered.t()
   def shoot_details(assigns) do
     ~H"""
-
     """
   end
 
@@ -1986,55 +2455,93 @@ defmodule TodoplaceWeb.JobLive.Shared do
     assigns = assigns |> Enum.into(%{main_class: "md:w-2/3"})
 
     ~H"""
-      <%= form_tag("#", [phx_change: :search, phx_submit: :submit, phx_target: @myself]) do %>
-        <div class="flex flex-col justify-between items-center px-1.5 md:flex-row">
-          <div class={"relative flex #{@main_class} w-full"}>
-            <a href='#' class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2">
-              <%= if (Enum.any?(@search_results) && @search_phrase) || @searched_client do %>
-                <span phx-click="clear-search" phx-target={@myself} class="cursor-pointer">
-                  <.icon name="close-x" class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300" />
-                </span>
-              <% else %>
-                <.icon name="search" class="w-4 ml-1 fill-current" />
-              <% end %>
-            </a>
-            <input disabled={!is_nil(@selected_client) || @new_client} type="text" class="form-control w-full text-input indent-6" id="search_phrase_input" name="search_phrase" value={if !is_nil(@selected_client), do: @selected_client.name, else: "#{@search_phrase}"} phx-debounce="500" phx-target={@myself} spellcheck="false" placeholder="Search clients by email or first/last name..." />
-            <%= if Enum.any?(@search_results) && @search_phrase do %>
-              <div id="search_results" class="absolute top-14 w-full z-50" phx-window-keydown="set-focus" phx-target={@myself}>
-                <div class="z-50 left-0 right-0 rounded-lg border border-gray-100 shadow py-2 px-2 bg-white w-full overflow-auto max-h-48 h-fit">
-                  <%= for {search_result, idx} <- Enum.with_index(@search_results) do %>
-                    <div class={"flex items-center cursor-pointer p-2"} phx-click="pick" phx-target={@myself} phx-value-client_id={"#{search_result.id}"}>
-                      <%= if search_result.id == @current_focus do %>
-                        <.icon name="radio-solid" class="mr-5 w-5 h-5" />
-                      <% else %>
-                        <.icon name="radio" class="mr-5 w-5 h-5" />
-                      <% end %>
-                      <%= radio_button(:search_radio, :name, search_result.name, checked: idx == @current_focus, class: "mr-5 w-5 h-5 radio text-blue-planning-300 hidden") %>
-                      <div>
-                        <p><%= search_result.name %></p>
-                        <p class="text-sm"><%= search_result.email %></p>
-                      </div>
+    <%= form_tag("#", [phx_change: :search, phx_submit: :submit, phx_target: @myself]) do %>
+      <div class="flex flex-col justify-between items-center px-1.5 md:flex-row">
+        <div class={"relative flex #{@main_class} w-full"}>
+          <a
+            href="#"
+            class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2"
+          >
+            <%= if (Enum.any?(@search_results) && @search_phrase) || @searched_client do %>
+              <span phx-click="clear-search" phx-target={@myself} class="cursor-pointer">
+                <.icon
+                  name="close-x"
+                  class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300"
+                />
+              </span>
+            <% else %>
+              <.icon name="search" class="w-4 ml-1 fill-current" />
+            <% end %>
+          </a>
+          <input
+            disabled={!is_nil(@selected_client) || @new_client}
+            type="text"
+            class="form-control w-full text-input indent-6"
+            id="search_phrase_input"
+            name="search_phrase"
+            value={if !is_nil(@selected_client), do: @selected_client.name, else: "#{@search_phrase}"}
+            phx-debounce="500"
+            phx-target={@myself}
+            spellcheck="false"
+            placeholder="Search clients by email or first/last name..."
+          />
+          <%= if Enum.any?(@search_results) && @search_phrase do %>
+            <div
+              id="search_results"
+              class="absolute top-14 w-full z-50"
+              phx-window-keydown="set-focus"
+              phx-target={@myself}
+            >
+              <div class="z-50 left-0 right-0 rounded-lg border border-gray-100 shadow py-2 px-2 bg-white w-full overflow-auto max-h-48 h-fit">
+                <%= for {search_result, idx} <- Enum.with_index(@search_results) do %>
+                  <div
+                    class="flex items-center cursor-pointer p-2"
+                    phx-click="pick"
+                    phx-target={@myself}
+                    phx-value-client_id={"#{search_result.id}"}
+                  >
+                    <%= if search_result.id == @current_focus do %>
+                      <.icon name="radio-solid" class="mr-5 w-5 h-5" />
+                    <% else %>
+                      <.icon name="radio" class="mr-5 w-5 h-5" />
+                    <% end %>
+                    <%= radio_button(:search_radio, :name, search_result.name,
+                      checked: idx == @current_focus,
+                      class: "mr-5 w-5 h-5 radio text-blue-planning-300 hidden"
+                    ) %>
+                    <div>
+                      <p><%= search_result.name %></p>
+                      <p class="text-sm"><%= search_result.email %></p>
                     </div>
-                  <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <%= if @search_phrase && @search_phrase !== "" && Enum.empty?(@search_results) && is_nil(@selected_client) && is_nil(@searched_client) do %>
+              <div class="absolute top-14 w-full z-50">
+                <div class="z-50 left-0 right-0 rounded-lg border border-gray-100 cursor-pointer shadow py-2 px-2 bg-white">
+                  <p class="font-bold">No client found with that information</p>
+                  <p>You'll need to add a new client</p>
                 </div>
               </div>
-            <% else %>
-              <%= if @search_phrase && @search_phrase !== "" && Enum.empty?(@search_results) && is_nil(@selected_client) && is_nil(@searched_client) do %>
-                <div class="absolute top-14 w-full z-50">
-                  <div class="z-50 left-0 right-0 rounded-lg border border-gray-100 cursor-pointer shadow py-2 px-2 bg-white">
-                    <p class="font-bold">No client found with that information</p>
-                    <p>You'll need to add a new client</p>
-                  </div>
-                </div>
-              <% end %>
             <% end %>
-          </div>
-          <p class={classes("flex", %{"text-gray-400" => (!is_nil(@selected_client) || @new_client)})}>or</p>
-          <button disabled={!is_nil(@selected_client) || @new_client} type="button" class="justify-right text-lg px-7 btn-primary" phx-click="new-client" phx-target={@myself}>
-            Add a new client
-          </button>
+          <% end %>
         </div>
-      <% end %>
+        <p class={classes("flex", %{"text-gray-400" => !is_nil(@selected_client) || @new_client})}>
+          or
+        </p>
+        <button
+          disabled={!is_nil(@selected_client) || @new_client}
+          type="button"
+          class="justify-right text-lg px-7 btn-primary"
+          phx-click="new-client"
+          phx-target={@myself}
+        >
+          Add a new client
+        </button>
+      </div>
+    <% end %>
     """
   end
 
@@ -2046,26 +2553,56 @@ defmodule TodoplaceWeb.JobLive.Shared do
           <h3 class="rounded-t-lg bg-gray-300 px-5 py-2 text-2xl font-bold">Add a new client</h3>
           <div class="row grid grid-cols-1 px-5 py-2 sm:grid-cols-3 gap-5 mt-3">
             <%= for client_form <- inputs_for(@form, :client) do %>
-              <%= labeled_input client_form, :email, type: :email_input, label: "Client Email", placeholder: "email@example.com", phx_debounce: "500" %>
-              <%= labeled_input client_form, :name, label: "Client Name", placeholder: "First and last name", autocapitalize: "words", autocorrect: "false", spellcheck: "false", autocomplete: "name", phx_debounce: "500" %>
-              <div class="flex flex-col" >
-                <%= label_for client_form, :phone, label: "Client Phone", optional: true %>
-                <.live_component module={LivePhone}  id={"phone"} form={client_form} field={:phone} tabindex={0}  preferred={["US", "CA"]} />
+              <%= labeled_input(client_form, :email,
+                type: :email_input,
+                label: "Client Email",
+                placeholder: "email@example.com",
+                phx_debounce: "500"
+              ) %>
+              <%= labeled_input(client_form, :name,
+                label: "Client Name",
+                placeholder: "First and last name",
+                autocapitalize: "words",
+                autocorrect: "false",
+                spellcheck: "false",
+                autocomplete: "name",
+                phx_debounce: "500"
+              ) %>
+              <div class="flex flex-col">
+                <%= label_for(client_form, :phone, label: "Client Phone", optional: true) %>
+                <.live_component
+                  module={LivePhone}
+                  id="phone"
+                  form={client_form}
+                  field={:phone}
+                  tabindex={0}
+                  preferred={["US", "CA"]}
+                />
               </div>
             <% end %>
           </div>
           <div class="flex px-5 py-5 ml-auto">
-            <button class="btn-secondary button rounded-lg border border-blue-planning-300 ml-auto" title="cancel" type="button" phx-click="cancel-new-client" phx-target={@myself}>
+            <button
+              class="btn-secondary button rounded-lg border border-blue-planning-300 ml-auto"
+              title="cancel"
+              type="button"
+              phx-click="cancel-new-client"
+              phx-target={@myself}
+            >
               Cancel
             </button>
           </div>
         </div>
       <% end %>
-      <hr class="mt-10">
+      <hr class="mt-10" />
       <div class="sm:col-span-3 mt-3">
         <div>
-          <%= label_for @form, :type, label: "Type of Photography" %>
-          <.tooltip class="" content="You can enable more photography types in your <a class='underline' href='/package_templates?edit_photography_types=true'>package settings</a>." id="photography-type-tooltip">
+          <%= label_for(@form, :type, label: "Type of Photography") %>
+          <.tooltip
+            class=""
+            content="You can enable more photography types in your <a class='underline' href='/package_templates?edit_photography_types=true'>package settings</a>."
+            id="photography-type-tooltip"
+          >
             <.link navigate="/package_templates?edit_photography_types=true">
               <span class="link text-sm">Not seeing your photography type?</span>
             </.link>
@@ -2073,7 +2610,12 @@ defmodule TodoplaceWeb.JobLive.Shared do
         </div>
         <div class="grid grid-cols-2 gap-3 mt-2 sm:grid-cols-4 sm:gap-5">
           <%= for job_type <- @job_types do %>
-            <.job_type_option type="radio" name={input_name(@form, :type)} job_type={job_type} checked={input_value(@form, :type) == job_type} />
+            <.job_type_option
+              type="radio"
+              name={input_name(@form, :type)}
+              job_type={job_type}
+              checked={input_value(@form, :type) == job_type}
+            />
           <% end %>
         </div>
       </div>
@@ -2092,18 +2634,29 @@ defmodule TodoplaceWeb.JobLive.Shared do
       })
 
     ~H"""
-    <div class="dragDrop border-dashed border-2 border-blue-planning-300 rounded-lg" id="dropzone-upload" phx-hook="DragDrop" phx-drop-target={@upload_entity.ref}>
+    <div
+      class="dragDrop border-dashed border-2 border-blue-planning-300 rounded-lg"
+      id="dropzone-upload"
+      phx-hook="DragDrop"
+      phx-drop-target={@upload_entity.ref}
+    >
       <label class={"flex flex-col items-center justify-center w-full h-full gap-8 cursor-pointer #{@label_class}"}>
         <div class={"max-w-xs mx-auto #{@job_view? && 'flex gap-4'}"}>
-          <img src={static_path(TodoplaceWeb.Endpoint, "/images/drag-drop-img.png")} width="76" height="76" class="mx-auto cursor-pointer opacity-75 cursor-defaul" alt="add photos icon"/>
-            <div class="flex flex-col items-center justify-center dragDrop__content">
-              <p class="text-center">
-                <span class={"font-bold #{@text_color}"}>Drag your <%= @item_name %> or </span>
-                <span class="font-bold cursor-pointer primary gray">browse</span>
-                <.live_file_input upload={@upload_entity} class="dragDropInput" />
-              </p>
-              <p class="text-center gray">Supports <%= @supported_types %></p>
-            </div>
+          <img
+            src={static_path(TodoplaceWeb.Endpoint, "/images/drag-drop-img.png")}
+            width="76"
+            height="76"
+            class="mx-auto cursor-pointer opacity-75 cursor-defaul"
+            alt="add photos icon"
+          />
+          <div class="flex flex-col items-center justify-center dragDrop__content">
+            <p class="text-center">
+              <span class={"font-bold #{@text_color}"}>Drag your <%= @item_name %> or</span>
+              <span class="font-bold cursor-pointer primary gray">browse</span>
+              <.live_file_input upload={@upload_entity} class="dragDropInput" />
+            </p>
+            <p class="text-center gray">Supports <%= @supported_types %></p>
+          </div>
         </div>
       </label>
     </div>
@@ -2114,42 +2667,79 @@ defmodule TodoplaceWeb.JobLive.Shared do
     assigns = Enum.into(assigns, %{myself: nil, for: nil, string_length: @string_length})
 
     ~H"""
-      <div class={classes("uploadEntry grid grid-cols-5 pb-4 items-center", %{"px-14" => @for == :photos})}>
-        <p class="max-w-md overflow-hidden col-span-2">
+    <div class={
+      classes("uploadEntry grid grid-cols-5 pb-4 items-center", %{"px-14" => @for == :photos})
+    }>
+      <p class="max-w-md overflow-hidden col-span-2">
         <%= truncate_name(@entry, @string_length) %>
-        </p>
-        <div class={classes("flex photoUploadingIsFailed items-center justify-center", %{"gap-x-1 lg:gap-x-4 md:gap-x-4 grid-cols-1" => @for == :photos || @for in [:job, :job_detail], "col-span-1" => @for != :photos || @for not in [:job, :job_detail]})}>
-          <%= render_slot(@inner_block) %>
-        </div>
-        <%= if @for in [:job, :job_detail] do %>
-          <div class="w-full ml-4 lg:ml-0 md:ml-0">
-            <div class={"sm:w-3/4 lg:w-full w-2/3 bg-green-finances-300 mt-4 mx-auto rounded-full h-1.5 mb-4 darkbg-green-finances-300 #{((!@entry.valid? || @entry.done?)) && 'invisible'}"}>
-              <div class="bg-green-finances-300 font-sans h-1.5 rounded-full" style={"width: #{@entry.progress}%"}></div>
+      </p>
+      <div class={
+        classes("flex photoUploadingIsFailed items-center justify-center", %{
+          "gap-x-1 lg:gap-x-4 md:gap-x-4 grid-cols-1" =>
+            @for == :photos || @for in [:job, :job_detail],
+          "col-span-1" => @for != :photos || @for not in [:job, :job_detail]
+        })
+      }>
+        <%= render_slot(@inner_block) %>
+      </div>
+      <%= if @for in [:job, :job_detail] do %>
+        <div class="w-full ml-4 lg:ml-0 md:ml-0">
+          <div class={"sm:w-3/4 lg:w-full w-2/3 bg-green-finances-300 mt-4 mx-auto rounded-full h-1.5 mb-4 darkbg-green-finances-300 #{((!@entry.valid? || @entry.done?)) && 'invisible'}"}>
+            <div
+              class="bg-green-finances-300 font-sans h-1.5 rounded-full"
+              style={"width: #{@entry.progress}%"}
+            >
             </div>
           </div>
-        <% end %>
+        </div>
+      <% end %>
 
-          <%= case @for do %>
-            <% :job_detail -> %>
-              <.removal_button phx-click="cancel-upload" phx-value-ref={@entry.ref} />
-            <% :photos -> %>
-              <.removal_button phx-target={@target} phx-click="delete_photo" phx-value-index={@index} phx-value-delete_from={@delete_from} />
-            <% _ -> %>
-              <div id={"file_options-#{@entry.uuid}"} data-offset-x="-60" phx-hook="Select" class="justify-self-end grid-cols-1 cursor-pointer ml-5 lg:ml-auto">
-                  <button type="button" class="flex flex-shrink-0 p-2.5 bg-white border rounded-lg border-blue-planning-300 text-blue-planning-300">
-                    <.icon name="hellip" class="w-4 h-1 m-1 fill-current open-icon text-blue-planning-300" />
-                    <.icon name="close-x" class="hidden w-3 h-3 mx-1.5 stroke-current close-icon stroke-2 text-blue-planning-300" />
-                  </button>
+      <%= case @for do %>
+        <% :job_detail -> %>
+          <.removal_button phx-click="cancel-upload" phx-value-ref={@entry.ref} />
+        <% :photos -> %>
+          <.removal_button
+            phx-target={@target}
+            phx-click="delete_photo"
+            phx-value-index={@index}
+            phx-value-delete_from={@delete_from}
+          />
+        <% _ -> %>
+          <div
+            id={"file_options-#{@entry.uuid}"}
+            data-offset-x="-60"
+            phx-hook="Select"
+            class="justify-self-end grid-cols-1 cursor-pointer ml-5 lg:ml-auto"
+          >
+            <button
+              type="button"
+              class="flex flex-shrink-0 p-2.5 bg-white border rounded-lg border-blue-planning-300 text-blue-planning-300"
+            >
+              <.icon name="hellip" class="w-4 h-1 m-1 fill-current open-icon text-blue-planning-300" />
+              <.icon
+                name="close-x"
+                class="hidden w-3 h-3 mx-1.5 stroke-current close-icon stroke-2 text-blue-planning-300"
+              />
+            </button>
 
-                  <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content">
-                    <span phx-click="cancel-upload" phx-target={@myself} phx-value-ref={@entry.ref} aria-label="remove" class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold cursor-pointer">
-                      <span class="pr-2">Delete</span>
-                      <.icon name="remove-icon" class="inline-block w-4 h-4 mr-2 fill-current text-red-sales-300"/>
-                    </span>
-                  </div>
-              </div>
-          <% end %>
-      </div>
+            <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content">
+              <span
+                phx-click="cancel-upload"
+                phx-target={@myself}
+                phx-value-ref={@entry.ref}
+                aria-label="remove"
+                class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold cursor-pointer"
+              >
+                <span class="pr-2">Delete</span>
+                <.icon
+                  name="remove-icon"
+                  class="inline-block w-4 h-4 mr-2 fill-current text-red-sales-300"
+                />
+              </span>
+            </div>
+          </div>
+      <% end %>
+    </div>
     """
   end
 
@@ -2182,7 +2772,16 @@ defmodule TodoplaceWeb.JobLive.Shared do
 
     ~H"""
     <div class={"flex flex-col items-center #{@class}"}>
-      <button id="finish-proposal" title="send proposal" class="w-full md:w-auto btn-primary intro-finish-proposal" phx-click="finish-proposal" data-intercom-trigger="send-proposal" disabled={@disabled_message}>Send proposal</button>
+      <button
+        id="finish-proposal"
+        title="send proposal"
+        class="w-full md:w-auto btn-primary intro-finish-proposal"
+        phx-click="finish-proposal"
+        data-intercom-trigger="send-proposal"
+        disabled={@disabled_message}
+      >
+        Send proposal
+      </button>
       <%= if @show_message && @disabled_message do %>
         <em class="pt-1 text-xs text-red-sales-300"><%= @disabled_message %></em>
       <% end %>
@@ -2202,13 +2801,17 @@ defmodule TodoplaceWeb.JobLive.Shared do
     ~H"""
     <div class={"px-4 bg-orange-inbox-400 md:flex md:justify-between grid rounded-lg py-2 my-2 #{@class}"}>
       <div class="flex justify-start items-center">
-        <.icon name="warning-orange", class={"md:w-6 md:h-6 w-10 h-10 stroke-[4px] #{@icon_class}"} />
+        <.icon name="warning-orange" , class={"md:w-6 md:h-6 w-10 h-10 stroke-[4px] #{@icon_class}"} />
         <div class="pl-4"><%= @message %></div>
       </div>
       <div class="flex items-center md:justify-end justify-center">
-      <button type="button" class={"btn-primary intro-message #{@button.class}"} phx-click={@button.action}>
-        <%= @button.title %>
-      </button>
+        <button
+          type="button"
+          class={"btn-primary intro-message #{@button.class}"}
+          phx-click={@button.action}
+        >
+          <%= @button.title %>
+        </button>
       </div>
     </div>
     """
@@ -2219,8 +2822,12 @@ defmodule TodoplaceWeb.JobLive.Shared do
 
     ~H"""
     <p class="error btn items-center px-2 sm:px-1"><%= Phoenix.Naming.humanize(@error) %></p>
-    <p class={"retry rounded ml-2 py-1 px-2 sm:px-1 text-xs cursor-pointer #{!retryable?(@error) && 'hidden'}"}
-      phx-value-ref={@entry.ref} phx-click="retry" phx-target={@target}>
+    <p
+      class={"retry rounded ml-2 py-1 px-2 sm:px-1 text-xs cursor-pointer #{!retryable?(@error) && 'hidden'}"}
+      phx-value-ref={@entry.ref}
+      phx-click="retry"
+      phx-target={@target}
+    >
       Retry?
     </p>
     """
@@ -2625,8 +3232,12 @@ defmodule TodoplaceWeb.JobLive.Shared do
 
   defp removal_button(assigns) do
     ~H"""
-    <button {assigns} aria-label="remove" class="justify-self-end grid-cols-1 cursor-pointer ml-5 lg:ml-auto">
-      <.icon name="remove-icon" class="w-3.5 h-3.5 ml-1 text-base-250"/>
+    <button
+      {assigns}
+      aria-label="remove"
+      class="justify-self-end grid-cols-1 cursor-pointer ml-5 lg:ml-auto"
+    >
+      <.icon name="remove-icon" class="w-3.5 h-3.5 ml-1 text-base-250" />
     </button>
     """
   end

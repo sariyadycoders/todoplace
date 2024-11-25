@@ -20,7 +20,8 @@ defmodule TodoplaceWeb.GalleryLive.FramedPreviewComponent do
       height={@height}
       id={@id}
       phx-hook="Preview"
-      width={@width}>
+      width={@width}
+    >
     </canvas>
     """
   end

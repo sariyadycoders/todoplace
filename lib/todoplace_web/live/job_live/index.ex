@@ -152,7 +152,9 @@ defmodule TodoplaceWeb.JobLive.Index do
   @impl true
   def handle_event("view-job", %{"id" => id}, %{assigns: %{type: type}} = socket) do
     socket
-    |> push_redirect(to: ~p"/#{if String.to_atom(type.plural) == :leads, do: "leads", else: "jobs"}/#{id}")
+    |> push_redirect(
+      to: ~p"/#{if String.to_atom(type.plural) == :leads, do: "leads", else: "jobs"}/#{id}"
+    )
     |> noreply()
   end
 
@@ -169,7 +171,8 @@ defmodule TodoplaceWeb.JobLive.Index do
   def handle_event("view-galleries", %{"id" => id}, %{assigns: %{type: type}} = socket) do
     socket
     |> push_redirect(
-      to: ~p"/#{if String.to_atom(type.plural) == :leads, do: "leads", else: "jobs"}/#{id}?#{%{tab_active: "galleries"}}"
+      to:
+        ~p"/#{if String.to_atom(type.plural) == :leads, do: "leads", else: "jobs"}/#{id}?#{%{tab_active: "galleries"}}"
     )
     |> noreply()
   end
@@ -233,25 +236,64 @@ defmodule TodoplaceWeb.JobLive.Index do
 
   def actions(assigns) do
     ~H"""
-    <div class="flex items-center md:ml-auto w-full md:w-auto left-3 sm:left-8" data-offset="0" phx-update="ignore" data-placement="bottom-end" phx-hook="Select" id={"manage-job-#{@job.id}"}>
-      <button title="Manage" class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full">
+    <div
+      class="flex items-center md:ml-auto w-full md:w-auto left-3 sm:left-8"
+      data-offset="0"
+      phx-update="ignore"
+      data-placement="bottom-end"
+      phx-hook="Select"
+      id={"manage-job-#{@job.id}"}
+    >
+      <button
+        title="Manage"
+        class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full"
+      >
         Actions
-        <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-        <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+        <.icon
+          name="down"
+          class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+        />
+        <.icon
+          name="up"
+          class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+        />
       </button>
 
       <div class="z-10 flex flex-col hidden w-44 bg-white border rounded-lg shadow-lg popover-content">
         <%= for %{title: title, action: action, icon: icon} <- actions(), (@type.plural == "jobs") || (@type.plural == "leads" and action not in ["complete-job", "view-galleries"]) do %>
-          <button title={title} type="button" phx-click={action} phx-value-id={@job.id} class={classes("flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100", %{"hidden" => hide_action?(@job, icon)})}>
-            <.icon name={icon} class={classes("inline-block w-4 h-4 mr-3 fill-current", %{"text-red-sales-300" => icon == "trash", "text-blue-planning-300" => icon != "trash"})} />
+          <button
+            title={title}
+            type="button"
+            phx-click={action}
+            phx-value-id={@job.id}
+            class={
+              classes("flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100", %{
+                "hidden" => hide_action?(@job, icon)
+              })
+            }
+          >
+            <.icon
+              name={icon}
+              class={
+                classes("inline-block w-4 h-4 mr-3 fill-current", %{
+                  "text-red-sales-300" => icon == "trash",
+                  "text-blue-planning-300" => icon != "trash"
+                })
+              }
+            />
             <%= title %>
           </button>
         <% end %>
         <%= if @job.job_status.current_status == :archived do %>
-            <button title="Unarchive" type="button" phx-click="confirm-archive-unarchive" phx-value-id={@job.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100">
-              <.icon name="plus" class="inline-block w-4 h-4 mr-3 text-blue-planning-300" />
-              Unarchive
-            </button>
+          <button
+            title="Unarchive"
+            type="button"
+            phx-click="confirm-archive-unarchive"
+            phx-value-id={@job.id}
+            class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100"
+          >
+            <.icon name="plus" class="inline-block w-4 h-4 mr-3 text-blue-planning-300" /> Unarchive
+          </button>
         <% end %>
       </div>
     </div>
@@ -281,67 +323,155 @@ defmodule TodoplaceWeb.JobLive.Index do
       |> Enum.into(%{class: ""})
 
     ~H"""
-      <div class="flex flex-col w-full lg:w-auto mr-2 mb-3 lg:mb-0">
-        <h1 class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></h1>
-        <div class="flex">
-          <div id={@id} class={classes("relative w-full lg:w-48 border-grey border p-2 cursor-pointer", %{"lg:w-64" => @id == "status" and @type == "lead", "rounded-l-lg" => @id == "sort_by", "rounded-lg" => @title == "Filter" or @id != "sort_by"})} data-offset-y="5" phx-hook="Select">
-            <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
-                <%= Utils.capitalize_per_word(String.replace(@selected_option, "_", " ")) %>
-                <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
-                <.icon name="up" class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon" />
-            </div>
-            <ul class={"absolute z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 #{@class}"}>
-              <%= for option <- @options_list do %>
-                <li id={option.id} target-class="toggle-it" parent-class="toggle" toggle-type="selected-active" phx-hook="ToggleSiblings"
-                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md" phx-click={"apply-filter-#{@id}"} phx-value-option={option.id}>
-                  <button id={"btn-#{option.id}"} class={classes("album-select", %{"w-64" => @id == "status", "w-40" => @id != "status"})}><%= option.title %></button>
-                  <%= if option.id == @selected_option do %>
-                    <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
+    <div class="flex flex-col w-full lg:w-auto mr-2 mb-3 lg:mb-0">
+      <h1 class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></h1>
+      <div class="flex">
+        <div
+          id={@id}
+          class={
+            classes("relative w-full lg:w-48 border-grey border p-2 cursor-pointer", %{
+              "lg:w-64" => @id == "status" and @type == "lead",
+              "rounded-l-lg" => @id == "sort_by",
+              "rounded-lg" => @title == "Filter" or @id != "sort_by"
+            })
+          }
+          data-offset-y="5"
+          phx-hook="Select"
+        >
+          <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
+            <%= Utils.capitalize_per_word(String.replace(@selected_option, "_", " ")) %>
+            <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
+            <.icon
+              name="up"
+              class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon"
+            />
           </div>
-          <%= if @title == "Sort" do%>
-            <div class="items-center flex border rounded-r-lg border-grey p-2">
-              <button phx-click="toggle-sort-direction" disabled={@selected_option not in ["name", "shoot_date"]}>
-                <%= if @sort_direction == :asc do %>
-                  <.icon name="sort-vector-2" {testid("edit-link-button")} class={classes("blue-planning-300 w-5 h-5", %{"pointer-events-none opacity-40" => @selected_option not in ["name", "shoot_date"]})} />
-                <% else %>
-                  <.icon name="sort-vector" {testid("edit-link-button")} class={classes("blue-planning-300 w-5 h-5", %{"pointer-events-none opacity-40" => @selected_option not in ["name", "shoot_date"]})} />
+          <ul class={"absolute z-30 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 #{@class}"}>
+            <%= for option <- @options_list do %>
+              <li
+                id={option.id}
+                target-class="toggle-it"
+                parent-class="toggle"
+                toggle-type="selected-active"
+                phx-hook="ToggleSiblings"
+                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md"
+                phx-click={"apply-filter-#{@id}"}
+                phx-value-option={option.id}
+              >
+                <button
+                  id={"btn-#{option.id}"}
+                  class={
+                    classes("album-select", %{"w-64" => @id == "status", "w-40" => @id != "status"})
+                  }
+                >
+                  <%= option.title %>
+                </button>
+                <%= if option.id == @selected_option do %>
+                  <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
                 <% end %>
-              </button>
-            </div>
-          <% end %>
+              </li>
+            <% end %>
+          </ul>
         </div>
+        <%= if @title == "Sort" do %>
+          <div class="items-center flex border rounded-r-lg border-grey p-2">
+            <button
+              phx-click="toggle-sort-direction"
+              disabled={@selected_option not in ["name", "shoot_date"]}
+            >
+              <%= if @sort_direction == :asc do %>
+                <.icon
+                  name="sort-vector-2"
+                  {testid("edit-link-button")}
+                  class={
+                    classes("blue-planning-300 w-5 h-5", %{
+                      "pointer-events-none opacity-40" =>
+                        @selected_option not in ["name", "shoot_date"]
+                    })
+                  }
+                />
+              <% else %>
+                <.icon
+                  name="sort-vector"
+                  {testid("edit-link-button")}
+                  class={
+                    classes("blue-planning-300 w-5 h-5", %{
+                      "pointer-events-none opacity-40" =>
+                        @selected_option not in ["name", "shoot_date"]
+                    })
+                  }
+                />
+              <% end %>
+            </button>
+          </div>
+        <% end %>
       </div>
+    </div>
     """
   end
 
   def search_sort_bar(assigns) do
     ~H"""
-      <div {testid("search_filter_and_sort_bar")} class="flex flex-col px-5 center-container justify-between items-end px-1.5 lg:flex-row mb-0 md:mb-10">
-        <div class="relative flex w-full lg:w-2/3 mr-2 mb-3 md:mb-0">
-          <a {testid("close_search")} class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2">
-            <%= if @search_phrase do %>
-              <span phx-click="clear-search" class="cursor-pointer">
-                <.icon name="close-x" class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300" />
-              </span>
-            <% else %>
-              <.icon name="search" class="w-4 ml-1 fill-current" />
-            <% end %>
-          </a>
-          <%= form_tag("#", [phx_change: :search, phx_submit: :submit, class: "w-full"]) do %>
-            <input disabled={!is_nil(@selected_job)} type="text" class="form-control w-full lg:w-64 text-input indent-6 bg-base-200" id="search_phrase_input" name="search_phrase" value={"#{@search_phrase}"} phx-debounce="100" spellcheck="false" placeholder={@placeholder} />
+    <div
+      {testid("search_filter_and_sort_bar")}
+      class="flex flex-col px-5 center-container justify-between items-end px-1.5 lg:flex-row mb-0 md:mb-10"
+    >
+      <div class="relative flex w-full lg:w-2/3 mr-2 mb-3 md:mb-0">
+        <a
+          {testid("close_search")}
+          class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2"
+        >
+          <%= if @search_phrase do %>
+            <span phx-click="clear-search" class="cursor-pointer">
+              <.icon
+                name="close-x"
+                class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300"
+              />
+            </span>
+          <% else %>
+            <.icon name="search" class="w-4 ml-1 fill-current" />
           <% end %>
-        </div>
-        <.select_dropdown class="w-full md:w-60" type={@type} title={if @type == "job", do: 'Job Status', else: 'Lead Status'} id="status" selected_option={@job_status} options_list={if @type == "job", do: job_status_options(), else: lead_status_options()}/>
-
-        <.select_dropdown class="w-full" title={if @type == "job", do: 'Job Type', else: 'Lead Type'} id="type" selected_option={@job_type} options_list={job_type_options(@job_types)}/>
-
-        <.select_dropdown class="w-full" sort_direction={@sort_direction} title="Sort" id="sort_by" selected_option={@sort_by} options_list={if @type == "job", do: job_sort_options(), else: lead_sort_options()}/>
-
+        </a>
+        <%= form_tag("#", [phx_change: :search, phx_submit: :submit, class: "w-full"]) do %>
+          <input
+            disabled={!is_nil(@selected_job)}
+            type="text"
+            class="form-control w-full lg:w-64 text-input indent-6 bg-base-200"
+            id="search_phrase_input"
+            name="search_phrase"
+            value={"#{@search_phrase}"}
+            phx-debounce="100"
+            spellcheck="false"
+            placeholder={@placeholder}
+          />
+        <% end %>
       </div>
+      <.select_dropdown
+        class="w-full md:w-60"
+        type={@type}
+        title={if @type == "job", do: ~c"Job Status", else: ~c"Lead Status"}
+        id="status"
+        selected_option={@job_status}
+        options_list={if @type == "job", do: job_status_options(), else: lead_status_options()}
+      />
+
+      <.select_dropdown
+        class="w-full"
+        title={if @type == "job", do: ~c"Job Type", else: ~c"Lead Type"}
+        id="type"
+        selected_option={@job_type}
+        options_list={job_type_options(@job_types)}
+      />
+
+      <.select_dropdown
+        class="w-full"
+        sort_direction={@sort_direction}
+        title="Sort"
+        id="sort_by"
+        selected_option={@sort_by}
+        options_list={if @type == "job", do: job_sort_options(), else: lead_sort_options()}
+      />
+    </div>
     """
   end
 

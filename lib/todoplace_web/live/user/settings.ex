@@ -661,24 +661,29 @@ defmodule TodoplaceWeb.Live.User.Settings do
     assigns = assigns |> Enum.into(%{container_class: "", intro_id: nil})
 
     ~H"""
-    <div class="flex items-center gap-1 center-container px-6 pt-10 mt-10 sm:mt-0"><h1 class="text-4xl font-bold">Your Settings</h1></div>
+    <div class="flex items-center gap-1 center-container px-6 pt-10 mt-10 sm:mt-0">
+      <h1 class="text-4xl font-bold">Your Settings</h1>
+    </div>
 
-    <div class={"flex flex-col flex-1 px-6 center-container #{@container_class}"} {if @intro_id, do: intro(@current_user, @intro_id), else: []}>
+    <div
+      class={"flex flex-col flex-1 px-6 center-container #{@container_class}"}
+      {if @intro_id, do: intro(@current_user, @intro_id), else: []}
+    >
       <._settings_nav socket={@socket} live_action={@live_action} current_user={@current_user}>
-        <:link to={"/package_templates"}>Packages</:link>
-        <:link to={"/contracts"}>Contracts</:link>
-        <:link to={"/questionnaires"}>Questionnaires</:link>
-        <:link to={"/calendar/settings"}>Calendar</:link>
-        <:link to={"/galleries/settings"}>Gallery</:link>
-        <:link to={"/finance"}>Payments</:link>
-        <:link to={"/brand"}>Brand</:link>
-        <:link hide={!show_pricing_tab?()} to={"/pricing"}>Gallery Store Pricing</:link>
-        <:link to={"/profile/settings"}>Public Profile</:link>
-        <:link to={"/users/settings"}>Account</:link>
+        <:link to="/package_templates">Packages</:link>
+        <:link to="/contracts">Contracts</:link>
+        <:link to="/questionnaires">Questionnaires</:link>
+        <:link to="/calendar/settings">Calendar</:link>
+        <:link to="/galleries/settings">Gallery</:link>
+        <:link to="/finance">Payments</:link>
+        <:link to="/brand">Brand</:link>
+        <:link hide={!show_pricing_tab?()} to="/pricing">Gallery Store Pricing</:link>
+        <:link to="/profile/settings">Public Profile</:link>
+        <:link to="/users/settings">Account</:link>
       </._settings_nav>
       <hr />
 
-      <%= render_slot @inner_block %>
+      <%= render_slot(@inner_block) %>
     </div>
     """
   end
@@ -691,9 +696,10 @@ defmodule TodoplaceWeb.Live.User.Settings do
       <div class="w-4 border-r bg-blue-planning-300" />
 
       <div class={classes("flex flex-col justify-between w-full p-10", %{"pl-14 -ml-4" => @select})}>
-
         <div class="flex flex-col items-start sm:items-center sm:flex-row">
-          <h1 class="mb-2 mr-4 text-xl font-bold sm:text-2xl text-blue-planning-300"><%= @title %></h1>
+          <h1 class="mb-2 mr-4 text-xl font-bold sm:text-2xl text-blue-planning-300">
+            <%= @title %>
+          </h1>
           <%= if @title_badge do %>
             <.badge color={:gray}><%= @title_badge %></.badge>
           <% end %>
@@ -707,19 +713,39 @@ defmodule TodoplaceWeb.Live.User.Settings do
 
   defp sign_out(assigns) do
     ~H"""
-      <.form class={@class} :let={_} for={%{}} as={:sign_out} action={~p"/users/log_out"} method="delete" phx-trigger-action={@sign_out} phx-submit="sign_out">
-        <%= submit "Sign out", class: "btn-primary w-full" %>
-      </.form>
+    <.form
+      :let={_}
+      class={@class}
+      for={%{}}
+      as={:sign_out}
+      action={~p"/users/log_out"}
+      method="delete"
+      phx-trigger-action={@sign_out}
+      phx-submit="sign_out"
+    >
+      <%= submit("Sign out", class: "btn-primary w-full") %>
+    </.form>
     """
   end
 
   defp _settings_nav(assigns) do
     ~H"""
     <ul class="flex py-4 overflow-auto font-bold text-blue-planning-300" {testid("settings-nav")}>
-    <%= for %{to: to} = link <- @link, !Map.get(link, :hide) do %>
+      <%= for %{to: to} = link <- @link, !Map.get(link, :hide) do %>
         <li>
-           <.nav_link title={to} :let={active} to={to} class="block whitespace-nowrap border-b-4 border-transparent transition-all duration-300 hover:border-b-blue-planning-300" active_class="border-b-blue-planning-300" socket={@socket} live_action={@live_action}>
-            <div {if active, do: %{id: "active-settings-nav-link", phx_hook: "ScrollIntoView"}, else: %{}} class="px-3 py-2">
+          <.nav_link
+            :let={active}
+            title={to}
+            to={to}
+            class="block whitespace-nowrap border-b-4 border-transparent transition-all duration-300 hover:border-b-blue-planning-300"
+            active_class="border-b-blue-planning-300"
+            socket={@socket}
+            live_action={@live_action}
+          >
+            <div
+              {if active, do: %{id: "active-settings-nav-link", phx_hook: "ScrollIntoView"}, else: %{}}
+              class="px-3 py-2"
+            >
               <%= render_slot(link) %>
             </div>
           </.nav_link>

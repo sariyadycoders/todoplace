@@ -3,7 +3,7 @@
 
   <%= @inner_content %>
 
-  <%= live_render @socket, TodoplaceWeb.LiveModal, id: "live_modal" %>
+  <%= live_render(@socket, TodoplaceWeb.LiveModal, id: "live_modal") %>
 
   <footer class="mt-auto text-white footer-cookie mb-24 hidden sm:block">
     <div class="center-container gallery__container px-7 sm:px-16">
@@ -11,5 +11,4 @@
       <.footer_nav socket={@socket} gallery={@gallery} />
     </div>
   </footer>
-
 </main>

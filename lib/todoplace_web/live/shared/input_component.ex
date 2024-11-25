@@ -45,17 +45,37 @@ defmodule TodoplaceWeb.Shared.InputComponent do
 
   defp section(assigns) do
     ~H"""
-    <.form :let={f} for={%{}} phx-submit={@save_event} phx-change={@change_event} phx-target={@myself} class="mt-2">
-      <%= text_input f, @input_name, value: @input_value, class: "w-full px-2 py-3 border border-slate-400 rounded-md mt-1", placeholder: @placeholder %>
+    <.form
+      :let={f}
+      for={%{}}
+      phx-submit={@save_event}
+      phx-change={@change_event}
+      phx-target={@myself}
+      class="mt-2"
+    >
+      <%= text_input(f, @input_name,
+        value: @input_value,
+        class: "w-full px-2 py-3 border border-slate-400 rounded-md mt-1",
+        placeholder: @placeholder
+      ) %>
       <%= if @error do %>
         <span class="text-sm text-orange-600"><%= @error %></span>
       <% end %>
       <div class="flex flex-col gap-2 mt-4">
-        <button class="w-full border border-current text-center p-1.5 font-semibold bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed" disabled={!is_nil(@error)} phx-disable-with="Saving&hellip;">
+        <button
+          class="w-full border border-current text-center p-1.5 font-semibold bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!is_nil(@error)}
+          phx-disable-with="Saving&hellip;"
+        >
           <%= @save_label %>
         </button>
 
-        <button class="w-full border border-current text-center p-1.5 font-semibold" type="button" phx-click="modal" phx-value-action="close">
+        <button
+          class="w-full border border-current text-center p-1.5 font-semibold"
+          type="button"
+          phx-click="modal"
+          phx-value-action="close"
+        >
           <%= @close_label %>
         </button>
       </div>

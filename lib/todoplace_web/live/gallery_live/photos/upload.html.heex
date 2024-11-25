@@ -1,40 +1,99 @@
 <div>
-    <%= case @view do %>
+  <%= case @view do %>
     <% "add_button" -> %>
-    <div id="upload-wrapper" phx-hook="CustomFileUploader" phx-update="ignore" data-target={"addPhoto-newForm-#{@gallery.id}"} data-gallery-id={@gallery.id} data-change="yes" data-album-id={@album_id}>
+      <div
+        id="upload-wrapper"
+        phx-hook="CustomFileUploader"
+        phx-update="ignore"
+        data-target={"addPhoto-newForm-#{@gallery.id}"}
+        data-gallery-id={@gallery.id}
+        data-change="yes"
+        data-album-id={@album_id}
+      >
         <form id={"addPhoto-newForm-#{@gallery.id}"}>
-            <label class="flex flex-col items-center justify-center float-right cursor-pointer">
-                <div class="max-w-xs mx-auto">
-                    <p class="text-center">
-                        <.add_photo_button disable={if disabled?(@gallery), do: false, else: (Enum.empty?(@pending_photos) || Enum.empty?(@inprogress_photos))} class="flex items-center text-sm bg-base-300 lg:justify-end px-2 py-2 border font-sans rounded-lg text-white font-medium hover:opacity-75">
-                            <.icon name="plus" class="w-4 h-4 mr-1 text-white" />
-                            Add photos
-                        </.add_photo_button>
-                        <input type="file" id="photos" name="photos-1" class="hidden" multiple accept="image/png, image/jpeg" />
-                    </p>
-                </div>
-            </label>
-        </form>
-    </div>
-    <% "drag_drop" -> %>
-    <div id="drag-drop-wrapper" phx-hook="CustomFileUploader" phx-update="ignore" data-target={"dragDrop-upload-form-#{@gallery.id}"} data-gallery-id={@gallery.id} data-change="no" data-album-id={@album_id}>
-        <form id={"dragDrop-upload-form-#{@gallery.id}"}>
-            <div class={classes("dragDrop", %{"pointer-events-none border-gray-400 bg-gray-200" => disabled?(@gallery)})} id={"dropzone-upload-#{@gallery.id}"}>
-                <label class="flex flex-col py-32 items-center justify-center w-full h-full gap-8 cursor-pointer">
-                    <div class="max-w-xs mx-auto">
-                        <img src={static_path(TodoplaceWeb.Endpoint, "/images/drag-drop-img.png")} width="76" height="76" class={classes("mx-auto cursor-pointer", %{"opacity-75 pointer-events-none cursor-default" => disabled?(@gallery)})} alt="add photos icon"/>
-                        <div class="flex flex-col items-center justify-center dragDrop__content">
-                            <p class="text-center">
-                                <span class={classes("font-bold", %{"gray" => disabled?(@gallery)})}>Drag your images or </span>
-                                <span class={classes("font-bold cursor-pointer primary", %{"gray" => disabled?(@gallery)})}>browse</span>
-                                <input type="file" id="photos-drag-drop" name="photos-2" class="hidden" multiple accept="image/png, image/jpeg" />
-                            </p>
-                            <p class="text-center gray">Supports JPEG or PNG</p>
-                        </div>
-                    </div>
-                </label>
+          <label class="flex flex-col items-center justify-center float-right cursor-pointer">
+            <div class="max-w-xs mx-auto">
+              <p class="text-center">
+                <.add_photo_button
+                  disable={
+                    if disabled?(@gallery),
+                      do: false,
+                      else: Enum.empty?(@pending_photos) || Enum.empty?(@inprogress_photos)
+                  }
+                  class="flex items-center text-sm bg-base-300 lg:justify-end px-2 py-2 border font-sans rounded-lg text-white font-medium hover:opacity-75"
+                >
+                  <.icon name="plus" class="w-4 h-4 mr-1 text-white" /> Add photos
+                </.add_photo_button>
+                <input
+                  type="file"
+                  id="photos"
+                  name="photos-1"
+                  class="hidden"
+                  multiple
+                  accept="image/png, image/jpeg"
+                />
+              </p>
             </div>
+          </label>
         </form>
-    </div>
-    <% end %>
+      </div>
+    <% "drag_drop" -> %>
+      <div
+        id="drag-drop-wrapper"
+        phx-hook="CustomFileUploader"
+        phx-update="ignore"
+        data-target={"dragDrop-upload-form-#{@gallery.id}"}
+        data-gallery-id={@gallery.id}
+        data-change="no"
+        data-album-id={@album_id}
+      >
+        <form id={"dragDrop-upload-form-#{@gallery.id}"}>
+          <div
+            class={
+              classes("dragDrop", %{
+                "pointer-events-none border-gray-400 bg-gray-200" => disabled?(@gallery)
+              })
+            }
+            id={"dropzone-upload-#{@gallery.id}"}
+          >
+            <label class="flex flex-col py-32 items-center justify-center w-full h-full gap-8 cursor-pointer">
+              <div class="max-w-xs mx-auto">
+                <img
+                  src={static_path(TodoplaceWeb.Endpoint, "/images/drag-drop-img.png")}
+                  width="76"
+                  height="76"
+                  class={
+                    classes("mx-auto cursor-pointer", %{
+                      "opacity-75 pointer-events-none cursor-default" => disabled?(@gallery)
+                    })
+                  }
+                  alt="add photos icon"
+                />
+                <div class="flex flex-col items-center justify-center dragDrop__content">
+                  <p class="text-center">
+                    <span class={classes("font-bold", %{"gray" => disabled?(@gallery)})}>
+                      Drag your images or 
+                    </span>
+                    <span class={
+                      classes("font-bold cursor-pointer primary", %{"gray" => disabled?(@gallery)})
+                    }>
+                      browse
+                    </span>
+                    <input
+                      type="file"
+                      id="photos-drag-drop"
+                      name="photos-2"
+                      class="hidden"
+                      multiple
+                      accept="image/png, image/jpeg"
+                    />
+                  </p>
+                  <p class="text-center gray">Supports JPEG or PNG</p>
+                </div>
+              </div>
+            </label>
+          </div>
+        </form>
+      </div>
+  <% end %>
 </div>

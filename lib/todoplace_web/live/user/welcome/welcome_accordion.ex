@@ -35,7 +35,11 @@ defmodule TodoplaceWeb.Live.User.Welcome.AccordionComponent do
 
     ~H"""
     <div class="bg-white rounded-lg">
-      <div class="flex gap-4 cursor-pointer p-6 border rounded-t-lg" phx-click="toggle-open" phx-target={@myself}>
+      <div
+        class="flex gap-4 cursor-pointer p-6 border rounded-t-lg"
+        phx-click="toggle-open"
+        phx-target={@myself}
+      >
         <.icon name={@icon} class="w-6 h-6 flex-shrink-0 text-blue-planning-300" />
         <h2 class="font-bold text-xl"><%= @heading %></h2>
         <div class="ml-auto flex items-center gap-4">
@@ -54,7 +58,14 @@ defmodule TodoplaceWeb.Live.User.Welcome.AccordionComponent do
           <% end %>
         </div>
       </div>
-      <div class={classes("border-b-8 rounded-b-lg transition-all border", %{"rounded-b-none" => @is_open, "border-green-finances-200" => @is_complete, "border-base-200" => !@is_complete})}></div>
+      <div class={
+        classes("border-b-8 rounded-b-lg transition-all border", %{
+          "rounded-b-none" => @is_open,
+          "border-green-finances-200" => @is_complete,
+          "border-base-200" => !@is_complete
+        })
+      }>
+      </div>
       <div class={classes("p-6 border rounded-b-lg", %{"hidden" => !@is_open})}>
         <%= if @is_complete do %>
           <div class="bg-green-finances-200/20 p-2 flex items-center gap-2 text-green-finances-200 rounded-lg mb-6">
@@ -70,7 +81,9 @@ defmodule TodoplaceWeb.Live.User.Welcome.AccordionComponent do
               </div>
             <% end %>
             <%= if @slug == "connect-stripe" do %>
-              <.live_component module={TodoplaceWeb.StripeOnboardingComponent} id={:stripe_onboarding}
+              <.live_component
+                module={TodoplaceWeb.StripeOnboardingComponent}
+                id={:stripe_onboarding}
                 error_class="text-right"
                 class="btn-primary inline-block mt-6"
                 container_class="w-auto"
@@ -80,13 +93,26 @@ defmodule TodoplaceWeb.Live.User.Welcome.AccordionComponent do
               />
             <% end %>
             <%= if @complete_text && @complete_action do %>
-              <button type="button" phx-click={@complete_action} phx-value-id={@id} phx-value-complete_action={@complete_action} phx-value-group={@group} phx-value-slug={@slug} class="btn-primary block mt-6">
+              <button
+                type="button"
+                phx-click={@complete_action}
+                phx-value-id={@id}
+                phx-value-complete_action={@complete_action}
+                phx-value-group={@group}
+                phx-value-slug={@slug}
+                class="btn-primary block mt-6"
+              >
                 <%= @complete_text %>
               </button>
             <% end %>
             <%= if @secondary_text && @secondary_action do %>
-              <button type="button" phx-click={@secondary_action} class="link mt-2 flex items-center gap-2">
-                <%= @secondary_text %> <.icon name="external-link" class="w-4 h-4 text-blue-planning-300 flex-shrink-0" />
+              <button
+                type="button"
+                phx-click={@secondary_action}
+                class="link mt-2 flex items-center gap-2"
+              >
+                <%= @secondary_text %>
+                <.icon name="external-link" class="w-4 h-4 text-blue-planning-300 flex-shrink-0" />
               </button>
             <% end %>
           </div>
@@ -97,10 +123,17 @@ defmodule TodoplaceWeb.Live.User.Welcome.AccordionComponent do
           </div>
         </div>
         <div class="flex justify-end text-base-250 mt-4">
-          <button class="btn-tertiary flex items-center gap-2" phx-click="toggle-complete" phx-target={@myself} phx-value-slug={@slug} phx-value-group={@group} type="button">
+          <button
+            class="btn-tertiary flex items-center gap-2"
+            phx-click="toggle-complete"
+            phx-target={@myself}
+            phx-value-slug={@slug}
+            phx-value-group={@group}
+            type="button"
+          >
             <%= if @is_complete do %>
               <.icon name="checkclose" class="w-6 h-6 flex-shrink-0 text-red-sales-300" />
-               Mark incomplete
+              Mark incomplete
             <% else %>
               <.icon name="checkcircle" class="w-6 h-6 flex-shrink-0 text-green-finances-200" />
               Mark complete
@@ -119,7 +152,15 @@ defmodule TodoplaceWeb.Live.User.Welcome.AccordionComponent do
       })
 
     ~H"""
-    <iframe class="aspect-video w-full" src={"https://www.youtube.com/embed/#{@video_id}"} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <iframe
+      class="aspect-video w-full"
+      src={"https://www.youtube.com/embed/#{@video_id}"}
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    >
+    </iframe>
     """
   end
 

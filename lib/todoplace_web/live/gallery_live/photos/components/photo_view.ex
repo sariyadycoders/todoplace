@@ -96,31 +96,58 @@ defmodule TodoplaceWeb.GalleryLive.Photos.PhotoView do
     ~H"""
     <div>
       <div class="w-screen h-screen lg:h-full overflow-auto flex lg:justify-between">
-        <a phx-click="close" phx-target={@myself} phx-value-photo_id={@photo.id} class="absolute z-50 p-2 rounded-full cursor-pointer right-5 top-5">
+        <a
+          phx-click="close"
+          phx-target={@myself}
+          phx-value-photo_id={@photo.id}
+          class="absolute z-50 p-2 rounded-full cursor-pointer right-5 top-5"
+        >
           <.icon name="close-x" class="w-6 h-6 text-base-100 stroke-current stroke-2" />
         </a>
         <div class="relative justify-center flex flex-col h-screen w-screen p2 md:p-5">
-          <img src={preview_url(@photo, proofing_client_view?: @is_proofing)} class="object-contain h-full flex-shrink-1 p2 md:p-5" loading="lazy">
+          <img
+            src={preview_url(@photo, proofing_client_view?: @is_proofing)}
+            class="object-contain h-full flex-shrink-1 p2 md:p-5"
+            loading="lazy"
+          />
           <div class="flex gap-4 md:gap-10 flex-grow-1 w-full justify-between md:justify-center md:pb-4 pb-16 px-8 md:px-0">
-            <div phx-click="prev" phx-window-keyup="keydown" phx-target={@myself} class="bg-inherit border-2 flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0">
+            <div
+              phx-click="prev"
+              phx-window-keyup="keydown"
+              phx-target={@myself}
+              class="bg-inherit border-2 flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0"
+            >
               <.icon name="back" class="w-full h-full p-2 cursor-pointer text-base-100 stroke-2" />
             </div>
             <div class="flex items-center gap-2">
               <%= if !@is_proofing do %>
                 <button class="likeBtn" phx-click={js_like_click(@photo.id, @myself)}>
                   <div id={"photo-#{@photo.id}-liked"} style={!@is_liked && "display: none"}>
-                    <.icon name="heart-filled" class="text-gray-200 w-7 h-7"/>
+                    <.icon name="heart-filled" class="text-gray-200 w-7 h-7" />
                   </div>
                   <div id={"photo-#{@photo.id}-to-like"} style={@is_liked && "display: none"}>
-                    <.icon name="heart-white" class="text-transparent fill-current w-7 h-7 hover:text-base-200 hover:text-opacity-40"/>
+                    <.icon
+                      name="heart-white"
+                      class="text-transparent fill-current w-7 h-7 hover:text-base-200 hover:text-opacity-40"
+                    />
                   </div>
                 </button>
               <% end %>
-              <h4 class="text-base-200 font-light text-sm items-center flex-shrink-0 truncate sm:max-w-none max-w-[120px] underline sm:no-underline cursor-pointer" {testid("lightbox-photo-name")} phx-hook="Tooltip" id="filename" data-hint={@photo.name}>
+              <h4
+                class="text-base-200 font-light text-sm items-center flex-shrink-0 truncate sm:max-w-none max-w-[120px] underline sm:no-underline cursor-pointer"
+                {testid("lightbox-photo-name")}
+                phx-hook="Tooltip"
+                id="filename"
+                data-hint={@photo.name}
+              >
                 <%= @photo.name %>
               </h4>
             </div>
-            <div phx-click="next" phx-target={@myself} class="bg-inherit border-2 flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0">
+            <div
+              phx-click="next"
+              phx-target={@myself}
+              class="bg-inherit border-2 flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0"
+            >
               <.icon name="forth" class="w-full h-full p-2 cursor-pointer text-base-100 stroke-2" />
             </div>
           </div>

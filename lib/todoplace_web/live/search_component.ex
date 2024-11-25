@@ -52,7 +52,7 @@ defmodule TodoplaceWeb.SearchComponent do
       </h1>
 
       <%= if @subtitle do %>
-        <p class="pt-4 text-gray-400"><%= raw (@subtitle) %></p>
+        <p class="pt-4 text-gray-400"><%= raw(@subtitle) %></p>
       <% end %>
 
       <%= if @component_used_for == :booking_events_search  do %>
@@ -74,35 +74,57 @@ defmodule TodoplaceWeb.SearchComponent do
               </p>
             </div>
             <p class="text-sm font-semibold ml-8">
-              <%="#{parse_time(@payload.slot.slot_start)} - #{parse_time(@payload.slot.slot_end)}"%>
+              <%= "#{parse_time(@payload.slot.slot_start)} - #{parse_time(@payload.slot.slot_end)}" %>
             </p>
           </div>
         <% end %>
       <% end %>
 
       <%= if @show_search do %>
-        <.form :let={f} for={%{}} phx-change="change" phx-submit="submit" phx-target={@myself} class="mt-2">
+        <.form
+          :let={f}
+          for={%{}}
+          phx-change="change"
+          phx-submit="submit"
+          phx-target={@myself}
+          class="mt-2"
+        >
           <%= if @search_label do %>
             <h1 class="font-extrabold pb-2"><%= @search_label %></h1>
           <% end %>
           <div class="flex flex-col justify-between items-center px-1.5 md:flex-row">
             <div class="relative flex w-full">
-                <a href='#' class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2">
+              <a
+                href="#"
+                class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2"
+              >
                 <%= if Enum.any?(@results) || @selection do %>
                   <span phx-click="clear-search" class="cursor-pointer" phx-target={@myself}>
-                    <.icon name="close-x" class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300" />
+                    <.icon
+                      name="close-x"
+                      class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300"
+                    />
                   </span>
                 <% else %>
                   <.icon name="search" class="w-4 ml-1 fill-current" />
                 <% end %>
               </a>
-              <%= text_input f, :search, value: Map.get(@selection || %{}, :name), class: "form-control w-full text-input indent-6", phx_debounce: "500", placeholder: @placeholder, maxlength: (if @component_used_for == :booking_events_search, do: nil, else: 3), autocomplete: "off" %>
+              <%= text_input(f, :search,
+                value: Map.get(@selection || %{}, :name),
+                class: "form-control w-full text-input indent-6",
+                phx_debounce: "500",
+                placeholder: @placeholder,
+                maxlength: if(@component_used_for == :booking_events_search, do: nil, else: 3),
+                autocomplete: "off"
+              ) %>
               <%= if Enum.any?(@results) do %>
                 <div id="search_results" class="absolute top-14 w-full z-10">
                   <div class="z-50 left-0 right-0 rounded-lg border border-gray-100 shadow py-2 px-2 bg-white w-full overflow-auto max-h-48 h-fit">
                     <%= for result <- @results do %>
                       <div class="flex items-center p-2 border-b-2 hover:bg-base-200">
-                        <%= radio_button f, :selection, result.id, class: "mr-5 w-5 h-5 cursor-pointer radio text-blue-planning-300" %>
+                        <%= radio_button(f, :selection, result.id,
+                          class: "mr-5 w-5 h-5 cursor-pointer radio text-blue-planning-300"
+                        ) %>
                         <div class="flex flex-col">
                           <p class="text-sm font-semibold"><%= result.name %></p>
                           <%= if Map.has_key?(result, :email) do %>
@@ -127,32 +149,54 @@ defmodule TodoplaceWeb.SearchComponent do
 
           <%= if @show_warning? do %>
             <div class="bg-base-200 rounded-lg p-4 my-2">
-              <span class="bg-blue-planning-300 rounded-lg px-3 py-1 font-bold text-white text-base">Note</span>
+              <span class="bg-blue-planning-300 rounded-lg px-3 py-1 font-bold text-white text-base">
+                Note
+              </span>
               <div class="text-base-250 font-medium mt-2">
                 <%= raw(@warning_note) %>
               </div>
             </div>
           <% end %>
 
-          <button class="w-full mt-6 font-semibold btn-primary text-lg" {%{disabled: is_nil(@selection)}} phx-disable-with="Saving&hellip;" phx-target={@myself}>
+          <button
+            class="w-full mt-6 font-semibold btn-primary text-lg"
+            {%{disabled: is_nil(@selection)}}
+            phx-disable-with="Saving&hellip;"
+            phx-target={@myself}
+          >
             <%= @save_label %>
           </button>
         </.form>
       <% end %>
 
       <%= if @confirm_event do %>
-        <button class={"w-full mt-4 " <> @confirm_class} title={@confirm_label} type="button" phx-click={@confirm_event} phx-disable-with="Saving&hellip;" phx-target={@myself}>
+        <button
+          class={"w-full mt-4 " <> @confirm_class}
+          title={@confirm_label}
+          type="button"
+          phx-click={@confirm_event}
+          phx-disable-with="Saving&hellip;"
+          phx-target={@myself}
+        >
           <%= @confirm_label %>
         </button>
       <% end %>
 
       <%= if @secondary_btn_label do %>
-        <button class="w-full mt-2 px-6 py-3 btn-tertiary text-blue-planning-300" type="button" phx-click={@secondary_btn_event}>
+        <button
+          class="w-full mt-2 px-6 py-3 btn-tertiary text-blue-planning-300"
+          type="button"
+          phx-click={@secondary_btn_event}
+        >
           <%= @secondary_btn_label %>
         </button>
       <% end %>
 
-      <button class="w-full mt-2 border border-current p-3 rounded-lg font-semibold text-lg" phx-click="modal" phx-value-action="close">
+      <button
+        class="w-full mt-2 border border-current p-3 rounded-lg font-semibold text-lg"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         <%= @close_label %>
       </button>
     </div>

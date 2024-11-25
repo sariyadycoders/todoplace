@@ -330,24 +330,32 @@ defmodule TodoplaceWeb.EmailAutomationLive.Shared do
     assigns = assigns |> Enum.into(%{index: -1})
 
     ~H"""
-      <div class="flex flex-row mt-2 mb-4 items-center">
-        <div class="flex mr-2">
-          <div class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-planning-300">
-            <.icon name="envelope" class="w-4 h-4 text-white fill-current"/>
-          </div>
-        </div>
-        <div class="flex flex-col ml-2">
-          <p><b> <%= @email.type |> Atom.to_string() |> String.capitalize()%>:</b> <%= get_email_name(@email, nil, 0, nil) %></p>
-          <p class="text-sm text-base-250">
-            <%= if @email.total_hours == 0 do %>
-              <%= get_email_schedule_text(0, @pipeline.state, nil, @index, nil, nil) %>
-            <% else %>
-              <% %{calendar: calendar, count: count, sign: sign} = EmailAutomations.get_email_meta(@email.total_hours, TodoplaceWeb.Helpers) %>
-              <%= "Send email #{count} #{calendar} #{sign} #{String.downcase(@pipeline.name)}" %>
-            <% end %>
-          </p>
+    <div class="flex flex-row mt-2 mb-4 items-center">
+      <div class="flex mr-2">
+        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-planning-300">
+          <.icon name="envelope" class="w-4 h-4 text-white fill-current" />
         </div>
       </div>
+      <div class="flex flex-col ml-2">
+        <p>
+          <b><%= @email.type |> Atom.to_string() |> String.capitalize() %>:</b> <%= get_email_name(
+            @email,
+            nil,
+            0,
+            nil
+          ) %>
+        </p>
+        <p class="text-sm text-base-250">
+          <%= if @email.total_hours == 0 do %>
+            <%= get_email_schedule_text(0, @pipeline.state, nil, @index, nil, nil) %>
+          <% else %>
+            <% %{calendar: calendar, count: count, sign: sign} =
+              EmailAutomations.get_email_meta(@email.total_hours, TodoplaceWeb.Helpers) %>
+            <%= "Send email #{count} #{calendar} #{sign} #{String.downcase(@pipeline.name)}" %>
+          <% end %>
+        </p>
+      </div>
+    </div>
     """
   end
 

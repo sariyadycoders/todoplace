@@ -82,10 +82,10 @@ defmodule TodoplaceWeb.OrganizationLive.Show do
             </p>
           </div>
           <div>
-           <%= organization_user.status %>
+            <%= organization_user.status %>
           </div>
           <hr class="sm:hidden border-gray-100 my-2" />
-           <.actions organization_user={organization_user} />
+          <.actions organization_user={organization_user} />
         </div>
       <% end %>
     </div>

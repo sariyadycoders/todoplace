@@ -463,8 +463,19 @@ defmodule TodoplaceWeb.GalleryLive.PhotographerIndex do
 
   defp remove_watermark_button(assigns) do
     ~H"""
-    <button type="button" disabled={assigns.disabled} title="remove watermark" phx-click="delete_watermark_popup" class="pl-5">
-      <.icon name="remove-icon" class={classes("w-3.5 h-3.5 ml-1 text-base-250", %{"pointer-events-none" => assigns.disabled})}/>
+    <button
+      type="button"
+      disabled={assigns.disabled}
+      title="remove watermark"
+      phx-click="delete_watermark_popup"
+      class="pl-5"
+    >
+      <.icon
+        name="remove-icon"
+        class={
+          classes("w-3.5 h-3.5 ml-1 text-base-250", %{"pointer-events-none" => assigns.disabled})
+        }
+      />
     </button>
     """
   end
@@ -474,37 +485,52 @@ defmodule TodoplaceWeb.GalleryLive.PhotographerIndex do
       case disabled?(gallery) do
         true ->
           ~H"""
-            <h3 class="font-sans">Enable Gallery</h3>
-            <p class="font-sans">
+          <h3 class="font-sans">Enable Gallery</h3>
+          <p class="font-sans">
             Gallery orders are disabled, your client has made purchases from this gallery, so you can't delete it, or they'll lose their order
             history. This action will enable additional gallery orders moving forward.
-            </p>
-            <button {testid("deleteGalleryPopupButton")} phx-click={"enable_gallery_popup"} class="justify-center w-full py-3 font-sans border border-black rounded-lg mt-7" id="deleteGalleryPopupButton">
-              Enable gallery
-            </button>
+          </p>
+          <button
+            {testid("deleteGalleryPopupButton")}
+            phx-click="enable_gallery_popup"
+            class="justify-center w-full py-3 font-sans border border-black rounded-lg mt-7"
+            id="deleteGalleryPopupButton"
+          >
+            Enable gallery
+          </button>
           """
 
         false ->
           ~H"""
-            <h3 class="font-sans">Disable Future Gallery Orders</h3>
-            <p class="font-sans">
-              Your client has made purchases from this gallery. This action will prohibit them from being able to make additional gallery orders moving forward.
-            </p>
-            <button {testid("deleteGalleryPopupButton")} phx-click={"disable_gallery_popup"} class="justify-center w-full py-3 font-sans border border-black rounded-lg mt-7" id="deleteGalleryPopupButton">
-              Disable Future Gallery Orders
-            </button>
+          <h3 class="font-sans">Disable Future Gallery Orders</h3>
+          <p class="font-sans">
+            Your client has made purchases from this gallery. This action will prohibit them from being able to make additional gallery orders moving forward.
+          </p>
+          <button
+            {testid("deleteGalleryPopupButton")}
+            phx-click="disable_gallery_popup"
+            class="justify-center w-full py-3 font-sans border border-black rounded-lg mt-7"
+            id="deleteGalleryPopupButton"
+          >
+            Disable Future Gallery Orders
+          </button>
           """
       end
     else
       ~H"""
-        <h3 class="font-sans">Delete gallery</h3>
-        <p class="font-sans">
-          If you want to start completely over, or there’s another reason you want to delete the whole gallery, this is
-          the place for you.
-        </p>
-        <button {testid("deleteGalleryPopupButton")} phx-click={"delete_gallery_popup"} class="justify-center w-full py-3 font-sans border border-black rounded-lg mt-7" id="deleteGalleryPopupButton">
-          Delete gallery
-        </button>
+      <h3 class="font-sans">Delete gallery</h3>
+      <p class="font-sans">
+        If you want to start completely over, or there’s another reason you want to delete the whole gallery, this is
+        the place for you.
+      </p>
+      <button
+        {testid("deleteGalleryPopupButton")}
+        phx-click="delete_gallery_popup"
+        class="justify-center w-full py-3 font-sans border border-black rounded-lg mt-7"
+        id="deleteGalleryPopupButton"
+      >
+        Delete gallery
+      </button>
       """
     end
   end

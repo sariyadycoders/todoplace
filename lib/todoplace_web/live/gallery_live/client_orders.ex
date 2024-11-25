@@ -110,50 +110,54 @@ defmodule TodoplaceWeb.GalleryLive.ClientOrders do
     assigns = Enum.into(assigns, %{quantity: [], shipping: [], is_proofing: false})
 
     ~H"""
-      <div class="block py-6 lg:justify-between lg:py-8 lg:flex">
-        <div class="grid gap-4 grid-cols-[120px,1fr,min-content] lg:grid-cols-[147px,1fr]">
-          <.item_image item={@item} is_proofing={@is_proofing}/>
+    <div class="block py-6 lg:justify-between lg:py-8 lg:flex">
+      <div class="grid gap-4 grid-cols-[120px,1fr,min-content] lg:grid-cols-[147px,1fr]">
+        <.item_image item={@item} is_proofing={@is_proofing} />
 
-          <div class="flex flex-col justify-center py-2 align-self-center">
-            <div class="flex items-baseline lg:flex-col">
-            <span class="mr-2 text-lg lg:text-base lg:font-medium"><%= product_name(@item, @is_proofing) %></span>
-              <span class="text-lg font-extrabold lg:mt-2"><%= @price %></span>
-            </div>
-
-            <%= render_slot(@quantity) %>
+        <div class="flex flex-col justify-center py-2 align-self-center">
+          <div class="flex items-baseline lg:flex-col">
+            <span class="mr-2 text-lg lg:text-base lg:font-medium">
+              <%= product_name(@item, @is_proofing) %>
+            </span>
+            <span class="text-lg font-extrabold lg:mt-2"><%= @price %></span>
           </div>
 
+          <%= render_slot(@quantity) %>
         </div>
-
-        <%= render_slot(@shipping) %>
       </div>
+
+      <%= render_slot(@shipping) %>
+    </div>
     """
   end
 
   defp item_image(%{item: %{photo: %{active: false}}} = assigns) do
     ~H"""
-      <div class="rounded-lg object-contain place-self-center bg-base-200">
-        <div class="flex justify-center items-center pt-2">
-          <.icon name="photos-2" class="inline-block w-5 h-5 text-base-250"/>
-        </div>
-        <div class="text-base-250 text-sm text-center">
-          <span>Photographer deleted photo, please contact them for more info</span>
-        </div>
+    <div class="rounded-lg object-contain place-self-center bg-base-200">
+      <div class="flex justify-center items-center pt-2">
+        <.icon name="photos-2" class="inline-block w-5 h-5 text-base-250" />
       </div>
+      <div class="text-base-250 text-sm text-center">
+        <span>Photographer deleted photo, please contact them for more info</span>
+      </div>
+    </div>
     """
   end
 
   defp item_image(%{item: {:bundle, _order}} = assigns) do
     ~H"""
-      <div class="h-32 w-[120px] lg:h-[120px] place-self-center">
-        <.bundle_image url={item_image_url(@item)} />
-      </div>
+    <div class="h-32 w-[120px] lg:h-[120px] place-self-center">
+      <.bundle_image url={item_image_url(@item)} />
+    </div>
     """
   end
 
   defp item_image(assigns) do
     ~H"""
-    <img src={item_image_url(@item, proofing_client_view?: @is_proofing)} class="object-contain h-32 lg:h-[120px] place-self-center"/>
+    <img
+      src={item_image_url(@item, proofing_client_view?: @is_proofing)}
+      class="object-contain h-32 lg:h-[120px] place-self-center"
+    />
     """
   end
 

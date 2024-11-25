@@ -3,9 +3,11 @@ defmodule Todoplace.Repo.Migrations.AddOrganizationIdToNotifications do
 
   def change do
     alter table(:notifications) do
-      add :organization_id, references(:organizations, on_delete: :nothing)  # Add organization_id as a foreign key
+      # Add organization_id as a foreign key
+      add :organization_id, references(:organizations, on_delete: :nothing)
     end
 
-    create index(:notifications, [:organization_id])  # Optional: Index for faster lookups
+    # Optional: Index for faster lookups
+    create index(:notifications, [:organization_id])
   end
 end

@@ -11,7 +11,12 @@ defmodule TodoplaceWeb.Live.Pricing do
   @impl true
   def render(assigns) do
     ~H"""
-    <.settings_nav socket={@socket} live_action={@live_action} current_user={@current_user} container_class="sm:pb-0 pb-28">
+    <.settings_nav
+      socket={@socket}
+      live_action={@live_action}
+      current_user={@current_user}
+      container_class="sm:pb-0 pb-28"
+    >
       <div class="my-5">
         <h1 class="text-2xl font-bold">Gallery Store Pricing</h1>
 
@@ -20,18 +25,20 @@ defmodule TodoplaceWeb.Live.Pricing do
         </p>
       </div>
 
-      <hr class="mb-7"/>
+      <hr class="mb-7" />
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
-      <%= for %{name: name, icon: icon, id: id} <- @categories do %>
-        <.live_link to={~p"/pricing/categories/#{id}"} class="block p-5 border rounded">
-          <div class="w-full rounded aspect-square bg-base-200">
-            <div class="flex items-center justify-center"><.icon name={icon} class="w-1/3 text-blue-planning-300" /></div>
-          </div>
+        <%= for %{name: name, icon: icon, id: id} <- @categories do %>
+          <.live_link to={~p"/pricing/categories/#{id}"} class="block p-5 border rounded">
+            <div class="w-full rounded aspect-square bg-base-200">
+              <div class="flex items-center justify-center">
+                <.icon name={icon} class="w-1/3 text-blue-planning-300" />
+              </div>
+            </div>
 
-          <h2 class="pt-3 text-2xl font-bold"><%= name %></h2>
-        </.live_link>
-      <% end %>
+            <h2 class="pt-3 text-2xl font-bold"><%= name %></h2>
+          </.live_link>
+        <% end %>
       </div>
     </.settings_nav>
     """

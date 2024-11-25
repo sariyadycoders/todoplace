@@ -31,18 +31,20 @@ defmodule TodoplaceWeb.GalleryLive.Settings.ManageGalleryAnalyticsComponent do
     ~H"""
     <div>
       <h3>Gallery analytics</h3>
-        <div class="flex justify-between">
-          <p class="font-sans text-base-250">You can see if your client has logged into the gallery or send a reminder!</p>
-        </div>
-        <div class="flex flex-col mt-2">
-          <p class="font-bold">Emails that have viewed:</p>
-          <%= if @gallery_analytics != [] do %>
-            <div class="grid md:grid-cols-2">
-              <%= for gallery_analytic <- @gallery_analytics do %>
+      <div class="flex justify-between">
+        <p class="font-sans text-base-250">
+          You can see if your client has logged into the gallery or send a reminder!
+        </p>
+      </div>
+      <div class="flex flex-col mt-2">
+        <p class="font-bold">Emails that have viewed:</p>
+        <%= if @gallery_analytics != [] do %>
+          <div class="grid md:grid-cols-2">
+            <%= for gallery_analytic <- @gallery_analytics do %>
               <div class="flex flex-row mt-2 items-center">
                 <div class="flex">
                   <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full bg-blue-planning-300">
-                    <.icon name="envelope" class="w-4 h-4 text-white fill-current"/>
+                    <.icon name="envelope" class="w-4 h-4 text-white fill-current" />
                   </div>
                 </div>
                 <div class="flex flex-col ml-2">
@@ -53,46 +55,63 @@ defmodule TodoplaceWeb.GalleryLive.Settings.ManageGalleryAnalyticsComponent do
                       <%= gallery_analytic["email"] %>
                     <% end %>
                   </p>
-                  <p class="text-base-250 font-normal">Viewed: <%= format_date_string(gallery_analytic["viewed_at"], @time_zone) %></p>
+                  <p class="text-base-250 font-normal">
+                    Viewed: <%= format_date_string(gallery_analytic["viewed_at"], @time_zone) %>
+                  </p>
                 </div>
               </div>
-              <% end %>
-            </div>
-          <% else %>
-            <p class="text-base-250">No one has viewed yet!</p>
-          <% end %>
-        </div>
-        <div class="flex flex-col mt-2">
-          <p class="font-bold">Download tracking:</p>
-          <%= unless @download_tracking == [] || is_nil(@download_tracking) do %>
-            <div class="grid md:grid-cols-2">
-              <%= for download_tracking <- @download_tracking do %>
-                <div class="flex flex-row mt-2 items-center">
-                  <div class="flex">
-                    <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full bg-blue-planning-300">
-                      <.icon name="photos-2" class="w-4 h-4 text-white fill-current"/>
-                    </div>
-                  </div>
-                  <div class="flex flex-col ml-2">
-                    <p class="text-base-250 font-bold">
-                      <%= if download_tracking["email"] == @gallery_client_email do %>
-                        <%= download_tracking["email"] <> " (client)" %>
-                      <% else %>
-                        <%= download_tracking["email"] %>
-                      <% end %>
-                    </p>
-                    <p class="text-base-250 font-normal">Downloaded <%= download_tracking["name"] %> on <%= format_date_string(download_tracking["downloaded_at"], @time_zone) %></p>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-base-250">No one has viewed yet!</p>
+        <% end %>
+      </div>
+      <div class="flex flex-col mt-2">
+        <p class="font-bold">Download tracking:</p>
+        <%= unless @download_tracking == [] || is_nil(@download_tracking) do %>
+          <div class="grid md:grid-cols-2">
+            <%= for download_tracking <- @download_tracking do %>
+              <div class="flex flex-row mt-2 items-center">
+                <div class="flex">
+                  <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full bg-blue-planning-300">
+                    <.icon name="photos-2" class="w-4 h-4 text-white fill-current" />
                   </div>
                 </div>
-              <% end %>
-            </div>
-          <% else %>
-            <p class="text-base-250">No one has downloaded yet!</p>
-          <% end %>
-        </div>
-        <div {testid("send-reminder")} class="flex flex-row-reverse items-center justify-between w-full mt-5 lg:items-start">
-            <a class={classes("btn-settings px-5 hover:cursor-pointer", %{"hidden" => @gallery_analytics != []})} phx-click="client-link">Send reminder</a>
-        </div>
+                <div class="flex flex-col ml-2">
+                  <p class="text-base-250 font-bold">
+                    <%= if download_tracking["email"] == @gallery_client_email do %>
+                      <%= download_tracking["email"] <> " (client)" %>
+                    <% else %>
+                      <%= download_tracking["email"] %>
+                    <% end %>
+                  </p>
+                  <p class="text-base-250 font-normal">
+                    Downloaded <%= download_tracking["name"] %> on <%= format_date_string(
+                      download_tracking["downloaded_at"],
+                      @time_zone
+                    ) %>
+                  </p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-base-250">No one has downloaded yet!</p>
+        <% end %>
+      </div>
+      <div
+        {testid("send-reminder")}
+        class="flex flex-row-reverse items-center justify-between w-full mt-5 lg:items-start"
+      >
+        <a
+          class={
+            classes("btn-settings px-5 hover:cursor-pointer", %{"hidden" => @gallery_analytics != []})
+          }
+          phx-click="client-link"
+        >
+          Send reminder
+        </a>
+      </div>
     </div>
     """
   end

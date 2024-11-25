@@ -1,6 +1,5 @@
-<%= live_render @socket, TodoplaceWeb.LiveModal, id: "with_out_layout" %>
+<%= live_render(@socket, TodoplaceWeb.LiveModal, id: "with_out_layout") %>
 <main role="main" class={"#{dynamic_background_class(assigns)}"}>
-    <%= TodoplaceWeb.LayoutView.flash(@flash) %>
-    <%= @inner_content %>
+  <%= TodoplaceWeb.LayoutView.flash(@flash) %>
+  <%= @inner_content %>
 </main>
-  

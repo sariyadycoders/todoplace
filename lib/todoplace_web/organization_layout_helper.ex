@@ -19,10 +19,17 @@ defmodule TodoplaceWeb.Live.OrganizationLayoutHelpers do
   def mount(_params, _session, %{assigns: %{current_user: current_user}} = socket) do
     organizations = Todoplace.Accounts.user_active_organization(current_user.id, "Joined")
     organization = Enum.find(organizations, &(&1.id == current_user.organization_id))
-    {:ok, socket |> assign(:organizations, organizations) |> assign(:current_organization, organization)}
+
+    {:ok,
+     socket
+     |> assign(:organizations, organizations)
+     |> assign(:current_organization, organization)}
   end
 
-  def handle_change_organization(organization_id,  %{assigns: %{current_user: current_user}} = socket) do
+  def handle_change_organization(
+        organization_id,
+        %{assigns: %{current_user: current_user}} = socket
+      ) do
     Todoplace.Accounts.update_user(current_user.id, %{"organization_id" => organization_id})
 
     # TODO: Hurry

@@ -17,6 +17,7 @@ defmodule TodoplaceWeb.AuthController do
 
   def callback(%{assigns: %{ueberauth_auth: auth}, req_cookies: cookies} = conn, _params) do
     device_id = cookies |> Map.get("user_agent") |> URI.decode_www_form()
+
     onboarding_flow_source =
       case Map.get(cookies, "onboarding_type") do
         nil -> []

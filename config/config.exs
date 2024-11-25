@@ -142,20 +142,21 @@ config :todoplace, :products,
 config :todoplace, Oban,
   repo: Todoplace.Repo,
   queues: [default: 10, storage: 10, campaigns: 10, user_initiated: 10]
-  # plugins: [
-  #   {Oban.Plugins.Pruner, max_age: 60 * 60},
-  #   {Oban.Plugins.Cron,
-  #    crontab: [
-  #      {System.get_env("EMAIL_AUTOMATION_TIME") || "*/10 * * * *",
-  #       Todoplace.Workers.ScheduleAutomationEmail},
-  #      {"0 8 * * *", Todoplace.Workers.SendGalleryExpirationReminder},
-  #      {"0 0 * * 0", Todoplace.Workers.SyncWHCCCatalog},
-  #      {"0 1 * * *", Todoplace.Workers.CleanUploader}
-  #      #  {"*/10 * * * *", Todoplace.Workers.SendProposalReminder},
-  #      #  {"*/20 * * * *", Todoplace.Workers.SendShootReminder},
-  #      #  {"0 * * * *", Todoplace.Workers.SendPaymentScheduleReminder},
-  #    ]}
-  # ]
+
+# plugins: [
+#   {Oban.Plugins.Pruner, max_age: 60 * 60},
+#   {Oban.Plugins.Cron,
+#    crontab: [
+#      {System.get_env("EMAIL_AUTOMATION_TIME") || "*/10 * * * *",
+#       Todoplace.Workers.ScheduleAutomationEmail},
+#      {"0 8 * * *", Todoplace.Workers.SendGalleryExpirationReminder},
+#      {"0 0 * * 0", Todoplace.Workers.SyncWHCCCatalog},
+#      {"0 1 * * *", Todoplace.Workers.CleanUploader}
+#      #  {"*/10 * * * *", Todoplace.Workers.SendProposalReminder},
+#      #  {"*/20 * * * *", Todoplace.Workers.SendShootReminder},
+#      #  {"0 * * * *", Todoplace.Workers.SendPaymentScheduleReminder},
+#    ]}
+# ]
 
 config :todoplace, :packages,
   calculator: [
@@ -252,7 +253,8 @@ config :todoplace, :firebase, %{
   storage_bucket: System.get_env("FIREBASE_STORAGE_BUCKET"),
   messaging_sender_id: System.get_env("FIREBASE_MESSAGING_SENDER_ID"),
   app_id: System.get_env("FIREBASE_APP_ID"),
-  measurement_id: System.get_env("FIREBASE_MEASUREMENT_ID")}
+  measurement_id: System.get_env("FIREBASE_MEASUREMENT_ID")
+}
 
 config :triplex,
   repo: Todoplace.Repo,

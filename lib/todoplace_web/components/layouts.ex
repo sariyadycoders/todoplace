@@ -22,5 +22,4 @@ defmodule TodoplaceWeb.Layouts do
   import TodoplaceWeb.LiveHelpers, only: [icon: 1, classes: 2]
 
   embed_templates "layouts/*"
-
 end

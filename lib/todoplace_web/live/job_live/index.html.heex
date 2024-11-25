@@ -9,11 +9,20 @@
       <div class="fixed top-12 left-0 right-0 z-10 flex flex-shrink-0 w-full sm:p-0 p-6 mt-1 sm:mt-0 sm:bottom-auto sm:static sm:items-start sm:w-auto">
         <%= case @type.singular do %>
           <% "lead" -> %>
-            <a {testid("create-a-lead")} title="create lead" class="w-full md:w-auto btn-primary text-center hover:cursor-pointer" phx-click="create-lead">
+            <a
+              {testid("create-a-lead")}
+              title="create lead"
+              class="w-full md:w-auto btn-primary text-center hover:cursor-pointer"
+              phx-click="create-lead"
+            >
               Create a lead
             </a>
           <% "job" -> %>
-            <a title="import job" class="w-full md:w-auto btn-primary text-center hover:cursor-pointer" phx-click="import-job">
+            <a
+              title="import job"
+              class="w-full md:w-auto btn-primary text-center hover:cursor-pointer"
+              phx-click="import-job"
+            >
               Import existing job
             </a>
         <% end %>
@@ -23,7 +32,17 @@
   </div>
 </header>
 
-<.search_sort_bar type={@type.singular} sort_direction={@sort_direction} search_phrase={@search_phrase} selected_job={@selected_job} job_status={@job_status} job_type={@job_type} job_types={@job_types} sort_by={@sort_by} placeholder={"Search #{@type.plural}..."} />
+<.search_sort_bar
+  type={@type.singular}
+  sort_direction={@sort_direction}
+  search_phrase={@search_phrase}
+  selected_job={@selected_job}
+  job_status={@job_status}
+  job_type={@job_type}
+  job_types={@job_types}
+  sort_by={@sort_by}
+  placeholder={"Search #{@type.plural}..."}
+/>
 
 <%= if Enum.empty? @jobs do %>
   <div class="flex flex-col justify-between flex-auto p-6 center-container lg:flex-none">
@@ -31,21 +50,47 @@
     <%= case {@type.singular, @stripe_status} do %>
       <% {"lead", _stripe_status} -> %>
         <%= if @search_phrase || @job_status !== "all" || @job_type !== "all" do %>
-          <p class="text-center text-lg lg:text-2xl text-base-250">No leads match your search or filters.</p>
+          <p class="text-center text-lg lg:text-2xl text-base-250">
+            No leads match your search or filters.
+          </p>
         <% else %>
-          <.empty_state_base tour_embed="https://demo.arcade.software/2rNmJeh5ZDMmrhth7v0P?embed" headline="Meet Leads" eyebrow_text="Leads Product Tour" body="Leads are the beginning to a great relationship between you and your client! Creating one takes less than a minute." third_party_padding="calc(59.916666666666664% + 41px)" show_dismiss={false}>
-            <a title="create lead" class="w-full md:w-auto btn-tertiary text-center flex-shrink-0 hover:cursor-pointer" phx-click="create-lead">
+          <.empty_state_base
+            tour_embed="https://demo.arcade.software/2rNmJeh5ZDMmrhth7v0P?embed"
+            headline="Meet Leads"
+            eyebrow_text="Leads Product Tour"
+            body="Leads are the beginning to a great relationship between you and your client! Creating one takes less than a minute."
+            third_party_padding="calc(59.916666666666664% + 41px)"
+            show_dismiss={false}
+          >
+            <a
+              title="create lead"
+              class="w-full md:w-auto btn-tertiary text-center flex-shrink-0 hover:cursor-pointer"
+              phx-click="create-lead"
+            >
               Create a lead
             </a>
           </.empty_state_base>
-          <% end %>
+        <% end %>
       <% {"job", :loading} -> %>
       <% {"job", _stripe_status} -> %>
         <%= if @search_phrase || @job_status !== "all" || @job_type !== "all" do %>
-          <p class="text-center text-lg lg:text-2xl text-base-250">No jobs match your search or filters.</p>
+          <p class="text-center text-lg lg:text-2xl text-base-250">
+            No jobs match your search or filters.
+          </p>
         <% else %>
-          <.empty_state_base tour_embed="https://demo.arcade.software/UyCDDjBKFuMgVF6LOSG7?embed" headline="Meet Jobs" eyebrow_text="Jobs Product Tour" body="Jobs are the core to your business. They mean you have been booked and contain the history of your shoots and galleries. You can import a job if you are migrating or have something in progress." third_party_padding="calc(66.66666666666666% + 41px)" show_dismiss={false}>
-            <a title="import a job" class="w-full md:w-auto btn-tertiary text-center flex-shrink-0" phx-click="import-job">
+          <.empty_state_base
+            tour_embed="https://demo.arcade.software/UyCDDjBKFuMgVF6LOSG7?embed"
+            headline="Meet Jobs"
+            eyebrow_text="Jobs Product Tour"
+            body="Jobs are the core to your business. They mean you have been booked and contain the history of your shoots and galleries. You can import a job if you are migrating or have something in progress."
+            third_party_padding="calc(66.66666666666666% + 41px)"
+            show_dismiss={false}
+          >
+            <a
+              title="import a job"
+              class="w-full md:w-auto btn-tertiary text-center flex-shrink-0"
+              phx-click="import-job"
+            >
               Import a job
             </a>
           </.empty_state_base>
@@ -55,61 +100,91 @@
 <% else %>
   <div class="p-6 center-container">
     <div class="hidden items-center sm:grid sm:grid-cols-8 gap-2 border-b-8 border-blue-planning-300 font-semibold text-lg pb-6">
-      <div class="sm:col-span-2"><%= String.capitalize(@type.singular)%> Information</div>
+      <div class="sm:col-span-2"><%= String.capitalize(@type.singular) %> Information</div>
       <div class="sm:col-span-2">Package</div>
       <div class="sm:col-span-2">Shoot Date(s)</div>
       <div>Status</div>
     </div>
     <%= for job <- @jobs do %>
-      <div {testid("job-row")} class="grid sm:grid-cols-8 gap-2 border p-3 items-center sm:pt-0 sm:px-0 sm:pb-2 sm:border-b sm:border-t-0 sm:border-x-0 rounded-lg sm:rounded-none border-gray-100 mt-2">
+      <div
+        {testid("job-row")}
+        class="grid sm:grid-cols-8 gap-2 border p-3 items-center sm:pt-0 sm:px-0 sm:pb-2 sm:border-b sm:border-t-0 sm:border-x-0 rounded-lg sm:rounded-none border-gray-100 mt-2"
+      >
         <div phx-click="view-job" phx-value-id={job.id} class="sm:col-span-2 flex flex-col">
-          <.link navigate={~p"/#{if String.to_atom(@type.plural) == :leads, do: "leads", else: "jobs"}/#{job.id}"} >
+          <.link navigate={
+            ~p"/#{if String.to_atom(@type.plural) == :leads, do: "leads", else: "jobs"}/#{job.id}"
+          }>
             <p class="text-blue-planning-300 font-bold underline hover:cursor-pointer capitalize">
               <%= if String.length(job.client.name) < 20 do
-                  job.client.name || "-"
-                else
-                  "#{job.client.name |> String.slice(0..20)} ..."
-                end %>
+                job.client.name || "-"
+              else
+                "#{job.client.name |> String.slice(0..20)} ..."
+              end %>
             </p>
             <p class="text-gray-400 italic font-normal text-sm">
               <%= if String.length(job |> Job.name()) < 20 do
-                  (job |> Job.name()) || "-"
-                else
-                  "#{job |> Job.name() |> String.slice(0..20)} ..."
-                end %>
+                job |> Job.name() || "-"
+              else
+                "#{job |> Job.name() |> String.slice(0..20)} ..."
+              end %>
             </p>
-            <p class="text-gray-400 font-normal text-sm"><%= status_label(job, @current_user.time_zone) %></p>
+            <p class="text-gray-400 font-normal text-sm">
+              <%= status_label(job, @current_user.time_zone) %>
+            </p>
           </.link>
         </div>
         <div class="sm:col-span-2 flex flex-col sm:flex gap-2 sm:gap-0 hidden md:block">
           <%= if job.package do %>
-            <p class="capitalize font-bold"><%= job.package.name || "-" %><span class="font-normal capitalize"><%= "-#{job.type}" %></span></p>
-            <p class="text-gray-400"><%=  Package.price(job.package) |> Money.to_string(fractional_unit: false) %></p>
+            <p class="capitalize font-bold">
+              <%= job.package.name || "-" %><span class="font-normal capitalize"><%= "-#{job.type}" %></span>
+            </p>
+            <p class="text-gray-400">
+              <%= Package.price(job.package) |> Money.to_string(fractional_unit: false) %>
+            </p>
           <% else %>
             <p class="font-bold text-red-sales-300">No package selected</p>
             <p>-</p>
           <% end %>
         </div>
         <div class="sm:col-span-2 flex flex-col md:block">
-          <% collapse? = Enum.any?(@collapsed_shoots, & &1 == job.id) %>
+          <% collapse? = Enum.any?(@collapsed_shoots, &(&1 == job.id)) %>
           <%= for shoot  <- get_shoots(@sort_direction, job.shoots, collapse?) do %>
-            <p class="sm:text-base text-xs"><%= format_datetime_via_type(shoot.starts_at, @current_user.time_zone) %> </p>
+            <p class="sm:text-base text-xs">
+              <%= format_datetime_via_type(shoot.starts_at, @current_user.time_zone) %>
+            </p>
           <% end %>
-          <div class={classes(%{"hidden" => Enum.count(job.shoots) < 4})} phx-click="toggle-shoots" phx-value-job_id={job.id}>
-            <.icon name="hellip" class={classes("w-4 h-4 text-blue-planning-300 mt-2 cursor-pointer", %{"hidden" => Enum.any?(@collapsed_shoots, & &1 == job.id)})} />
-            <span class={classes("text-blue-planning-300 underline cursor-pointer", %{"hidden" => !collapse?})}>Hide</span>
+          <div
+            class={classes(%{"hidden" => Enum.count(job.shoots) < 4})}
+            phx-click="toggle-shoots"
+            phx-value-job_id={job.id}
+          >
+            <.icon
+              name="hellip"
+              class={
+                classes("w-4 h-4 text-blue-planning-300 mt-2 cursor-pointer", %{
+                  "hidden" => Enum.any?(@collapsed_shoots, &(&1 == job.id))
+                })
+              }
+            />
+            <span class={
+              classes("text-blue-planning-300 underline cursor-pointer", %{"hidden" => !collapse?})
+            }>
+              Hide
+            </span>
           </div>
           <%= if job.shoots == [] do %>
             <p class="font-bold text-red-sales-300">Missing Shoot Date</p>
           <% end %>
         </div>
-        <.status_badge class="w-fit" job={job}/>
+        <.status_badge class="w-fit" job={job} />
         <hr class="sm:hidden border-gray-100 my-2" />
-        <.actions type={@type} job={job}/>
+        <.actions type={@type} job={job} />
       </div>
     <% end %>
   </div>
 
-  <.pagination_component pagination_changeset={@pagination_changeset} limit_options={[12, 24, 36, 48]} />
-
+  <.pagination_component
+    pagination_changeset={@pagination_changeset}
+    limit_options={[12, 24, 36, 48]}
+  />
 <% end %>

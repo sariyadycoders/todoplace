@@ -26,7 +26,9 @@ defmodule TodoplaceWeb.Live.Admin.User.SubscriptionReport do
     <header class="p-8 bg-gray-100 flex items-center justify-between">
       <div>
         <h1 class="text-4xl font-bold">User Subscription Reconciliation Report</h1>
-        <p>If the two statuses don't match after your check, need to sync stripe to our db for that user</p>
+        <p>
+          If the two statuses don't match after your check, need to sync stripe to our db for that user
+        </p>
         <p>Stripe has strict rate limits so wasn't able to preload all the statuses :/</p>
       </div>
     </header>
@@ -53,29 +55,59 @@ defmodule TodoplaceWeb.Live.Admin.User.SubscriptionReport do
                 <%= if is_nil(stripe_customer_id) do %>
                   -
                 <% else %>
-                  <a class="link" target="_blank" href={"https://dashboard.stripe.com/customers/#{stripe_customer_id}"}><%= stripe_customer_id %></a>
+                  <a
+                    class="link"
+                    target="_blank"
+                    href={"https://dashboard.stripe.com/customers/#{stripe_customer_id}"}
+                  >
+                    <%= stripe_customer_id %>
+                  </a>
                 <% end %>
               </td>
               <td class="py-1">
                 <%= if is_nil(subscription) do %>
                   -
                 <% else %>
-                  <a class="link" target="_blank" href={"https://dashboard.stripe.com/subscriptions/#{Map.get(subscription, :stripe_subscription_id)}"}><%= Map.get(subscription, :stripe_subscription_id) %></a>
+                  <a
+                    class="link"
+                    target="_blank"
+                    href={"https://dashboard.stripe.com/subscriptions/#{Map.get(subscription, :stripe_subscription_id)}"}
+                  >
+                    <%= Map.get(subscription, :stripe_subscription_id) %>
+                  </a>
                 <% end %>
               </td>
               <td class="py-1">
                 <%= if is_nil(subscription) do %>
                   -
                 <% else %>
-                  <button class="rounded-lg px-2 py-1 bg-gray-200" type="button" phx-click="sync" phx-value-id={Map.get(subscription, :stripe_subscription_id)} phx-value-user_id={id}>Sync</button>
+                  <button
+                    class="rounded-lg px-2 py-1 bg-gray-200"
+                    type="button"
+                    phx-click="sync"
+                    phx-value-id={Map.get(subscription, :stripe_subscription_id)}
+                    phx-value-user_id={id}
+                  >
+                    Sync
+                  </button>
                   <%= if is_nil(stripe_subscription) do %>
-                    <button class="rounded-lg px-2 py-1 bg-black text-white ml-4" type="button" phx-click="check" phx-value-id={Map.get(subscription, :stripe_subscription_id)} phx-value-user_id={id}>Check</button>
+                    <button
+                      class="rounded-lg px-2 py-1 bg-black text-white ml-4"
+                      type="button"
+                      phx-click="check"
+                      phx-value-id={Map.get(subscription, :stripe_subscription_id)}
+                      phx-value-user_id={id}
+                    >
+                      Check
+                    </button>
                   <% else %>
                     <span class="ml-4"><%= Map.get(stripe_subscription, :status) %></span>
                   <% end %>
                 <% end %>
               </td>
-              <td class="py-1"><%= if is_nil(subscription), do: "-", else: Map.get(subscription, :status)  %></td>
+              <td class="py-1">
+                <%= if is_nil(subscription), do: "-", else: Map.get(subscription, :status) %>
+              </td>
             </tr>
           <% end %>
         </tbody>

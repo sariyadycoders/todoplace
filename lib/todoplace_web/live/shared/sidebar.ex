@@ -7,6 +7,7 @@ defmodule TodoplaceWeb.Shared.Sidebar do
     Accounts.User,
     Repo
   }
+
   alias Phoenix.LiveView.JS
 
   use TodoplaceWeb, :live_component
@@ -14,7 +15,6 @@ defmodule TodoplaceWeb.Shared.Sidebar do
   import TodoplaceWeb.LiveHelpers
   import Todoplace.Onboardings, only: [user_update_sidebar_preference_changeset: 2]
   import Todoplace.Onboardings.Welcome, only: [get_percentage_completed_count: 1]
-
 
   @impl true
   def update(
@@ -67,7 +67,13 @@ defmodule TodoplaceWeb.Shared.Sidebar do
   def handle_event(
         "collapse",
         _unsigned_params,
-        %{assigns: %{is_drawer_open?: is_drawer_open?, current_user: current_user, firstlayer?: is_firstlayer}} = socket
+        %{
+          assigns: %{
+            is_drawer_open?: is_drawer_open?,
+            current_user: current_user,
+            firstlayer?: is_firstlayer
+          }
+        } = socket
       ) do
     current_user
     |> user_update_sidebar_preference_changeset(%{
@@ -75,7 +81,10 @@ defmodule TodoplaceWeb.Shared.Sidebar do
     })
     |> Repo.update!()
 
-    send_update(TodoplaceWeb.Shared.Outerbar, id: "app-org-sidebar", is_drawer_open?: !is_drawer_open?)
+    send_update(TodoplaceWeb.Shared.Outerbar,
+      id: "app-org-sidebar",
+      is_drawer_open?: !is_drawer_open?
+    )
 
     socket
     |> push_event("sidebar:collapse", %{
@@ -133,7 +142,6 @@ defmodule TodoplaceWeb.Shared.Sidebar do
     |> noreply()
   end
 
-
   @impl true
   def render(assigns) do
     ~H"""
@@ -145,7 +153,6 @@ defmodule TodoplaceWeb.Shared.Sidebar do
       class="z-30"
       data-target={@myself}
     >
-
       <aside
         id="default-sidebar"
         class={
@@ -371,8 +378,7 @@ defmodule TodoplaceWeb.Shared.Sidebar do
 
   def initials_menu(assigns) do
     assigns =
-      Enum.into(assigns, %{
-      })
+      Enum.into(assigns, %{})
 
     ~H"""
     <div
@@ -408,7 +414,7 @@ defmodule TodoplaceWeb.Shared.Sidebar do
             <% end %>
 
             <.form :let={f} for={%{}} as={:sign_out} action={~p"/users/log_out"} method="delete">
-            <div id="user-agent" phx-hook="UserAgent"> </div>
+              <div id="user-agent" phx-hook="UserAgent"></div>
               <%= submit("Logout", class: "text-center py-2 w-full") %>
             </.form>
           </div>

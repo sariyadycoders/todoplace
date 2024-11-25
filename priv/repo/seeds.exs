@@ -45,7 +45,6 @@ defmodule Seeds do
         email: "test@mail.com",
         password: "test@mail.com"
       })
-
     end
   end
 end

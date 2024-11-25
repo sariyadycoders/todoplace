@@ -2,8 +2,7 @@ defmodule TodoplaceWeb.Live.Brand.Shared do
   @moduledoc false
 
   use Phoenix.Component
-  use  TodoplaceWeb, :live_component
-
+  use TodoplaceWeb, :live_component
 
   def brand_logo_preview(assigns) do
     ~H"""
@@ -15,7 +14,12 @@ defmodule TodoplaceWeb.Live.Brand.Shared do
       <% end %>
       <div class="shadow-2xl rounded-lg flex items-center justify-center raw_html h-full p-10">
         <div>
-          <%= raw Phoenix.View.render_to_string(TodoplaceWeb.BrandLogoView, "show.html", organization: @organization, user: @user) %>
+          <%= raw(
+            Phoenix.View.render_to_string(TodoplaceWeb.BrandLogoView, "show.html",
+              organization: @organization,
+              user: @user
+            )
+          ) %>
         </div>
       </div>
     </div>
@@ -28,7 +32,12 @@ defmodule TodoplaceWeb.Live.Brand.Shared do
       <div class="input-label mb-4">Signature Preview</div>
       <div class="shadow-2xl rounded-lg px-6 pb-6 raw_html">
         <div>
-          <%= raw Phoenix.View.render_to_string(TodoplaceWeb.EmailSignatureView, "show.html", organization: @organization, user: @user) %>
+          <%= raw(
+            Phoenix.View.render_to_string(TodoplaceWeb.EmailSignatureView, "show.html",
+              organization: @organization,
+              user: @user
+            )
+          ) %>
         </div>
       </div>
     </div>
@@ -41,7 +50,13 @@ defmodule TodoplaceWeb.Live.Brand.Shared do
       <div class="input-label mb-4">Client Proposal Preview</div>
       <div class="shadow-2xl rounded-lg px-6 pb-6 raw_html">
         <div>
-          <%= raw Phoenix.View.render_to_string(TodoplaceWeb.ClientProposalView, "show.html", organization: @organization, user: @user, client_proposal: client_proposal(@organization)) %>
+          <%= raw(
+            Phoenix.View.render_to_string(TodoplaceWeb.ClientProposalView, "show.html",
+              organization: @organization,
+              user: @user,
+              client_proposal: client_proposal(@organization)
+            )
+          ) %>
         </div>
       </div>
     </div>

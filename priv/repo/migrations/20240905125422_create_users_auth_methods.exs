@@ -5,7 +5,10 @@ defmodule Todoplace.Repo.Migrations.CreateUsersAuthMethods do
     create table(:users_auth_methods) do
       add :provider_user_id, :string
       add :user_id, references(:users, on_delete: :nothing)
-      add :auth_method_name, references(:auth_methods, column: :name, type: :string, on_delete: :delete_all), null: false
+
+      add :auth_method_name,
+          references(:auth_methods, column: :name, type: :string, on_delete: :delete_all),
+          null: false
 
       timestamps()
     end

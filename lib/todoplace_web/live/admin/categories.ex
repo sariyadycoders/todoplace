@@ -35,21 +35,41 @@ defmodule TodoplaceWeb.Live.Admin.Categories do
             <div><%= whcc_id %></div>
 
             <.form :let={f} for={changeset} class="contents" phx-change="save" id={"form-#{whcc_id}"}>
-              <%= hidden_input f, :id %>
-              <%= checkbox f, :coming_soon, class: "checkbox", phx_debounce: 200 %>
-              <%= checkbox f, :hidden, class: "checkbox", phx_debounce: 200 %>
+              <%= hidden_input(f, :id) %>
+              <%= checkbox(f, :coming_soon, class: "checkbox", phx_debounce: 200) %>
+              <%= checkbox(f, :hidden, class: "checkbox", phx_debounce: 200) %>
               <div>
                 <.icon name={icon} class="w-4 h-4" />
-                <%= select f, :icon, Todoplace.Icon.names(), phx_debounce: 200 %>
+                <%= select(f, :icon, Todoplace.Icon.names(), phx_debounce: 200) %>
               </div>
-              <%= input f, :name, phx_debounce: 200 %>
-              <%= input f, :default_markup, type: :number_input, phx_debounce: 200, step: 0.01, min: 1.0, class: "w-24" %>
-              <%= select f, :frame_image, [""| Todoplace.Category.frame_images()], phx_debounce: 200 %>
+              <%= input(f, :name, phx_debounce: 200) %>
+              <%= input(f, :default_markup,
+                type: :number_input,
+                phx_debounce: 200,
+                step: 0.01,
+                min: 1.0,
+                class: "w-24"
+              ) %>
+              <%= select(f, :frame_image, ["" | Todoplace.Category.frame_images()], phx_debounce: 200) %>
             </.form>
 
             <div class="flex text-center justify-evenly">
-              <a class="flex-grow p-2 mr-2 border rounded" phx-value-id={id} phx-value-direction="up" phx-click="reorder">↑</a>
-              <a class="flex-grow p-2 border rounded" phx-value-id={id} phx-value-direction="down" phx-click="reorder">↓</a>
+              <a
+                class="flex-grow p-2 mr-2 border rounded"
+                phx-value-id={id}
+                phx-value-direction="up"
+                phx-click="reorder"
+              >
+                ↑
+              </a>
+              <a
+                class="flex-grow p-2 border rounded"
+                phx-value-id={id}
+                phx-value-direction="down"
+                phx-click="reorder"
+              >
+                ↓
+              </a>
             </div>
           </div>
         <% end %>

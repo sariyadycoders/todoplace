@@ -3,7 +3,17 @@ defmodule Mix.Tasks.UpdateInprogressOrders do
 
   use Mix.Task
 
-  alias Todoplace.{Repo, Category, Cart, Galleries, WHCC, Cart.Order, Cart.Product, Intents.Intent}
+  alias Todoplace.{
+    Repo,
+    Category,
+    Cart,
+    Galleries,
+    WHCC,
+    Cart.Order,
+    Cart.Product,
+    Intents.Intent
+  }
+
   alias Ecto.{Multi, Changeset}
 
   import Ecto.Query

@@ -96,7 +96,8 @@ defmodule TodoplaceWeb.GalleryLive.Albums.AlbumThumbnail do
         streams={@streams}
         selected={@selected}
         myself={@myself}
-        title={@title}>
+        title={@title}
+      >
         <div class="flex items-start justify-center bg-gray-300 row-span-2 previewImg">
           <.framed_preview photo={@thumbnail || album_placeholder()} item_id={@album.id} />
         </div>

@@ -16,52 +16,67 @@ defmodule TodoplaceWeb.Live.Brand.EditSignatureComponent do
   @impl true
   def render(assigns) do
     ~H"""
-      <div class="flex flex-col modal">
-        <div class="flex items-start justify-between flex-shrink-0">
-          <h1 class="mb-4 text-3xl font-bold">
-            Edit email signature
-          </h1>
+    <div class="flex flex-col modal">
+      <div class="flex items-start justify-between flex-shrink-0">
+        <h1 class="mb-4 text-3xl font-bold">
+          Edit email signature
+        </h1>
 
-          <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-            <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
-          </button>
-        </div>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
+        </button>
+      </div>
 
-        <.form for={@changeset} :let={f} phx-change="validate" phx-submit="save" phx-target={@myself}>
-          <%= for e <- inputs_for(f, :email_signature) do %>
-            <div class="grid mt-4 grid-cols-1 sm:grid-cols-5 gap-5 sm:gap-12 mb-6">
-
-              <div class="col-span-3">
-                <div>
-                  <div class="input-label mb-4">Extra content</div>
-                  <.quill_input f={e} html_field={:content} placeholder="Start typing…" />
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2">
-                  <label class="flex my-4 cursor-pointer">
-                    <%= checkbox(e, :show_business_name, class: "w-6 h-6 mt-1 checkbox") %>
-                    <p class="ml-3 text-base-250"><span class="font-bold text-base-300">Show your business name?</span> <br />(Edit in account settings)</p>
-                  </label>
-                  <%= if @current_user.onboarding.phone do %>
-                    <label class="flex my-4 cursor-pointer">
-                      <%= checkbox(e, :show_phone, class: "w-6 h-6 mt-1 checkbox") %>
-                      <p class="ml-3 text-base-250"><span class="font-bold text-base-300">Show your phone number?</span> <br />(Edit in account settings)</p>
-                    </label>
-                  <% else %>
-                    <p class="text-base-250 my-4 italic">Add your phone number in account settings to enable/disable in your signature.</p>
-                  <% end %>
-                </div>
+      <.form :let={f} for={@changeset} phx-change="validate" phx-submit="save" phx-target={@myself}>
+        <%= for e <- inputs_for(f, :email_signature) do %>
+          <div class="grid mt-4 grid-cols-1 sm:grid-cols-5 gap-5 sm:gap-12 mb-6">
+            <div class="col-span-3">
+              <div>
+                <div class="input-label mb-4">Extra content</div>
+                <.quill_input f={e} html_field={:content} placeholder="Start typing…" />
               </div>
-
-              <div class="col-span-2">
-                <.email_signature_preview organization={current_organization(@changeset)} user={@current_user} />
+              <div class="grid grid-cols-1 sm:grid-cols-2">
+                <label class="flex my-4 cursor-pointer">
+                  <%= checkbox(e, :show_business_name, class: "w-6 h-6 mt-1 checkbox") %>
+                  <p class="ml-3 text-base-250">
+                    <span class="font-bold text-base-300">Show your business name?</span>
+                    <br />(Edit in account settings)
+                  </p>
+                </label>
+                <%= if @current_user.onboarding.phone do %>
+                  <label class="flex my-4 cursor-pointer">
+                    <%= checkbox(e, :show_phone, class: "w-6 h-6 mt-1 checkbox") %>
+                    <p class="ml-3 text-base-250">
+                      <span class="font-bold text-base-300">Show your phone number?</span>
+                      <br />(Edit in account settings)
+                    </p>
+                  </label>
+                <% else %>
+                  <p class="text-base-250 my-4 italic">
+                    Add your phone number in account settings to enable/disable in your signature.
+                  </p>
+                <% end %>
               </div>
             </div>
-          <% end %>
 
+            <div class="col-span-2">
+              <.email_signature_preview
+                organization={current_organization(@changeset)}
+                user={@current_user}
+              />
+            </div>
+          </div>
+        <% end %>
 
-          <TodoplaceWeb.LiveModal.footer disabled={!@changeset.valid?} />
-        </.form>
-      </div>
+        <TodoplaceWeb.LiveModal.footer disabled={!@changeset.valid?} />
+      </.form>
+    </div>
     """
   end
 

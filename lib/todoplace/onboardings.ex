@@ -140,8 +140,6 @@ defmodule Todoplace.Onboardings do
       field(:company_size, :string)
       field(:first_focus, :string)
       field(:first_manage, :string)
-
-
     end
 
     def changeset(%__MODULE__{} = data, attrs) do

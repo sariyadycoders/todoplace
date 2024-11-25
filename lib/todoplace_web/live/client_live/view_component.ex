@@ -48,10 +48,19 @@ defmodule TodoplaceWeb.Live.ClientLive.ClientViewComponent do
         </div>
       <% end %>
 
-      <button class="w-full mt-6 font-semibold btn-primary text-lg flex items-center justify-center gap-2" phx-click="edit-client" phx-value-id={@client.id} phx-target={@myself}>
+      <button
+        class="w-full mt-6 font-semibold btn-primary text-lg flex items-center justify-center gap-2"
+        phx-click="edit-client"
+        phx-value-id={@client.id}
+        phx-target={@myself}
+      >
         Edit <.icon name="external-link" class="text-white w-4 h-4" />
       </button>
-      <button class="w-full mt-2 border border-current p-3 rounded-lg font-semibold text-lg" phx-click="modal" phx-value-action="close">
+      <button
+        class="w-full mt-2 border border-current p-3 rounded-lg font-semibold text-lg"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         Close
       </button>
     </div>

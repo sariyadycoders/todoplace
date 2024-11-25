@@ -18,7 +18,15 @@ defmodule TodoplaceWeb.Shared.ImageUploadInput do
       })
 
     ~H"""
-    <div id={"#{@id}-wrapper"} class={@class} phx-hook="ImageUploadInput" class="mt-2" data-target={@myself} data-upload-folder={@upload_folder} data-resize-height={@resize_height}>
+    <div
+      id={"#{@id}-wrapper"}
+      class={@class}
+      phx-hook="ImageUploadInput"
+      class="mt-2"
+      data-target={@myself}
+      data-upload-folder={@upload_folder}
+      data-resize-height={@resize_height}
+    >
       <input type="hidden" name={@name} value={@url} />
       <input type="file" class="hidden" {testid("image-upload-input")} />
 

@@ -25,31 +25,44 @@ defmodule TodoplaceWeb.GalleryLive.Photos.CloudError do
           <div class="flex items-center justify-between w-full px-12 pb-4">
             <p class="font-bold text-2xl">Retry Upload</p>
             <a phx-click="close" phx-target={@myself} class="cursor-pointer">
-              <.icon name="close-x" class="w-4 h-4 stroke-current stroke-2"/>
+              <.icon name="close-x" class="w-4 h-4 stroke-current stroke-2" />
             </a>
           </div>
 
           <div class="bg-orange-inbox-400 rounded-lg mx-12 py-2">
-              <div class="flex justify-center items-center mx-4">
-                  <.icon name="warning-orange", class="w-10 h-10 stroke-[4px]" />
-                  <.error_type id="error_type" />
-              </div>
+            <div class="flex justify-center items-center mx-4">
+              <.icon name="warning-orange" , class="w-10 h-10 stroke-[4px]" />
+              <.error_type id="error_type" />
+            </div>
           </div>
         </div>
 
         <div class="uploadEntry grid grid-cols-5 w-full px-12">
           <div class="grid-cols-1 col-span-3">
             <span class="error text-xs text-center rounded py-1 px-2 items-center cursor-default">
-              <%= Enum.count(@invalid_preview_photos) %> <%= ngettext("photo", "photos", Enum.count(@invalid_preview_photos)) %> failed
+              <%= Enum.count(@invalid_preview_photos) %> <%= ngettext(
+                "photo",
+                "photos",
+                Enum.count(@invalid_preview_photos)
+              ) %> failed
             </span>
           </div>
           <div class="grid-cols-2">
-            <span phx-target={@myself} phx-click="upload_invalid_previews" class="retry text-xs text-center rounded py-1 px-7 cursor-pointer items-center">
+            <span
+              phx-target={@myself}
+              phx-click="upload_invalid_previews"
+              class="retry text-xs text-center rounded py-1 px-7 cursor-pointer items-center"
+            >
               Retry all?
             </span>
           </div>
           <div class="grid-cols-3 justify-center">
-            <.action_button name="Delete all?" {assigns} action="delete_photos" class="border-solid border border-base-250 rounded" />
+            <.action_button
+              name="Delete all?"
+              {assigns}
+              action="delete_photos"
+              class="border-solid border border-base-250 rounded"
+            />
           </div>
         </div>
 
@@ -62,13 +75,28 @@ defmodule TodoplaceWeb.GalleryLive.Photos.CloudError do
               <div class="items-center gap-x-1 lg:gap-x-4 md:gap-x-4 grid-cols-1">
                 <p class="error btn items-center">Failed to process</p>
               </div>
-              <.action_button name="Retry" {assigns} attrs={[phx_value_id: photo.id]} action="upload_invalid_previews" />
-              <.action_button name="Delete" {assigns} attrs={[phx_value_id: photo.id]} action="delete_photos" />
+              <.action_button
+                name="Retry"
+                {assigns}
+                attrs={[phx_value_id: photo.id]}
+                action="upload_invalid_previews"
+              />
+              <.action_button
+                name="Delete"
+                {assigns}
+                attrs={[phx_value_id: photo.id]}
+                action="delete_photos"
+              />
             </div>
           <% end) %>
         </div>
       </div>
-      <button phx-click="close" phx-target={@myself} aria-label="canncel" class="bg-black text-white mr-12 mt-5 py-3 px-8 float-right rounded-lg border">
+      <button
+        phx-click="close"
+        phx-target={@myself}
+        aria-label="canncel"
+        class="bg-black text-white mr-12 mt-5 py-3 px-8 float-right rounded-lg border"
+      >
         Close
       </button>
     </div>
@@ -79,7 +107,12 @@ defmodule TodoplaceWeb.GalleryLive.Photos.CloudError do
     assigns = Enum.into(assigns, %{class: "", attrs: []})
 
     ~H"""
-    <span phx-target={@myself} phx-click={@action} {@attrs} class={"text-base-300 font-bold text-xs text-center py-1 px-6 cursor-pointer items-center #{@class}"}>
+    <span
+      phx-target={@myself}
+      phx-click={@action}
+      {@attrs}
+      class={"text-base-300 font-bold text-xs text-center py-1 px-6 cursor-pointer items-center #{@class}"}
+    >
       <%= @name %>
     </span>
     """

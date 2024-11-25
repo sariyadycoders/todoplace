@@ -1,5 +1,5 @@
 <div class="modal">
-  <form action="#" phx-submit="submit" phx-change="validate" phx-target={ @myself }>
+  <form action="#" phx-submit="submit" phx-change="validate" phx-target={@myself}>
     <.close_x />
 
     <div class="mb-4 md:mb-8">
@@ -11,13 +11,20 @@
     </h1>
 
     <%= if @answer.id do %>
-      <p>Answered on <%= strftime(@photographer.time_zone, @answer.inserted_at, "%b %d, %Y") %></p>
+      <p>
+        Answered on <%= strftime(@photographer.time_zone, @answer.inserted_at, "%b %d, %Y") %>
+      </p>
     <% end %>
 
     <fieldset class={classes(%{"opacity-75" => @read_only})} disabled={@read_only}>
       <dl>
         <%= for {{question, answer}, question_index} <- @questionnaire.questions |> Enum.zip(@answer.answers) |> Enum.with_index() do %>
-          <.questionnaire_item question={question} answer={answer} question_index={question_index} disable?={@read_only} />
+          <.questionnaire_item
+            question={question}
+            answer={answer}
+            question_index={question_index}
+            disable?={@read_only}
+          />
         <% end %>
       </dl>
     </fieldset>
@@ -28,7 +35,13 @@
           Save
         </button>
       <% end %>
-      <button class="btn-secondary" title="close" type="button" phx-click="modal" phx-value-action="close">
+      <button
+        class="btn-secondary"
+        title="close"
+        type="button"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         Close
       </button>
     </.footer>

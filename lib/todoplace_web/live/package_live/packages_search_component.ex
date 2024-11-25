@@ -29,21 +29,51 @@ defmodule TodoplaceWeb.PackageLive.PackagesSearchComponent do
     ~H"""
     <div class="flex flex-col justify-between items-center px-1.5 lg:flex-row mb-10 gap-3">
       <div class="relative flex lg:w-64 w-full md:mt-6">
-        <a href='#' class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2">
+        <a
+          href="#"
+          class="absolute top-0 bottom-0 flex flex-row items-center justify-center overflow-hidden text-xs text-gray-400 left-2"
+        >
           <%= if @search_phrase_packages && @search_phrase_packages != "" do %>
             <span phx-click="clear-search" phx-target={@myself} class="cursor-pointer">
-              <.icon name="close-x" class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300" />
+              <.icon
+                name="close-x"
+                class="w-4 ml-1 fill-current stroke-current stroke-2 close-icon text-blue-planning-300"
+              />
             </span>
           <% else %>
             <.icon name="search" class="w-4 ml-1 fill-current" />
           <% end %>
         </a>
-          <input type="text" class="bg-base-200 text-base-250 form-control w-full text-input indent-6" id="search_phrase_input" name="search_phrase" value={"#{@search_phrase_packages}"} phx-debounce="100" phx-change= "search" phx-target={@myself} spellcheck="false" placeholder="Search packages..." />
+        <input
+          type="text"
+          class="bg-base-200 text-base-250 form-control w-full text-input indent-6"
+          id="search_phrase_input"
+          name="search_phrase"
+          value={"#{@search_phrase_packages}"}
+          phx-debounce="100"
+          phx-change="search"
+          phx-target={@myself}
+          spellcheck="false"
+          placeholder="Search packages..."
+        />
       </div>
 
       <div class="flex flex-col lg:flex-row w-full lg:w-1/2 gap-2 lg:justify-end">
-        <.select_dropdown title="Photography Type" selected_option={@package_type} id="type" options_list={@job_types} target={@myself}/>
-        <.select_dropdown title="Sort" id="sort" selected_option={@sort_by} options_list={packages_sort_options()} sort_direction={@sort_direction} target={@myself}/>
+        <.select_dropdown
+          title="Photography Type"
+          selected_option={@package_type}
+          id="type"
+          options_list={@job_types}
+          target={@myself}
+        />
+        <.select_dropdown
+          title="Sort"
+          id="sort"
+          selected_option={@sort_by}
+          options_list={packages_sort_options()}
+          sort_direction={@sort_direction}
+          target={@myself}
+        />
       </div>
     </div>
     """
@@ -52,22 +82,45 @@ defmodule TodoplaceWeb.PackageLive.PackagesSearchComponent do
   def select_dropdown(assigns) do
     ~H"""
     <div class="flex w-full lg:w-48">
-      <div class={"relative w-full mt-3 md:mt-0"}>
+      <div class="relative w-full mt-3 md:mt-0">
         <div>
           <h4 class="font-extrabold text-sm mb-1"><%= @title %></h4>
         </div>
         <div class="flex w-full">
           <div id={@id} class="w-full" data-offset-y="10" phx-hook="Select">
             <div class={"flex flex-row items-center border #{@title != "Sort" && "rounded-lg"} p-3 #{@title == "Sort" && "rounded-l-lg"}"}>
-                <span class="flex-shrink-0"><%= String.capitalize(String.replace(@selected_option, "_", " ")) %></span>
-                <.icon name="down" class="flex-shrink-0 w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
-                <.icon name="up" class="flex-shrink-0 hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon" />
+              <span class="flex-shrink-0">
+                <%= String.capitalize(String.replace(@selected_option, "_", " ")) %>
+              </span>
+              <.icon
+                name="down"
+                class="flex-shrink-0 w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon"
+              />
+              <.icon
+                name="up"
+                class="flex-shrink-0 hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon"
+              />
             </div>
             <ul class="absolute z-30 hidden w-full md:w-32 mt-2 bg-white toggle rounded-md popover-content border shadow-lg">
               <%= for option <- @options_list do %>
-                <li id={option.id} target-class="toggle-it" parent-class="toggle" toggle-type="selected-active" phx-hook="ToggleSiblings"
-                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md">
-                  <button type="button" id={option.id} class="album-select" phx-click={"apply-filter-#{@id}"} phx-target={@target} phx-value-option={option.id}><%= option.title %></button>
+                <li
+                  id={option.id}
+                  target-class="toggle-it"
+                  parent-class="toggle"
+                  toggle-type="selected-active"
+                  phx-hook="ToggleSiblings"
+                  class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md"
+                >
+                  <button
+                    type="button"
+                    id={option.id}
+                    class="album-select"
+                    phx-click={"apply-filter-#{@id}"}
+                    phx-target={@target}
+                    phx-value-option={option.id}
+                  >
+                    <%= option.title %>
+                  </button>
                   <%= if option.id == @selected_option do %>
                     <.icon name="tick" class="w-6 h-5 mr-1 toggle-it text-blue-planning-300" />
                   <% end %>
@@ -75,16 +128,24 @@ defmodule TodoplaceWeb.PackageLive.PackagesSearchComponent do
               <% end %>
             </ul>
           </div>
-          <%= if @title == "Sort" do%>
-          <div class="items-center flex border rounded-r-lg border-grey p-2">
-            <button type="button" phx-click="switch_sort" phx-target={@target}>
-              <%= if @sort_direction == "asc" do%>
-                <.icon name="sort-vector-2" {testid("edit-link-button")} class="blue-planning-300 w-5 h-5" />
-              <% else%>
-                <.icon name="sort-vector" {testid("edit-link-button")} class="blue-planning-300 w-5 h-5" />
-              <% end %>
-            </button>
-          </div>
+          <%= if @title == "Sort" do %>
+            <div class="items-center flex border rounded-r-lg border-grey p-2">
+              <button type="button" phx-click="switch_sort" phx-target={@target}>
+                <%= if @sort_direction == "asc" do %>
+                  <.icon
+                    name="sort-vector-2"
+                    {testid("edit-link-button")}
+                    class="blue-planning-300 w-5 h-5"
+                  />
+                <% else %>
+                  <.icon
+                    name="sort-vector"
+                    {testid("edit-link-button")}
+                    class="blue-planning-300 w-5 h-5"
+                  />
+                <% end %>
+              </button>
+            </div>
           <% end %>
         </div>
       </div>
@@ -94,7 +155,7 @@ defmodule TodoplaceWeb.PackageLive.PackagesSearchComponent do
 
   def packages_search_component(assigns) do
     ~H"""
-      <.live_component id={assigns[:id]} {assigns} module={__MODULE__} />
+    <.live_component id={assigns[:id]} {assigns} module={__MODULE__} />
     """
   end
 

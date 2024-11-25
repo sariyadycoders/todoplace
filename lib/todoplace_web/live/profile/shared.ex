@@ -177,10 +177,12 @@ defmodule TodoplaceWeb.Live.Profile.Shared do
       |> assign_new(:show_large_logo?, fn -> false end)
 
     ~H"""
-      <%= case Profiles.logo_url(@organization) do %>
-        <% nil -> %> <h1 class="text-sm sm:text-xl font-client text-base-300"><%= @organization.name %></h1>
-        <% url -> %> <img class={if @show_large_logo?, do: "md:h-18 h-16", else: "h-16"} src={url} />
-      <% end %>
+    <%= case Profiles.logo_url(@organization) do %>
+      <% nil -> %>
+        <h1 class="text-sm sm:text-xl font-client text-base-300"><%= @organization.name %></h1>
+      <% url -> %>
+        <img class={if @show_large_logo?, do: "md:h-18 h-16", else: "h-16"} src={url} />
+    <% end %>
     """
   end
 
@@ -188,7 +190,9 @@ defmodule TodoplaceWeb.Live.Profile.Shared do
     ~H"""
     <footer class="mt-auto pt-10 center-container">
       <div class="flex flex-col md:flex-row">
-        <div class="flex justify-center py-8 md:justify-start md:py-14"><.photographer_logo {assigns} /></div>
+        <div class="flex justify-center py-8 md:justify-start md:py-14">
+          <.photographer_logo {assigns} />
+        </div>
         <div class="flex items-center justify-center md:ml-auto flex-wrap">
           <%= for %{link: link, link_id: link_id, show_on_profile?: true, active?: true} <- Profiles.get_brand_links_by_organization(@organization) do %>
             <div {testid("marketing-links")} class="flex items-center mb-4">
@@ -204,7 +208,15 @@ defmodule TodoplaceWeb.Live.Profile.Shared do
       <div class="flex flex-col items-center justify-start pt-6 mb-8 border-t md:flex-row md:justify-between border-base-250 text-base-300 opacity-30">
         <span>© <%= Date.utc_today().year %> <%= @organization.name %></span>
 
-        <span class="mt-2 md:mt-0">Powered By <a href={"#{base_url(:marketing)}?utm_source=app&utm_medium=link&utm_campaign=public_profile&utm_contentType=landing_page&utm_content=footer_link&utm_audience=existing_user"} target="_blank">Todoplace</a></span>
+        <span class="mt-2 md:mt-0">
+          Powered By
+          <a
+            href={"#{base_url(:marketing)}?utm_source=app&utm_medium=link&utm_campaign=public_profile&utm_contentType=landing_page&utm_content=footer_link&utm_audience=existing_user"}
+            target="_blank"
+          >
+            Todoplace
+          </a>
+        </span>
       </div>
     </footer>
     """

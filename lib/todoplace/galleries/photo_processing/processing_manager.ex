@@ -39,7 +39,7 @@ defmodule Todoplace.Galleries.PhotoProcessing.ProcessingManager do
     topic = Application.get_env(:todoplace, :photo_processing_input_topic)
     {:ok, project_id} = Goth.Config.get("project_id")
     {:ok, token} = Todoplace.Galleries.Workers.PhotoStorage.Impl.handle_credentials()
-    
+
     result =
       Kane.Message.publish(
         %Kane{project_id: project_id, token: token},

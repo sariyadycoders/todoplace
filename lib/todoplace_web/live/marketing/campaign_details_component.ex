@@ -32,19 +32,29 @@ defmodule TodoplaceWeb.Live.Marketing.CampaignDetailsComponent do
       <div class="flex items-start justify-between flex-shrink-0">
         <h1 class="text-3xl font-bold"><%= @campaign.subject %></h1>
 
-        <button phx-click="modal" phx-value-action="close" title="close modal" type="button" class="p-2">
-          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6"/>
+        <button
+          phx-click="modal"
+          phx-value-action="close"
+          title="close modal"
+          type="button"
+          class="p-2"
+        >
+          <.icon name="close-x" class="w-3 h-3 stroke-current stroke-2 sm:stroke-1 sm:w-6 sm:h-6" />
         </button>
       </div>
 
       <div class="mt-3 p-3 rounded-lg border w-full">
         <dl>
           <dt class="inline text-blue-planning-300">Recipient list:</dt>
-          <dd class="inline"><%= ngettext "1 client", "%{count} clients", @campaign.clients_count %></dd>
+          <dd class="inline">
+            <%= ngettext("1 client", "%{count} clients", @campaign.clients_count) %>
+          </dd>
         </dl>
         <dl>
           <dt class="inline text-blue-planning-300">Date:</dt>
-          <dd class="inline"><%= strftime(@current_user.time_zone, @campaign.inserted_at, "%B %d, %Y") %></dd>
+          <dd class="inline">
+            <%= strftime(@current_user.time_zone, @campaign.inserted_at, "%B %d, %Y") %>
+          </dd>
         </dl>
       </div>
       <%= case @template_preview do %>
@@ -56,13 +66,26 @@ defmodule TodoplaceWeb.Live.Marketing.CampaignDetailsComponent do
           </div>
         <% content -> %>
           <div class="rounded-lg bg-base-200 flex justify-center mt-4 p-2">
-            <iframe srcdoc={content} class="w-[30rem]" scrolling="no" phx-hook="IFrameAutoHeight" id="template-preview">
+            <iframe
+              srcdoc={content}
+              class="w-[30rem]"
+              scrolling="no"
+              phx-hook="IFrameAutoHeight"
+              id="template-preview"
+            >
             </iframe>
           </div>
       <% end %>
 
       <TodoplaceWeb.LiveModal.footer>
-        <button id="close" class="btn-secondary" title="close" type="button" phx-click="modal" phx-value-action="close">
+        <button
+          id="close"
+          class="btn-secondary"
+          title="close"
+          type="button"
+          phx-click="modal"
+          phx-value-action="close"
+        >
           Close
         </button>
       </TodoplaceWeb.LiveModal.footer>

@@ -91,8 +91,17 @@ defmodule TodoplaceWeb.Live.Admin.AutomationsSentTodayReport do
       </div>
       <.form :let={f} for={%{}} as={:date} phx-change="change-date">
         <div class="">
-          <.date_picker_field class="" id="select_automation_date" form={f} field={:automation_date} input_placeholder="mm/dd/yyyy" input_label="Change Date" />
-          <p class="opacity-50">(defaults to today—time range on selection is utc 00:00:00 to 23:59:59)</p>
+          <.date_picker_field
+            class=""
+            id="select_automation_date"
+            form={f}
+            field={:automation_date}
+            input_placeholder="mm/dd/yyyy"
+            input_label="Change Date"
+          />
+          <p class="opacity-50">
+            (defaults to today—time range on selection is utc 00:00:00 to 23:59:59)
+          </p>
         </div>
       </.form>
     </header>
@@ -120,7 +129,15 @@ defmodule TodoplaceWeb.Live.Admin.AutomationsSentTodayReport do
               <td class="py-1"><%= user_name %></td>
               <td class="py-1"><%= client_email %></td>
               <td class="py-1"><%= job_id %></td>
-              <td class="py-1 link" phx-click="email-preview" phx-value-email-preview-id={id} phx-value-user-id={user_id} phx-value-job-id={job_id}><%= name %></td>
+              <td
+                class="py-1 link"
+                phx-click="email-preview"
+                phx-value-email-preview-id={id}
+                phx-value-user-id={user_id}
+                phx-value-job-id={job_id}
+              >
+                <%= name %>
+              </td>
               <td class="py-1"><%= inserted_at %></td>
               <td class="py-1"><%= user_time_zone %></td>
             </tr>

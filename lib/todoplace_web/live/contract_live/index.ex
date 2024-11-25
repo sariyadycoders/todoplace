@@ -258,53 +258,126 @@ defmodule TodoplaceWeb.Live.Contracts.Index do
     <div class="flex items-center justify-end gap-3">
       <%= if @contract.status == :active do %>
         <%= if @contract.organization_id do %>
-          <button title="Edit" type="button" phx-click="edit-contract" phx-value-contract-id={@contract.id} class="flex items-center px-2 py-1 btn-tertiary bg-blue-planning-300 text-white hover:bg-blue-planning-300/75" >
-            <.icon name="pencil" class="inline-block w-4 h-4 mr-3 fill-current text-white" />
-            Edit
+          <button
+            title="Edit"
+            type="button"
+            phx-click="edit-contract"
+            phx-value-contract-id={@contract.id}
+            class="flex items-center px-2 py-1 btn-tertiary bg-blue-planning-300 text-white hover:bg-blue-planning-300/75"
+          >
+            <.icon name="pencil" class="inline-block w-4 h-4 mr-3 fill-current text-white" /> Edit
           </button>
         <% else %>
-          <button title="Duplicate Table" type="button" phx-click="duplicate-contract" phx-value-contract-id={@contract.id} class="flex items-center px-2 py-1 btn-tertiary bg-blue-planning-300 text-white hover:bg-blue-planning-300/75">
-            <.icon name="duplicate" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300 text-white" />
-            Duplicate
+          <button
+            title="Duplicate Table"
+            type="button"
+            phx-click="duplicate-contract"
+            phx-value-contract-id={@contract.id}
+            class="flex items-center px-2 py-1 btn-tertiary bg-blue-planning-300 text-white hover:bg-blue-planning-300/75"
+          >
+            <.icon
+              name="duplicate"
+              class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300 text-white"
+            /> Duplicate
           </button>
         <% end %>
       <% end %>
       <div data-offset="0" phx-hook="Select" id={"manage-contract-#{@contract.id}"}>
-        <button {testid("actions")} title="Manage" class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full">
+        <button
+          {testid("actions")}
+          title="Manage"
+          class="btn-tertiary px-2 py-1 flex items-center gap-3 mr-2 text-blue-planning-300 xl:w-auto w-full"
+        >
           Actions
-          <.icon name="down" class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon" />
-          <.icon name="up" class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon" />
+          <.icon
+            name="down"
+            class="w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 open-icon"
+          />
+          <.icon
+            name="up"
+            class="hidden w-4 h-4 ml-auto mr-1 stroke-current stroke-3 text-blue-planning-300 close-icon"
+          />
         </button>
 
-        <div class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content" style="z-index: 2147483001;">
+        <div
+          class="flex flex-col hidden bg-white border rounded-lg shadow-lg popover-content"
+          style="z-index: 2147483001;"
+        >
           <%= if @contract.status == :active do %>
             <%= if @contract.organization_id do %>
-              <button title="Edit" type="button" phx-click="edit-contract" phx-value-contract-id={@contract.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                <.icon name="pencil" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300" />
-                Edit
+              <button
+                title="Edit"
+                type="button"
+                phx-click="edit-contract"
+                phx-value-contract-id={@contract.id}
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+              >
+                <.icon
+                  name="pencil"
+                  class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300"
+                /> Edit
               </button>
-              <button title="Duplicate Table" type="button" phx-click="duplicate-contract" phx-value-contract-id={@contract.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                <.icon name="duplicate" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300" />
-                Duplicate
+              <button
+                title="Duplicate Table"
+                type="button"
+                phx-click="duplicate-contract"
+                phx-value-contract-id={@contract.id}
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+              >
+                <.icon
+                  name="duplicate"
+                  class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300"
+                /> Duplicate
               </button>
-              <button title="Trash" type="button" phx-click="confirm-archive-contract" phx-value-contract-id={@contract.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-red-sales-100 hover:font-bold">
+              <button
+                title="Trash"
+                type="button"
+                phx-click="confirm-archive-contract"
+                phx-value-contract-id={@contract.id}
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-red-sales-100 hover:font-bold"
+              >
                 <.icon name="trash" class="inline-block w-4 h-4 mr-3 fill-current text-red-sales-300" />
                 Archive
               </button>
-              <% else %>
-              <button title="View" type="button" phx-click="view-contract" phx-value-contract-id={@contract.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                <.icon name="eye" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300" />
-                View
+            <% else %>
+              <button
+                title="View"
+                type="button"
+                phx-click="view-contract"
+                phx-value-contract-id={@contract.id}
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+              >
+                <.icon
+                  name="eye"
+                  class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300"
+                /> View
               </button>
-              <button title="Duplicate" type="button" phx-click="duplicate-contract" phx-value-contract-id={@contract.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold" {testid("duplicate")}>
-                <.icon name="duplicate" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300" />
-                Duplicate
+              <button
+                title="Duplicate"
+                type="button"
+                phx-click="duplicate-contract"
+                phx-value-contract-id={@contract.id}
+                class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+                {testid("duplicate")}
+              >
+                <.icon
+                  name="duplicate"
+                  class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300"
+                /> Duplicate
               </button>
             <% end %>
           <% else %>
-            <button title="Plus" type="button" phx-click="enable-contract" phx-value-contract-id={@contract.id} class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold">
-                <.icon name="plus" class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300" />
-                Unarchive
+            <button
+              title="Plus"
+              type="button"
+              phx-click="enable-contract"
+              phx-value-contract-id={@contract.id}
+              class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-planning-100 hover:font-bold"
+            >
+              <.icon
+                name="plus"
+                class="inline-block w-4 h-4 mr-3 fill-current text-blue-planning-300"
+              /> Unarchive
             </button>
           <% end %>
         </div>
@@ -319,29 +392,46 @@ defmodule TodoplaceWeb.Live.Contracts.Index do
       |> Enum.into(%{class: ""})
 
     ~H"""
-      <div class="flex flex-col w-full lg:w-auto mr-2 mb-3 lg:mb-0">
-        <h1 class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></h1>
-        <div class="flex">
-          <div id={@id} class="relative rounded-lg w-full lg:w-48 border-grey border p-2 cursor-pointer") data-offset-y="5" phx-hook="Select">
-            <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
-                <%= Utils.capitalize_all_words(String.replace(@selected_option, "_", " ")) %>
-                <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
-                <.icon name="up" class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon" />
-            </div>
-            <ul class={"absolute z-10 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 #{@class}"}>
-              <%= for option <- @options_list do %>
-                <li id={option.id} target-class="toggle-it" parent-class="toggle" toggle-type="selected-active" phx-hook="ToggleSiblings"
-                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md" phx-click={"apply-filter-#{@id}"} phx-value-option={option.id}>
-                  <button id={"btn-#{option.id}"} class="album-select"><%= option.title %></button>
-                  <%= if option.id == @selected_option do %>
-                    <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
+    <div class="flex flex-col w-full lg:w-auto mr-2 mb-3 lg:mb-0">
+      <h1 class="font-extrabold text-sm flex flex-col whitespace-nowrap mb-1"><%= @title %></h1>
+      <div class="flex">
+        <div
+          id={@id}
+          class="relative rounded-lg w-full lg:w-48 border-grey border p-2 cursor-pointer"
+          )
+          data-offset-y="5"
+          phx-hook="Select"
+        >
+          <div {testid("dropdown_#{@id}")} class="flex flex-row items-center border-gray-700">
+            <%= Utils.capitalize_all_words(String.replace(@selected_option, "_", " ")) %>
+            <.icon name="down" class="w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 open-icon" />
+            <.icon
+              name="up"
+              class="hidden w-3 h-3 ml-auto lg:mr-2 mr-1 stroke-current stroke-2 close-icon"
+            />
           </div>
+          <ul class={"absolute z-10 hidden mt-2 bg-white toggle rounded-md popover-content border border-base-200 #{@class}"}>
+            <%= for option <- @options_list do %>
+              <li
+                id={option.id}
+                target-class="toggle-it"
+                parent-class="toggle"
+                toggle-type="selected-active"
+                phx-hook="ToggleSiblings"
+                class="flex items-center py-1.5 hover:bg-blue-planning-100 hover:rounded-md"
+                phx-click={"apply-filter-#{@id}"}
+                phx-value-option={option.id}
+              >
+                <button id={"btn-#{option.id}"} class="album-select"><%= option.title %></button>
+                <%= if option.id == @selected_option do %>
+                  <.icon name="tick" class="w-6 h-5 ml-auto mr-1 toggle-it text-green" />
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
         </div>
       </div>
+    </div>
     """
   end
 

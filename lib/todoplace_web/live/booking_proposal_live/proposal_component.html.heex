@@ -1,11 +1,11 @@
 <div class="modal">
   <.close_x />
-  
+
   <div class="mb-4 md:mb-8">
     <.maybe_show_photographer_logo? organization={@organization} />
   </div>
-  
-  <.visual_banner 
+
+  <.visual_banner
     title="Proposal"
     job={@job}
     package={@package}
@@ -18,7 +18,7 @@
 
   <h2 class="text-2xl">Quote</h2>
 
-  <.items 
+  <.items
     photographer={@photographer}
     proposal={@proposal}
     organization={@organization}
@@ -37,6 +37,8 @@
       </button>
     <% end %>
 
-    <button class="btn-secondary" phx-click="modal" phx-value-action="close" type="button">Close</button>
+    <button class="btn-secondary" phx-click="modal" phx-value-action="close" type="button">
+      Close
+    </button>
   </.footer>
 </div>

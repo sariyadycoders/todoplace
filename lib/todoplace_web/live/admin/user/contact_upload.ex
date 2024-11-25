@@ -4,7 +4,6 @@ defmodule TodoplaceWeb.Live.Admin.User.ContactUpload do
 
   alias Todoplace.{Repo, Accounts, Client, Clients}
 
-
   @impl true
   def mount(_params, _session, socket) do
     socket
@@ -40,7 +39,14 @@ defmodule TodoplaceWeb.Live.Admin.User.ContactUpload do
           <h4>Organization id: <%= @user.organization_id %></h4>
         </div>
         <div class="p-4 border rounded-lg">
-          <h4 class="font-bold text-red-sales-300">NOTE: Please make a copy of the <a class="underline" href="https://docs.google.com/spreadsheets/d/1vAzfbjUviI3c2G_uXU29EdfEDtufa5r59E2ESho4eOA/edit?usp=sharing" target="_blank" rel="noreferre">Google Sheet template</a>, fill it out with the exact columns, and download to CSV before uploading</h4>
+          <h4 class="font-bold text-red-sales-300">
+            NOTE: Please make a copy of the <a
+              class="underline"
+              href="https://docs.google.com/spreadsheets/d/1vAzfbjUviI3c2G_uXU29EdfEDtufa5r59E2ESho4eOA/edit?usp=sharing"
+              target="_blank"
+              rel="noreferre"
+            >Google Sheet template</a>, fill it out with the exact columns, and download to CSV before uploading
+          </h4>
           <h3 class="text-2xl font-bold mb-4">Upload file</h3>
           <form id="upload-form" phx-submit="save" phx-change="validate">
             <.live_file_input upload={@uploads.contact_csv} class="" />
@@ -50,7 +56,7 @@ defmodule TodoplaceWeb.Live.Admin.User.ContactUpload do
       </div>
       <%= if Enum.empty? @clients do %>
         <div class="mt-5">
-        User doesn't have any clients
+          User doesn't have any clients
         </div>
       <% end %>
       <table class="flex flex-row flex-no-wrap w-full mt-5 mb-32 responsive-table sm:bg-white sm:mb-5">
@@ -61,14 +67,18 @@ defmodule TodoplaceWeb.Live.Admin.User.ContactUpload do
           </tr>
         </thead>
         <tbody class="flex-1 sm:flex-none">
-            <%= for client <- @clients do %>
-              <tr class="flex flex-col mb-2 flex-no-wrap sm:table-row sm:mb-0">
-                <td class="p-3 truncate border border-grey-light sm:border-none"><%= client.name || "-" %></td>
-                <td class="p-3 truncate border border-grey-light sm:border-none"><%= client.email || "-" %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+          <%= for client <- @clients do %>
+            <tr class="flex flex-col mb-2 flex-no-wrap sm:table-row sm:mb-0">
+              <td class="p-3 truncate border border-grey-light sm:border-none">
+                <%= client.name || "-" %>
+              </td>
+              <td class="p-3 truncate border border-grey-light sm:border-none">
+                <%= client.email || "-" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
     """
   end

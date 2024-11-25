@@ -266,26 +266,51 @@ defmodule TodoplaceWeb.Live.EmailAutomations.Show do
 
   defp pipeline_section(assigns) do
     ~H"""
-
     <%= if Enum.member?(@collapsed_sections, @subcategory) do %>
       <% sorted_emails = sort_emails(@pipeline.emails, @pipeline.state) %>
       <div testid="pipeline-section" class="mb-3 md:mr-4 border border-base-200 rounded-lg">
-        <% next_email = get_next_email_schdule_date(@category_type, sorted_emails, @pipeline.id, @pipeline.state, @subcategory_slug) %>
+        <% next_email =
+          get_next_email_schdule_date(
+            @category_type,
+            sorted_emails,
+            @pipeline.id,
+            @pipeline.state,
+            @subcategory_slug
+          ) %>
         <% email_is_completed? = next_email.is_completed %>
         <div class={classes("flex justify-between p-2", %{"opacity-60" => email_is_completed?})}>
-            <% stopped_email_text = EmailAutomationSchedules.get_stopped_emails_text(@job_id, @pipeline.state, TodoplaceWeb.Helpers) %>
-            <%= if stopped_email_text do %>
-              <span class="pl-1 text-red-sales-300 font-bold"> <%= stopped_email_text %> </span>
-            <% else %>
-              <span class="pl-1 text-blue-planning-300 font-bold"> <%= next_email.text %> </span>
-            <% end %>
+          <% stopped_email_text =
+            EmailAutomationSchedules.get_stopped_emails_text(
+              @job_id,
+              @pipeline.state,
+              TodoplaceWeb.Helpers
+            ) %>
+          <%= if stopped_email_text do %>
+            <span class="pl-1 text-red-sales-300 font-bold"><%= stopped_email_text %></span>
+          <% else %>
+            <span class="pl-1 text-blue-planning-300 font-bold"><%= next_email.text %></span>
+          <% end %>
           <%= if not is_nil(next_email.email_preview_id) do %>
-            <span class="text-blue-planning-300 pr-4 underline hover:cursor-pointer" phx-click="email-preview" phx-value-email-preview-id={next_email.email_preview_id} phx-value-is-preview={true} >Preview</span>
+            <span
+              class="text-blue-planning-300 pr-4 underline hover:cursor-pointer"
+              phx-click="email-preview"
+              phx-value-email-preview-id={next_email.email_preview_id}
+              phx-value-is-preview={true}
+            >
+              Preview
+            </span>
           <% end %>
         </div>
 
-        <div class={classes("flex bg-base-200 pl-2 pr-7 py-3 items-center cursor-pointer", %{"opacity-60" => email_is_completed?})} phx-click="toggle-section" phx-value-section_id={"pipeline-#{@pipeline.id}-#{@subcategory}"}>
-
+        <div
+          class={
+            classes("flex bg-base-200 pl-2 pr-7 py-3 items-center cursor-pointer", %{
+              "opacity-60" => email_is_completed?
+            })
+          }
+          phx-click="toggle-section"
+          phx-value-section_id={"pipeline-#{@pipeline.id}-#{@subcategory}"}
+        >
           <div class="flex flex-col">
             <div class=" flex flex-row items-center">
               <div class="flex-row w-8 h-8 rounded-full bg-white flex items-center justify-center">
@@ -297,9 +322,17 @@ defmodule TodoplaceWeb.Live.EmailAutomations.Show do
               </div>
               <span class="flex items-center text-blue-planning-300 text-xl font-bold ml-2">
                 <%= @pipeline.name %>
-                <span class="text-base-300 ml-2 rounded-md bg-white px-2 text-sm font-bold whitespace-nowrap"><%= Enum.count(sorted_emails) %> <%=ngettext("email", "emails", Enum.count(sorted_emails)) %></span>
+                <span class="text-base-300 ml-2 rounded-md bg-white px-2 text-sm font-bold whitespace-nowrap">
+                  <%= Enum.count(sorted_emails) %> <%= ngettext(
+                    "email",
+                    "emails",
+                    Enum.count(sorted_emails)
+                  ) %>
+                </span>
                 <%= if is_state_manually_trigger(@pipeline.state) do %>
-                  <span class="text-base-300 ml-2 rounded-md bg-white px-2 text-sm font-bold whitespace-nowrap">Manual Trigger</span>
+                  <span class="text-base-300 ml-2 rounded-md bg-white px-2 text-sm font-bold whitespace-nowrap">
+                    Manual Trigger
+                  </span>
                 <% end %>
               </span>
             </div>
@@ -310,41 +343,58 @@ defmodule TodoplaceWeb.Live.EmailAutomations.Show do
 
           <div class="ml-auto">
             <%= if !Enum.member?(@collapsed_sections, "pipeline-#{@pipeline.id}-#{@subcategory}") do %>
-                <.icon name="down" class="w-5 h-5 stroke-2 text-blue-planning-300" />
-              <% else %>
-                <.icon name="up" class="w-5 h-5 stroke-2 text-blue-planning-300" />
-              <% end %>
-            </div>
+              <.icon name="down" class="w-5 h-5 stroke-2 text-blue-planning-300" />
+            <% else %>
+              <.icon name="up" class="w-5 h-5 stroke-2 text-blue-planning-300" />
+            <% end %>
+          </div>
         </div>
 
         <%= if Enum.member?(@collapsed_sections, "pipeline-#{@pipeline.id}-#{@subcategory}") do %>
           <%= Enum.with_index(sorted_emails, fn email, index -> %>
-              <% last_index = Enum.count(sorted_emails) - 1 %>
-              <% is_email_disable = disable_send_stop_email(email, sorted_emails, @pipeline.state, index)%>
+            <% last_index = Enum.count(sorted_emails) - 1 %>
+            <% is_email_disable =
+              disable_send_stop_email(email, sorted_emails, @pipeline.state, index) %>
             <div class="flex flex-col md:flex-row pl-2 pr-7 md:items-center justify-between">
               <div class={classes("flex flex-row ml-2 h-max", %{"opacity-60" => email_is_completed?})}>
                 <div class={"h-auto pt-3 md:relative #{index != last_index && "md:before:absolute md:before:border md:before:h-full md:before:border-base-200 md:before:left-1/2 md:before:z-10 md:before:z-[-1]"}"}>
                   <div class="flex w-8 h-8 rounded-full items-center justify-center bg-base-200 z-40">
                     <%= cond do %>
-                      <% not is_nil(email.reminded_at) -> %> <.icon name="tick" class="w-5 h-5 text-blue-planning-300" />
-                      <% not is_nil(email.stopped_at) -> %> <.icon name="stop" class="w-5 h-5 text-red-sales-300" />
-                      <% is_state_manually_trigger(@pipeline.state) and index == 0 -> %> <.icon name="paper-airplane" class="w-5 h-5 text-blue-planning-300" />
-                      <% true -> %>  <.icon name="envelope" class="w-5 h-5 text-blue-planning-300" />
+                      <% not is_nil(email.reminded_at) -> %>
+                        <.icon name="tick" class="w-5 h-5 text-blue-planning-300" />
+                      <% not is_nil(email.stopped_at) -> %>
+                        <.icon name="stop" class="w-5 h-5 text-red-sales-300" />
+                      <% is_state_manually_trigger(@pipeline.state) and index == 0 -> %>
+                        <.icon name="paper-airplane" class="w-5 h-5 text-blue-planning-300" />
+                      <% true -> %>
+                        <.icon name="envelope" class="w-5 h-5 text-blue-planning-300" />
                     <% end %>
                   </div>
                 </div>
-                <span class={classes("text-sm font-bold ml-4 py-3", %{"text-blue-planning-300" => not is_nil(email.reminded_at), "text-red-sales-300" => not is_nil(email.stopped_at)})}>
+                <span class={
+                  classes("text-sm font-bold ml-4 py-3", %{
+                    "text-blue-planning-300" => not is_nil(email.reminded_at),
+                    "text-red-sales-300" => not is_nil(email.stopped_at)
+                  })
+                }>
                   <%= if not is_nil(email.reminded_at) do %>
                     Completed <%= get_date(email.reminded_at) %>
                   <% end %>
                   <%= if not is_nil(email.stopped_at) do %>
-                    Stopped <%= get_date(email.stopped_at) %> | Reason: <%= stop_reason_text(email.stopped_reason) %>
+                    Stopped <%= get_date(email.stopped_at) %> | Reason: <%= stop_reason_text(
+                      email.stopped_reason
+                    ) %>
                   <% end %>
 
                   <p class="text-black text-xl">
                     <%= get_email_name(email, @type, index, @pipeline.state) %>
                     <%= if not is_nil(email.stopped_at) do %>
-                      <span testid={"#{@pipeline.state}-stop_text-#{index}"} class="ml-2 rounded-md bg-red-sales-100 text-red-sales-300 px-2 pb-1 text-sm font-bold whitespace-nowrap">Stopped</span>
+                      <span
+                        testid={"#{@pipeline.state}-stop_text-#{index}"}
+                        class="ml-2 rounded-md bg-red-sales-100 text-red-sales-300 px-2 pb-1 text-sm font-bold whitespace-nowrap"
+                      >
+                        Stopped
+                      </span>
                     <% end %>
                   </p>
                   <div class="flex items-center bg-white">
@@ -352,7 +402,14 @@ defmodule TodoplaceWeb.Live.EmailAutomations.Show do
                       <.icon name="play-icon" class="w-4 h-4 text-blue-planning-300" />
                     </div>
                     <p class="font-normal text-base-250 text-sm">
-                      <%= get_email_schedule_text(email.total_hours, @pipeline.state, sorted_emails, index, @type, @current_user.organization_id) %>
+                      <%= get_email_schedule_text(
+                        email.total_hours,
+                        @pipeline.state,
+                        sorted_emails,
+                        index,
+                        @type,
+                        @current_user.organization_id
+                      ) %>
                     </p>
                   </div>
                 </span>
@@ -360,26 +417,79 @@ defmodule TodoplaceWeb.Live.EmailAutomations.Show do
 
               <div class="flex justify-end mr-2">
                 <%= if not (is_state_manually_trigger(@pipeline.state) and index == 0) do %>
-                  <.icon_button_simple testid={"#{@pipeline.state}-stop_button-#{index}"} class={classes("flex flex-row items-center justify-center w-8 h-8 bg-base-200 mr-2 rounded-xl", %{"opacity-30 hover:cursor-not-allowed" => is_email_disable})} disabled={is_email_disable} phx-click="confirm-stop-email" phx-value-email_id={email.id} icon_class="flex flex-col items-center justify-center w-5 h-5" color="red-sales-300" icon="stop"></.icon_button_simple>
+                  <.icon_button_simple
+                    testid={"#{@pipeline.state}-stop_button-#{index}"}
+                    class={
+                      classes(
+                        "flex flex-row items-center justify-center w-8 h-8 bg-base-200 mr-2 rounded-xl",
+                        %{"opacity-30 hover:cursor-not-allowed" => is_email_disable}
+                      )
+                    }
+                    disabled={is_email_disable}
+                    phx-click="confirm-stop-email"
+                    phx-value-email_id={email.id}
+                    icon_class="flex flex-col items-center justify-center w-5 h-5"
+                    color="red-sales-300"
+                    icon="stop"
+                  >
+                  </.icon_button_simple>
                 <% end %>
                 <% allow_cursor? = !is_nil(email.stopped_at) || !is_nil(email.reminded_at) %>
-                <button testid="email_send_OR_start_sequence" disabled={is_email_disable} class={classes("h-8 flex items-center px-2 py-1 btn-tertiary text-black font-bold  hover:border-blue-planning-300 mr-2 whitespace-nowrap", %{"opacity-30 hover:cursor-not-allowed" => allow_cursor? || disable_pipeline?(sorted_emails, @pipeline.state, index), "hidden" => @subcategory_slug == "payment_reminder_emails"})} phx-click="confirm-send-email" phx-value-email_id={email.id} phx-value-pipeline_id={@pipeline.id}>
+                <button
+                  testid="email_send_OR_start_sequence"
+                  disabled={is_email_disable}
+                  class={
+                    classes(
+                      "h-8 flex items-center px-2 py-1 btn-tertiary text-black font-bold  hover:border-blue-planning-300 mr-2 whitespace-nowrap",
+                      %{
+                        "opacity-30 hover:cursor-not-allowed" =>
+                          allow_cursor? || disable_pipeline?(sorted_emails, @pipeline.state, index),
+                        "hidden" => @subcategory_slug == "payment_reminder_emails"
+                      }
+                    )
+                  }
+                  phx-click="confirm-send-email"
+                  phx-value-email_id={email.id}
+                  phx-value-pipeline_id={@pipeline.id}
+                >
                   <%= if is_state_manually_trigger(@pipeline.state) and index == 0 do %>
-                      Start Sequence
-                    <% else %>
-                      Send now
+                    Start Sequence
+                  <% else %>
+                    Send now
                   <% end %>
                 </button>
-                <% icon_btn_class = "h-8 flex items-center px-2 py-1 btn-tertiary bg-blue-planning-300 text-white hover:bg-blue-planning-300/75 whitespace-nowrap" %>
+                <% icon_btn_class =
+                  "h-8 flex items-center px-2 py-1 btn-tertiary bg-blue-planning-300 text-white hover:bg-blue-planning-300/75 whitespace-nowrap" %>
                 <%= if allow_cursor? do %>
-                    <.icon_button_simple  class={icon_btn_class} phx-click="email-preview" phx-value-email-preview-id={email.id} phx-value-is-preview="false" icon_class="inline-block w-4 h-4 mr-3" color="white" icon="eye">View email</.icon_button_simple>
-                  <% else %>
-                    <.icon_button_simple  class={icon_btn_class} phx-click="edit-email" phx-value-index={index} phx-value-email_id={email.id} phx-value-pipeline_id={@pipeline.id} icon_class="inline-block w-4 h-4 mr-3" color="white" icon="pencil">Edit email</.icon_button_simple>
+                  <.icon_button_simple
+                    class={icon_btn_class}
+                    phx-click="email-preview"
+                    phx-value-email-preview-id={email.id}
+                    phx-value-is-preview="false"
+                    icon_class="inline-block w-4 h-4 mr-3"
+                    color="white"
+                    icon="eye"
+                  >
+                    View email
+                  </.icon_button_simple>
+                <% else %>
+                  <.icon_button_simple
+                    class={icon_btn_class}
+                    phx-click="edit-email"
+                    phx-value-index={index}
+                    phx-value-email_id={email.id}
+                    phx-value-pipeline_id={@pipeline.id}
+                    icon_class="inline-block w-4 h-4 mr-3"
+                    color="white"
+                    icon="pencil"
+                  >
+                    Edit email
+                  </.icon_button_simple>
                 <% end %>
               </div>
             </div>
           <% end) %>
-      <% end %>
+        <% end %>
       </div>
     <% end %>
     """

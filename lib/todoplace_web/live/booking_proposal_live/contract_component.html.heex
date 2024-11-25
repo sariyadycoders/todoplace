@@ -1,12 +1,12 @@
 <div class="modal">
-  <.form for={@changeset} :let={f} phx-change="validate" phx-submit="submit" phx-target={@myself}>
+  <.form :let={f} for={@changeset} phx-change="validate" phx-submit="submit" phx-target={@myself}>
     <.close_x />
 
     <div class="mb-4 md:mb-8">
       <.maybe_show_photographer_logo? organization={@organization} />
     </div>
 
-    <.visual_banner 
+    <.visual_banner
       title="Contract"
       job={@job}
       package={@package}
@@ -17,7 +17,7 @@
 
     <hr class="my-8 col-span-2" />
 
-    <.items 
+    <.items
       photographer={@photographer}
       proposal={@proposal}
       organization={@organization}
@@ -31,18 +31,30 @@
     <hr class="my-8 col-span-2" />
 
     <div class="mt-4 raw_html text-base-250 min-h-[8rem]">
-      <%= raw @contract_content %>
+      <%= raw(@contract_content) %>
     </div>
 
-    <p class="mt-4 text-base-250">I confirm that I have read and understood this contract, and I agree to enter into this contract with <%= @organization.name %></p>
+    <p class="mt-4 text-base-250">
+      I confirm that I have read and understood this contract, and I agree to enter into this contract with <%= @organization.name %>
+    </p>
 
     <hr class="my-6" />
 
     <fieldset disabled={@read_only}>
-      <%= labeled_input f, :signed_legal_name, label: (if @proposal && @proposal.signed_at, do: "Signed by:", else: "Type your full legal name"), phx_debounce: "500", wrapper_class: "text-base" %>
+      <%= labeled_input(f, :signed_legal_name,
+        label:
+          if(@proposal && @proposal.signed_at,
+            do: "Signed by:",
+            else: "Type your full legal name"
+          ),
+        phx_debounce: "500",
+        wrapper_class: "text-base"
+      ) %>
       <%= if @proposal && @proposal.signed_at do %>
         <div class="mt-4">
-          <.badge color={:gray} mode={:outlined}>Signed on <%= strftime(@photographer.time_zone, @proposal.signed_at, "%b %d, %Y") %></.badge>
+          <.badge color={:gray} mode={:outlined}>
+            Signed on <%= strftime(@photographer.time_zone, @proposal.signed_at, "%b %d, %Y") %>
+          </.badge>
         </div>
       <% end %>
     </fieldset>
@@ -53,9 +65,19 @@
 
     <.footer>
       <%= unless @read_only do %>
-        <%= submit "Accept Contract", class: "btn-primary accept-contract", disabled: !@changeset.valid?, phx_disable_with: "Accept Contract" %>
+        <%= submit("Accept Contract",
+          class: "btn-primary accept-contract",
+          disabled: !@changeset.valid?,
+          phx_disable_with: "Accept Contract"
+        ) %>
       <% end %>
-      <button class="btn-secondary" title="close" type="button" phx-click="modal" phx-value-action="close">
+      <button
+        class="btn-secondary"
+        title="close"
+        type="button"
+        phx-click="modal"
+        phx-value-action="close"
+      >
         Close
       </button>
     </.footer>
